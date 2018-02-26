@@ -69,7 +69,7 @@
         "indent": [true, "spaces"],
         "jsdoc-format": false,
         "missing-jsdoc": false,
-        "linebreak-style": [true, "CRLF"],
+        "linebreak-style": false,
         "max-line-length": [true, 250],
         "new-parens": true,
         "no-angle-bracket-type-assertion": false,
