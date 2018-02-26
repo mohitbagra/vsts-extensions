@@ -34,7 +34,7 @@
     },
     "repository": {
         "type": "git",
-        "uri": "https://github.com/mohitbagra/vsts-extensions-checklist"
+        "uri": "https://github.com/mohitbagra/vsts-extensions"
     },  
     "branding": {
         "color": "#106ebe",
