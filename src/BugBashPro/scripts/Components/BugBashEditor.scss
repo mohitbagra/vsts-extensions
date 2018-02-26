@@ -1,0 +1,62 @@
+.bugbash-editor {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+
+    .message-panel {
+        margin-bottom: 10px;
+    }
+    
+    .bugbash-editor-contents {
+        flex: 1;
+        outline: none;
+        display: flex;
+        flex-direction: column;        
+
+        .section-container {
+            flex: 1;
+            display: flex;
+
+            .first-section {
+                flex: 1;
+            }
+    
+            .second-section {
+                flex: 1;
+                margin-left: 30px;
+                margin-top: 23px;
+            }
+        }
+        
+        .input-error {
+            margin-top: 5px;
+        }
+
+        .editor-control {
+            margin-bottom: 8px;
+        }
+
+        .title-container {
+            margin-bottom: 20px;
+        }        
+
+        .info-label {
+            margin-bottom: 5px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            margin-bottom: 20px;
+
+            .auto-accept {
+                margin-right: 10px;                
+            }
+
+            .info-label {
+                padding-top: 7px;
+            }
+        }        
+    }
+}

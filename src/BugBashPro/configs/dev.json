@@ -1,0 +1,16 @@
+{
+    "public": false,
+    "publisher": "mohitbagra-dev",
+    "name": "Bug Bash Pro - Dev",
+    "baseUri": "https://localhost:8888/BugBashPro",
+    "files": [
+        {
+            "path": "../images",
+            "addressable": true
+        },
+        {
+            "path": "../README.md",
+            "addressable": true
+        }
+    ]
+}

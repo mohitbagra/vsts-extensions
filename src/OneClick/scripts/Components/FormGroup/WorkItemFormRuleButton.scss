@@ -1,0 +1,35 @@
+.rule-button {
+    display: flex;
+    width: 130px;
+    height: 24px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap: normal;
+    white-space: nowrap;
+    padding: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    align-items: center;
+    cursor: pointer;
+
+    i {
+        margin:0;
+        padding: 0;
+        font-size: 12px;
+        font-weight: 100;
+        height: 16px;
+        line-height: 16px;
+        margin-right: 3px;
+    }
+
+    .rule-button-text {
+        flex: 1;
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap: normal;
+        white-space: nowrap;
+        line-height: 20px;
+        @include UserSelectNone();
+    }
+}

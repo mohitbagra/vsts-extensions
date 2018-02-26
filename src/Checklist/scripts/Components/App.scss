@@ -1,0 +1,39 @@
+body {
+    margin: 0;
+    padding: 0;
+
+    #ext-container {
+        padding-bottom: 10px;
+
+        .container {
+            display: flex;
+            flex-direction: column;
+
+            .ms-Pivot-link {
+                height: 28px;
+                margin-right: 0;
+            }
+
+            .command-bar {
+                position: absolute;
+                right: 0;
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                margin-right: 5px;
+
+                .command-item {                   
+                    color: #106ebe;
+
+                    &.info-button {
+                        height: 20px;
+
+                        i {
+                            font-size: 20px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,80 @@
+.vss-combobox {
+    .info-label.vss-combo-label {
+        margin-bottom: 5px;
+    }
+
+    .input-error.vss-combo-error {
+        margin-top: 5px;
+    }
+
+    .combo {
+        width: inherit;
+        background-color: #fff;
+        border: 1px solid #a6a6a6;
+        padding: 0 8px;
+        height: 30px;
+
+        div.wrap > input[type="text"] {
+            padding: 0 5px;
+            width: calc(100% - 45px);    
+            @include TextOverflowEllipsis();
+        }
+
+        .drop {
+            font-family: FabricMDL2Icons;
+            top: 0;
+            bottom: 0;
+            padding-top: 8px;
+            width: 25px;
+            transform: none;
+            font-size: 12px;
+            
+            &::before {
+                content: "\E70D";
+            }
+
+            &.bowtie-calendar {
+                font-size: 15px;
+                
+                &::before {
+                    content: "\E787";
+                }
+            }
+        }
+
+        .virtualizing-list-view > .items > li {
+            height: 24px;
+            padding: 2px;
+
+            .node-img.icon {
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                overflow: hidden;
+                vertical-align: middle;
+            }
+
+            &.expanded > div.node-content > .node-img.icon {
+                font-family: FabricMDL2Icons;
+                font-size: 10px;
+                vertical-align: middle;
+                margin-right: 3px;
+                
+                &::before {
+                    content: "\E70D";
+                }
+            }
+
+            &.collapsed > div.node-content > .node-img.icon {
+                font-family: FabricMDL2Icons;
+                font-size: 10px;
+                vertical-align: middle;
+                margin-right: 3px;
+
+                &::before {
+                    content: "\E76C";
+                }
+            }
+        }
+    }
+}

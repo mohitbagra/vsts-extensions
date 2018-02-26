@@ -1,0 +1,35 @@
+.work-item-title-view {
+    border-left: 6px solid black;    
+    display: flex;
+    align-items: center;
+
+    &:not(.no-color) {
+        padding-left: 5px !important;
+    }
+
+    &.no-color {
+        border-left: none;
+        padding-left: 0;
+    }
+
+    img {
+        width: 14px;
+        min-width: 14px;
+        height: 14px;
+        margin-right: 5px;
+    }
+
+    .work-item-id {
+        margin-right: 5px;
+        color: #666;
+    }
+
+    .title-link {
+        color: #333333;
+
+        &:hover {
+            color: #0078d7;
+            text-decoration: underline;
+        }
+    }
+}

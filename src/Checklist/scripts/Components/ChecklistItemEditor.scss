@@ -1,0 +1,73 @@
+.checklist-item-editor {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    max-width: 300px;
+
+    .checklist-item-editor-text-field {
+        width: 100%;
+
+        .ms-TextField-fieldGroup {
+            height: 26px;
+        }
+
+        .checklist-item-editor-input {
+            padding: 0px 6px;
+
+            &.disabled {
+                background-color: #ebebe4;
+            }
+        }
+    }
+
+    .checklist-item-editor-bottom-section {
+        display: flex;
+        margin-top: 10px;
+        align-items: center;
+        width: 100%;
+
+        .checklist-item-editor-properties {
+            flex: 1;
+            display: flex;
+            align-items: center;
+
+            .checklist-item-editor-state-picker {                    
+                margin-left: 10px;                
+                height: 20px;
+                padding: 0;
+                font-size: 12px;
+
+                i {
+                    margin-left: 0px;
+                    font-size: 10px;
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .checklist-item-editor-buttons {
+            margin-left: 20px;
+
+            .checklist-item-editor-button {
+                padding: 0;
+                font-weight: bold;
+                width: 20px;
+                height: 20px;
+                overflow: visible;
+                
+                i {
+                    font-size: 18px;
+                }
+
+                &.save-button {
+                    margin-right: 5px;
+                    color: #0078d7;
+                }
+
+                &.cancel-button {                    
+                    color: #da0a00;
+                }
+            }
+        }
+    }
+}

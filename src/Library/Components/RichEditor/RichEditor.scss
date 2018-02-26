@@ -1,0 +1,75 @@
+.rich-editor-container {
+    display: flex;
+    flex-direction: column;
+
+    .info-label.rich-editor-label {
+        margin-bottom: 5px;
+    }
+
+    .input-error.rich-editor-error {
+        margin-top: 5px;
+    }
+
+    .progress-bar {
+        height: 4px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        background-color: #fff;
+
+        &:before{
+            display: block;
+            position: absolute;
+            content: "";
+            left: -200px;
+            width: 200px;
+            height: 4px;
+            background-color: #ffd3ad;
+            animation: loading 2s linear infinite;
+        }
+    }      
+      
+    @keyframes loading {
+        from {left: -200px; width: 30%;}
+        50% {width: 30%;}
+        70% {width: 70%;}
+        80% { left: 50%;}
+        95% {left: 120%;}
+        to {left: 100%;}
+    }
+    
+    .trumbowyg-box {
+        flex: 1;
+        margin: 0;
+        
+        .trumbowyg-modal {
+            overflow: visible;
+        }
+
+        .trumbowyg-editor {
+            padding: 5px;
+
+            p {
+                margin: 0;
+            }
+    
+            img {
+                display: block;
+                margin: 5px 0;
+            }
+        }
+
+        &.trumbowyg-fullscreen {
+            border: 1px solid #DDD !important;
+            right: 0;
+            left: 0;
+            width: inherit;
+            bottom: 0;
+            top: 0;
+
+            .trumbowyg-editor {
+                max-height: 100%;
+            }
+        }
+    }
+}

@@ -1,0 +1,75 @@
+.checklist-item-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+    &:hover {
+        .drag-handle {
+            visibility: visible;
+        }
+    }
+
+    .drag-handle {
+        margin-right: 5px;
+        cursor: move;
+        visibility: hidden;
+        @include UserSelectNone();
+    }
+
+    .checklist-item {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        flex: 1;
+
+        .required-item {
+            color: #da0a00;
+            margin-left: 2px;
+            margin-top: -5px;
+            font-weight: 600;
+            font-size: 18px;
+            @include UserSelectNone();
+        }
+
+        .checklist-item-state {
+            margin-left: 2px;
+            font-weight: 600;            
+            border-radius: 3px;
+            padding: 2px 4px;
+            height: 11px;
+            line-height: 11px;
+            font-size: 11px;
+            @include UserSelectNone();
+        }
+
+        .checklist-item-label {
+            flex: 1;
+            margin-left: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-wrap: normal;
+            font-size: 14px;
+            @include UserSelectNone();
+
+            &.checked {
+                text-decoration: line-through;
+                color: #999;
+            }
+        }
+
+        .checklist-item-button  {
+            height: 20px;
+            overflow: visible;
+            
+            &.delete-item-button {
+                color: #da0a00;
+            }
+
+            &.edit-item-button {
+                color: #0078d7;
+                width: 20px;
+            }
+        }
+    }
+}

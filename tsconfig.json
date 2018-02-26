@@ -1,0 +1,40 @@
+{
+    "compilerOptions": {
+        "module": "es6",
+        "moduleResolution": "node",
+        "sourceMap": false,
+        "target": "es5",
+        "lib": ["dom", "es2015.promise", "es5"],
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": ".",
+        "allowJs": true,
+        "noEmitHelpers": true,
+        "importHelpers": true,
+        "paths": {
+            "OfficeFabric/*": ["node_modules/office-ui-fabric-react/lib/*"],
+            "VSSUI/*": ["node_modules/vss-ui/*"],
+            "ReactWidgets/*": ["node_modules/react-widgets/lib/*"],
+            "Library/*": ["src/Library/*"],
+            "BugBashPro/*": ["src/BugBashPro/scripts/*"],
+            "Checklist/*": ["src/Checklist/scripts/*"],
+            "ControlsLibrary/*": ["src/ControlsLibrary/scripts/*"],
+            "OneClick/*": ["src/OneClick/scripts/*"],
+            "RelatedWits/*": ["src/RelatedWits/scripts/*"]
+        },
+        "types": [
+            "q",
+            "knockout",
+            "requirejs",
+            "jquery",
+            "react",
+            "react-dom"
+        ]
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

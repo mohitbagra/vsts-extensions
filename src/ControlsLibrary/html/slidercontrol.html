@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <script src="../3rdParty/es6-promise.min.js"></script>
+    <script src="../3rdParty/VSS.SDK.min.js"></script>
+</head>
+
+<body>
+    <script type="text/javascript">
+        // Initialize framework 
+        VSS.init({
+            explicitNotifyLoaded: true,
+            usePlatformScripts: true,
+            usePlatformStyles: false
+        });
+        
+        // Load main entry point for extension
+        VSS.require(["scripts/SliderControl"], function (SliderControl) {            
+            SliderControl.init();
+            VSS.notifyLoadSucceeded();            
+        });
+    </script>
+
+    <div id="ext-container">
+        
+    </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+.all-view {
+    height: 100%;
+
+    .bugbashes-hub {
+        height: 100%;
+
+        .vss-PivotBarItem {
+            width: 100%;
+            box-sizing: border-box;
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+
+            .grid-container {
+                overflow: auto;
+                height: 100%;
+                position: relative;
+                padding-left: 15px;
+                
+                .bugbashes-grid {
+                    overflow-x: initial;
+                    overflow-y: initial;
+    
+                    .title-link {
+                        flex: 1;
+                    }
+                }
+            }
+        }
+    }
+}

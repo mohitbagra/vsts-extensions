@@ -1,0 +1,16 @@
+{
+    "public": false,
+    "publisher": "mohitbagra-dev",
+    "name": "Work item checklist - Dev",
+    "baseUri": "https://localhost:8888/Checklist",
+    "files": [
+        {
+            "path": "../images",
+            "addressable": true
+        },
+        {
+            "path": "../README.md",
+            "addressable": true
+        }
+    ]
+}

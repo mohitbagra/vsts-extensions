@@ -1,0 +1,44 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "files.exclude": {
+        "**/*.js": {
+            "when": "$(basename).tsx"
+        },
+        "**/*.css": {
+            "when": "$(basename).scss"
+        },
+        "**/*.css.map": {
+            "when": "$(basename).scss"
+        },
+        "**/*.vsix": true,
+        "dist/**/*": true 
+    },
+    "vsicons.presets.angular": false,
+    "importSorter.sortConfiguration.customOrderingRules.defaultNumberOfEmptyLinesAfterGroup": 2,
+    "importSorter.importStringConfiguration.quoteMark": "double",
+    "importSorter.importStringConfiguration.hasSemicolon": true,
+    "importSorter.generalConfiguration.sortOnBeforeSave": true,
+    "importSorter.importStringConfiguration.spacingPerImportExpression.afterStartingBracket": 1,
+    "importSorter.importStringConfiguration.spacingPerImportExpression.beforeEndingBracket": 1,
+    "importSorter.importStringConfiguration.spacingPerImportExpression.beforeComma": 0,
+    "importSorter.importStringConfiguration.spacingPerImportExpression.afterComma": 1,
+    "importSorter.importStringConfiguration.numberOfEmptyLinesAfterAllImports": 1,
+    "importSorter.sortConfiguration.customOrderingRules.rules": [
+        {
+            "regex": ".scss$",
+            "orderLevel": 0,
+            "numberOfEmptyLinesAfterGroup": 1
+        },
+        {
+            "regex": "^react",
+            "orderLevel": 1,
+            "numberOfEmptyLinesAfterGroup": 1
+        },
+        {
+            "regex": "^trumbowyg",
+            "orderLevel": 2,
+            "numberOfEmptyLinesAfterGroup": 1
+        }
+    ]
+}

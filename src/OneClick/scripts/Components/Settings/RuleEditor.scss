@@ -1,0 +1,132 @@
+.rule-editor-panel {
+    .rule-editor-panel-header {
+        padding: 5px 0px 0 40px;
+        border-bottom: 1px solid #eaeaea;
+        display: flex;
+        flex-direction: row;
+        min-height: 40px;
+        height: 40px;
+        justify-content: center;
+        align-items: center;
+
+        .rule-editor-header-text {
+            font-size: 21px;
+            font-weight: 100;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .rule-header-tabs {
+            flex: 1;
+            margin-left: 130px;
+
+            .rule-editor-header-tab {
+                margin-right: 0px;
+                background-color: transparent;
+                height: 40px;
+                border-bottom: 2px solid transparent;
+
+                &.selected {
+                    border-bottom: 2px solid #0078d7;
+                }
+            }
+        }
+
+        .rule-editor-header-add-button {
+            margin-right: 10px;
+            background-color: transparent;
+            height: 40px;
+            border: none;
+
+            &:hover {
+                color: #212121;
+                background-color: #eaeaea;
+            }
+        }
+    }
+    
+    .ms-Panel-content {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        padding-right: 5px;
+
+        .rule-editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+
+            .rule-editor-error {
+                margin: 10px 0;
+                overflow: hidden;
+            }
+        
+            .rule-editor {
+                flex: 1;
+                display: flex;
+                flex-direction: row;            
+                overflow: hidden;
+                
+                .left-section {
+                    width: 200px;
+                    margin-right: 10px;
+                    padding-right: 10px;
+                    border-right: 1px solid #ccc;
+                    padding-top: 10px;
+        
+                    .form-control {
+                        margin-bottom: 15px;
+                    }
+                }
+        
+                .right-section {
+                    flex: 1;
+                    padding-right: 10px;
+                    padding-top: 10px;
+                    overflow-y: auto;
+                    overflow-x: hidden;
+
+                    .action-container {                        
+                        border-bottom: 1px solid #ccc;
+                        padding-bottom: 10px;
+                        margin-bottom: 10px;
+                        
+                        .action-header {
+                            display: flex;
+                            flex-direction: row;
+                            margin-bottom: 5px;
+                            align-items: center;
+                            padding: 0 5px;
+                    
+                            .action-name {
+                                flex: 1;
+                                text-transform: uppercase;
+                                font-weight: 700;
+                                color: #000;
+                                font-size: 14px;
+                            }
+        
+                            .delete-action-command {
+                                color: #da0a00;
+                            }
+                        }
+                        
+                        .action-properties-list {
+                            padding-left: 10px;
+        
+                            .action-property-control {
+                                margin-bottom: 10px;
+                            }
+
+                            .input-error {
+                                margin-top: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

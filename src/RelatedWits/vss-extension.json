@@ -1,0 +1,59 @@
+{
+    "manifestVersion": 1,
+    "id": "related-workitems",
+    "version": "2.1.0",
+    "name": "Related Work items",
+    "description": "Gets a list of related work items for your current work item.",
+    "publisher": "mohitbagra",
+    "icons": {
+        "default": "images/logo.png"
+    },
+    "scopes": [ 
+    	"vso.work"
+	 ],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services.Cloud"
+        },
+        {
+            "id": "Microsoft.TeamFoundation.Server",
+            "version": "[15.1,)"
+        }
+    ],
+    "tags": [
+        "Work Item",
+        "Related",
+        "Form",
+        "Page"
+    ],
+    "content": {
+        "details": {
+            "path": "README.md"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/mohitbagra/vsts-extensions-related-wits"
+    },  
+    "branding": {
+        "color": "#106ebe",
+        "theme": "dark"
+    },
+    "categories": [
+        "Plan and track"
+    ],
+    "contributions": [
+        {
+            "id": "related-workitems-form-page",
+            "type": "ms.vss-work-web.work-item-form-page",
+            "description": "Related work items page",
+            "targets": [
+                "ms.vss-work-web.work-item-form"
+            ],
+            "properties": {
+                "name": "Related Work items",
+                "uri": "html/index.html"
+            }
+        }
+    ]
+}

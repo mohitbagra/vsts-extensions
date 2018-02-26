@@ -1,0 +1,75 @@
+.rule-group-list-container {
+    height: 100%;
+
+    .rule-group-list-hub {   
+        height: 100%;
+        
+        .vss-PivotBarItem {
+            width: 100%;
+            box-sizing: border-box;
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+
+            .rule-group-list-contents {
+                overflow: auto;
+                height: 100%;
+                position: relative;
+                padding-left: 15px;
+
+                .rule-group-list {
+                    overflow-x: initial;
+                    overflow-y: initial;
+
+                    .ms-DetailsRow {
+                        &:hover, &.is-selected {
+                            .subscribe-button {
+                                visibility: visible !important;
+                            }
+                        }
+                    }
+            
+                    .rule-group-status {
+                        color: #107c10;
+                        cursor: help;
+                        padding-left: 8px;
+                        
+                        &.disabled {
+                            color: #666666;
+                        }
+                    }
+            
+                    .name-column-cell {
+                        display: flex;
+                        flex-grow: 1;
+                        width: 0;
+            
+                        .name-part {
+                            display: flex;
+                            align-items: center;
+                            flex-grow: 1;
+                            width: 0;
+                            @include TextOverflowEllipsis();
+            
+                            .name-link {
+                                @include TextOverflowEllipsis();
+                            }
+                        }
+            
+                        .rule-group-info-icon {
+                            color: #0078d7;
+                            padding: 0 9px;
+                        }
+            
+                        .subscribe-button {
+                            flex-grow: 0;
+            
+                            &.unsubscribed {
+                                visibility: hidden;
+                            }                
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

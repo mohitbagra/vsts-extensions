@@ -1,0 +1,92 @@
+body {
+    margin: 0;
+    padding: 0;
+    
+    #ext-container {
+        padding: 0px 10px;
+
+        .fabric-container {
+            height: 100%;
+
+            .rules-content-container {
+                height: 100%;     
+                outline: none;           
+
+                .rules-command-bar {
+                    display: flex;
+                    flex-direction: row-reverse;;
+                    border-bottom: 1px solid #ddd;
+                    margin-bottom: 5px;
+                    padding-bottom: 5px;
+                    align-items: center;
+                    
+                    .rules-command {
+                        color: #0078d7;
+                        height: 24px;
+    
+                        &:hover {
+                            color: #005a9e;
+                        }
+                    }
+
+                    .info-button {
+                        height: 20px;
+
+                        i {
+                            color: #0078d7;
+                            font-size: 20px;
+                        }
+                    }
+
+                    .error-link {
+                        color: #e81123;
+                        text-decoration: none;
+                        line-height: 22px;
+                        margin-right: 10px;
+                        
+                        &:hover, &:focus {
+                            text-decoration: underline;
+                        }
+                    }
+                }
+    
+                .vss-ZeroData {
+                    margin-top: 0px;
+                    padding-bottom: 10px;
+
+                    .vss-ZeroDataItem--image {
+                        display: none;
+                    }
+                }
+    
+                .rules-list-container {
+                    max-height: 300px;
+                    overflow: auto;
+                    margin: 0;
+                    padding: 0;                    
+                    padding-bottom: 10px;
+
+                    .rule-list-item {
+                        float: left;
+                        margin: 5px;
+                    }
+                }
+            } 
+        }               
+    }
+
+    .ms-font-m {
+        font-size: 14px;
+        font-weight: 400;
+    }
+    
+    .ms-font-xl {
+        font-size: 21px;
+        font-weight: 100;
+    }
+    
+    .ms-font-xxl {
+        font-size: 28px;
+        font-weight: 100;   
+    }
+}

@@ -1,0 +1,19 @@
+.work-item-state-view {   
+    display: flex;
+    align-items: center;
+
+    .work-item-type-state-color {
+        height: 8px;
+        width: 8px;
+        min-width: 8px;
+        border-radius: 50%;
+        border-width: 1px;
+        border-style: solid;
+        margin-right: 5px;
+    }
+
+    .state-name {
+        padding: 0;
+        margin: 0;
+    }
+}

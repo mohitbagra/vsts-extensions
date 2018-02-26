@@ -1,0 +1,53 @@
+{
+    "license": "MIT",
+    "private": true,
+    "main": "webpack.config.js",
+    "version": "1.0.0",
+    "scripts": {
+        "clean": "rimraf dist",
+        "clean:all": "npm run clean && rimraf typings node_modules",
+        "build": "npm run clean && mkdir dist && webpack --display-error-details --progress --colors --output-path ./dist -p",
+        "start": "webpack-dev-server -d --hot --progress --colors --https --content-base ./src/ --port 8888",
+        "package": "npm run build && node buildPackages.js",
+        "postinstall": "typings install"
+    },
+    "devDependencies": {
+        "@types/react": "^16.0.9",
+        "@types/react-dom": "^16.0.0",
+        "@types/jquery": "2.0.41",
+        "react": "^15.3.2",
+        "react-dom": "^15.3.2",
+        "webpack": "3.10.0",
+        "webpack-dev-server": "2.11.1",
+        "rimraf": "2.6.2",
+        "sass-loader": "6.0.6",
+        "sass-resources-loader": "1.3.2",
+        "style-loader": "0.20.1",
+        "css-loader": "0.28.9",
+        "ts-loader": "3.4.0",
+        "node-sass": "4.7.2",
+        "typescript": "2.7.1",
+        "typings": "2.1.1",
+        "uglifyjs-webpack-plugin": "1.1.8",
+        "tfx-cli": "0.5.4",
+        "copy-webpack-plugin": "4.3.1",
+        "url-loader": "0.6.2",
+        "file-loader": "1.1.6",
+        "uglify-es": "3.3.9",
+        "glob": "7.1.2"
+    },
+    "dependencies": {
+        "es6-promise": "4.2.4",
+        "vss-ui": "3.127.3",
+        "vss-web-extension-sdk": "5.127.0",
+        "office-ui-fabric-react": "~5.21.1",
+        "recharts": "0.22.4",
+        "tslib": "~1.7.1",
+        "trumbowyg": "2.9.4",
+        "dateformat": "3.0.2",
+        "@xkeshi/image-compressor": "0.5.2",
+        "moment": "2.18.1",
+        "react-widgets": "3.4.6",
+        "react-sortable-hoc": "0.6.8"
+    }
+}

@@ -1,0 +1,93 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#ext-container {
+    overflow: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    .fabric-container {        
+        height: 100%;
+
+        & > .message-panel {
+            margin-top: 10px;
+        }
+
+        .related-wits-hub {
+            height: 100%;
+
+            .vss-PivotBarItem {
+                width: 100%;
+                box-sizing: border-box;
+                
+                .grid-container {
+                    overflow: auto;
+                    height: 100%;
+                    position: relative;
+        
+                    .work-item-grid {
+                        overflow-x: initial;
+                        overflow-y: initial;
+        
+                        .ms-DetailsRow-check {
+                            height: 100%;
+                        }
+        
+                        .item-grid-cell {                    
+                            &.identity-view {
+                                .ms-Persona-details {
+                                    padding: 0 0 0 5px;
+                                }
+            
+                                .ms-Persona-primaryText {
+                                    font-size: 13px;
+                                }
+                            }
+                        }
+        
+                        .info-label {
+                            align-items: center;
+        
+                            .info-icon {
+                                padding-top: 0;
+                                vertical-align: top;
+                            }
+        
+                            &.linked-cell .info-label-text {
+                                color: green;
+                            }
+        
+                            &.unlinked-cell .info-label-text {
+                                color: red;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.callout-container {
+    max-height: 200px;
+}
+
+.ms-font-m {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.ms-font-xl {
+    font-size: 21px;
+    font-weight: 100;
+}
+
+.ms-font-xxl {
+    font-size: 28px;
+    font-weight: 100;   
+}

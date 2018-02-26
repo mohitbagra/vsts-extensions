@@ -1,0 +1,12 @@
+.throttled-text-field {
+    display: flex;
+    flex-direction: column;
+
+    .info-label.throttled-text-field-label {
+        margin-bottom: 5px;
+    }
+
+    .input-error.throttled-text-field-error {
+        margin-top: 5px;
+    }
+}

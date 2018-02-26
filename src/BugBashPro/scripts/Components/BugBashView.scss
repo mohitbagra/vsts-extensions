@@ -1,0 +1,15 @@
+.bugbash-view-hub {
+    height: 100%;
+    
+    .vss-PivotBarItem {
+        width: 100%;
+        box-sizing: border-box;
+        padding-right: 0px !important;
+
+        .bugbash-hub-contents {
+            height: 100%;
+            position: relative;
+            box-sizing: border-box;
+        }
+    }
+}

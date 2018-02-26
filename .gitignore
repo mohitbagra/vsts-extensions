@@ -1,0 +1,8 @@
+dist
+node_modules
+typings
+*.vsix
+.sass-cache
+.vscode/*.db
+.vscode/*.db-wal
+npm-debug.log

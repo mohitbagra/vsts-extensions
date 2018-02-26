@@ -1,0 +1,23 @@
+.settings-panel {    
+    .settings-controls-container {
+        margin-bottom: 80px;
+
+        .settings-label {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .settings-control {
+            margin: 10px 0;
+        }
+
+        .info-label {
+            margin-bottom: 5px;
+        }
+    }
+
+    .save-button {
+        margin-top: 10px;
+        float: right;
+    }
+}

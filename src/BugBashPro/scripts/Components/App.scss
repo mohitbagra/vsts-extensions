@@ -1,0 +1,82 @@
+#ext-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+
+    .fabric-container {
+        height: 100%;
+
+        .changelog-message {
+            background-color: #dff6dd;
+        }
+
+        .loading-overlay {
+            z-index: 10002;
+            background-color: rgba(255,255,255, 0.6);
+        }
+
+        .vss-HubTileRegion .vss-HubTile {
+            width: auto;
+        }
+    }    
+}
+
+.vss-PickList .vss-PickList--element .vss-ItemIndicator--textIndicator {
+    padding-right: 5px;
+}
+
+.ms-font-m {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.ms-font-xl {
+    font-size: 21px;
+    font-weight: 100;
+}
+
+.ms-font-xxl {
+    font-size: 28px;
+    font-weight: 100;   
+}
+
+.callout-container {
+    max-height: 320px;
+}
+
+button[disabled], button[disabled]:hover, button[disabled]:focus {
+    border: none !important;
+}
+
+.overflow-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+
+.bugbash-badge {
+    position: fixed;
+    top: 7px;
+    right: 0;
+    z-index: 2000;
+    background: #fff;
+    width: 350px;
+    text-align: right;
+    padding-right: 20px;
+}
+
+.bugbash-badge-callout {
+    padding: 8px 14px 2px;
+
+    .badge-callout-header {
+        margin-bottom: 10px;
+        font-size: 21px;
+        font-weight: 100;
+        color: #333333;
+        font-weight: 500;
+    }
+}

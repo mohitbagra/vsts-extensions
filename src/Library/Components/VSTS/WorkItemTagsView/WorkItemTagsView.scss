@@ -1,0 +1,13 @@
+.tags-view {
+    display: inline-flex;
+    width: 100%;
+
+    .tag {        
+        margin: 0 5px 0 0;
+        background-color: #eff6fc;
+        min-width: 50px;
+        @include TextOverflowEllipsis();
+        line-height: 12px;
+        text-align: center;
+    }
+}

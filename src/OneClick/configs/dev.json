@@ -1,0 +1,16 @@
+{
+    "public": false,
+    "publisher": "mohitbagra-dev",
+    "name": "Work item form one click actions - Dev",
+    "baseUri": "https://localhost:8888/OneClick",
+    "files": [
+        {
+            "path": "../images",
+            "addressable": true
+        },
+        {
+            "path": "../README.md",
+            "addressable": true
+        }
+    ]
+}

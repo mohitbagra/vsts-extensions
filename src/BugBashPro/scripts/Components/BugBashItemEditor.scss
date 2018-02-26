@@ -1,0 +1,137 @@
+.item-editor {
+    outline: none;
+
+    .item-editor-commandbar {
+        background: none;
+        border-bottom: 1px solid #eaeaea;
+        height: 35px;
+
+        .ms-CommandBarItem {
+            height: 35px;
+        }
+
+        .ms-CommandBar-primaryCommands {
+            margin: 0;
+        }
+
+        .ms-CommandBar-sideCommands {
+            margin: 0;
+            padding: 0;
+        }
+
+        .auto-accept-menuitem, .acceptItemButton {
+            i {
+                color: #107c10;
+            }
+        }        
+
+        .reject-menu-item-checkbox {
+            padding: 10px;
+        }
+    }
+
+    .accepted-item {
+        padding: 5px 5px 0px 5px;
+
+        a {
+            text-decoration: none;            
+            color: #0078d7;
+
+            &:hover {
+                color: #0078d7;
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .item-editor-controls {
+        padding: 5px 8px;
+        position: relative;
+
+        .created-info {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+            max-width: calc(100% - 100px);
+        }
+
+        .bugbashitem-inputbox {
+            padding: 0 5px;
+        }
+
+        .input-error {
+            margin-top: 5px;
+        }
+        
+        .item-team-container {
+            margin-top: 10px;
+        }
+    
+        .reject-reason-input {
+            margin-top: 10px;
+        }
+    
+        .item-description-container, .item-comments-editor-container {
+            margin-top: 10px;
+    
+            .trumbowyg-box {
+                min-height: 250px;
+    
+                #description-editor {
+                    min-height: 250px;
+                }
+            }
+        }
+    
+        .item-comments-editor-container {
+            .trumbowyg-button-pane {
+                display: none;
+            }
+    
+            .trumbowyg-box {
+                min-height: 100px;
+    
+                #comment-editor {
+                    min-height: 100px;
+                }            
+            }  
+        }
+    
+        .item-comments-container {
+            padding-top: 10px;
+            overflow: auto;
+            flex: 1;
+    
+            .item-comment {
+                margin-bottom: 10px;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 10px;
+    
+                .created-by {
+                    font-weight: 800;
+                    margin-right: 5px;
+                    font-size: 12px;
+                }
+
+                .created-date {
+                    font-size: 10px;
+                    font-style: italic;
+                    color: #666;
+                }
+    
+                .message {
+                    margin-top: 5px;
+                    word-wrap: break-word;
+                    font-size: 14px;
+
+                    p {
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+}

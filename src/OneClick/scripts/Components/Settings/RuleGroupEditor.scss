@@ -1,0 +1,13 @@
+.rule-group-editor {
+    display: flex;
+    flex-direction: column;
+
+    .rule-group-editor-error {
+        margin-bottom: 10px;
+    }
+
+    .form-control {
+        margin-bottom: 15px;
+        text-align: left;
+    }
+}

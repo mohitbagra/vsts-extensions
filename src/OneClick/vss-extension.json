@@ -1,0 +1,71 @@
+{
+    "manifestVersion": 1,
+    "id": "witoneclickactions",
+    "version": "2.2.1",
+    "name": "Work item form one click actions",
+    "description": "Work item form group extension with custom defined action buttons",
+    "publisher": "mohitbagra",
+    "icons": {
+        "default": "images/logo.png"
+    },
+    "scopes": [
+    	"vso.work",
+        "vso.work_write",
+        "vso.profile"
+	 ],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services.Cloud"
+        }
+    ],
+    "tags": [
+        "Work Item",
+        "Work Item form",
+        "work item form group",
+        "smart wit",
+        "quick actions"
+    ],
+    "content": {
+        "details": {
+            "path": "README.md"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/mohitbagra/vsts-extensions-witoneclickactions"
+    },    
+    "branding": {
+        "color": "#106ebe",
+        "theme": "dark"
+    },
+    "categories": [
+        "Plan and track"
+    ],
+    "contributions": [        
+        {
+            "id": "work-item-oneclick-group-hub",
+            "type": "ms.vss-work-web.work-item-form-group",
+            "description": "Work item form one click group",
+            "targets": [
+                "ms.vss-work-web.work-item-form"
+            ],
+            "properties": {
+                "name": "OneClick actions",
+                "uri": "html/form-group.html"
+            }
+        },
+        {
+            "id": "settings-hub",
+            "type": "ms.vss-web.hub",
+            "description": "Customize work item one click actions",
+            "targets": [
+                "ms.vss-web.project-admin-hub-group"
+            ],
+            "properties": {
+                "name": "WIT One Click Actions",
+                "order": 100,
+                "uri": "html/settings.html"
+            }
+        }
+    ]
+}

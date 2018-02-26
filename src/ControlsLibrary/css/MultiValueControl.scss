@@ -1,0 +1,17 @@
+@import "base";
+
+#ext-container {
+    padding: 2px 15px 2px 1px !important;
+    font-family: $font;
+
+    .multivalue-control-container {
+        font-size: $fontSize;
+        color: $color;
+        
+        &.invalid-value {
+            .rw-multiselect {
+                border: 1px solid #a80000;
+            }
+        }
+    }
+}

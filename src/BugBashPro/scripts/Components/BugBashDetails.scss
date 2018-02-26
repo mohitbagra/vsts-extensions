@@ -1,0 +1,42 @@
+.bugbash-details {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+
+    .message-panel {
+        margin-bottom: 10px;
+    }
+    
+    .bugbash-details-contents {
+        flex: 1;
+        outline: none;
+
+        .bugbash-details-nodata {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 18px;
+        }
+
+        .bugbash-details-html {
+            p {
+                margin: 0;
+            }
+        }
+    
+        .rich-editor-container {
+            height: 100%;
+
+            .trumbowyg-box {
+                height: 100%;
+        
+                #bugbash-description-editor {
+                    min-height: calc(100% - 40px);
+                }
+            }
+        }    
+    }
+}
