@@ -1,2 +1,8 @@
-# VSTSExtensions
-Repo holding all my VSTS extensions
+# vsts-extensions
+
+#### Bug Bash Pro ####
+#### Related WITs ####
+#### Control Library ####
+#### One Click ####
+#### Checklist ####
+#### Common Library ####
