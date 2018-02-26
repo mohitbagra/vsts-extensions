@@ -101,6 +101,12 @@ export class SimpleCombo<T> extends BaseFluxComponent<ISimpleComboProps<T>, ISim
         if (nextProps.disabled !== this.props.disabled) {
             this._control.setEnabled(!nextProps.disabled);
         }
+
+        if (nextProps.options !== this.props.options) {
+            const options = nextProps.options || [];
+            this._buildOptionsMap(options, nextProps.getItemText);
+            this._control.setSource(options.map(o => this._getTextValue(o, null, nextProps.getItemText)));
+        }
     }
 
     protected initializeState(): void {
