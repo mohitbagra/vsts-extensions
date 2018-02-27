@@ -229,7 +229,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
                 items={items}
                 axis="xy"
                 lockAxis="xy"
-                pressDelay={200}
+                distance={10}
                 onSortEnd={this._reorderChecklistItem}
             />
         );
