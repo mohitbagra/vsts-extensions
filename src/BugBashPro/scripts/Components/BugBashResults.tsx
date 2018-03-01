@@ -201,20 +201,19 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
 
     private _renderGrid(): JSX.Element {
         let items = [];
-        let columns = [];
 
         switch (this.props.view) {
             case BugBashViewActions.AcceptedItemsOnly:
                 items = this.state.acceptedBugBashItems;
-                columns = this._getAcceptedGridColumns();
                 break;
             case BugBashViewActions.RejectedItemsOnly:
                 items = this.state.rejectedBugBashItems;
-                columns = this._getBugBashItemGridColumns(true);
+                break;
+            case BugBashViewActions.PendingItemsOnly:
+                items = this.state.pendingBugBashItems;
                 break;
             default:
-                items = this.state.pendingBugBashItems;
-                columns = this._getBugBashItemGridColumns(false);
+                items = this.state.bugBashItems;
                 break;
         }
 
@@ -232,7 +231,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
             <div className="grid-container">
                 <VssDetailsList
                     items={items}
-                    columns={columns}
+                    columns={this._getBugBashItemGridColumns()}
                     selectionPreservedOnEmptyClick={true}
                     layoutMode={DetailsListLayoutMode.justified}
                     constrainMode={ConstrainMode.horizontalConstrained}
@@ -244,7 +243,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
                     getKey={this._getBugBashItemId}
                     setKey={`bugbash-item-grid-${this.state.gridKeyCounter}`}
                     onItemInvoked={this._onItemInvoked}
-                    actionsColumnKey={this.props.view === BugBashViewActions.AcceptedItemsOnly ? WorkItemFieldNames.Title : undefined}
+                    actionsColumnKey={this.props.view === BugBashViewActions.AcceptedItemsOnly ? BugBashItemFieldNames.Title : undefined}
                     getMenuItems={this._getGridContextMenuItems}
                     onRenderItemColumn={this._onRenderColumn}
                 />
@@ -255,6 +254,67 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
     @autobind
     private _onRenderColumn(item: BugBashItem, _index: number, column: IColumn): JSX.Element {
         return item.onRenderPropertyCell(column.key as BugBashItemFieldNames | WorkItemFieldNames);
+    }
+
+    private _getColumn(key: string, name: string, minWidth: number, maxWidth: number): IColumn {
+        return {
+            key: key,
+            fieldName: key,
+            name: name,
+            minWidth: minWidth,
+            maxWidth: maxWidth,
+            isResizable: true,
+            isSorted: (StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.sortKey) === key,
+            isSortedDescending: !!(StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.isSortedDescending)
+        };
+    }
+
+    private _getBugBashItemGridColumns(): IColumn[] {
+        const view = this.props.view;
+        let columns: IColumn[];
+        if (view === BugBashViewActions.AcceptedItemsOnly) {
+            columns = [
+                this._getColumn(BugBashItemFieldNames.Title, "Title", 150, 420),
+                this._getColumn(WorkItemFieldNames.State, "State", 50, 100),
+                this._getColumn(WorkItemFieldNames.AssignedTo, "Assigned To", 100, 200),
+                this._getColumn(WorkItemFieldNames.AreaPath, "Area Path", 150, 250),
+                this._getColumn(BugBashItemFieldNames.CreatedBy, "Item Created By", 100, 200),
+                this._getColumn(BugBashItemFieldNames.CreatedDate, "Item Created Date", 100, 200)
+            ];
+        }
+        else if (view === BugBashViewActions.PendingItemsOnly || view === BugBashViewActions.RejectedItemsOnly) {
+            const isRejectedGrid = view === BugBashViewActions.RejectedItemsOnly;
+            columns = [
+                this._getColumn(BugBashItemFieldNames.Title, "Title", 200, isRejectedGrid ? 600 : 800),
+                this._getColumn(BugBashItemFieldNames.TeamId, "Assigned to team", isRejectedGrid ? 100 : 200, isRejectedGrid ? 200 : 300),
+                this._getColumn(BugBashItemFieldNames.CreatedBy, "Created By", isRejectedGrid ? 100 : 200, isRejectedGrid ? 200 : 300),
+                this._getColumn(BugBashItemFieldNames.CreatedDate, "Created Date", isRejectedGrid ? 100 : 200, isRejectedGrid ? 200 : 300)
+            ];
+
+            if (isRejectedGrid) {
+                columns.push(
+                    this._getColumn(BugBashItemFieldNames.RejectedBy, "Rejected By", 100, 200),
+                    this._getColumn(BugBashItemFieldNames.RejectReason, "Reject Reason", 200, 800)
+                );
+            }
+        }
+        else {
+            columns = [
+                {
+                    key: BugBashItemFieldNames.Status,
+                    fieldName: BugBashItemFieldNames.Status,
+                    name: "Status",
+                    minWidth: 30,
+                    maxWidth: 30,
+                    isResizable: false
+                },
+                this._getColumn(BugBashItemFieldNames.Title, "Title", 300, 800),
+                this._getColumn(BugBashItemFieldNames.CreatedBy, "Created By", 200, 300),
+                this._getColumn(BugBashItemFieldNames.CreatedDate, "Created Date", 200, 300)
+            ];
+        }
+
+        return columns;
     }
 
     @autobind
@@ -304,145 +364,12 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
         }
     }
 
-    private _getAcceptedGridColumns(): IColumn[] {
-        return [
-            {
-                key: WorkItemFieldNames.Title,
-                fieldName: WorkItemFieldNames.Title,
-                name: "Title",
-                minWidth: 150,
-                maxWidth: 420,
-                isResizable: true,
-                isSorted: (StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.sortKey) === WorkItemFieldNames.Title,
-                isSortedDescending: !!(StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.isSortedDescending)
-            },
-            {
-                key: WorkItemFieldNames.State,
-                fieldName: WorkItemFieldNames.State,
-                name: "State",
-                minWidth: 50,
-                maxWidth: 100,
-                isResizable: true,
-                isSorted: (StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.sortKey) === WorkItemFieldNames.State,
-                isSortedDescending: !!(StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.isSortedDescending)
-            },
-            {
-                key: WorkItemFieldNames.AssignedTo,
-                fieldName: WorkItemFieldNames.AssignedTo,
-                name: "Assigned To",
-                minWidth: 100,
-                maxWidth: 200,
-                isResizable: true,
-                isSorted: (StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.sortKey) === WorkItemFieldNames.AssignedTo,
-                isSortedDescending: !!(StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.isSortedDescending)
-            },
-            {
-                key: WorkItemFieldNames.AreaPath,
-                fieldName: WorkItemFieldNames.AreaPath,
-                name: "Area path",
-                minWidth: 150,
-                maxWidth: 250,
-                isResizable: true,
-                isSorted: (StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.sortKey) === WorkItemFieldNames.AreaPath,
-                isSortedDescending: !!(StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.isSortedDescending)
-            },
-            {
-                key: BugBashItemFieldNames.CreatedBy,
-                fieldName: BugBashItemFieldNames.CreatedBy,
-                name: "Item created by",
-                minWidth: 100,
-                maxWidth: 200,
-                isResizable: true,
-                isSorted: (StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.sortKey) === BugBashItemFieldNames.CreatedBy,
-                isSortedDescending: !!(StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.isSortedDescending)
-            },
-            {
-                key: BugBashItemFieldNames.CreatedDate,
-                fieldName: BugBashItemFieldNames.CreatedDate,
-                name: "Item created date",
-                minWidth: 100,
-                maxWidth: 200,
-                isResizable: true,
-                isSorted: (StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.sortKey) === BugBashItemFieldNames.CreatedDate,
-                isSortedDescending: !!(StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.isSortedDescending)
-            }
-        ];
-    }
-
-    private _getBugBashItemGridColumns(isRejectedGrid: boolean): IColumn[] {
-        const columns: IColumn[] = [
-            {
-                key: BugBashItemFieldNames.Title,
-                fieldName: BugBashItemFieldNames.Title,
-                name: "Title",
-                minWidth: 200,
-                maxWidth: isRejectedGrid ? 600 : 800,
-                isResizable: true,
-                isSorted: (StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.sortKey) === BugBashItemFieldNames.Title,
-                isSortedDescending: !!(StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.isSortedDescending)
-            },
-            {
-                key: BugBashItemFieldNames.TeamId,
-                fieldName: BugBashItemFieldNames.TeamId,
-                name: "Assigned to team",
-                minWidth: isRejectedGrid ? 100 : 200,
-                maxWidth: isRejectedGrid ? 200 : 300,
-                isResizable: true,
-                isSorted: (StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.sortKey) === BugBashItemFieldNames.TeamId,
-                isSortedDescending: !!(StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.isSortedDescending)
-            },
-            {
-                key: BugBashItemFieldNames.CreatedBy,
-                fieldName: BugBashItemFieldNames.CreatedBy,
-                name: "Created By",
-                minWidth: isRejectedGrid ? 100 : 200,
-                maxWidth: isRejectedGrid ? 200 : 300,
-                isResizable: true,
-                isSorted: (StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.sortKey) === BugBashItemFieldNames.CreatedBy,
-                isSortedDescending: !!(StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.isSortedDescending)
-            },
-            {
-                key: BugBashItemFieldNames.CreatedDate,
-                fieldName: BugBashItemFieldNames.CreatedDate,
-                name: "Created Date",
-                minWidth: isRejectedGrid ? 100 : 200,
-                maxWidth: isRejectedGrid ? 200 : 300,
-                isResizable: true,
-                isSorted: (StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.sortKey) === BugBashItemFieldNames.CreatedDate,
-                isSortedDescending: !!(StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.isSortedDescending)
-            }
-        ];
-
-        if (isRejectedGrid) {
-            columns.push(
-                {
-                    key: BugBashItemFieldNames.RejectedBy,
-                    fieldName: BugBashItemFieldNames.RejectedBy,
-                    name: "Rejected By",
-                    minWidth: 100,
-                    maxWidth: 200,
-                    isResizable: true,
-                    isSorted: (StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.sortKey) === BugBashItemFieldNames.RejectedBy,
-                    isSortedDescending: !!(StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.isSortedDescending)
-                },
-                {
-                    key: BugBashItemFieldNames.RejectReason,
-                    fieldName: BugBashItemFieldNames.RejectReason,
-                    name: "Reject Reason",
-                    minWidth: 200,
-                    maxWidth: 800,
-                    isResizable: true,
-                    isSorted: (StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.sortKey) === BugBashItemFieldNames.RejectReason,
-                    isSortedDescending: !!(StoresHub.bugBashItemStore.sortState && StoresHub.bugBashItemStore.sortState.isSortedDescending)
-                }
-            );
-        }
-
-        return columns;
-    }
-
     @autobind
     private _onSortChange(_ev?: React.MouseEvent<HTMLElement>, column?: IColumn) {
+        if (column.key === BugBashItemFieldNames.Status) {
+            return;
+        }
+
         BugBashItemActions.applySort({
             sortKey: column.key as BugBashFieldNames | WorkItemFieldNames,
             isSortedDescending: !column.isSortedDescending

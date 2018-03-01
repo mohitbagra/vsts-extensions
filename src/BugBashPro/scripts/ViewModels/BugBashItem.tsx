@@ -22,6 +22,7 @@ import {
 import { autobind } from "OfficeFabric/Utilities";
 import { WorkItem } from "TFS/WorkItemTracking/Contracts";
 import { IFilterState } from "VSSUI/Utilities/Filter";
+import { VssIcon, VssIconType } from "VSSUI/VssIcon";
 
 const BugBashItemKeyTypes = {
     [BugBashItemFieldNames.Title]: "string",
@@ -53,6 +54,10 @@ export class BugBashItem {
         const isSortedDescending = sortState.isSortedDescending;
         let compareValue: number = 0;
 
+        if (sortKey === BugBashItemFieldNames.Status) {
+            return 0;
+        }
+
         let v1: string | Date | number | boolean | IdentityRef;
         let v2: string | Date | number | boolean | IdentityRef;
 
@@ -63,6 +68,10 @@ export class BugBashItem {
             if (bugBashItem2.isAccepted) {
                 v2 = sortKey === WorkItemFieldNames.ID ? bugBashItem2.workItemId : bugBashItem2.workItem.fields[sortKey];
             }
+        }
+        else if (sortKey === BugBashItemFieldNames.Title) {
+            v1 = bugBashItem1.isAccepted ? bugBashItem1.workItem.fields[WorkItemFieldNames.Title] : bugBashItem1.getFieldValue(BugBashItemFieldNames.Title, true);
+            v2 = bugBashItem2.isAccepted ? bugBashItem2.workItem.fields[WorkItemFieldNames.Title] : bugBashItem2.getFieldValue(BugBashItemFieldNames.Title, true);
         }
         else {
             v1 = bugBashItem1.getFieldValue(sortKey as BugBashItemFieldNames, true);
@@ -186,7 +195,7 @@ export class BugBashItem {
         }
     }
 
-    public matches(filter: IFilterState) {
+    public matches(filter: IFilterState): boolean {
         if (filter == null) {
             return true;
         }
@@ -195,16 +204,7 @@ export class BugBashItem {
         const keyword = filter["keyword"] && filter["keyword"].value;
         if (!isNullOrWhiteSpace(keyword)) {
             const title = this.isAccepted ? this.workItem.fields[WorkItemFieldNames.Title] : this._originalModel.title;
-            if (!caseInsensitiveContains(title, keyword)) {
-                if (this.isRejected) {
-                    if (!caseInsensitiveContains(this._originalModel.rejectReason, keyword)) {
-                        return false;
-                    }
-                }
-                else {
-                    return false;
-                }
-            }
+            return caseInsensitiveContains(title, keyword);
         }
 
         // filter by teamIds: only for non accepted items
@@ -341,9 +341,14 @@ export class BugBashItem {
         }
 
         if (BugBashItem.isWorkItemFieldName(key)) {
-            value = key === WorkItemFieldNames.ID ? this.workItemId : this.workItem.fields[key];
+            if (this.isAccepted) {
+                value = key === WorkItemFieldNames.ID ? this.workItemId : this.workItem.fields[key];
+            }
         }
-        else {
+        else if (key === BugBashItemFieldNames.Title && this.isAccepted) {
+            value = this.workItem.fields[WorkItemFieldNames.Title];
+        }
+        else if (key !== BugBashItemFieldNames.Status) {
             value = this.getFieldValue(key as BugBashItemFieldNames);
             if (key === BugBashItemFieldNames.TeamId) {
                 const team = StoresHub.teamStore.getItem(value);
@@ -351,7 +356,10 @@ export class BugBashItem {
             }
         }
 
-        if (key === WorkItemFieldNames.Title) {
+        if (key === BugBashItemFieldNames.Status) {
+            return this._renderStatusCell();
+        }
+        else if (key === BugBashItemFieldNames.Title && this.isAccepted) {
             return (
                 <TooltipHost
                     content={value}
@@ -394,7 +402,6 @@ export class BugBashItem {
                     overflowMode={TooltipOverflowMode.Parent}
                     directionalHint={DirectionalHint.bottomLeftEdge}
                 >
-
                     <span className={className}>
                         {`${this.isDirty() ? "* " : ""}${value}`}
                     </span>
@@ -428,7 +435,6 @@ export class BugBashItem {
                     overflowMode={TooltipOverflowMode.Parent}
                     directionalHint={DirectionalHint.bottomLeftEdge}
                 >
-
                     <span className={className}>
                         {value}
                     </span>
@@ -443,5 +449,48 @@ export class BugBashItem {
         if (updatedWorkItem) {
             WorkItemActions.refreshWorkItemInStore([updatedWorkItem]);
         }
+    }
+
+    private _renderStatusCell(): JSX.Element {
+        let tooltip: string;
+        let iconName: string;
+        let color: string;
+
+        if (this.isAccepted) {
+            tooltip = "Accepted";
+            iconName = "Accept";
+            color = "#107c10";
+        }
+        else if (this.isRejected) {
+            tooltip = "Rejected";
+            iconName = "Cancel";
+            color = "#da0a00";
+        }
+        else {
+            tooltip = "Pending";
+            iconName = "Clock";
+            color = "#666666";
+        }
+
+        return (
+            <div style={{textAlign: "center"}}>
+                <TooltipHost
+                    content={tooltip}
+                    delay={TooltipDelay.medium}
+                    directionalHint={DirectionalHint.bottomCenter}
+                >
+                    <VssIcon
+                        iconName={iconName}
+                        iconType={VssIconType.fabric}
+                        styles={{
+                            root: {
+                                color: color,
+                                cursor: "default"
+                            }
+                        }}
+                    />
+                </TooltipHost>
+            </div>
+        );
     }
 }

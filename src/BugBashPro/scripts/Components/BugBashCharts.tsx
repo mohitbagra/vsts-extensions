@@ -23,9 +23,9 @@ import {
 } from "Library/Utilities/Identity";
 import { Checkbox } from "OfficeFabric/Checkbox";
 import { Label } from "OfficeFabric/Label";
-import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
 import { autobind } from "OfficeFabric/Utilities";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { ZeroData } from "VSSUI/ZeroData";
 
 interface IBugBashChartsState extends IBaseFluxComponentState {
     allBugBashItems: BugBashItem[];
@@ -86,34 +86,24 @@ export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBa
             return <Loading />;
         }
 
-        if (this.state.allBugBashItems.length === 0) {
-            return (
-                <MessageBar messageBarType={MessageBarType.info} className="message-panel">
-                    No items created yet
-                </MessageBar>
-            );
-        }
-
         let bugBashItems: BugBashItem[] = this.state.allBugBashItems;
-        let emptyMessage = "No items created yet";
         if (this.props.view === BugBashViewActions.AcceptedItemsOnly) {
             bugBashItems = this.state.acceptedBugBashItems;
-            emptyMessage = "No item has been accepted yet.";
         }
         else if (this.props.view === BugBashViewActions.RejectedItemsOnly) {
             bugBashItems = this.state.rejectedBugBashItems;
-            emptyMessage = "No item has been rejected yet.";
         }
         else if (this.props.view === BugBashViewActions.PendingItemsOnly) {
             bugBashItems = this.state.pendingBugBashItems;
-            emptyMessage = "No pending items left.";
         }
 
         if (bugBashItems.length === 0) {
             return (
-                <MessageBar messageBarType={MessageBarType.info} className="message-panel">
-                    {emptyMessage}
-                </MessageBar>
+                <ZeroData
+                    imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`}
+                    imageAltText=""
+                    primaryText="No results"
+                />
             );
         }
 
@@ -178,29 +168,31 @@ export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBa
 
         return (
             <div className="bugbash-charts">
-                <div className="chart-view-container">
-                    <div className="header-container">
-                        <Label className="header">{`Assigned to ${this.props.view === BugBashViewActions.AcceptedItemsOnly ? "area path" : "team"} (${bugBashItems.length})`}</Label>
+                { this.props.view !== BugBashViewActions.AllItems &&
+                    <div className="chart-view-container">
+                        <div className="header-container">
+                            <Label className="header">{`Assigned to ${this.props.view === BugBashViewActions.AcceptedItemsOnly ? "area path" : "team"} (${bugBashItems.length})`}</Label>
+                        </div>
+                        <div className="chart-view">
+                            <ResponsiveContainer>
+                                <BarChart
+                                    layout={"vertical"}
+                                    width={600}
+                                    height={600}
+                                    data={assignedToTeamData}
+                                    barSize={5}
+                                    margin={{top: 5, right: 30, left: 20, bottom: 5}}
+                                >
+                                    <XAxis type="number" allowDecimals={false} />
+                                    <YAxis type="category" dataKey="name" tick={<CustomAxisTick />} allowDecimals={false} />
+                                    <CartesianGrid strokeDasharray="3 3"/>
+                                    <Tooltip isAnimationActive={false} />
+                                    <Bar isAnimationActive={false} dataKey="value" fill="#8884d8" />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
                     </div>
-                    <div className="chart-view">
-                        <ResponsiveContainer>
-                            <BarChart
-                                layout={"vertical"}
-                                width={600}
-                                height={600}
-                                data={assignedToTeamData}
-                                barSize={5}
-                                margin={{top: 5, right: 30, left: 20, bottom: 5}}
-                            >
-                                <XAxis type="number" allowDecimals={false} />
-                                <YAxis type="category" dataKey="name" tick={<CustomAxisTick />} allowDecimals={false} />
-                                <CartesianGrid strokeDasharray="3 3"/>
-                                <Tooltip isAnimationActive={false} />
-                                <Bar isAnimationActive={false} dataKey="value" fill="#8884d8" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
+                }
                 <div className="chart-view-container">
                     <div className="header-container">
                         <Label className="header">{`Created By (${bugBashItems.length})`}</Label>

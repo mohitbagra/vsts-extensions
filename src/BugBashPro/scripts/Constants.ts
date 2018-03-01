@@ -9,6 +9,7 @@ export enum UrlActions {
 }
 
 export enum BugBashViewActions {
+    AllItems = "All Items",
     PendingItemsOnly = "Pending Items",
     RejectedItemsOnly = "Rejected Items",
     AcceptedItemsOnly = "Accepted Items"
@@ -49,7 +50,8 @@ export enum BugBashItemFieldNames {
     CreatedBy = "createdBy",
     Rejected = "rejected",
     RejectReason = "rejectReason",
-    RejectedBy = "rejectedBy"
+    RejectedBy = "rejectedBy",
+    Status = "status"
 }
 
 export enum WorkItemFieldNames {

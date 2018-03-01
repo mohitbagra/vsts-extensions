@@ -400,6 +400,7 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
                     <KeywordFilterBarItem filterItemKey={"keyword"} />
                     {
                         this.state.paneMode !== BugBashViewActions.AcceptedItemsOnly &&
+                        this.state.paneMode !== BugBashViewActions.AllItems &&
                         <PickListFilterBarItem
                             placeholder={"Team"}
                             filterItemKey={BugBashItemFieldNames.TeamId}
@@ -550,7 +551,12 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
                             key: BugBashViewActions.AcceptedItemsOnly,
                             text: BugBashViewActions.AcceptedItemsOnly,
                             ariaLabel: BugBashViewActions.AcceptedItemsOnly,
-                        }
+                        },
+                        {
+                            key: BugBashViewActions.AllItems,
+                            text: BugBashViewActions.AllItems,
+                            ariaLabel: BugBashViewActions.AllItems,
+                        },
                     ]
                 } as IChoiceGroupViewActionProps
             }
