@@ -88,15 +88,13 @@ export namespace BugBashItemActions {
 
             try {
                 const updatedBugBashItemModel = await BugBashItemDataService.updateBugBashItem(bugBashId, bugBashItemModel);
-
-                BugBashItemActionsHub.UpdateBugBashItem.invoke(updatedBugBashItemModel);
-                StoresHub.bugBashItemStore.setLoading(false, bugBashItemModel.id);
-                ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashItemError);
-
                 if (!isNullOrWhiteSpace(newComment)) {
                     BugBashItemCommentActions.createComment(updatedBugBashItemModel.id, newComment);
                 }
 
+                BugBashItemActionsHub.UpdateBugBashItem.invoke(updatedBugBashItemModel);
+                StoresHub.bugBashItemStore.setLoading(false, bugBashItemModel.id);
+                ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashItemError);
                 BugBashClientActionsHub.SelectedBugBashItemChanged.invoke(updatedBugBashItemModel.id);
             }
             catch (e) {
@@ -110,14 +108,14 @@ export namespace BugBashItemActions {
         if (!StoresHub.bugBashItemStore.isLoading()) {
             try {
                 const createdBugBashItemModel = await BugBashItemDataService.createBugBashItem(bugBashId, bugBashItemModel, newComment);
+                if (!isNullOrWhiteSpace(newComment) && !createdBugBashItemModel.workItemId) {
+                    BugBashItemCommentActions.createComment(createdBugBashItemModel.id, newComment);
+                }
+
                 BugBashItemActionsHub.CreateBugBashItem.invoke(createdBugBashItemModel);
 
                 BugBashClientActionsHub.SelectedBugBashItemChanged.invoke(createdBugBashItemModel.id);
                 ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashItemError);
-
-                if (!isNullOrWhiteSpace(newComment) && !createdBugBashItemModel.workItemId) {
-                    BugBashItemCommentActions.createComment(createdBugBashItemModel.id, newComment);
-                }
             }
             catch (e) {
                 ErrorMessageActions.showErrorMessage(e, ErrorKeys.BugBashItemError);
