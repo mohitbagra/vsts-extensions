@@ -19,6 +19,7 @@ export interface IRule {
     color?: string;
     description?: string;
     disabled?: boolean;
+    hideOnForm?: boolean;
     actions: IAction[];
     triggers: ITrigger[];
     projectId: string;

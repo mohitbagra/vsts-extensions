@@ -9,6 +9,7 @@ import { RemoveTagsAction } from "OneClick/RuleActions/RemoveTagsAction";
 import { SaveWorkItemAction } from "OneClick/RuleActions/SaveWorkItemAction";
 import { SetFieldValueAction } from "OneClick/RuleActions/SetFieldValueAction";
 import { BaseTrigger } from "OneClick/RuleTriggers/BaseTrigger";
+import { FieldChangedTrigger } from "OneClick/RuleTriggers/FieldChangedTrigger";
 import { NewWorkItemOpenedTrigger } from "OneClick/RuleTriggers/NewWorkItemOpenedTrigger";
 
 export const registeredActions: IDictionaryStringTo<new(model: IAction) => BaseAction> = {};
@@ -42,3 +43,4 @@ registerAction("AddExistingRelationAction", AddExistingRelationAction);
 
 // register triggers
 registerTrigger("NewWorkItemOpenedTrigger", NewWorkItemOpenedTrigger);
+registerTrigger("FieldChangedTrigger", FieldChangedTrigger);

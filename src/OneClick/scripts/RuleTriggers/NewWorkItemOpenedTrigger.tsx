@@ -4,9 +4,10 @@ import { IIconProps } from "OfficeFabric/Icon";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
 import { FormEvents } from "OneClick/Constants";
 import { BaseTrigger } from "OneClick/RuleTriggers/BaseTrigger";
+import { IWorkItemLoadedArgs } from "TFS/WorkItemTracking/ExtensionContracts";
 
 export class NewWorkItemOpenedTrigger extends BaseTrigger {
-    public shouldTrigger(args: any): boolean {
+    public async shouldTrigger(args: IWorkItemLoadedArgs): Promise<boolean> {
         return args.isNew;
     }
 

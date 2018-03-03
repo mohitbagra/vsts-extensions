@@ -1,3 +1,4 @@
+export * from "./FieldChangedPicker";
 export * from "./FieldNameValuePicker";
 export * from "./AddNewRelationActionRenderer";
 export * from "./AddExistingRelationActionRenderer";

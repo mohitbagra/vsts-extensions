@@ -3,6 +3,7 @@ import "./RuleEditor.scss";
 import * as React from "react";
 
 import { ColorPicker } from "Library/Components/ColorPicker";
+import { InfoLabel } from "Library/Components/InfoLabel";
 import { Loading } from "Library/Components/Loading";
 import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
@@ -102,6 +103,17 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
                                 label="Disabled"
                                 onChange={this._onToggleDisable}
                             />
+                            <div className="form-control checkbox-label-control">
+                                <Checkbox
+                                    checked={this.state.rule.getFieldValue<boolean>(RuleFieldNames.HideOnForm)}
+                                    onChange={this._onToggleFormVisibility}
+                                />
+                                <InfoLabel
+                                    label="Hide on form"
+                                    info={"If you have triggers configured in this rule, then you can choose to hide the rule button in your form, " +
+                                        "as the rule will automatically fire when the trigger is fired"}
+                                />
+                            </div>
                         </div>
                         <div className="right-section">
                             {this.state.showTriggers && this._renderTriggers()}
@@ -260,6 +272,11 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
     @autobind
     private _onToggleDisable(_ev: React.FormEvent<HTMLElement>, isChecked: boolean) {
         this.state.rule.setFieldValue<boolean>(RuleFieldNames.Disabled, isChecked);
+    }
+
+    @autobind
+    private _onToggleFormVisibility(_ev: React.FormEvent<HTMLElement>, isChecked: boolean) {
+        this.state.rule.setFieldValue<boolean>(RuleFieldNames.HideOnForm, isChecked);
     }
 
     @autobind

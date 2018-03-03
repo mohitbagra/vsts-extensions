@@ -107,6 +107,7 @@ export enum RuleFieldNames {
     Name = "name",
     Description = "description",
     Disabled = "disabled",
+    HideOnForm = "hideOnForm",
     Color = "color",
     CreatedBy = "createdBy",
     LastUpdatedBy = "lastUpdatedBy",

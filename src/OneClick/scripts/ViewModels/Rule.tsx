@@ -17,6 +17,7 @@ export class Rule extends Observable<void> {
             name: "New rule",
             description: "",
             disabled: false,
+            hideOnForm: false,
             color: "#007acc",
             projectId: VSS.getWebContext().project.id,
             workItemType: workItemTypeName,
@@ -88,6 +89,7 @@ export class Rule extends Observable<void> {
             || !stringEquals(this.updatedModel.color, this._originalModel.color, true)
             || !stringEquals(this.updatedModel.description, this._originalModel.description, true)
             || this.updatedModel.disabled !== this._originalModel.disabled
+            || this.updatedModel.hideOnForm !== this._originalModel.hideOnForm
             || this._originalModel.actions.length !== this._actions.length
             || this._originalModel.triggers.length !== this._triggers.length
             || this._actions.some((a: BaseAction) => a.isDirty())
@@ -210,8 +212,17 @@ export class Rule extends Observable<void> {
     }
 
     // determine if the rule should be run when an event is fired
-    public shouldRunOnEvent(eventName: FormEvents, triggerArgs: any): boolean {
-        return this._triggers.some(t => t.getAssociatedFormEvent() === eventName && t.shouldTrigger(triggerArgs));
+    public async shouldRunOnEvent(eventName: FormEvents, triggerArgs: any): Promise<boolean> {
+        const result = await Promise.all(this._triggers.map(trigger => this._shouldTriggerFire(eventName, triggerArgs, trigger)));
+        return result.some(trigger => trigger);
+    }
+
+    private async _shouldTriggerFire(eventName: FormEvents, triggerArgs: any, trigger: BaseTrigger): Promise<boolean> {
+        if (trigger.getAssociatedFormEvent() !== eventName) {
+            return false;
+        }
+
+        return await trigger.shouldTrigger(triggerArgs);
     }
 
     @autobind

@@ -286,7 +286,8 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
         const rules = rulesToEvaluate || this.state.rules;
         if (rules) {
             for (const rule of rules) {
-                if (rule.shouldRunOnEvent(eventName, args)) {
+                const shouldRunOnEvent = await rule.shouldRunOnEvent(eventName, args);
+                if (shouldRunOnEvent) {
                     const errors = await rule.run();
                     this._setError(errors);
 

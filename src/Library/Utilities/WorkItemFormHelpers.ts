@@ -26,14 +26,14 @@ export async function getWorkItemAllowedFieldValues(fieldRefName: string): Promi
     return await formService.getAllowedFieldValues(fieldRefName) as string[];
 }
 
-export async function getWorkItemFieldValue(fieldName: string): Promise<Object> {
+export async function getWorkItemFieldValue(fieldName: string, original?: boolean): Promise<Object> {
     const formService = await getFormService();
-    return await formService.getFieldValue(fieldName);
+    return await formService.getFieldValue(fieldName, original);
 }
 
-export async function getWorkItemFieldValues(fieldNames: string[]): Promise<IDictionaryStringTo<Object>> {
+export async function getWorkItemFieldValues(fieldNames: string[], original?: boolean): Promise<IDictionaryStringTo<Object>> {
     const formService = await getFormService();
-    return await formService.getFieldValues(fieldNames);
+    return await formService.getFieldValues(fieldNames, original);
 }
 
 export async function getWorkItemFields(): Promise<WorkItemField[]> {

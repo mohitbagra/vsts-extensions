@@ -96,6 +96,9 @@ export namespace RulesDataService {
         if (!rule.color) {
             rule.color = "#007acc";
         }
+        if (rule.hideOnForm == null) {
+            rule.hideOnForm = false;
+        }
         if (!rule.actions) {
             rule.actions = [];
         }

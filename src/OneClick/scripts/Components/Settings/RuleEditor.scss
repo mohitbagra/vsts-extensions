@@ -78,6 +78,14 @@
         
                     .form-control {
                         margin-bottom: 15px;
+
+                        &.checkbox-label-control {
+                            display: flex;
+
+                            .info-label {
+                                margin-left: 8px;
+                            }
+                        }
                     }
                 }
         

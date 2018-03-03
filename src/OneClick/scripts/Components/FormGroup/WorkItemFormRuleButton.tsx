@@ -29,6 +29,7 @@ export class WorkItemFormRuleButton extends BaseFluxComponent<IWorkItemFormRuleB
 
         const name = rule.getFieldValue<string>(RuleFieldNames.Name);
         const color = rule.getFieldValue<string>(RuleFieldNames.Color);
+        const hideButton = rule.getFieldValue<boolean>(RuleFieldNames.HideOnForm);
         const triggersTooltipText = rule.hasTriggers ? `\nTriggers: ${rule.triggers.map(t => t.getFriendlyName()).join(", ")}` : "";
         const tooltip = `${name}.\nActions: ${rule.actions.map(a => a.getFriendlyName()).join(", ")}${triggersTooltipText}`;
         const disabled = this.state.disabled;
@@ -40,7 +41,8 @@ export class WorkItemFormRuleButton extends BaseFluxComponent<IWorkItemFormRuleB
                 title={tooltip}
                 style={{
                     backgroundColor: color,
-                    color: new Color(color).toBlackOrWhite().invert().asHex()
+                    color: new Color(color).toBlackOrWhite().invert().asHex(),
+                    display: hideButton ? "none" : undefined
                 }}
             >
                 {rule.hasTriggers && <VssIcon iconName="LightningBolt" iconType={VssIconType.fabric} />}
