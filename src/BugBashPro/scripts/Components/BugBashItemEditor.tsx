@@ -50,7 +50,7 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
     public componentDidMount() {
         super.componentDidMount();
 
-        if (!this.props.bugBashItem.isNew()) {
+        if (!this.props.bugBashItem.isNew() && !this.props.bugBashItem.isAccepted) {
              BugBashItemCommentActions.initializeComments(this.props.bugBashItem.id);
         }
     }
@@ -59,15 +59,15 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
         if (this.props.bugBashItem.id !== nextProps.bugBashItem.id) {
             this._dismissErrorMessage();
 
-            if (!nextProps.bugBashItem.isNew() && StoresHub.bugBashItemCommentStore.isLoaded(nextProps.bugBashItem.id)) {
+            if (nextProps.bugBashItem.isAccepted || nextProps.bugBashItem.isNew()) {
                 this.setState({
-                    comments: StoresHub.bugBashItemCommentStore.getItem(nextProps.bugBashItem.id),
+                    comments: [],
                     commentsLoading: false
                 });
             }
-            else if (nextProps.bugBashItem.isNew()) {
+            else if (StoresHub.bugBashItemCommentStore.isLoaded(nextProps.bugBashItem.id)) {
                 this.setState({
-                    comments: [],
+                    comments: StoresHub.bugBashItemCommentStore.getItem(nextProps.bugBashItem.id),
                     commentsLoading: false
                 });
             }
@@ -114,6 +114,8 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
         const description = item.getFieldValue<string>(BugBashItemFieldNames.Description);
         const rejected = item.getFieldValue<boolean>(BugBashItemFieldNames.Rejected);
         const rejectReason = item.getFieldValue<string>(BugBashItemFieldNames.RejectReason);
+        const rejectedBy = item.getFieldValue<IdentityRef>(BugBashItemFieldNames.RejectedBy);
+        const rejectedByName = (rejected && rejectedBy) ? rejectedBy.displayName : null;
 
         return (
             <div className="item-editor" onKeyDown={this._onEditorKeyDown} tabIndex={0}>
@@ -173,6 +175,7 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                     { rejected &&
                         <ThrottledTextField
                             label="Reject reason"
+                            info={`Rejected by ${rejectedByName}`}
                             inputClassName="bugbashitem-inputbox"
                             maxLength={SizeLimits.RejectFieldMaxLength}
                             className="reject-reason-input"

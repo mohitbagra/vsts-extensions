@@ -28,9 +28,9 @@ export namespace WorkItemActions {
             workItemStore.setLoading(true);
 
             try {
-                const workItems = await WitClient.getClient().getWorkItems(idsToFetch, null, null, null, WorkItemErrorPolicy.Omit);
+                const workItems = await getWorkItems(idsToFetch);
 
-                WorkItemActionsHub.AddOrUpdateWorkItems.invoke(filterNullWorkItems(workItems, idsToFetch));
+                WorkItemActionsHub.AddOrUpdateWorkItems.invoke(workItems);
                 workItemStore.setLoading(false);
             }
             catch (e) {
@@ -48,8 +48,8 @@ export namespace WorkItemActions {
             workItemStore.setLoading(true);
 
             try {
-                const workItems = await WitClient.getClient().getWorkItems(ids, null, null, null, WorkItemErrorPolicy.Omit);
-                WorkItemActionsHub.AddOrUpdateWorkItems.invoke(filterNullWorkItems(workItems, ids));
+                const workItems = await getWorkItems(ids);
+                WorkItemActionsHub.AddOrUpdateWorkItems.invoke(workItems);
                 workItemStore.setLoading(false);
             }
             catch (e) {
@@ -168,6 +168,25 @@ export namespace WorkItemActions {
 
     export function clearWorkItemsCache() {
         WorkItemActionsHub.ClearWorkItems.invoke(null);
+    }
+
+    async function getWorkItems(ids: number[]): Promise<WorkItem[]> {
+        const cloneIds = [...ids];
+        const idsToFetch: number[][] = [];
+        let i = 0;
+        while (cloneIds.length > 0) {
+            idsToFetch[i] = cloneIds.splice(0, 100);
+            i++;
+        }
+
+        const promises = idsToFetch.map(witIds => WitClient.getClient().getWorkItems(witIds, null, null, null, WorkItemErrorPolicy.Omit));
+        const workItemArrays: WorkItem[][] = await Promise.all(promises);
+        const finalResult: WorkItem[] = [];
+        for (const workItemArray of workItemArrays) {
+            finalResult.push(...workItemArray);
+        }
+
+        return filterNullWorkItems(finalResult, ids);
     }
 
     function filterNullWorkItems(workItems: WorkItem[], idsToFetch: number[]): WorkItem[] {

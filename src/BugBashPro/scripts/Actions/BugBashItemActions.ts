@@ -73,7 +73,9 @@ export namespace BugBashItemActions {
                 ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashItemError);
 
                 // refresh comments for this bug bash item
-                BugBashItemCommentActions.refreshComments(bugBashItemId);
+                if (bugBashItemModel.workItemId <= 0 || bugBashItemModel.workItemId == null) {
+                    BugBashItemCommentActions.refreshComments(bugBashItemId);
+                }
             }
             catch (e) {
                 StoresHub.bugBashItemStore.setLoading(false, bugBashItemId);
