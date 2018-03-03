@@ -10,7 +10,7 @@ import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
 import { ExcludedFields, FormEvents } from "OneClick/Constants";
 import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
-import { isDate, isInteger, isNumeric, translateToFieldValue } from "OneClick/Helpers";
+import { isAnyMacro, isDate, isInteger, isNumeric, translateToFieldValue } from "OneClick/Helpers";
 import { BaseMacro } from "OneClick/Macros/Macros";
 import { BaseTrigger } from "OneClick/RuleTriggers/BaseTrigger";
 import { FieldType } from "TFS/WorkItemTracking/Contracts";
@@ -37,7 +37,7 @@ export class FieldChangedTrigger extends BaseTrigger {
             const oldValue = await WorkItemFormHelpers.getWorkItemFieldValue(fieldName, true);
             const newValue = await WorkItemFormHelpers.getWorkItemFieldValue(fieldName);
 
-            return oldFieldValue === oldValue && newFieldValue === newValue;
+            return (oldValue !== newValue) && (isAnyMacro(oldFieldValue) || oldFieldValue === oldValue) && (isAnyMacro(newFieldValue) || newFieldValue === newValue);
         }
 
         return false;
@@ -138,7 +138,7 @@ export class FieldChangedTrigger extends BaseTrigger {
     }
 
     private _getFieldValueError(fieldType: FieldType, value: string): string {
-        if (BaseMacro.isMacro(value) && BaseMacro.getMacroType(value)) {
+        if ((BaseMacro.isMacro(value) && BaseMacro.getMacroType(value)) || isAnyMacro(value)) {
             return null;
         }
 

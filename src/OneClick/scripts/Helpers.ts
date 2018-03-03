@@ -50,6 +50,10 @@ export async function translateToFieldValue(value: string, fieldType: WitContrac
     }
 }
 
+export function isAnyMacro(value: string): boolean {
+    return stringEquals(value, Constants.AnyMacro, true);
+}
+
 export function isInteger(value: string): boolean {
     return /^\d+$/.test(value);
 }

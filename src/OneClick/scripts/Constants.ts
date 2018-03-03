@@ -75,6 +75,7 @@ export namespace Constants {
     export const GlobalRuleGroupId = "global";
     export const StorageKey = "witoneclickactions";
     export const UserScope = { scopeType: "User" };
+    export const AnyMacro = "@any";
 }
 
 export namespace SizeLimits {
