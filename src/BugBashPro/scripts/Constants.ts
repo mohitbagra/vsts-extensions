@@ -1,4 +1,4 @@
-export const ChangelogMajorVersion = "3.1";
+export const ChangelogMajorVersion = "3.3";
 
 export enum UrlActions {
     ACTION_ALL = "all",

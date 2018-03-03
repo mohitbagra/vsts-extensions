@@ -1,6 +1,12 @@
 >UPDATE:
 >A recent change in VSTS mention feature makes it incompatible with one click's "Mention someone" action. Due to this, mentioning someone is temporarily suspended from the extension.
 
+# Changelog
+<a name="changelog" id="changelog"></a>
+**(03/03/18) Version 2.3:** 
+* Added "Field changed trigger" which will be fired when a field changes on work item form. To configure this trigger, provide a field name, its old value and new value. For eg - FieldName="System.State", OldValue="New", NewValue="Active" will fire when State changes from New to Active. Users can also use "@any" macro as fieldValue (both for old and new). For eg, if OldValue="@any", then the trigger will fire when State changes from any value to "Active". If NewValue="@any", then the trigger will fire when State changes from "New" to any value.
+
+
 # Perform multiple actions from just a single click in work item form
 
 A work item form group extension that lets users perform multiple actions on a workitem by just a single click. It shows up as a group in work item form where users can manage and perform one click actions.

@@ -102,6 +102,11 @@ Users can configure 2 things here -
 
 # Changelog
 <a name="changelog" id="changelog"></a>
+**(03/03/18) Version 3.3:** 
+* Added "All" pivot in results and charts view to show all the items irrespective of whether they are pending or rejected or accepted.
+* Fixed a bug where accepted work items wont load if their number is too high (around 200+).
+* Fixed a bug where discussion comment was not getting saved if it was added during creation of a bug bash item.
+
 **(02/07/18) Version 3.1:** 
 * Set default team  for a bug bash. Can be configured in bug bash editor. All bug bash items would be defaulted to the selected team. Users can still change the team.
 * Stand alone view of a bug bash item. Users can now double click on each row in bug bash results grid to open the selected bug bash item in full view. You can then share the url with other people for that particular bug bash item.
