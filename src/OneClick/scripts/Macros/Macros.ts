@@ -1,7 +1,7 @@
 import { getCurrentUserName } from "Library/Utilities/Identity";
 import { startsWith, toString } from "Library/Utilities/String";
+import { isInteger } from "Library/Utilities/Validators";
 import * as WorkItemFormHelpers from "Library/Utilities/WorkItemFormHelpers";
-import { isInteger } from "OneClick/Helpers";
 import * as DateUtils from "VSS/Utils/Date";
 
 export abstract class BaseMacro {

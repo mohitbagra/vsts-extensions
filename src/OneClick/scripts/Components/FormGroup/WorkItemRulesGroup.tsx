@@ -16,6 +16,7 @@ import {
     readLocalSetting, WebSettingsScope, writeLocalSetting
 } from "Library/Utilities/LocalSettingsService";
 import { stringEquals } from "Library/Utilities/String";
+import { getMarketplaceUrl, getWorkItemTypeSettingsUrl } from "Library/Utilities/UrlHelper";
 import * as WorkItemFormHelpers from "Library/Utilities/WorkItemFormHelpers";
 import { IconButton } from "OfficeFabric/Button";
 import { Fabric } from "OfficeFabric/Fabric";
@@ -28,7 +29,6 @@ import {
 import { RuleGroupsDataService } from "OneClick/DataServices/RuleGroupsDataService";
 import { RulesDataService } from "OneClick/DataServices/RulesDataService";
 import { SettingsDataService } from "OneClick/DataServices/SettingsDataService";
-import { getWorkItemTypeUrl } from "OneClick/Helpers";
 import { IActionError, ILocalStorageRulesData, IRule } from "OneClick/Interfaces";
 import { trackEvent } from "OneClick/Telemetry";
 import { Rule } from "OneClick/ViewModels/Rule";
@@ -107,6 +107,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
     }
 
     public render(): JSX.Element {
+        const iconsDisabled = this.state.loading || !this.state.rules;
         return (
             <Fabric className="fabric-container">
                 <div className="rules-content-container" tabIndex={-1} onKeyDown={this._onKeyDown}>
@@ -121,8 +122,9 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
                                 iconProps={{
                                     iconName: "Settings"
                                 }}
-                                disabled={this.state.loading || !this.state.rules}
-                                onClick={this._openSettingsPage}
+                                disabled={iconsDisabled}
+                                href={this._project ? getWorkItemTypeSettingsUrl(this._workItemTypeName, this._project.name) : ""}
+                                target="_blank"
                             />
                         </TooltipHost>
                         <TooltipHost
@@ -135,7 +137,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
                                 iconProps={{
                                     iconName: "Refresh"
                                 }}
-                                disabled={this.state.loading || !this.state.rules}
+                                disabled={iconsDisabled}
                                 onClick={this._refresh}
                             />
                         </TooltipHost>
@@ -149,8 +151,9 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
                                 iconProps={{
                                     iconName: "InfoSolid"
                                 }}
-                                disabled={this.state.loading || !this.state.rules}
-                                onClick={this._openMarketplaceLink}
+                                disabled={iconsDisabled}
+                                href={getMarketplaceUrl()}
+                                target="_blank"
                             />
                         </TooltipHost>
                         {this._renderErrors()}
@@ -230,7 +233,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
                 axis="xy"
                 lockAxis="xy"
                 distance={10}
-                onSortEnd={this._reorderChecklistItem}
+                onSortEnd={this._reorderRules}
             />
         );
     }
@@ -246,7 +249,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
     }
 
     @autobind
-    private async _reorderChecklistItem(data: {oldIndex: number, newIndex: number}) {
+    private async _reorderRules(data: {oldIndex: number, newIndex: number}) {
         const {oldIndex, newIndex} = data;
         if (oldIndex !== newIndex) {
             let newRules = [...this.state.rules];
@@ -265,14 +268,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
 
     @autobind
     private async _openSettingsPage() {
-        const url = getWorkItemTypeUrl(this._workItemTypeName, this._project.name);
-        window.open(url, "_blank");
-    }
-
-    @autobind
-    private async _openMarketplaceLink() {
-        const extensionId = `${VSS.getExtensionContext().publisherId}.${VSS.getExtensionContext().extensionId}`;
-        const url = `https://marketplace.visualstudio.com/items?itemName=${extensionId}`;
+        const url = getWorkItemTypeSettingsUrl(this._workItemTypeName, this._project.name);
         window.open(url, "_blank");
     }
 

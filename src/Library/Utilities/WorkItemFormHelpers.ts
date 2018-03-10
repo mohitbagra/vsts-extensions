@@ -36,6 +36,16 @@ export async function getWorkItemFieldValues(fieldNames: string[], original?: bo
     return await formService.getFieldValues(fieldNames, original);
 }
 
+export async function getWorkItemType(): Promise<string> {
+    const formService = await getFormService();
+    return await formService.getFieldValue("System.WorkItemType", true) as string;
+}
+
+export async function getWorkItemProject(): Promise<string> {
+    const formService = await getFormService();
+    return await formService.getFieldValue("System.TeamProject", true) as string;
+}
+
 export async function getWorkItemFields(): Promise<WorkItemField[]> {
     const formService = await getFormService();
     return await formService.getFields();

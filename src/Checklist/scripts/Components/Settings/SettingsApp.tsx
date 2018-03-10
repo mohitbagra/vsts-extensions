@@ -4,6 +4,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { initializeIcons } from "@uifabric/icons";
+import { WorkItemTypeView } from "Checklist/Components/Settings/WorkItemTypeView";
+import { StoresHub } from "Checklist/Stores/StoresHub";
 import { Loading } from "Library/Components/Loading";
 import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
@@ -17,14 +19,10 @@ import { Fabric } from "OfficeFabric/Fabric";
 import { INavLink, Nav } from "OfficeFabric/Nav";
 import { DirectionalHint, TooltipDelay, TooltipHost } from "OfficeFabric/Tooltip";
 import { autobind } from "OfficeFabric/Utilities";
-import { WorkItemTypeView } from "OneClick/Components/Settings/WorkItemTypeView";
-import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
-import { initTelemetry } from "OneClick/Telemetry";
 import { HostNavigationService } from "VSS/SDK/Services/Navigation";
 
 export interface IAppState extends IBaseFluxComponentState {
     selectedWit?: string;
-    selectedRuleGroupId?: string;
 }
 
 export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
@@ -33,7 +31,6 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
     public componentDidMount() {
         super.componentDidMount();
 
-        initTelemetry();
         this._attachNavigate();
         WorkItemTypeActions.initializeWorkItemTypes();
     }
@@ -60,10 +57,9 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
                             selectedKey={this.state.selectedWit}
                         />
 
-                        <div className="rule-groups-container">
+                        <div className="workitemtype-container">
                             <WorkItemTypeView
                                 workItemTypeName={this.state.selectedWit}
-                                ruleGroupId={this.state.selectedRuleGroupId}
                             />
                         </div>
                     </div>
@@ -154,7 +150,6 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
             const workItemTypes = StoresHub.workItemTypeStore.getAll();
             const state = await this._navigationService.getCurrentState();
             let witName = state && state.witName;
-            const ruleGroupId = state && state.ruleGroup;
 
             if (witName && workItemTypes) {
                 // if wit store is loaded, check the store for witName
@@ -174,8 +169,7 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
             }
 
             this.setState({
-                selectedWit: witName,
-                selectedRuleGroupId: ruleGroupId || ""
+                selectedWit: witName
             });
         }
     }

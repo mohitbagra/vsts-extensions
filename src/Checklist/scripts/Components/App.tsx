@@ -12,6 +12,8 @@ import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { ErrorMessageActions } from "Library/Flux/Actions/ErrorMessageActions";
+import { getMarketplaceUrl, getWorkItemTypeSettingsUrl } from "Library/Utilities/UrlHelper";
+import { getWorkItemProject, getWorkItemType } from "Library/Utilities/WorkItemFormHelpers";
 import { IconButton } from "OfficeFabric/Button";
 import { Fabric } from "OfficeFabric/Fabric";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
@@ -27,6 +29,8 @@ const AsyncChecklistView = getAsyncLoadedComponent(
 
 interface IChecklistAppState extends IBaseFluxComponentState {
     workItemId: number;
+    workItemType: string;
+    projectName: string;
 }
 
 export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, IChecklistAppState> {
@@ -35,11 +39,11 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
 
         VSS.register(VSS.getContribution().id, {
             onLoaded: (args: WitExtensionContracts.IWorkItemLoadedArgs) => {
-                this.setState({workItemId: args.isNew ? 0 : args.id});
+                this._onWorkItemLoad(args.id, args.isNew);
             },
             onUnloaded: (_args: WitExtensionContracts.IWorkItemChangedArgs) => {
                 ErrorMessageActions.dismissErrorMessage("ChecklistError");
-                this.setState({workItemId: null});
+                this.setState({workItemId: null, workItemType: null, projectName: null});
             },
             onSaved: (args: WitExtensionContracts.IWorkItemChangedArgs) => {
                 if (args.id !== this.state.workItemId) {
@@ -87,7 +91,8 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
                                     iconProps={{
                                         iconName: "InfoSolid"
                                     }}
-                                    onClick={this._openMarketplaceLink}
+                                    href={getMarketplaceUrl()}
+                                    target="_blank"
                                 />
                             </TooltipHost>
                             <TooltipHost
@@ -99,6 +104,18 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
                                     className="command-item"
                                     iconProps={{iconName: "Refresh"}}
                                     onClick={this._onRefreshClick}
+                                />
+                            </TooltipHost>
+                            <TooltipHost
+                                content={"Settings"}
+                                delay={TooltipDelay.medium}
+                                directionalHint={DirectionalHint.bottomRightEdge}
+                            >
+                                <IconButton
+                                    className="command-item"
+                                    iconProps={{iconName: "Settings"}}
+                                    href={getWorkItemTypeSettingsUrl(this.state.workItemType, this.state.projectName)}
+                                    target="_blank"
                                 />
                             </TooltipHost>
                         </div>
@@ -130,8 +147,17 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
 
     private _getFreshState(): IChecklistAppState {
         return {
-            workItemId: null
+            workItemId: null,
+            workItemType: null,
+            projectName: null
         };
+    }
+
+    @autobind
+    private async _onWorkItemLoad(workItemId: number, isNew: boolean) {
+        const workItemType = await getWorkItemType();
+        const projectName = await getWorkItemProject();
+        this.setState({workItemId: isNew ? 0 : workItemId, projectName: projectName, workItemType: workItemType});
     }
 
     @autobind
@@ -143,13 +169,6 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
         if (workItemId != null && workItemId !== 0) {
             ChecklistActions.refreshChecklist(workItemId);
         }
-    }
-
-    @autobind
-    private async _openMarketplaceLink() {
-        const extensionId = `${VSS.getExtensionContext().publisherId}.${VSS.getExtensionContext().extensionId}`;
-        const url = `https://marketplace.visualstudio.com/items?itemName=${extensionId}#changelog`;
-        window.open(url, "_blank");
     }
 }
 

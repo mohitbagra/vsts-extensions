@@ -10,6 +10,7 @@ export interface IChecklistItem {
     text: string;
     required?: boolean;
     state?: ChecklistItemState;
+    isDefault?: boolean;
 }
 
 export enum ChecklistItemState {

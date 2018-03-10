@@ -18,7 +18,7 @@
         });
         
         // Load main entry point for extension
-        VSS.require(["scripts/App", "TFS/WorkItemTracking/ExtensionContracts"], function (App) {
+        VSS.require(["scripts/App", "TFS/WorkItemTracking/ExtensionContracts", "TFS/WorkItemTracking/Services"], function (App) {
             App.init();
             VSS.notifyLoadSucceeded();
         });

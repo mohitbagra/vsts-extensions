@@ -23,7 +23,8 @@ import { delay, DelayedFunction } from "Library/Utilities/Core";
 import {
     readLocalSetting, WebSettingsScope, writeLocalSetting
 } from "Library/Utilities/LocalSettingsService";
-import { getQueryUrl, navigate } from "Library/Utilities/Navigation";
+import { navigate } from "Library/Utilities/Navigation";
+import { getQueryUrl } from "Library/Utilities/UrlHelper";
 import { openWorkItemDialog } from "Library/Utilities/WorkItemFormHelpers";
 import { IContextualMenuItem } from "OfficeFabric/ContextualMenu";
 import {
@@ -325,24 +326,22 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
     @autobind
     private _getGridContextMenuItems(item: BugBashItem): IContextualMenuItem[] {
         if (this.props.view === BugBashViewActions.AcceptedItemsOnly) {
+            let selectedItems = this._selection.getSelection() as BugBashItem[];
+            if (!selectedItems || selectedItems.length === 0) {
+                selectedItems = [item];
+            }
+
             return [
                 {
                     key: "openinquery", name: "Open selected items in Queries", iconProps: {iconName: "ReplyMirrored"},
-                    onClick: () => {
-                        let selectedItems = this._selection.getSelection() as BugBashItem[];
-                        if (!selectedItems || selectedItems.length === 0) {
-                            selectedItems = [item];
-                        }
-
-                        const url = getQueryUrl(selectedItems.map(i => i.workItem), [
-                            WorkItemFieldNames.ID,
-                            WorkItemFieldNames.Title,
-                            WorkItemFieldNames.State,
-                            WorkItemFieldNames.AssignedTo,
-                            WorkItemFieldNames.AreaPath
-                        ]);
-                        window.open(url, "_blank");
-                    }
+                    href: getQueryUrl(selectedItems.map(i => i.workItem), [
+                        WorkItemFieldNames.ID,
+                        WorkItemFieldNames.Title,
+                        WorkItemFieldNames.State,
+                        WorkItemFieldNames.AssignedTo,
+                        WorkItemFieldNames.AreaPath
+                    ]),
+                    target: "_blank"
                 }
             ];
         }

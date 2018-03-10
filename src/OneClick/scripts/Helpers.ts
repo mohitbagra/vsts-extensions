@@ -1,4 +1,5 @@
 import { stringEquals } from "Library/Utilities/String";
+import { isInteger, isNumeric } from "Library/Utilities/Validators";
 import { Constants } from "OneClick/Constants";
 import { IRuleGroup } from "OneClick/Interfaces";
 import * as Macros from "OneClick/Macros/Macros";
@@ -15,12 +16,6 @@ export function isGlobalRuleGroup(ruleGroup: IRuleGroup): boolean {
 
 export function isPersonalOrGlobalRuleGroup(ruleGroup: IRuleGroup): boolean {
     return isPersonalRuleGroup(ruleGroup) || isGlobalRuleGroup(ruleGroup);
-}
-
-export function getWorkItemTypeUrl(witName: string, projectName?: string): string {
-    const {collection, project} = VSS.getWebContext();
-    const extensionId = `${VSS.getExtensionContext().publisherId}.${VSS.getExtensionContext().extensionId}`;
-    return `${collection.uri}/${projectName || project.name}/_apps/hub/${extensionId}.settings-hub?witName=${witName}`;
 }
 
 export function getRuleGroupUrl(witName: string, ruleGroupId: string): string {
@@ -52,20 +47,4 @@ export async function translateToFieldValue(value: string, fieldType: WitContrac
 
 export function isAnyMacro(value: string): boolean {
     return stringEquals(value, Constants.AnyMacro, true);
-}
-
-export function isInteger(value: string): boolean {
-    return /^\d+$/.test(value);
-}
-
-export function isFloat(value: string): boolean {
-    return /^\d+\.\d+$/.test(value);
-}
-
-export function isNumeric(value: string): boolean {
-    return isInteger(value) || isFloat(value);
-}
-
-export function isDate(value: string): boolean {
-    return Utils_Date.parseDateString(value) !== null;
 }

@@ -13,6 +13,7 @@ import { confirmAction, delegate } from "Library/Utilities/Core";
 import { getCurrentUser } from "Library/Utilities/Identity";
 import { navigate } from "Library/Utilities/Navigation";
 import { stringEquals } from "Library/Utilities/String";
+import { getWorkItemTypeSettingsUrl } from "Library/Utilities/UrlHelper";
 import { IContextualMenuItem } from "OfficeFabric/ContextualMenu";
 import {
     ConstrainMode, DetailsListLayoutMode, IColumn, SelectionMode
@@ -29,7 +30,7 @@ import { Constants, SettingKey } from "OneClick/Constants";
 import { RuleActions } from "OneClick/Flux/Actions/RuleActions";
 import { RuleGroupActions } from "OneClick/Flux/Actions/RuleGroupActions";
 import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
-import { getRuleGroupUrl, getWorkItemTypeUrl, isPersonalOrGlobalRuleGroup } from "OneClick/Helpers";
+import { getRuleGroupUrl, isPersonalOrGlobalRuleGroup } from "OneClick/Helpers";
 import { IRule, IRuleGroup } from "OneClick/Interfaces";
 import { Hub } from "VSSUI/Components/Hub";
 import { HubHeader } from "VSSUI/Components/HubHeader";
@@ -133,7 +134,7 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
                                     height: 16
                                 }
                             },
-                            href: getWorkItemTypeUrl(this.props.workItemTypeName)
+                            href: getWorkItemTypeSettingsUrl(this.props.workItemTypeName)
                         }]}
                     />
                     <PivotBarItem name="Rule Group" itemKey="RuleGroup" viewActions={this._getHubViewActions()}>

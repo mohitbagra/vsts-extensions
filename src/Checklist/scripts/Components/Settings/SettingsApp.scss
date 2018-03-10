@@ -1,0 +1,83 @@
+#ext-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;    
+
+    .fabric-container {
+        height: 100%;
+        
+        .info-button-contaier {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+
+            .info-button {
+                i {
+                    font-size: 40px;
+                    color: #0078d7;
+                }
+            }
+        }
+
+        .vss-HubTileRegion .vss-HubTile {
+            width: auto;
+        }
+
+        .container {
+            height: 100%;
+            display: flex;
+
+            .workitemtype-selector-nav {
+                height: 100%;
+                border-right: 1px solid #eaeaea;
+            }
+
+            .workitemtype-container {
+                overflow: auto;
+                flex: 1;
+
+                .vss-DetailsList.ms-DetailsList {
+                    .ms-DetailsHeader {
+                        min-height: 32px;
+                    }
+
+                    .identity-view {
+                        height: 34px;
+
+                        .ms-Persona-details {
+                            padding: 0 5px;
+                        }
+                    }
+                }
+            }
+        }
+    }    
+}
+
+.callout-container {
+    max-height: 320px;
+}
+
+.loading-overlay {
+    z-index: 10002;
+    background-color: rgba(255,255,255, 0.6) !important;
+}
+
+.ms-font-m {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.ms-font-xl {
+    font-size: 21px;
+    font-weight: 100;
+}
+
+.ms-font-xxl {
+    font-size: 28px;
+    font-weight: 100;   
+}

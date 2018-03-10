@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "workitem-checklist",
-    "version": "2.1.1",
+    "version": "3.0.0",
     "name": "Work item checklist",
     "description": "Manage personal or shared checklist for a workitem.",
     "publisher": "mohitbagra",
@@ -54,6 +54,19 @@
             "properties": {
                 "name": "Checklist",
                 "uri": "html/index.html"
+            }
+        },
+        {
+            "id": "settings-hub",
+            "type": "ms.vss-web.hub",
+            "description": "Customize work item checklists",
+            "targets": [
+                "ms.vss-web.project-admin-hub-group"
+            ],
+            "properties": {
+                "name": "Work item checklists",
+                "order": 100,
+                "uri": "html/settings.html"
             }
         }
     ]

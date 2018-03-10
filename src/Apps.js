@@ -1,7 +1,7 @@
 module.exports = [
-    "BugBashPro",
+    //"BugBashPro",
     "Checklist",
-    "ControlsLibrary",
-    "OneClick",
-    "RelatedWits"
+    // "ControlsLibrary",
+    // "OneClick",
+    // "RelatedWits"
 ];

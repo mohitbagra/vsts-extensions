@@ -18,6 +18,7 @@ import { delegate } from "Library/Utilities/Core";
 import * as ExtensionDataManager from "Library/Utilities/ExtensionDataManager";
 import { parseUniquefiedIdentityName } from "Library/Utilities/Identity";
 import { stringEquals } from "Library/Utilities/String";
+import { getQueryUrl } from "Library/Utilities/UrlHelper";
 import { openWorkItemDialog } from "Library/Utilities/WorkItemFormHelpers";
 import { IContextualMenuItem } from "OfficeFabric/ContextualMenu";
 import {
@@ -33,7 +34,6 @@ import { autobind } from "OfficeFabric/Utilities";
 import { ISelection, Selection, SelectionMode } from "OfficeFabric/utilities/selection";
 import { RelatedWorkItemsActions } from "RelatedWits/Actions/RelatedWorkItemsActions";
 import * as SettingsPanel_Async from "RelatedWits/Components/SettingsPanel";
-import { getQueryUrl } from "RelatedWits/Helpers";
 import { Constants, ISettings, WorkItemFieldNames } from "RelatedWits/Models";
 import { StoresHub } from "RelatedWits/Stores/StoresHub";
 import { WorkItem, WorkItemRelation, WorkItemRelationType } from "TFS/WorkItemTracking/Contracts";
@@ -546,16 +546,14 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
         return [
             {
                 key: "openinquery", name: "Open selected items in Queries", iconProps: {iconName: "ReplyMirrored"},
-                onClick: () => {
-                    const url = getQueryUrl(selectedItems, [
-                        WorkItemFieldNames.ID,
-                        WorkItemFieldNames.Title,
-                        WorkItemFieldNames.State,
-                        WorkItemFieldNames.AssignedTo,
-                        WorkItemFieldNames.AreaPath
-                    ]);
-                    window.open(url, "_blank");
-                }
+                href: getQueryUrl(selectedItems, [
+                    WorkItemFieldNames.ID,
+                    WorkItemFieldNames.Title,
+                    WorkItemFieldNames.State,
+                    WorkItemFieldNames.AssignedTo,
+                    WorkItemFieldNames.AreaPath
+                ]),
+                target: "_blank"
             },
             {
                 key: "add-link", name: "Add Link", title: "Add as a link to the current workitem", iconProps: {iconName: "Link"},

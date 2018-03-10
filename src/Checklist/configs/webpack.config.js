@@ -4,7 +4,8 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const config = {
     entry: {
         "Checklist/scripts/App": "./src/Checklist/scripts/Components/App.tsx",
-        "Checklist/scripts/ChecklistView": "./src/Checklist/scripts/Components/ChecklistView.tsx"
+        "Checklist/scripts/ChecklistView": "./src/Checklist/scripts/Components/ChecklistView.tsx",
+        "Checklist/scripts/SettingsApp": "./src/Checklist/scripts/Components/Settings/SettingsApp.tsx",
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin(
