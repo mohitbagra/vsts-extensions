@@ -1,7 +1,6 @@
 .checklist-item-container {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
 
     &:hover {
         .drag-handle {
@@ -21,7 +20,10 @@
         align-items: center;
         overflow: hidden;
         flex: 1;
-
+        padding: 4px 2px;
+        border: 1px solid transparent;
+        height: 20px;
+        
         .required-item {
             color: #da0a00;
             margin-left: 2px;
@@ -51,7 +53,7 @@
             word-wrap: normal;
             font-size: 14px;
             @include UserSelectNone();
-
+            
             &.checked {
                 text-decoration: line-through;
                 color: #999;
@@ -61,7 +63,8 @@
         .checklist-item-button  {
             height: 20px;
             overflow: visible;
-            
+            display: none;
+
             &.delete-item-button {
                 color: #da0a00;
             }
@@ -69,6 +72,14 @@
             &.edit-item-button {
                 color: #0078d7;
                 width: 20px;
+            }
+        }
+
+        &:hover {
+            border: 1px solid #000;
+
+            .checklist-item-button {
+                display: block;
             }
         }
     }

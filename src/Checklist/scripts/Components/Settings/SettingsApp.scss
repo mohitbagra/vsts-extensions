@@ -39,23 +39,26 @@
             .workitemtype-container {
                 overflow: auto;
                 flex: 1;
+                padding: 10px;
 
-                .vss-DetailsList.ms-DetailsList {
-                    .ms-DetailsHeader {
-                        min-height: 32px;
-                    }
+                .checklist-items-container {
+                    width: 600px;
 
-                    .identity-view {
-                        height: 34px;
-
-                        .ms-Persona-details {
-                            padding: 0 5px;
-                        }
+                    .checklist-item-editor {
+                        max-width: 400px;
+                        width: 400px;
                     }
                 }
             }
         }
     }    
+}
+
+.edit-checklist-item-overlay {
+    .checklist-item-editor {
+        max-width: 400px;
+        width: 400px;
+    }
 }
 
 .callout-container {

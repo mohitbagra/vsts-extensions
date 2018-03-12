@@ -16,25 +16,32 @@ import { autobind, css } from "OfficeFabric/Utilities";
 export interface IChecklistItemProps extends IBaseFluxComponentProps {
     checklistItem: IChecklistItem;
     disabled?: boolean;
+    disableStateChange?: boolean;
     onEdit(checklistItem: IChecklistItem): void;
     onDelete(checklistItem: IChecklistItem): void;
-    onToggleCheck(checklistItem: IChecklistItem, checked: boolean): void;
+    onToggleCheck?(checklistItem: IChecklistItem, checked: boolean): void;
 }
 
 export class ChecklistItem extends BaseFluxComponent<IChecklistItemProps, IBaseFluxComponentState> {
     public render(): JSX.Element {
-        const {checklistItem, disabled} = this.props;
+        const {checklistItem, disabled, disableStateChange} = this.props;
         const isCompleted = checklistItem.state === ChecklistItemState.Completed;
         const checklistItemState = ChecklistItemStates[checklistItem.state];
-
+        const labelStyle: React.CSSProperties = disableStateChange ? undefined : { cursor: "pointer"};
         return (
-            <div className="checklist-item" key={checklistItem.id}>
-                <Checkbox
-                    className={css("checklist-checkbox", { checked: isCompleted })}
-                    checked={isCompleted}
-                    disabled={disabled}
-                    onChange={this._onChecklistItemChange}
-                />
+            <div
+                className="checklist-item"
+                key={checklistItem.id}
+            >
+                { !disableStateChange &&
+                    <Checkbox
+                        className={css("checklist-checkbox", { checked: isCompleted })}
+                        checked={isCompleted}
+                        disabled={disabled}
+                        onChange={this._onChecklistItemChange}
+                    />
+                }
+
                 {checklistItem.required &&
                     <div className="required-item">*</div>
                 }
@@ -43,7 +50,7 @@ export class ChecklistItem extends BaseFluxComponent<IChecklistItemProps, IBaseF
                         {checklistItem.state}
                     </div>
                 }
-                <div className={css("checklist-item-label", { checked: isCompleted })}>
+                <div className={css("checklist-item-label", { checked: isCompleted })} onClick={this._onLabelClick} style={labelStyle}>
                     <TooltipHost
                         content={checklistItem.text}
                         delay={TooltipDelay.medium}
@@ -83,7 +90,15 @@ export class ChecklistItem extends BaseFluxComponent<IChecklistItemProps, IBaseF
 
     @autobind
     private _onChecklistItemChange(_ev: React.FormEvent<HTMLInputElement>, checked: boolean) {
-        this.props.onToggleCheck(this.props.checklistItem, checked);
+        if (this.props.onToggleCheck && !this.props.disableStateChange) {
+            this.props.onToggleCheck(this.props.checklistItem, checked);
+        }
+    }
+
+    @autobind
+    private _onLabelClick() {
+        const isCompleted = this.props.checklistItem.state === ChecklistItemState.Completed;
+        this._onChecklistItemChange(null, !isCompleted);
     }
 
     @autobind

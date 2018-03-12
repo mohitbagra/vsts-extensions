@@ -59,7 +59,7 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
 
                         <div className="workitemtype-container">
                             <WorkItemTypeView
-                                workItemTypeName={this.state.selectedWit}
+                                workItemType={this.state.selectedWit}
                             />
                         </div>
                     </div>

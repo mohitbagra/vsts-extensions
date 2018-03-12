@@ -1,9 +1,11 @@
 import { ChecklistActionsHub, IChecklistActionData } from "Checklist/Actions/ActionsHub";
 import { IWorkItemChecklist } from "Checklist/Interfaces";
 import { BaseStore } from "Library/Flux/Stores/BaseStore";
-import { isNullOrWhiteSpace } from "Library/Utilities/String";
+import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
 
 export class ChecklistStore extends BaseStore<IDictionaryStringTo<IChecklistActionData>, IChecklistActionData, string> {
+    private _workItemTypeName: string;
+
     constructor() {
         super();
         this.items = {};
@@ -18,6 +20,19 @@ export class ChecklistStore extends BaseStore<IDictionaryStringTo<IChecklistActi
 
     public getKey(): string {
         return "ChecklistStore";
+    }
+
+    public setCurrentWorkItemType(workItemTypeName: string) {
+        this._workItemTypeName = workItemTypeName;
+    }
+
+    public checkCurrentWorkItemType(workItemTypeName: string): boolean {
+        return stringEquals(this._workItemTypeName, workItemTypeName, true);
+    }
+
+    public clear() {
+        this.items = {};
+        this._workItemTypeName = null;
     }
 
     protected initializeActionListeners() {
