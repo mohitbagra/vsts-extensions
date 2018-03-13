@@ -1,4 +1,4 @@
-.checklist-items-container {
+.checklist-view {
     margin-top: 10px;
     display: flex;
     flex-direction: column;
@@ -12,14 +12,25 @@
         margin-bottom: 10px;
     }
 
-    .checklist-items {
+    .checklist-items-container {
+        flex: 1;
         max-height: 300px; // show 10 items in view
         overflow: auto;
-    }
+
+        .checklist-items-label {
+            border-bottom: 1px solid #ccc;
+            margin: 0 10px 5px 10px;
+            padding-left: 10px;
+            font-size: 12px;
+            font-weight: 400;
+            color: #333;
+            padding-bottom: 2px;
+        }
+    }    
 
     .checklist-item-editor {
-        margin-top: 10px;
-        margin-left: 20px;
+        margin-top: 15px;
+        margin-left: 10px;
         margin-right: 10px;
     }
 }

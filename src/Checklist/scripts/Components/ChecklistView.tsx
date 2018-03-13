@@ -86,11 +86,19 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
         }
         else {
             return (
-                <div className="checklist-items-container">
-                    {this._renderZeroDataMessage()}
+                <div className="checklist-view">
                     {this._renderEditView()}
                     {this._renderError()}
-                    {this._renderChecklistItems()}
+                    <div className="checklist-items-container">
+                        <div>
+                            <div className="checklist-items-label">Default items</div>
+                            {this._renderChecklistItems((checklist.checklistItems || []).filter(i => i.isDefault), false)}
+                        </div>
+                        <div style={{marginTop: "10px"}}>
+                            <div className="checklist-items-label">Custom items</div>
+                            {this._renderChecklistItems((checklist.checklistItems || []).filter(i => !i.isDefault), true)}
+                        </div>
+                    </div>
                     <ChecklistItemEditor
                         inputPlaceholder="Add new item"
                         disabled={disabled}
@@ -133,6 +141,44 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
         return newState;
     }
 
+    private _renderChecklistItems(checklistItems: IChecklistItem[], allowSorting: boolean): JSX.Element {
+        const items = checklistItems.map(this._renderChecklistItem);
+
+        if (items.length === 0) {
+            return this._renderZeroDataMessage();
+        }
+        else if (!allowSorting) {
+            return (
+                <div className="checklist-items">
+                    {items.map(i => (
+                        <div className="checklist-item-container" style={{paddingLeft: "19px"}} >
+                            {i}
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+        else {
+            return (
+                <SortableList
+                    items={items}
+                    axis="y"
+                    lockAxis="y"
+                    onSortEnd={this._reorderChecklistItem}
+                    useDragHandle={true}
+                />
+            );
+        }
+    }
+
+    private _renderZeroDataMessage(): JSX.Element {
+        return (
+            <MessageBar messageBarType={MessageBarType.info} className="message-bar">
+                No checklist items yet.
+            </MessageBar>
+        );
+    }
+
     @autobind
     private _renderChecklistItem(checklistItem: IChecklistItem): JSX.Element {
         return (
@@ -144,18 +190,6 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
                 onToggleCheck={this._onToggleChecklistItem}
             />
         );
-    }
-
-    private _renderZeroDataMessage(): JSX.Element {
-        const {checklist} = this.state;
-        if (checklist.checklistItems == null || checklist.checklistItems.length === 0) {
-            return (
-                <MessageBar messageBarType={MessageBarType.info} className="message-bar">
-                    No checklist items yet.
-                </MessageBar>
-            );
-        }
-        return null;
     }
 
     private _renderEditView(): JSX.Element {
@@ -187,23 +221,6 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
                 <MessageBar className="error-message" messageBarType={MessageBarType.error}>
                     {error}
                 </MessageBar>
-            );
-        }
-        return null;
-    }
-
-    private _renderChecklistItems(): JSX.Element {
-        const {checklist} = this.state;
-        if (checklist.checklistItems != null && checklist.checklistItems.length > 0) {
-            const items = checklist.checklistItems.map(this._renderChecklistItem);
-            return (
-                <SortableList
-                    items={items}
-                    axis="y"
-                    lockAxis="y"
-                    onSortEnd={this._reorderChecklistItem}
-                    useDragHandle={true}
-                />
             );
         }
         return null;

@@ -149,11 +149,13 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
             return <Loading />;
         }
         return (
-            <div className="checklist-items-container">
+            <div className="checklist-view">
                 {this._renderZeroDataMessage()}
                 {this._renderEditView()}
                 {this._renderError()}
-                {this._renderChecklistItems()}
+                <div className="checklist-items-container">
+                    {this._renderChecklistItems()}
+                </div>
                 <ChecklistItemEditor
                     inputPlaceholder="Add new item"
                     disabled={disabled}
@@ -169,6 +171,7 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
             <ChecklistItem
                 checklistItem={checklistItem}
                 disabled={this.state.disabled}
+                allowEditDefaultItems={true}
                 disableStateChange={true}
                 onEdit={this._editChecklistItem}
                 onDelete={this._deleteChecklistItem}

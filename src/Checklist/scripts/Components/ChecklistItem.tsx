@@ -17,6 +17,7 @@ export interface IChecklistItemProps extends IBaseFluxComponentProps {
     checklistItem: IChecklistItem;
     disabled?: boolean;
     disableStateChange?: boolean;
+    allowEditDefaultItems?: boolean;
     onEdit(checklistItem: IChecklistItem): void;
     onDelete(checklistItem: IChecklistItem): void;
     onToggleCheck?(checklistItem: IChecklistItem, checked: boolean): void;
@@ -24,7 +25,7 @@ export interface IChecklistItemProps extends IBaseFluxComponentProps {
 
 export class ChecklistItem extends BaseFluxComponent<IChecklistItemProps, IBaseFluxComponentState> {
     public render(): JSX.Element {
-        const {checklistItem, disabled, disableStateChange} = this.props;
+        const {checklistItem, disabled, disableStateChange, allowEditDefaultItems} = this.props;
         const isCompleted = checklistItem.state === ChecklistItemState.Completed;
         const isDefaultItem = checklistItem.isDefault;
         const checklistItemState = ChecklistItemStates[checklistItem.state];
@@ -62,7 +63,7 @@ export class ChecklistItem extends BaseFluxComponent<IChecklistItemProps, IBaseF
                     </TooltipHost>
                 </div>
 
-                {isDefaultItem &&
+                {isDefaultItem && !allowEditDefaultItems &&
                     <TooltipHost
                         content="This is a default item. To update or delete it, please go to the settings page by clicking the gear icon above."
                         delay={TooltipDelay.medium}
@@ -75,7 +76,7 @@ export class ChecklistItem extends BaseFluxComponent<IChecklistItemProps, IBaseF
                         />
                     </TooltipHost>
                 }
-                {!isDefaultItem &&
+                {(!isDefaultItem || allowEditDefaultItems) &&
                     <TooltipHost
                         content={"Edit item"}
                         delay={TooltipDelay.medium}
@@ -89,7 +90,7 @@ export class ChecklistItem extends BaseFluxComponent<IChecklistItemProps, IBaseF
                         />
                     </TooltipHost>
                 }
-                {!isDefaultItem &&
+                {(!isDefaultItem || allowEditDefaultItems) &&
                     <TooltipHost
                         content={"Delete item"}
                         delay={TooltipDelay.medium}
