@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "workitem-checklist",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "name": "Work item checklist",
     "description": "Manage personal or shared checklist for a workitem.",
     "publisher": "mohitbagra",
@@ -10,7 +10,8 @@
     },
     "scopes": [ 
     	"vso.work",
-        "vso.work_write"
+        "vso.work_write",
+        "vso.profile"
 	 ],
     "targets": [
         {

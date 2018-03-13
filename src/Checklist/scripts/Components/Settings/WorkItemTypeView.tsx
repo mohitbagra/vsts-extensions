@@ -91,7 +91,7 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
                 hideFullScreenToggle={true}
                 commands={this._getHubCommands()}
             >
-                <HubHeader title={this.props.workItemType} />
+                <HubHeader title={`Default checklist items for "${this.props.workItemType}"`} />
 
                 <PivotBarItem name="Default" itemKey="Default">
                     {this._renderChecklistView()}

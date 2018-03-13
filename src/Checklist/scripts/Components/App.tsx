@@ -13,14 +13,18 @@ import {
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { ErrorMessageActions } from "Library/Flux/Actions/ErrorMessageActions";
 import { getMarketplaceUrl, getWorkItemTypeSettingsUrl } from "Library/Utilities/UrlHelper";
-import { getWorkItemProject, getWorkItemType } from "Library/Utilities/WorkItemFormHelpers";
+import { getWorkItemFieldValues } from "Library/Utilities/WorkItemFormHelpers";
 import { IconButton } from "OfficeFabric/Button";
 import { Fabric } from "OfficeFabric/Fabric";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
 import { Pivot, PivotItem } from "OfficeFabric/Pivot";
 import { DirectionalHint, TooltipDelay, TooltipHost } from "OfficeFabric/Tooltip";
 import { autobind } from "OfficeFabric/Utilities";
-import * as WitExtensionContracts from "TFS/WorkItemTracking/ExtensionContracts";
+import { TeamProject } from "TFS/Core/Contracts";
+import * as CoreClient from "TFS/Core/RestClient";
+import {
+    IWorkItemChangedArgs, IWorkItemLoadedArgs, IWorkItemNotificationListener
+} from "TFS/WorkItemTracking/ExtensionContracts";
 
 const AsyncChecklistView = getAsyncLoadedComponent(
     ["scripts/ChecklistView"],
@@ -29,31 +33,32 @@ const AsyncChecklistView = getAsyncLoadedComponent(
 
 interface IChecklistAppState extends IBaseFluxComponentState {
     workItemId: number;
-    workItemType: string;
-    projectName: string;
 }
 
 export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, IChecklistAppState> {
+    private _project: TeamProject;
+    private _workItemTypeName: string;
+
     public componentDidMount() {
         super.componentDidMount();
 
         VSS.register(VSS.getContribution().id, {
-            onLoaded: (args: WitExtensionContracts.IWorkItemLoadedArgs) => {
+            onLoaded: (args: IWorkItemLoadedArgs) => {
                 this._onWorkItemLoad(args.id, args.isNew);
             },
-            onUnloaded: (_args: WitExtensionContracts.IWorkItemChangedArgs) => {
+            onUnloaded: (_args: IWorkItemChangedArgs) => {
                 ErrorMessageActions.dismissErrorMessage("ChecklistError");
-                this.setState({workItemId: null, workItemType: null, projectName: null});
+                this.setState({workItemId: null});
             },
-            onSaved: (args: WitExtensionContracts.IWorkItemChangedArgs) => {
+            onSaved: (args: IWorkItemChangedArgs) => {
                 if (args.id !== this.state.workItemId) {
                     this.setState({workItemId: args.id});
                 }
             },
-            onRefreshed: (_args: WitExtensionContracts.IWorkItemChangedArgs) => {
+            onRefreshed: (_args: IWorkItemChangedArgs) => {
                 this._refreshChecklist(this.state.workItemId);
             }
-        } as WitExtensionContracts.IWorkItemNotificationListener);
+        } as IWorkItemNotificationListener);
     }
 
     public componentWillUnmount() {
@@ -65,7 +70,7 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
         const {workItemId} = this.state;
 
         if (workItemId == null) {
-            return null;
+            return <Loading />;
         }
         else if (workItemId === 0) {
             return (
@@ -114,7 +119,7 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
                                 <IconButton
                                     className="command-item"
                                     iconProps={{iconName: "Settings"}}
-                                    href={getWorkItemTypeSettingsUrl(this.state.workItemType, this.state.projectName)}
+                                    href={this._project ? getWorkItemTypeSettingsUrl(this._workItemTypeName, this._project.name) : undefined}
                                     target="_blank"
                                 />
                             </TooltipHost>
@@ -123,6 +128,8 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
                             <PivotItem linkText="Shared" itemKey="shared">
                                 <AsyncChecklistView
                                     workItemId={workItemId}
+                                    workItemType={this._workItemTypeName}
+                                    projectId={this._project.id}
                                     key="shared"
                                     isPersonal={false}
                                 />
@@ -130,6 +137,8 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
                             <PivotItem linkText="Personal" itemKey="personal">
                                 <AsyncChecklistView
                                     workItemId={workItemId}
+                                    workItemType={this._workItemTypeName}
+                                    projectId={this._project.id}
                                     key="personal"
                                     isPersonal={true}
                                 />
@@ -147,17 +156,20 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
 
     private _getFreshState(): IChecklistAppState {
         return {
-            workItemId: null,
-            workItemType: null,
-            projectName: null
+            workItemId: null
         };
     }
 
     @autobind
     private async _onWorkItemLoad(workItemId: number, isNew: boolean) {
-        const workItemType = await getWorkItemType();
-        const projectName = await getWorkItemProject();
-        this.setState({workItemId: isNew ? 0 : workItemId, projectName: projectName, workItemType: workItemType});
+        if (!this._project) {
+            const fieldValues = await getWorkItemFieldValues(["System.WorkItemType", "System.TeamProject"]);
+            this._workItemTypeName = fieldValues["System.WorkItemType"] as string;
+            const projectName = fieldValues["System.TeamProject"] as string;
+            this._project = await CoreClient.getClient().getProject(projectName);
+        }
+
+        this.setState({workItemId: isNew ? 0 : workItemId});
     }
 
     @autobind
@@ -166,8 +178,8 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
     }
 
     private _refreshChecklist(workItemId: number) {
-        if (workItemId != null && workItemId !== 0) {
-            ChecklistActions.refreshChecklist(workItemId);
+        if (workItemId != null && workItemId !== 0 && this._project) {
+            ChecklistActions.refreshChecklist(workItemId, this._workItemTypeName, this._project.id);
         }
     }
 }

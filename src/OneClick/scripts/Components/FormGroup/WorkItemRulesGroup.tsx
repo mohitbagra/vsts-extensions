@@ -123,7 +123,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
                                     iconName: "Settings"
                                 }}
                                 disabled={iconsDisabled}
-                                href={this._project ? getWorkItemTypeSettingsUrl(this._workItemTypeName, this._project.name) : ""}
+                                href={this._project ? getWorkItemTypeSettingsUrl(this._workItemTypeName, this._project.name) : undefined}
                                 target="_blank"
                             />
                         </TooltipHost>

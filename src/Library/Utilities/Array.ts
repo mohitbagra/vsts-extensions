@@ -22,7 +22,7 @@ export function findIndex<T>(array: T[], predicate: (param: T) => boolean): numb
 }
 
 export function union<T>(arrayA: T[], arrayB: T[], comparer?: (a: T, b: T) => number): T[] {
-    let result: any[];
+    let result: T[];
 
     if (!arrayB || arrayB.length === 0) {
         return arrayA;
@@ -75,7 +75,7 @@ export function removeAtIndex<T>(array: T[], index: number): boolean {
 }
 
 export function subtract<T>(arrayA: T[], arrayB: T[], comparer: (s: T, t: T) => boolean): T[] {
-    const result: any[] = [];
+    const result: T[] = [];
 
     if (!arrayA || arrayA.length === 0 || !arrayB || arrayB.length === 0) {
         return arrayA;

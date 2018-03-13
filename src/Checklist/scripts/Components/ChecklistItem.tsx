@@ -26,6 +26,7 @@ export class ChecklistItem extends BaseFluxComponent<IChecklistItemProps, IBaseF
     public render(): JSX.Element {
         const {checklistItem, disabled, disableStateChange} = this.props;
         const isCompleted = checklistItem.state === ChecklistItemState.Completed;
+        const isDefaultItem = checklistItem.isDefault;
         const checklistItemState = ChecklistItemStates[checklistItem.state];
         const labelStyle: React.CSSProperties = disableStateChange ? undefined : { cursor: "pointer"};
         return (
@@ -60,37 +61,55 @@ export class ChecklistItem extends BaseFluxComponent<IChecklistItemProps, IBaseF
                         {checklistItem.text}
                     </TooltipHost>
                 </div>
-                <TooltipHost
-                    content={"Edit item"}
-                    delay={TooltipDelay.medium}
-                    directionalHint={DirectionalHint.bottomRightEdge}
-                >
-                    <IconButton
-                        className="checklist-item-button edit-item-button"
-                        disabled={disabled}
-                        iconProps={{iconName: "Edit"}}
-                        onClick={this._onEditItemButtonClick}
-                    />
-                </TooltipHost>
-                <TooltipHost
-                    content={"Delete item"}
-                    delay={TooltipDelay.medium}
-                    directionalHint={DirectionalHint.bottomRightEdge}
-                >
-                    <IconButton
-                        className="checklist-item-button delete-item-button"
-                        disabled={disabled}
-                        iconProps={{iconName: "Trash"}}
-                        onClick={this._onDeleteItemButtonClick}
-                    />
-                </TooltipHost>
+
+                {isDefaultItem &&
+                    <TooltipHost
+                        content="This is a default item. To update or delete it, please go to the settings page by clicking the gear icon above."
+                        delay={TooltipDelay.medium}
+                        directionalHint={DirectionalHint.bottomRightEdge}
+                    >
+                        <IconButton
+                            className="checklist-item-button info-button"
+                            disabled={disabled}
+                            iconProps={{iconName: "Info"}}
+                        />
+                    </TooltipHost>
+                }
+                {!isDefaultItem &&
+                    <TooltipHost
+                        content={"Edit item"}
+                        delay={TooltipDelay.medium}
+                        directionalHint={DirectionalHint.bottomRightEdge}
+                    >
+                        <IconButton
+                            className="checklist-item-button edit-item-button"
+                            disabled={disabled}
+                            iconProps={{iconName: "Edit"}}
+                            onClick={this._onEditItemButtonClick}
+                        />
+                    </TooltipHost>
+                }
+                {!isDefaultItem &&
+                    <TooltipHost
+                        content={"Delete item"}
+                        delay={TooltipDelay.medium}
+                        directionalHint={DirectionalHint.bottomRightEdge}
+                    >
+                        <IconButton
+                            className="checklist-item-button delete-item-button"
+                            disabled={disabled}
+                            iconProps={{iconName: "Trash"}}
+                            onClick={this._onDeleteItemButtonClick}
+                        />
+                    </TooltipHost>
+                }
             </div>
         );
     }
 
     @autobind
     private _onChecklistItemChange(_ev: React.FormEvent<HTMLInputElement>, checked: boolean) {
-        if (this.props.onToggleCheck && !this.props.disableStateChange) {
+        if (this.props.onToggleCheck && !this.props.disableStateChange && !this.props.disabled) {
             this.props.onToggleCheck(this.props.checklistItem, checked);
         }
     }

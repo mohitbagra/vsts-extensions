@@ -44,6 +44,8 @@ const SortableList = SortableContainer(({items}) => {
 
 export interface IChecklistViewProps extends IBaseFluxComponentProps {
     workItemId: number;
+    workItemType: string;
+    projectId: string;
     isPersonal?: boolean;
 }
 
@@ -58,7 +60,7 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
     public componentDidMount() {
         super.componentDidMount();
         if (this.state.checklist == null) {
-            ChecklistActions.initializeChecklist(this.props.workItemId);
+            ChecklistActions.initializeChecklist(this.props.workItemId, this.props.workItemType, this.props.projectId);
         }
     }
 
@@ -71,7 +73,7 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
             }
             else {
                 this.setState({checklist: null, editItem: null, error: null, disabled: false});
-                ChecklistActions.initializeChecklist(nextProps.workItemId);
+                ChecklistActions.initializeChecklist(nextProps.workItemId, nextProps.workItemType, nextProps.projectId);
             }
         }
     }
