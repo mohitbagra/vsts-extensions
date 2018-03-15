@@ -27,6 +27,18 @@ export interface IChecklistItemState {
     foregroundColor: string;
 }
 
+export interface IWorkItemChecklists {
+    personal: IWorkItemChecklist;
+    shared: IWorkItemChecklist;
+    witDefault: IWorkItemChecklist;
+}
+
+export enum ChecklistType {
+    Personal = 0,
+    Shared,
+    WitDefault
+}
+
 export const ChecklistItemStates: IDictionaryStringTo<IChecklistItemState> = {
     [ChecklistItemState.New]: {
         name: ChecklistItemState.New,

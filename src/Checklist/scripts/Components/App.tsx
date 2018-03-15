@@ -179,7 +179,7 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
 
     private _refreshChecklist(workItemId: number) {
         if (workItemId != null && workItemId !== 0 && this._project) {
-            ChecklistActions.refreshChecklist(workItemId, this._workItemTypeName, this._project.id);
+            ChecklistActions.refreshChecklists(workItemId, this._workItemTypeName, this._project.id);
         }
     }
 }

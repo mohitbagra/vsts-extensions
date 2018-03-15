@@ -1,9 +1,9 @@
-import { ChecklistActionsHub, IChecklistActionData } from "Checklist/Actions/ActionsHub";
-import { IWorkItemChecklist } from "Checklist/Interfaces";
+import { ChecklistActionsHub } from "Checklist/Actions/ActionsHub";
+import { ChecklistType, IWorkItemChecklist, IWorkItemChecklists } from "Checklist/Interfaces";
 import { BaseStore } from "Library/Flux/Stores/BaseStore";
 import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
 
-export class ChecklistStore extends BaseStore<IDictionaryStringTo<IChecklistActionData>, IChecklistActionData, string> {
+export class ChecklistStore extends BaseStore<IDictionaryStringTo<IWorkItemChecklists>, IWorkItemChecklists, string> {
     private _workItemTypeName: string;
 
     constructor() {
@@ -11,7 +11,7 @@ export class ChecklistStore extends BaseStore<IDictionaryStringTo<IChecklistActi
         this.items = {};
     }
 
-    public getItem(id: string): IChecklistActionData {
+    public getItem(id: string): IWorkItemChecklists {
         if (isNullOrWhiteSpace(id)) {
             return null;
         }
@@ -36,18 +36,20 @@ export class ChecklistStore extends BaseStore<IDictionaryStringTo<IChecklistActi
     }
 
     protected initializeActionListeners() {
-        ChecklistActionsHub.InitializeChecklist.addListener((checklistData: IChecklistActionData) => {
+        ChecklistActionsHub.InitializeChecklist.addListener((checklistData: IWorkItemChecklists) => {
             if (checklistData) {
-                this._updateChecklist(checklistData.personal, true);
-                this._updateChecklist(checklistData.shared, false);
+                this._updateChecklist(checklistData.personal, ChecklistType.Personal);
+                this._updateChecklist(checklistData.shared, ChecklistType.Shared);
+                this._updateChecklist(checklistData.witDefault, ChecklistType.WitDefault);
             }
             this.emitChanged();
         });
 
-        ChecklistActionsHub.UpdateChecklist.addListener((checklistData: IChecklistActionData) => {
+        ChecklistActionsHub.UpdateChecklist.addListener((checklistData: IWorkItemChecklists) => {
             if (checklistData) {
-                this._updateChecklist(checklistData.personal, true);
-                this._updateChecklist(checklistData.shared, false);
+                this._updateChecklist(checklistData.personal, ChecklistType.Personal);
+                this._updateChecklist(checklistData.shared, ChecklistType.Shared);
+                this._updateChecklist(checklistData.witDefault, ChecklistType.WitDefault);
             }
             this.emitChanged();
         });
@@ -57,17 +59,23 @@ export class ChecklistStore extends BaseStore<IDictionaryStringTo<IChecklistActi
         return key;
     }
 
-    private _updateChecklist(checklist: IWorkItemChecklist, isPersonal: boolean) {
+    private _updateChecklist(checklist: IWorkItemChecklist, checklistType: ChecklistType) {
         if (checklist) {
             const key = checklist.id.toLowerCase();
             if (this.items[key] == null) {
-                this.items[key] = {personal: null, shared: null};
+                this.items[key] = {personal: null, shared: null, witDefault: null};
             }
-            if (isPersonal) {
-                this.items[key].personal = checklist;
-            }
-            else {
-                this.items[key].shared = checklist;
+
+            switch (checklistType) {
+                case ChecklistType.Personal:
+                    this.items[key].personal = checklist;
+                    break;
+                case ChecklistType.Shared:
+                    this.items[key].shared = checklist;
+                    break;
+                default:
+                    this.items[key].witDefault = checklist;
+                    break;
             }
         }
     }

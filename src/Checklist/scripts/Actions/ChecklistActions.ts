@@ -1,6 +1,6 @@
 import { ChecklistActionsHub } from "Checklist/Actions/ActionsHub";
 import { ChecklistDataService } from "Checklist/DataServices/ChecklistDataService";
-import { DefaultError, IWorkItemChecklist } from "Checklist/Interfaces";
+import { ChecklistType, DefaultError, IWorkItemChecklist } from "Checklist/Interfaces";
 import { StoresHub } from "Checklist/Stores/StoresHub";
 import { ErrorMessageActions } from "Library/Flux/Actions/ErrorMessageActions";
 
@@ -13,7 +13,7 @@ export namespace ChecklistActions {
             const model = await ChecklistDataService.loadChecklistForWorkItemType(workItemType, projectId);
 
             if (StoresHub.checklistStore.checkCurrentWorkItemType(workItemType)) {
-                ChecklistActionsHub.InitializeChecklist.invoke({personal: null, shared: model});
+                ChecklistActionsHub.InitializeChecklist.invoke({personal: null, shared: null, witDefault: model});
             }
 
             StoresHub.checklistStore.setLoading(false, workItemType);
@@ -31,7 +31,8 @@ export namespace ChecklistActions {
                 if (StoresHub.checklistStore.checkCurrentWorkItemType(key)) {
                     ChecklistActionsHub.UpdateChecklist.invoke({
                         personal: null,
-                        shared: updatedChecklist
+                        shared: null,
+                        witDefault: updatedChecklist
                     });
                 }
                 StoresHub.checklistStore.setLoading(false, key);
@@ -44,17 +45,17 @@ export namespace ChecklistActions {
         }
     }
 
-    export async function initializeChecklist(workItemId: number, workItemType: string, projectId: string) {
+    export async function initializeChecklists(workItemId: number, workItemType: string, projectId: string) {
         if (StoresHub.checklistStore.isLoaded(`${workItemId}`)) {
             ErrorMessageActions.dismissErrorMessage("ChecklistError");
             ChecklistActionsHub.InitializeChecklist.invoke(null);
         }
         else {
-            refreshChecklist(workItemId, workItemType, projectId);
+            refreshChecklists(workItemId, workItemType, projectId);
         }
     }
 
-    export async function refreshChecklist(workItemId: number, workItemType: string, projectId: string) {
+    export async function refreshChecklists(workItemId: number, workItemType: string, projectId: string) {
         const key = `${workItemId}`;
 
         ErrorMessageActions.dismissErrorMessage("ChecklistError");
@@ -62,25 +63,39 @@ export namespace ChecklistActions {
         if (!StoresHub.checklistStore.isLoading(key)) {
             StoresHub.checklistStore.setLoading(true, key);
 
-            const models: IWorkItemChecklist[] = await ChecklistDataService.loadWorkItemChecklist(workItemId, workItemType, projectId);
+            const models = await ChecklistDataService.loadWorkItemChecklists(workItemId, workItemType, projectId);
 
-            ChecklistActionsHub.InitializeChecklist.invoke({personal: models[0], shared: models[1]});
+            ChecklistActionsHub.InitializeChecklist.invoke({personal: models.personal, shared: models.shared, witDefault: models.witDefault});
             StoresHub.checklistStore.setLoading(false, key);
         }
     }
 
-    export async function updateChecklist(checklist: IWorkItemChecklist, isPersonal: boolean) {
+    export async function updateChecklist(checklist: IWorkItemChecklist, checklistType: ChecklistType) {
         const key = checklist.id;
 
         if (!StoresHub.checklistStore.isLoading(key)) {
             StoresHub.checklistStore.setLoading(true, key);
             try {
-                const updatedChecklist = await ChecklistDataService.updateWorkItemChecklist(checklist, isPersonal);
+                if (checklistType === ChecklistType.WitDefault) {
+                    const updatedChecklist = await ChecklistDataService.updateDefaultChecklistForWorkItem(checklist);
 
-                ChecklistActionsHub.UpdateChecklist.invoke({
-                    personal: isPersonal ? updatedChecklist : null,
-                    shared: isPersonal ? null : updatedChecklist
-                });
+                    ChecklistActionsHub.UpdateChecklist.invoke({
+                        personal: null,
+                        shared: null,
+                        witDefault: updatedChecklist
+                    });
+                }
+                else {
+                    const isPersonal = checklistType === ChecklistType.Personal;
+                    const updatedChecklist = await ChecklistDataService.updateWorkItemChecklist(checklist, isPersonal);
+
+                    ChecklistActionsHub.UpdateChecklist.invoke({
+                        personal: isPersonal ? updatedChecklist : null,
+                        shared: isPersonal ? null : updatedChecklist,
+                        witDefault: null
+                    });
+                }
+
                 StoresHub.checklistStore.setLoading(false, key);
                 ErrorMessageActions.dismissErrorMessage("ChecklistError");
             }

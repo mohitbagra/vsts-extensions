@@ -1,14 +1,9 @@
-import { IWorkItemChecklist } from "Checklist/Interfaces";
+import { IWorkItemChecklists } from "Checklist/Interfaces";
 import { Action } from "Library/Flux/Actions/Action";
 
-export interface IChecklistActionData {
-    personal: IWorkItemChecklist;
-    shared: IWorkItemChecklist;
-}
-
 export namespace ChecklistActionsHub {
-    export const InitializeChecklist = new Action<IChecklistActionData>();
-    export const UpdateChecklist = new Action<IChecklistActionData>();
+    export const InitializeChecklist = new Action<IWorkItemChecklists>();
+    export const UpdateChecklist = new Action<IWorkItemChecklists>();
 }
 
 export namespace SettingsActionsHub {
