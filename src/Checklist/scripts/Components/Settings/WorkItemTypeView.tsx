@@ -286,7 +286,7 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
     @autobind
     private async _addChecklistItem(checklistItem: IChecklistItem) {
         const {checklist} = this.state;
-        const newChecklistItem = {...checklistItem, id: `dci_${Date.now()}`, isDefault: true};
+        const newChecklistItem = {...checklistItem, id: `dcwiti_${Date.now()}`, isDefault: true};
         const newChecklistItems = (checklist.checklistItems || []).concat(newChecklistItem);
 
         this._updateChecklist(newChecklistItems);
@@ -319,6 +319,6 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
         }
 
         const checklists = StoresHub.checklistStore.getItem(this.props.workItemType);
-        return checklists == null ? null : checklists.shared;
+        return checklists == null ? null : checklists.witDefault;
     }
 }

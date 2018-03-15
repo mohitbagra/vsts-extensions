@@ -1,37 +1,53 @@
-import { ChecklistItemState, IChecklistItem, IWorkItemChecklist } from "Checklist/Interfaces";
-import { subtract } from "Library/Utilities/Array";
+import {
+    ChecklistItemState, IChecklistItem, IWorkItemChecklist, IWorkItemChecklists
+} from "Checklist/Interfaces";
 import * as ExtensionDataManager from "Library/Utilities/ExtensionDataManager";
-import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
+import { isNullOrWhiteSpace } from "Library/Utilities/String";
 
 export namespace ChecklistDataService {
     export async function loadChecklistForWorkItemType(workItemType: string, projectId?: string): Promise<IWorkItemChecklist> {
         const project = projectId || VSS.getWebContext().project.id;
-        const model = await ExtensionDataManager.readDocument<IWorkItemChecklist>(`dc_${project}`, workItemType, {id: workItemType, checklistItems: []}, false);
+        const model = await ExtensionDataManager.readDocument<IWorkItemChecklist>(`dcwit_${project}`, workItemType, {id: workItemType, checklistItems: []}, false);
         preprocessChecklist(model);
         return model;
     }
 
     export async function updateChecklistForWorkItemType(checklist: IWorkItemChecklist): Promise<IWorkItemChecklist> {
-        const updatedChecklist = await ExtensionDataManager.addOrUpdateDocument<IWorkItemChecklist>(`dc_${VSS.getWebContext().project.id}`, checklist, false);
+        const updatedChecklist = await ExtensionDataManager.addOrUpdateDocument<IWorkItemChecklist>(`dcwit_${VSS.getWebContext().project.id}`, checklist, false);
         preprocessChecklist(updatedChecklist);
         return updatedChecklist;
     }
 
-    export async function loadWorkItemChecklist(workItemId: number, workItemType: string, projectId: string): Promise<IWorkItemChecklist[]> {
+    export async function loadDefaultChecklistForWorkItem(workItemId: number): Promise<IWorkItemChecklist> {
+        const key = `${workItemId}`;
+        const model = await ExtensionDataManager.readDocument<IWorkItemChecklist>("DefaultCheckList", key, {id: key, checklistItems: []}, false);
+        preprocessChecklist(model);
+        return model;
+    }
+
+    export async function updateDefaultChecklistForWorkItem(checklist: IWorkItemChecklist): Promise<IWorkItemChecklist> {
+        const updatedChecklist = await ExtensionDataManager.addOrUpdateDocument<IWorkItemChecklist>("DefaultCheckList", checklist, false);
+        preprocessChecklist(updatedChecklist);
+        return updatedChecklist;
+    }
+
+    export async function loadWorkItemChecklists(workItemId: number, workItemType: string, projectId: string): Promise<IWorkItemChecklists> {
         const key = `${workItemId}`;
 
-        const defaultChecklist = await loadChecklistForWorkItemType(workItemType, projectId);
-
         const models: IWorkItemChecklist[] = await Promise.all([
+            loadChecklistForWorkItemType(workItemType, projectId),
+            loadDefaultChecklistForWorkItem(workItemId),
             ExtensionDataManager.readDocument<IWorkItemChecklist>("CheckListItems", key, {id: key, checklistItems: []}, true),
             ExtensionDataManager.readDocument<IWorkItemChecklist>("CheckListItems", key, {id: key, checklistItems: []}, false)
         ]);
-        preprocessChecklist(models[0]);
-        preprocessChecklist(models[1]);
+        preprocessChecklist(models[2]);
+        preprocessChecklist(models[3]);
 
-        models[1].checklistItems = mergeChecklist(models[1].checklistItems, defaultChecklist.checklistItems);
-
-        return models;
+        return {
+            personal: models[2],
+            shared: models[3],
+            witDefault: mergeDefaultChecklists(models[0], models[1])
+        };
     }
 
     export async function updateWorkItemChecklist(checklist: IWorkItemChecklist, isPersonal: boolean): Promise<IWorkItemChecklist> {
@@ -55,12 +71,25 @@ export namespace ChecklistDataService {
         }
     }
 
-    function mergeChecklist(workItemChecklistItems: IChecklistItem[], defaultChecklistItems: IChecklistItem[]): IChecklistItem[] {
-        const defaultItemsInWorkItemChecklist = workItemChecklistItems.filter(i => i.isDefault);
-        const itemsToAdd = subtract(defaultChecklistItems, workItemChecklistItems, (i1, i2) => stringEquals(i1.id, i2.id, true));
-        const itemsToRemove = subtract(defaultItemsInWorkItemChecklist, defaultChecklistItems, (i1, i2) => stringEquals(i1.id, i2.id, true));
+    function mergeDefaultChecklists(workItemTypeChecklist: IWorkItemChecklist, workItemChecklist: IWorkItemChecklist): IWorkItemChecklist {
+        const mergedChecklist: IWorkItemChecklist = {...workItemChecklist, checklistItems: []};
 
-        const final = subtract(workItemChecklistItems, itemsToRemove, (i1, i2) => stringEquals(i1.id, i2.id, true));
-        return itemsToAdd.concat(final);
+        const workItemChecklistItemsMap: IDictionaryStringTo<IChecklistItem> = {};
+        for (const checklistItem of workItemChecklist.checklistItems) {
+            workItemChecklistItemsMap[checklistItem.id.toLowerCase()] = checklistItem;
+        }
+
+        for (const checklistItem of workItemTypeChecklist.checklistItems) {
+            const key = checklistItem.id.toLowerCase();
+            if (workItemChecklistItemsMap[key] == null) {
+                mergedChecklist.checklistItems.push(checklistItem);
+            }
+            else {
+                const workItemChecklistItem = workItemChecklistItemsMap[key];
+                mergedChecklist.checklistItems.push({...workItemChecklistItem, text: checklistItem.text, required: checklistItem.required});
+            }
+        }
+
+        return mergedChecklist;
     }
 }
