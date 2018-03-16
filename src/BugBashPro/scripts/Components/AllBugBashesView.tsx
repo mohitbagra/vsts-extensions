@@ -102,6 +102,7 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
                 }
                 <Hub
                     className="bugbashes-hub"
+                    hideFullScreenToggle={true}
                     hubViewState={this._hubViewState}
                     commands={[
                         {

@@ -182,7 +182,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
             else {
                 const bugBashItem = StoresHub.bugBashItemStore.getItem(this.props.bugBashItemId);
                 if (bugBashItem) {
-                    return <BugBashItemEditor bugBashId={this.props.bugBash.id} bugBashItem={bugBashItem} />;
+                    return <BugBashItemEditor bugBashId={this.props.bugBash.id} bugBashItem={bugBashItem} isMaximized={true} />;
                 }
                 else {
                     return <MessageBar messageBarType={MessageBarType.error}>This bug bash item does not exist</MessageBar>;

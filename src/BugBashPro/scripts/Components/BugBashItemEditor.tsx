@@ -5,7 +5,7 @@ import * as React from "react";
 import { BugBashItemCommentActions } from "BugBashPro/Actions/BugBashItemCommentActions";
 import { RichEditorComponent } from "BugBashPro/Components/RichEditorComponent";
 import {
-    BugBashFieldNames, BugBashItemFieldNames, ErrorKeys, SizeLimits
+    BugBashFieldNames, BugBashItemFieldNames, ErrorKeys, SizeLimits, UrlActions
 } from "BugBashPro/Constants";
 import { copyImageToGitRepo } from "BugBashPro/Helpers";
 import { IBugBashItemComment } from "BugBashPro/Interfaces";
@@ -22,6 +22,7 @@ import { BaseStore } from "Library/Flux/Stores/BaseStore";
 import { confirmAction } from "Library/Utilities/Core";
 import { defaultDateComparer, friendly } from "Library/Utilities/Date";
 import { getCurrentUser, IdentityRef } from "Library/Utilities/Identity";
+import { navigate } from "Library/Utilities/Navigation";
 import { Checkbox } from "OfficeFabric/Checkbox";
 import { CommandBar } from "OfficeFabric/CommandBar";
 import { ActivityItem } from "OfficeFabric/components/ActivityItem";
@@ -38,6 +39,7 @@ import { WebApiTeam } from "TFS/Core/Contracts";
 export interface IBugBashItemEditorProps extends IBaseFluxComponentProps {
     bugBashItem: BugBashItem;
     bugBashId: string;
+    isMaximized?: boolean;
 }
 
 export interface IBugBashItemEditorState extends IBaseFluxComponentState {
@@ -259,7 +261,7 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
 
             const isMenuDisabled = this.props.bugBashItem.isDirty() || this.props.bugBashItem.isNew();
 
-            return [
+            const menuItems: IContextualMenuItem[] = [
                 {
                     key: "Accept", name: "Accept", title: "Create workitems from selected items",
                     iconProps: {iconName: "Accept"}, className: !isMenuDisabled ? "acceptItemButton" : "",
@@ -281,6 +283,16 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                     }
                 }
             ];
+
+            if (!this.props.bugBashItem.isNew()) {
+                menuItems.push({
+                    key: "fullscreen", name: "",
+                    title: this.props.isMaximized ? "Go back to list" : "Go fullscreen",
+                    iconProps: {iconName: this.props.isMaximized ? "BackToWindow" : "FullScreen"},
+                    onClick: this._toggleFullScreen
+                });
+            }
+            return menuItems;
         }
         else {
             return [{
@@ -466,5 +478,17 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
     @autobind
     private _saveSelectedItem() {
         this.props.bugBashItem.save(this.props.bugBashId);
+    }
+
+    @autobind
+    private _toggleFullScreen() {
+        if (this.props.isMaximized) {
+            // go back to list
+            navigate({ view: UrlActions.ACTION_RESULTS, id: this.props.bugBashId });
+        }
+        else {
+            // open full screen item editor
+            navigate({view: UrlActions.ACTION_RESULTS, id: this.props.bugBashId, itemId: this.props.bugBashItem.id});
+        }
     }
 }

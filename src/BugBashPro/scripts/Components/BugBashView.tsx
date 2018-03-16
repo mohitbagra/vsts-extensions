@@ -166,6 +166,7 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
         return (
             <Hub
                 className="bugbash-view-hub"
+                hideFullScreenToggle={true}
                 hubViewState={this._hubViewState}
             >
                 <HubHeader
