@@ -25,13 +25,13 @@ import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { BaseStore } from "Library/Flux/Stores/BaseStore";
-import { confirmAction } from "Library/Utilities/Core";
+import { confirmAction, delegate } from "Library/Utilities/Core";
 import { parseUniquefiedIdentityName } from "Library/Utilities/Identity";
 import {
     readLocalSetting, WebSettingsScope, writeLocalSetting
 } from "Library/Utilities/LocalSettingsService";
 import { navigate } from "Library/Utilities/Navigation";
-import { stringEquals } from "Library/Utilities/String";
+import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
 import { SelectionMode } from "OfficeFabric/Selection";
 import { autobind } from "OfficeFabric/Utilities";
 import { FilterBar, IFilterBar, KeywordFilterBarItem } from "VSSUI/FilterBar";
@@ -301,7 +301,7 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
     @autobind
     private _getTeamListItem(teamId: string): IPickListItem {
         return {
-            name: StoresHub.teamStore.getItem(teamId) && StoresHub.teamStore.getItem(teamId).name,
+            name: (StoresHub.teamStore.getItem(teamId) && StoresHub.teamStore.getItem(teamId).name) || teamId,
             key: teamId
         };
     }
@@ -392,6 +392,55 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
         };
     }
 
+    @autobind
+    private _searchPicklist(searchText: string, items: string[], getListItem: (item: string) => IPickListItem): string[] {
+        const lowerCaseSearchText = searchText && searchText.toLowerCase();
+        let result;
+        if (!isNullOrWhiteSpace(lowerCaseSearchText)) {
+             result = items.filter(item => {
+                const pickListItem = getListItem(item);
+                return pickListItem.name.toLowerCase().indexOf(lowerCaseSearchText) === 0;
+            });
+        }
+        else {
+            result = items;
+        }
+
+        return result;
+    }
+
+    private _getPickListFilterBarItem(
+        placeholder: string,
+        filterItemKey: string,
+        getPickListItems: () => string[],
+        getListItem: (item: string) => IPickListItem
+    ): JSX.Element {
+        return (
+            <PickListFilterBarItem
+                showSelectAll={false}
+                placeholder={placeholder}
+                filterItemKey={filterItemKey}
+                selectionMode={SelectionMode.multiple}
+                getPickListItems={getPickListItems}
+                getListItem={getListItem}
+                isSearchable={true}
+                searchTextPlaceholder="Search"
+                searchNoResultsText="Nothing found"
+                indicators={[
+                    {
+                        getItemIndicator: ((value: string) => {
+                            if (!value) {
+                                return null;
+                            }
+                            return { title: `${StoresHub.bugBashItemStore.propertyMap[filterItemKey][value]}` };
+                        })
+                    }
+                ]}
+                onSearch={delegate(this, this._searchPicklist, getListItem)}
+            />
+        );
+    }
+
     private _renderHubFilterBar(): JSX.Element {
         if ((this.state.selectedPivot === BugBashViewPivotKeys.Results || this.state.selectedPivot === BugBashViewPivotKeys.Charts)
             && !this.props.bugBashItemId) {
@@ -402,120 +451,24 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
                     {
                         this.state.paneMode !== BugBashViewActions.AcceptedItemsOnly &&
                         this.state.paneMode !== BugBashViewActions.AllItems &&
-                        <PickListFilterBarItem
-                            placeholder={"Team"}
-                            filterItemKey={BugBashItemFieldNames.TeamId}
-                            selectionMode={SelectionMode.multiple}
-                            getPickListItems={this._getTeamPickListItems}
-                            getListItem={this._getTeamListItem}
-                            indicators={[
-                                {
-                                    getItemIndicator: ((teamId: string) => {
-                                        if (!teamId) {
-                                            return null;
-                                        }
-                                        return { title: `${StoresHub.bugBashItemStore.propertyMap[BugBashItemFieldNames.TeamId][teamId]}` };
-                                    })
-                                }
-                            ]}
-                        />
+                        this._getPickListFilterBarItem("Team", BugBashItemFieldNames.TeamId, this._getTeamPickListItems, this._getTeamListItem)
                     }
-                    <PickListFilterBarItem
-                        placeholder={"Created By"}
-                        filterItemKey={BugBashItemFieldNames.CreatedBy}
-                        selectionMode={SelectionMode.multiple}
-                        getPickListItems={this._getCreatedByPickListItems}
-                        getListItem={this._getCreatedByListItem}
-                        indicators={[
-                            {
-                                getItemIndicator: ((createdBy: string) => {
-                                    if (!createdBy) {
-                                        return null;
-                                    }
-                                    return { title: `${StoresHub.bugBashItemStore.propertyMap[BugBashItemFieldNames.CreatedBy][createdBy]}` };
-                                })
-                            }
-                        ]}
-                    />
+                    {this._getPickListFilterBarItem("Created By", BugBashItemFieldNames.CreatedBy, this._getCreatedByPickListItems, this._getCreatedByListItem)}
                     {
                         this.state.paneMode === BugBashViewActions.RejectedItemsOnly &&
-                        <PickListFilterBarItem
-                            placeholder={"Rejected By"}
-                            filterItemKey={BugBashItemFieldNames.RejectedBy}
-                            selectionMode={SelectionMode.multiple}
-                            getPickListItems={this._getRejectedByPickListItems}
-                            getListItem={this._getRejectedByListItem}
-                            indicators={[
-                                {
-                                    getItemIndicator: ((rejectedBy: string) => {
-                                        if (!rejectedBy) {
-                                            return null;
-                                        }
-                                        return { title: `${StoresHub.bugBashItemStore.propertyMap[BugBashItemFieldNames.RejectedBy][rejectedBy]}` };
-                                    })
-                                }
-                            ]}
-                        />
+                        this._getPickListFilterBarItem("Rejected By", BugBashItemFieldNames.RejectedBy, this._getRejectedByPickListItems, this._getRejectedByListItem)
                     }
                     {
                         this.state.paneMode === BugBashViewActions.AcceptedItemsOnly &&
-                        <PickListFilterBarItem
-                            placeholder={"State"}
-                            filterItemKey={WorkItemFieldNames.State}
-                            selectionMode={SelectionMode.multiple}
-                            getPickListItems={this._getStatePickListItems}
-                            getListItem={this._getStateListItem}
-                            indicators={[
-                                {
-                                    getItemIndicator: ((state: string) => {
-                                        if (!state) {
-                                            return null;
-                                        }
-                                        return { title: `${StoresHub.bugBashItemStore.propertyMap[WorkItemFieldNames.State][state]}` };
-                                    })
-                                }
-                            ]}
-                        />
+                        this._getPickListFilterBarItem("State", WorkItemFieldNames.State, this._getStatePickListItems, this._getStateListItem)
                     }
                     {
                         this.state.paneMode === BugBashViewActions.AcceptedItemsOnly &&
-                        <PickListFilterBarItem
-                            placeholder={"Assigned To"}
-                            filterItemKey={WorkItemFieldNames.AssignedTo}
-                            selectionMode={SelectionMode.multiple}
-                            getPickListItems={this._getAssignedToPickListItems}
-                            getListItem={this._getAssignedToListItem}
-                            indicators={[
-                                {
-                                    getItemIndicator: ((assignedTo: string) => {
-                                        if (!assignedTo) {
-                                            return null;
-                                        }
-                                        return { title: `${StoresHub.bugBashItemStore.propertyMap[WorkItemFieldNames.AssignedTo][assignedTo]}` };
-                                    })
-                                }
-                            ]}
-                        />
+                        this._getPickListFilterBarItem("Assigned To", WorkItemFieldNames.AssignedTo, this._getAssignedToPickListItems, this._getAssignedToListItem)
                     }
                     {
                         this.state.paneMode === BugBashViewActions.AcceptedItemsOnly &&
-                        <PickListFilterBarItem
-                            placeholder={"Area Path"}
-                            filterItemKey={WorkItemFieldNames.AreaPath}
-                            selectionMode={SelectionMode.multiple}
-                            getPickListItems={this._getAreaPathPickListItems}
-                            getListItem={this._getAreaPathListItem}
-                            indicators={[
-                                {
-                                    getItemIndicator: ((area: string) => {
-                                        if (!area) {
-                                            return null;
-                                        }
-                                        return { title: `${StoresHub.bugBashItemStore.propertyMap[WorkItemFieldNames.AreaPath][area]}` };
-                                    })
-                                }
-                            ]}
-                        />
+                        this._getPickListFilterBarItem("Area Path", WorkItemFieldNames.AreaPath, this._getAreaPathPickListItems, this._getAreaPathListItem)
                     }
                 </FilterBar>
             );
