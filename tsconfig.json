@@ -23,6 +23,7 @@
             "Checklist/*": ["src/Checklist/scripts/*"],
             "ControlsLibrary/*": ["src/ControlsLibrary/scripts/*"],
             "OneClick/*": ["src/OneClick/scripts/*"],
+            "PRWorkItems/*": ["src/PRWorkItems/scripts/*"],
             "RelatedWits/*": ["src/RelatedWits/scripts/*"]
         },
         "types": [

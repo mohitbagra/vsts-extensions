@@ -1,0 +1,16 @@
+{
+    "public": false,
+    "publisher": "mohitbagra-dev",
+    "name": "PR workitems - Dev",
+    "baseUri": "https://localhost:8888/PRWorkItems",
+    "files": [
+        {
+            "path": "../images",
+            "addressable": true
+        },
+        {
+            "path": "../README.md",
+            "addressable": true
+        }
+    ]
+}

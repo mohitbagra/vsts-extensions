@@ -83,6 +83,7 @@ module.exports = {
             "Checklist": path.resolve(__dirname, "src/Checklist/scripts"),
             "ControlsLibrary": path.resolve(__dirname, "src/ControlsLibrary/scripts"),
             "OneClick": path.resolve(__dirname, "src/OneClick/scripts"),
+            "PRWorkItems": path.resolve(__dirname, "src/PRWorkItems/scripts"),
             "RelatedWits": path.resolve(__dirname, "src/RelatedWits/scripts")
         }        
     },

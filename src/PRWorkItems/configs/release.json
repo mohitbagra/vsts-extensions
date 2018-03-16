@@ -1,0 +1,21 @@
+{
+    "public": true,
+    "files": [
+        {
+            "path": "../scripts",
+            "addressable": true
+        },
+        {
+            "path": "../images",
+            "addressable": true
+        },
+        {
+            "path": "../html",
+            "addressable": true
+        },
+        {
+            "path": "../README.md",
+            "addressable": true
+        }
+    ]
+}
