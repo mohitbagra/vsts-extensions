@@ -27,11 +27,11 @@ export abstract class AutoResizableComponent<TP, TS> extends BaseFluxComponent<T
 
     public componentDidMount() {
         super.componentDidMount();
-        this.resize();
+        this._windowResizeThrottleDelegate.call(this);
     }
 
     public componentDidUpdate() {
-        this.resize();
+        this._windowResizeThrottleDelegate.call(this);
     }
 
     protected resize() {

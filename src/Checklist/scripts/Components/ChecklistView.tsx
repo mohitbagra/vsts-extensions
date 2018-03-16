@@ -10,6 +10,7 @@ import {
     ChecklistItemState, ChecklistType, IChecklistItem, IWorkItemChecklist, IWorkItemChecklists
 } from "Checklist/Interfaces";
 import { StoresHub } from "Checklist/Stores/StoresHub";
+import { InfoLabel } from "Library/Components/InfoLabel";
 import { Loading } from "Library/Components/Loading";
 import { AutoResizableComponent } from "Library/Components/Utilities/AutoResizableComponent";
 import {
@@ -151,11 +152,19 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
             return (
                 <div className="checklist-items-container">
                     <div>
-                        <div className="checklist-items-label">Default items</div>
+                        <InfoLabel
+                            className="checklist-items-label"
+                            label="Default items"
+                            info={`Default checklist for all "${this.props.workItemType}" workitems.`}
+                        />
                         {this._renderChecklistItems(checklists.witDefault.checklistItems, ChecklistType.WitDefault)}
                     </div>
                     <div style={{marginTop: "10px"}}>
-                        <div className="checklist-items-label">Custom items</div>
+                        <InfoLabel
+                            className="checklist-items-label"
+                            label="Custom items"
+                            info="Custom checklist just for this workitem."
+                        />
                         {this._renderChecklistItems(checklists.shared.checklistItems, ChecklistType.Shared)}
                     </div>
                 </div>
@@ -272,7 +281,7 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
     }
 
     @autobind
-    private async _reorderChecklistItem(data: {oldIndex: number, newIndex: number}, checklistType: ChecklistType) {
+    private async _reorderChecklistItem(data: {oldIndex: number, newIndex: number}, _ev: MouseEvent, checklistType: ChecklistType) {
         const {oldIndex, newIndex} = data;
 
         if (oldIndex !== newIndex) {

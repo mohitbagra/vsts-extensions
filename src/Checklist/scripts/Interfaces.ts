@@ -68,3 +68,4 @@ export const ChecklistItemStates: IDictionaryStringTo<IChecklistItemState> = {
 };
 
 export const DefaultError = "The current version of checklist doesn't match the version of checklist in this workitem. Please refresh the workitem or the checklist to get the latest Checklist data.";
+export const DefaultWorkItemTypeError = "The current version of checklist doesn't match the version of checklist in this work item type. Please refresh the checklist to get the latest data.";

@@ -46,6 +46,10 @@
                     width: 600px;
                     margin-top: 20px;
                     
+                    .checklist-items-container {
+                        max-height: inherit;
+                    }
+
                     .checklist-item-editor {
                         max-width: 400px;
                         width: 400px;

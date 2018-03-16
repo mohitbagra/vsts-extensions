@@ -1,6 +1,8 @@
 import { ChecklistActionsHub } from "Checklist/Actions/ActionsHub";
 import { ChecklistDataService } from "Checklist/DataServices/ChecklistDataService";
-import { ChecklistType, DefaultError, IWorkItemChecklist } from "Checklist/Interfaces";
+import {
+    ChecklistType, DefaultError, DefaultWorkItemTypeError, IWorkItemChecklist
+} from "Checklist/Interfaces";
 import { StoresHub } from "Checklist/Stores/StoresHub";
 import { ErrorMessageActions } from "Library/Flux/Actions/ErrorMessageActions";
 
@@ -39,7 +41,7 @@ export namespace ChecklistActions {
                 ErrorMessageActions.dismissErrorMessage("ChecklistError");
             }
             catch {
-                ErrorMessageActions.showErrorMessage(DefaultError, "ChecklistError");
+                ErrorMessageActions.showErrorMessage(DefaultWorkItemTypeError, "ChecklistError");
                 StoresHub.checklistStore.setLoading(false, key);
             }
         }
