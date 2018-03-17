@@ -25,13 +25,13 @@ import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { BaseStore } from "Library/Flux/Stores/BaseStore";
-import { confirmAction, delegate } from "Library/Utilities/Core";
+import { confirmAction } from "Library/Utilities/Core";
 import { parseUniquefiedIdentityName } from "Library/Utilities/Identity";
 import {
     readLocalSetting, WebSettingsScope, writeLocalSetting
 } from "Library/Utilities/LocalSettingsService";
 import { navigate } from "Library/Utilities/Navigation";
-import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
+import { stringEquals } from "Library/Utilities/String";
 import { SelectionMode } from "OfficeFabric/Selection";
 import { autobind } from "OfficeFabric/Utilities";
 import { FilterBar, IFilterBar, KeywordFilterBarItem } from "VSSUI/FilterBar";
@@ -392,23 +392,6 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
         };
     }
 
-    @autobind
-    private _searchPicklist(searchText: string, items: string[], getListItem: (item: string) => IPickListItem): string[] {
-        const lowerCaseSearchText = searchText && searchText.toLowerCase();
-        let result;
-        if (!isNullOrWhiteSpace(lowerCaseSearchText)) {
-             result = items.filter(item => {
-                const pickListItem = getListItem(item);
-                return pickListItem.name.toLowerCase().indexOf(lowerCaseSearchText) === 0;
-            });
-        }
-        else {
-            result = items;
-        }
-
-        return result;
-    }
-
     private _getPickListFilterBarItem(
         placeholder: string,
         filterItemKey: string,
@@ -417,15 +400,17 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
     ): JSX.Element {
         return (
             <PickListFilterBarItem
-                showSelectAll={false}
-                placeholder={placeholder}
+                key={filterItemKey}
                 filterItemKey={filterItemKey}
                 selectionMode={SelectionMode.multiple}
                 getPickListItems={getPickListItems}
                 getListItem={getListItem}
+                placeholder={placeholder}
+                noItemsText="No items"
+                showSelectAll={false}
                 isSearchable={true}
                 searchTextPlaceholder="Search"
-                searchNoResultsText="Nothing found"
+                minItemsForSearchBox={4}
                 indicators={[
                     {
                         getItemIndicator: ((value: string) => {
@@ -436,7 +421,6 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
                         })
                     }
                 ]}
-                onSearch={delegate(this, this._searchPicklist, getListItem)}
             />
         );
     }
