@@ -26,6 +26,7 @@ import { isNullOrWhiteSpace } from "Library/Utilities/String";
 import { Checkbox } from "OfficeFabric/Checkbox";
 import { DatePicker } from "OfficeFabric/DatePicker";
 import { Dropdown, IDropdownOption, IDropdownProps } from "OfficeFabric/Dropdown";
+import { Link } from "OfficeFabric/Link";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
 import { Overlay } from "OfficeFabric/Overlay";
 import { autobind } from "OfficeFabric/Utilities";
@@ -252,7 +253,10 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
                             onChange={this._onDefaultTeamChange}
                         />
 
-                        <InfoLabel label="Work item template" info="Select a work item template that would be applied during work item creation." />
+                        <div className="template-info-container">
+                            <InfoLabel label="Work item template" info="Select a work item template that would be applied during work item creation." />
+                            {workItemType && acceptTemplateTeam && <Link href={this._getTemplatePageUrl(acceptTemplateTeamId, workItemType.name)} target="_blank">Add a template</Link>}
+                        </div>
                         <Dropdown
                             selectedKey={acceptTemplateId.toLowerCase()}
                             onRenderList={this._onRenderCallout}
@@ -264,6 +268,16 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
                 </div>
             </div>
         );
+    }
+
+    private _getTemplatePageUrl(teamId: string, workItemType?: string): string {
+        const webContext = VSS.getWebContext();
+        let url = `${webContext.collection.uri}/${webContext.project.id}/${teamId}/_admin/_work?_a=templates`;
+        if (workItemType) {
+            url = `${url}&type=${workItemType}`;
+        }
+
+        return url;
     }
 
     @autobind

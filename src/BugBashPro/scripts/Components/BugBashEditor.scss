@@ -29,6 +29,15 @@
                 margin-top: 23px;
             }
         }
+
+        .template-info-container {
+            display: flex;
+            align-items: center;
+    
+            .info-label {
+                flex: 1;
+            }
+        }
         
         .input-error {
             margin-top: 5px;
