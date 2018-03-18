@@ -41,10 +41,10 @@ import {
     IWorkItemChangedArgs, IWorkItemLoadedArgs, IWorkItemNotificationListener
 } from "TFS/WorkItemTracking/ExtensionContracts";
 import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
-import { PickListFilterBarItem } from "VSSUI/Components/PickList";
 import { FilterBar, IFilterBar, KeywordFilterBarItem } from "VSSUI/FilterBar";
 import { Hub } from "VSSUI/Hub";
 import { HubHeader } from "VSSUI/HubHeader";
+import { IPickListItem, PickListFilterBarItem } from "VSSUI/PickList";
 import { PivotBarItem } from "VSSUI/PivotBar";
 import { FILTER_CHANGE_EVENT, IFilterState } from "VSSUI/Utilities/Filter";
 import { HubViewOptionKeys, HubViewState, IHubViewState } from "VSSUI/Utilities/HubViewState";
@@ -165,74 +165,10 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                         <HubHeader title="Related work items" />
                         <FilterBar componentRef={this._resolveFilterBar}>
                             <KeywordFilterBarItem filterItemKey={"keyword"} />
-                            <PickListFilterBarItem
-                                placeholder={"Work Item Type"}
-                                filterItemKey={WorkItemFieldNames.WorkItemType}
-                                selectionMode={SelectionMode.multiple}
-                                getPickListItems={delegate(this, this._getPicklistItems, WorkItemFieldNames.WorkItemType)}
-                                getListItem={delegate(this, this._getListItem, WorkItemFieldNames.WorkItemType)}
-                                indicators={[
-                                    {
-                                        getItemIndicator: ((wit: string) => {
-                                            if (!wit) {
-                                                return null;
-                                            }
-                                            return { title: `${StoresHub.relatedWorkItemsStore.propertyMap[WorkItemFieldNames.WorkItemType][wit]}` };
-                                        })
-                                    }
-                                ]}
-                            />
-                            <PickListFilterBarItem
-                                placeholder={"State"}
-                                filterItemKey={WorkItemFieldNames.State}
-                                selectionMode={SelectionMode.multiple}
-                                getPickListItems={delegate(this, this._getPicklistItems, WorkItemFieldNames.State)}
-                                getListItem={delegate(this, this._getListItem, WorkItemFieldNames.State)}
-                                indicators={[
-                                    {
-                                        getItemIndicator: ((state: string) => {
-                                            if (!state) {
-                                                return null;
-                                            }
-                                            return { title: `${StoresHub.relatedWorkItemsStore.propertyMap[WorkItemFieldNames.State][state]}` };
-                                        })
-                                    }
-                                ]}
-                            />
-                            <PickListFilterBarItem
-                                placeholder={"Assigned To"}
-                                filterItemKey={WorkItemFieldNames.AssignedTo}
-                                selectionMode={SelectionMode.multiple}
-                                getPickListItems={delegate(this, this._getPicklistItems, WorkItemFieldNames.AssignedTo)}
-                                getListItem={delegate(this, this._getListItem, WorkItemFieldNames.AssignedTo)}
-                                indicators={[
-                                    {
-                                        getItemIndicator: ((assignedTo: string) => {
-                                            if (!assignedTo) {
-                                                return null;
-                                            }
-                                            return { title: `${StoresHub.relatedWorkItemsStore.propertyMap[WorkItemFieldNames.AssignedTo][assignedTo]}` };
-                                        })
-                                    }
-                                ]}
-                            />
-                            <PickListFilterBarItem
-                                placeholder={"Area Path"}
-                                filterItemKey={WorkItemFieldNames.AreaPath}
-                                selectionMode={SelectionMode.multiple}
-                                getPickListItems={delegate(this, this._getPicklistItems, WorkItemFieldNames.AreaPath)}
-                                getListItem={delegate(this, this._getListItem, WorkItemFieldNames.AreaPath)}
-                                indicators={[
-                                    {
-                                        getItemIndicator: ((area: string) => {
-                                            if (!area) {
-                                                return null;
-                                            }
-                                            return { title: `${StoresHub.relatedWorkItemsStore.propertyMap[WorkItemFieldNames.AreaPath][area]}` };
-                                        })
-                                    }
-                                ]}
-                            />
+                            {this._getPickListFilterBarItem("Work Item Type", WorkItemFieldNames.WorkItemType)}
+                            {this._getPickListFilterBarItem("State", WorkItemFieldNames.State)}
+                            {this._getPickListFilterBarItem("Assigned To", WorkItemFieldNames.AssignedTo)}
+                            {this._getPickListFilterBarItem("Area Path", WorkItemFieldNames.AreaPath)}
                         </FilterBar>
 
                         <PivotBarItem
@@ -470,13 +406,44 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
         RelatedWorkItemsActions.updateWorkItemInStore(updatedWorkItem);
     }
 
+    private _getPickListFilterBarItem(
+        placeholder: string,
+        filterItemKey: WorkItemFieldNames
+    ): JSX.Element {
+        return (
+            <PickListFilterBarItem
+                key={filterItemKey}
+                filterItemKey={filterItemKey}
+                selectionMode={SelectionMode.multiple}
+                getPickListItems={delegate(this, this._getPicklistItems, filterItemKey)}
+                getListItem={delegate(this, this._getListItem, filterItemKey)}
+                placeholder={placeholder}
+                noItemsText="No items"
+                showSelectAll={false}
+                isSearchable={true}
+                searchTextPlaceholder="Search"
+                minItemsForSearchBox={4}
+                indicators={[
+                    {
+                        getItemIndicator: ((value: string) => {
+                            if (!value) {
+                                return null;
+                            }
+                            return { title: `${StoresHub.relatedWorkItemsStore.propertyMap[filterItemKey][value]}` };
+                        })
+                    }
+                ]}
+            />
+        );
+    }
+
     @autobind
-    private _getPicklistItems(fieldName: WorkItemFieldNames) {
+    private _getPicklistItems(fieldName: WorkItemFieldNames): string[] {
         return Object.keys(StoresHub.relatedWorkItemsStore.propertyMap[fieldName]);
     }
 
     @autobind
-    private _getListItem(key: string, fieldName: WorkItemFieldNames) {
+    private _getListItem(key: string, fieldName: WorkItemFieldNames): IPickListItem {
         if (fieldName === WorkItemFieldNames.AssignedTo) {
             const identity = parseUniquefiedIdentityName(key);
             return {

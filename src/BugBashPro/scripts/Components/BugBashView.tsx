@@ -18,6 +18,7 @@ import {
 import { getBugBashUrl } from "BugBashPro/Helpers";
 import { StoresHub } from "BugBashPro/Stores/StoresHub";
 import { BugBash } from "BugBashPro/ViewModels/BugBash";
+import { BugBashItemKeyTypes } from "BugBashPro/ViewModels/BugBashItem";
 import { LongText } from "BugBashPro/ViewModels/LongText";
 import { Loading } from "Library/Components/Loading";
 import { getAsyncLoadedComponent } from "Library/Components/Utilities/AsyncLoadedComponent";
@@ -25,7 +26,7 @@ import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { BaseStore } from "Library/Flux/Stores/BaseStore";
-import { confirmAction } from "Library/Utilities/Core";
+import { confirmAction, delegate } from "Library/Utilities/Core";
 import { parseUniquefiedIdentityName } from "Library/Utilities/Identity";
 import {
     readLocalSetting, WebSettingsScope, writeLocalSetting
@@ -293,118 +294,17 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
         return null;
     }
 
-    @autobind
-    private _getTeamPickListItems(): string[] {
-        return Object.keys(StoresHub.bugBashItemStore.propertyMap[BugBashItemFieldNames.TeamId]);
-    }
-
-    @autobind
-    private _getTeamListItem(teamId: string): IPickListItem {
-        return {
-            name: (StoresHub.teamStore.getItem(teamId) && StoresHub.teamStore.getItem(teamId).name) || teamId,
-            key: teamId
-        };
-    }
-
-    @autobind
-    private _getCreatedByPickListItems(): string[] {
-        return Object.keys(StoresHub.bugBashItemStore.propertyMap[BugBashItemFieldNames.CreatedBy]);
-    }
-
-    @autobind
-    private _getCreatedByListItem(createdBy: string): IPickListItem {
-        const identity = parseUniquefiedIdentityName(createdBy);
-        return {
-            name: identity.displayName,
-            key: createdBy,
-            iconProps: {
-                iconType: VssIconType.image,
-                imageProps: {
-                    src: identity.imageUrl
-                }
-            }
-        };
-    }
-
-    @autobind
-    private _getRejectedByPickListItems(): string[] {
-        return Object.keys(StoresHub.bugBashItemStore.propertyMap[BugBashItemFieldNames.RejectedBy]);
-    }
-
-    @autobind
-    private _getRejectedByListItem(rejectedBy: string): IPickListItem {
-        const identity = parseUniquefiedIdentityName(rejectedBy);
-        return {
-            name: identity.displayName,
-            key: rejectedBy,
-            iconProps: {
-                iconType: VssIconType.image,
-                imageProps: {
-                    src: identity.imageUrl
-                }
-            }
-        };
-    }
-
-    @autobind
-    private _getStatePickListItems(): string[] {
-        return Object.keys(StoresHub.bugBashItemStore.propertyMap[WorkItemFieldNames.State]);
-    }
-
-    @autobind
-    private _getStateListItem(state: string): IPickListItem {
-        return {
-            name: state,
-            key: state
-        };
-    }
-
-    @autobind
-    private _getAssignedToPickListItems(): string[] {
-        return Object.keys(StoresHub.bugBashItemStore.propertyMap[WorkItemFieldNames.AssignedTo]);
-    }
-
-    @autobind
-    private _getAssignedToListItem(assignedTo: string): IPickListItem {
-        const identity = parseUniquefiedIdentityName(assignedTo);
-        return {
-            name: identity.displayName,
-            key: assignedTo,
-            iconProps: identity.imageUrl ? {
-                iconType: VssIconType.image,
-                imageProps: {
-                    src: identity.imageUrl
-                }
-            } : null
-        };
-    }
-
-    @autobind
-    private _getAreaPathPickListItems(): string[] {
-        return Object.keys(StoresHub.bugBashItemStore.propertyMap[WorkItemFieldNames.AreaPath]);
-    }
-
-    @autobind
-    private _getAreaPathListItem(area: string): IPickListItem {
-        return {
-            name: area.substr(area.lastIndexOf("\\") + 1),
-            key: area
-        };
-    }
-
     private _getPickListFilterBarItem(
         placeholder: string,
-        filterItemKey: string,
-        getPickListItems: () => string[],
-        getListItem: (item: string) => IPickListItem
+        filterItemKey: BugBashItemFieldNames | WorkItemFieldNames
     ): JSX.Element {
         return (
             <PickListFilterBarItem
                 key={filterItemKey}
                 filterItemKey={filterItemKey}
                 selectionMode={SelectionMode.multiple}
-                getPickListItems={getPickListItems}
-                getListItem={getListItem}
+                getPickListItems={delegate(this, this._getPicklistItems, filterItemKey)}
+                getListItem={delegate(this, this._getListItem, filterItemKey)}
                 placeholder={placeholder}
                 noItemsText="No items"
                 showSelectAll={false}
@@ -425,6 +325,48 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
         );
     }
 
+    @autobind
+    private _getPicklistItems(key: BugBashItemFieldNames | WorkItemFieldNames): string[] {
+        return Object.keys(StoresHub.bugBashItemStore.propertyMap[key]);
+    }
+
+    @autobind
+    private _getListItem(value: string, key: BugBashItemFieldNames | WorkItemFieldNames): IPickListItem {
+        const keyType = BugBashItemKeyTypes[key];
+
+        if (keyType === "identity" || keyType === "identityRef") {
+            const identity = parseUniquefiedIdentityName(value);
+            return {
+                name: identity.displayName,
+                key: value,
+                iconProps: identity.imageUrl ? {
+                    iconType: VssIconType.image,
+                    imageProps: {
+                        src: identity.imageUrl
+                    }
+                } : null
+            };
+        }
+        else if (key === WorkItemFieldNames.AreaPath) {
+            return {
+                name: value.substr(value.lastIndexOf("\\") + 1),
+                key: value
+            };
+        }
+        else if (key === BugBashItemFieldNames.TeamId) {
+            return {
+                name: (StoresHub.teamStore.getItem(value) && StoresHub.teamStore.getItem(value).name) || value,
+                key: value
+            };
+        }
+        else {
+            return {
+                name: value,
+                key: value
+            };
+        }
+    }
+
     private _renderHubFilterBar(): JSX.Element {
         if ((this.state.selectedPivot === BugBashViewPivotKeys.Results || this.state.selectedPivot === BugBashViewPivotKeys.Charts)
             && !this.props.bugBashItemId) {
@@ -435,24 +377,24 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
                     {
                         this.state.paneMode !== BugBashViewActions.AcceptedItemsOnly &&
                         this.state.paneMode !== BugBashViewActions.AllItems &&
-                        this._getPickListFilterBarItem("Team", BugBashItemFieldNames.TeamId, this._getTeamPickListItems, this._getTeamListItem)
+                        this._getPickListFilterBarItem("Team", BugBashItemFieldNames.TeamId)
                     }
-                    {this._getPickListFilterBarItem("Created By", BugBashItemFieldNames.CreatedBy, this._getCreatedByPickListItems, this._getCreatedByListItem)}
+                    {this._getPickListFilterBarItem("Created By", BugBashItemFieldNames.CreatedBy)}
                     {
                         this.state.paneMode === BugBashViewActions.RejectedItemsOnly &&
-                        this._getPickListFilterBarItem("Rejected By", BugBashItemFieldNames.RejectedBy, this._getRejectedByPickListItems, this._getRejectedByListItem)
+                        this._getPickListFilterBarItem("Rejected By", BugBashItemFieldNames.RejectedBy)
                     }
                     {
                         this.state.paneMode === BugBashViewActions.AcceptedItemsOnly &&
-                        this._getPickListFilterBarItem("State", WorkItemFieldNames.State, this._getStatePickListItems, this._getStateListItem)
+                        this._getPickListFilterBarItem("State", WorkItemFieldNames.State)
                     }
                     {
                         this.state.paneMode === BugBashViewActions.AcceptedItemsOnly &&
-                        this._getPickListFilterBarItem("Assigned To", WorkItemFieldNames.AssignedTo, this._getAssignedToPickListItems, this._getAssignedToListItem)
+                        this._getPickListFilterBarItem("Assigned To", WorkItemFieldNames.AssignedTo)
                     }
                     {
                         this.state.paneMode === BugBashViewActions.AcceptedItemsOnly &&
-                        this._getPickListFilterBarItem("Area Path", WorkItemFieldNames.AreaPath, this._getAreaPathPickListItems, this._getAreaPathListItem)
+                        this._getPickListFilterBarItem("Area Path", WorkItemFieldNames.AreaPath)
                     }
                 </FilterBar>
             );

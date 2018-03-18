@@ -24,7 +24,7 @@ import { WorkItem } from "TFS/WorkItemTracking/Contracts";
 import { IFilterState } from "VSSUI/Utilities/Filter";
 import { VssIcon, VssIconType } from "VSSUI/VssIcon";
 
-const BugBashItemKeyTypes = {
+export const BugBashItemKeyTypes = {
     [BugBashItemFieldNames.Title]: "string",
     [BugBashItemFieldNames.BugBashId]: "string",
     [BugBashItemFieldNames.CreatedBy]: "identityRef",

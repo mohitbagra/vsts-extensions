@@ -7,7 +7,7 @@
         "clean": "rimraf dist",
         "clean:all": "npm run clean && rimraf typings node_modules",
         "build": "npm run clean && mkdir dist && webpack --display-error-details --progress --colors --output-path ./dist -p",
-        "start": "webpack-dev-server -d --hot --progress --colors --https --content-base ./src/ --port 8888",
+        "start": "webpack-dev-server -d --progress --colors --https --content-base ./src/ --port 8888",
         "package": "npm run build && node buildPackages.js",
         "postinstall": "typings install"
     },
