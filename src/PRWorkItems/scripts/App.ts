@@ -1,3 +1,4 @@
+import { reloadPage } from "Library/Utilities/Navigation";
 import * as WitClient from "TFS/WorkItemTracking/RestClient";
 import { WorkItemFormNavigationService } from "TFS/WorkItemTracking/Services";
 import { JsonPatchDocument, JsonPatchOperation, Operation } from "VSS/WebApi/Contracts";
@@ -27,6 +28,7 @@ VSS.register(`${extensionContext.publisherId}.${extensionContext.extensionId}.co
                 ];
                 try {
                     await witClient.updateWorkItem(patchDocument, workItem.id);
+                    reloadPage();
                 }
                 catch (e) {
                     console.warn(`Cannot create workitem: ${e.message}`);

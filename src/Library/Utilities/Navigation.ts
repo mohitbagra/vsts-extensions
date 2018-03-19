@@ -15,3 +15,8 @@ export async function navigate(data?: IDictionaryStringTo<any>, replaceHistoryEn
     const navService = await getNavigationService();
     navService.updateHistoryEntry(null, data, replaceHistoryEntry, mergeWithCurrentState, windowTitle, suppressNavigate);
 }
+
+export async function reloadPage() {
+    const navService = await getNavigationService();
+    navService.reload();
+}
