@@ -25,7 +25,12 @@ VSS.register(`${extensionContext.publisherId}.${extensionContext.extensionId}.co
                         }
                     } as JsonPatchOperation
                 ];
-                witClient.updateWorkItem(patchDocument, workItem.id);
+                try {
+                    await witClient.updateWorkItem(patchDocument, workItem.id);
+                }
+                catch (e) {
+                    console.warn(`Cannot create workitem: ${e.message}`);
+                }
             }
         }
     }
