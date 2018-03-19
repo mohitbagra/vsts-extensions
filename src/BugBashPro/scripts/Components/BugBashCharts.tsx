@@ -174,7 +174,7 @@ export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBa
                             <Label className="header">{`Assigned to ${this.props.view === BugBashViewActions.AcceptedItemsOnly ? "area path" : "team"} (${bugBashItems.length})`}</Label>
                         </div>
                         <div className="chart-view">
-                            <ResponsiveContainer>
+                            <ResponsiveContainer width="95%">
                                 <BarChart
                                     layout={"vertical"}
                                     width={600}
@@ -204,7 +204,7 @@ export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBa
                         />
                     </div>
                     <div className="chart-view">
-                        <ResponsiveContainer>
+                        <ResponsiveContainer width="95%">
                             <BarChart
                                 layout={"vertical"}
                                 width={600}
