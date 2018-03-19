@@ -1,7 +1,6 @@
 import { StaticObservable } from "Library/Utilities/StaticObservable";
 
-// import * as ImageCompressor from "@xkeshi/image-compressor";
-// tslint:disable-next-line:no-function-expression
+ // tslint:disable-next-line:no-function-expression
 (function ($: any) {
     "use strict";
 
@@ -35,17 +34,6 @@ import { StaticObservable } from "Library/Utilities/StaticObservable";
 
                                     const file = items[i].getAsFile();
                                     reader.readAsDataURL(file);
-                                    // tslint:disable-next-line:no-unused-expression
-                                    // new ImageCompressor.ImageCompressor(file, {
-                                    //     quality: .6,
-                                    //     convertSize: 2000000,
-                                    //     success(newFile: any) {
-                                    //         reader.readAsDataURL(newFile);
-                                    //     },
-                                    //     error(e: any) {
-                                    //         console.log(e.message);
-                                    //     }
-                                    // });
 
                                     break;
                                 }

@@ -14,7 +14,7 @@ const config = {
         new webpack.optimize.CommonsChunkPlugin(
             {
                 name: "bugbashpro_common_chunks",
-                chunks: ["BugBashPro/scripts/App", "BugBashPro/scripts/AllBugBashesView", "BugBashPro/scripts/BugBashEditor", "BugBashPro/scripts/BugBashResults", "BugBashPro/scripts/BugBashCharts", "BugBashPro/scripts/BugBashProSettingsPanel"],
+                chunks: ["BugBashPro/scripts/App", "BugBashPro/scripts/AllBugBashesView", "BugBashPro/scripts/BugBashEditor", "BugBashPro/scripts/BugBashResults", "BugBashPro/scripts/BugBashCharts", "BugBashPro/scripts/SettingsPanel"],
                 filename: "./BugBashPro/scripts/bugbashpro_common_chunks.js",
                 minChunks: 3
             }
