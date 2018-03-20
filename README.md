@@ -5,6 +5,7 @@ This repo holds all my VSTS extensions.
 * Controls Library
 * One Click
 * Related WITs
+* PR WorkItems
 
 There is also a common library for shared components and utils in "Library" folder.
 
@@ -19,7 +20,7 @@ Steps to run build and package. From root folder -
 
 1. Fork the repo
 2. Decide which extension do you want. Lets say you want "Checklist" extension.
-3. Go to "src" folder and delete all folders except "Checklist" and "Library". "Library" holds a set of common components/utilities that every extension of mins uses, so you need this folder.
+3. Go to "src" folder and delete all folders except "Checklist" and "Library". "Library" holds a set of common components/utilities that every extension of mine uses, so you need this folder.
 4. In Apps.js file, remove everything except "Checklist"
 5. In tsconfig file, edit "paths" property. Remove all except "Checklist" and "Library". 
 6. In webpack.config.js file, edit "alias". Remove all except "Checklist" and "Library". 
