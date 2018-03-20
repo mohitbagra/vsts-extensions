@@ -15,7 +15,7 @@ Steps to run build and package. From root folder -
 
 "src/Apps.js" file manages all the apps that build and package command look into. If you want to build and package just 1 extension, comment all other into Apps.js file.
 
-If you want to fork just one of the extensions from it in your own account, do the following -
+**If you want to fork just one of the extensions from it in your own account, do the following -**
 
 1. Fork the repo
 2. Decide which extension do you want. Lets say you want "Checklist" extension.
