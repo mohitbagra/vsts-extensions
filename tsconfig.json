@@ -17,7 +17,6 @@
         "paths": {
             "OfficeFabric/*": ["node_modules/office-ui-fabric-react/lib/*"],
             "VSSUI/*": ["node_modules/vss-ui/*"],
-            "ReactWidgets/*": ["node_modules/react-widgets/lib/*"],
             "Library/*": ["src/Library/*"],
             "BugBashPro/*": ["src/BugBashPro/scripts/*"],
             "Checklist/*": ["src/Checklist/scripts/*"],

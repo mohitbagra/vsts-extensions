@@ -4,9 +4,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { initializeIcons } from "@uifabric/icons";
-import { InputError } from "Library/Components/InputError";
 import {
-    FieldControl, IFieldControlProps, IFieldControlState
+    IWorkItemFieldControlProps, IWorkItemFieldControlState, WorkItemFieldControl
 } from "Library/Components/VSTS/WorkItemFieldControl";
 import { Fabric } from "OfficeFabric/Fabric";
 import { Rating, RatingSize } from "OfficeFabric/Rating";
@@ -18,12 +17,12 @@ interface IRatingControlInputs {
     MaxValue: string;
 }
 
-interface IRatingControlProps extends IFieldControlProps {
+interface IRatingControlProps extends IWorkItemFieldControlProps {
     minValue: number;
     maxValue: number;
 }
 
-export class RatingControl extends FieldControl<IRatingControlProps, IFieldControlState> {
+export class RatingControl extends WorkItemFieldControl<number, IRatingControlProps, IWorkItemFieldControlState<number>> {
 
     public render(): JSX.Element {
         const className = "rating-control";
@@ -38,8 +37,6 @@ export class RatingControl extends FieldControl<IRatingControlProps, IFieldContr
                     size={RatingSize.Large}
                     onChanged={this._onChange}
                 />
-
-                {this.state.error && (<InputError error={this.state.error} />)}
             </Fabric>
         );
     }
@@ -52,7 +49,7 @@ export class RatingControl extends FieldControl<IRatingControlProps, IFieldContr
 
 export function init() {
     initializeIcons();
-    const inputs = FieldControl.getInputs<IRatingControlInputs>();
+    const inputs = WorkItemFieldControl.getInputs<IRatingControlInputs>();
 
     ReactDOM.render(
         <RatingControl

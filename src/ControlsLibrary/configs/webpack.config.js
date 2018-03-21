@@ -15,12 +15,6 @@ const config = {
             { from: "./node_modules/vss-web-extension-sdk/lib/VSS.SDK.min.js", to: "ControlsLibrary/3rdParty/VSS.SDK.min.js" },
             { from: "./node_modules/es6-promise/dist/es6-promise.min.js", to: "ControlsLibrary/3rdParty/es6-promise.min.js" },
             { from: "./node_modules/office-ui-fabric-react/dist/css/fabric.min.css", to: "ControlsLibrary/3rdParty/fabric.min.css" },
-            { from: "./node_modules/react-widgets/dist/css/react-widgets.css", to: "ControlsLibrary/3rdParty/react-widgets.css" },
-
-            { from: "./node_modules/react-widgets/dist/fonts/rw-widgets.eot", to: "ControlsLibrary/fonts/rw-widgets.eot" },
-            { from: "./node_modules/react-widgets/dist/fonts/rw-widgets.svg", to: "ControlsLibrary/fonts/rw-widgets.png" },
-            { from: "./node_modules/react-widgets/dist/fonts/rw-widgets.ttf", to: "ControlsLibrary/fonts/rw-widgets.ttf" },
-            { from: "./node_modules/react-widgets/dist/fonts/rw-widgets.woff", to: "ControlsLibrary/fonts/rw-widgets.woff" },
 
             { from: "./src/ControlsLibrary/configs", to: "ControlsLibrary/configs" },
             { from: "./src/ControlsLibrary/images", to: "ControlsLibrary/images" },

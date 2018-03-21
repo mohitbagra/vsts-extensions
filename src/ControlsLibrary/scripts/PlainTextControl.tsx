@@ -4,7 +4,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { AutoResizableComponent } from "Library/Components/Utilities/AutoResizableComponent";
-import { Label } from "OfficeFabric/Label";
+import { Fabric } from "OfficeFabric/Fabric";
 import {
     IWorkItemLoadedArgs, IWorkItemNotificationListener
 } from "TFS/WorkItemTracking/ExtensionContracts";
@@ -21,7 +21,7 @@ export class PlainTextControl extends AutoResizableComponent<IPlainTextControlPr
 
     public render(): JSX.Element {
         return (
-            <Label className={"plaintext-control"}>{this.props.text}</Label>
+            <Fabric className="plaintext-control">{this.props.text}</Fabric>
         );
     }
 

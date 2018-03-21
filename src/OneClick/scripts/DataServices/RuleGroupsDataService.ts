@@ -43,9 +43,7 @@ export namespace RuleGroupsDataService {
     }
 
     export async function deleteRuleGroups(workItemTypeName: string, ruleGroupIds: string[], projectId: string) {
-        await Promise.all(ruleGroupIds.map(async (ruleGroupId: string) => {
-            await deleteRuleGroup(workItemTypeName, ruleGroupId, projectId);
-        }));
+        await Promise.all(ruleGroupIds.map(ruleGroupId => deleteRuleGroup(workItemTypeName, ruleGroupId, projectId)));
     }
 
     function preProcessModel(ruleGroup: IRuleGroup) {

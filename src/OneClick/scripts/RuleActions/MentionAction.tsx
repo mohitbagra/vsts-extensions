@@ -35,9 +35,7 @@ export class MentionAction extends BaseAction {
 
         const personNamesArr = personNames.split(";").map((t: string) => t.trim());
         if (personNamesArr.length > 0) {
-            const translatedPersonNames = await Promise.all(personNamesArr.map(async (v: string) => {
-                return await translateToFieldValue(v, FieldType.String);
-            }));
+            const translatedPersonNames = await Promise.all(personNamesArr.map(v => translateToFieldValue(v, FieldType.String)));
 
             for (const personName of translatedPersonNames) {
                 if (personName) {

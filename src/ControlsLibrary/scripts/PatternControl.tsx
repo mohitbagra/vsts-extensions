@@ -4,12 +4,10 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { initializeIcons } from "@uifabric/icons";
-import { InputError } from "Library/Components/InputError";
 import {
-    FieldControl, IFieldControlProps, IFieldControlState
+    IWorkItemFieldControlProps, IWorkItemFieldControlState, WorkItemFieldControl
 } from "Library/Components/VSTS/WorkItemFieldControl";
 import { Fabric } from "OfficeFabric/Fabric";
-import { TextField } from "OfficeFabric/TextField";
 import { autobind } from "OfficeFabric/Utilities";
 import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
@@ -19,28 +17,28 @@ interface IPatternControlInputs {
     ErrorMessage?: string;
 }
 
-interface IPatternControlProps extends IFieldControlProps {
+interface IPatternControlProps extends IWorkItemFieldControlProps {
     pattern: string;
     errorMessage: string;
 }
 
-export class PatternControl extends FieldControl<IPatternControlProps, IFieldControlState> {
+export class PatternControl extends WorkItemFieldControl<string, IPatternControlProps, IWorkItemFieldControlState<string>> {
     public render(): JSX.Element {
-        let className = "pattern-control-input";
+        let className = "pattern-control";
         if (this.state.error) {
             className += " invalid-value";
         }
 
         return (
             <Fabric className="fabric-container">
-                <TextField
-                    className="pattern-control"
-                    inputClassName={className}
+                <input
+                    type="text"
+                    spellCheck={false}
+                    autoComplete="off"
+                    className={className}
                     value={this.state.value}
-                    onChanged={this._onChange}
+                    onChange={this._onChange}
                 />
-
-                {this.state.error && (<InputError error={this.state.error} />)}
             </Fabric>
         );
     }
@@ -56,8 +54,8 @@ export class PatternControl extends FieldControl<IPatternControlProps, IFieldCon
     }
 
     @autobind
-    private _onChange(newValue: string) {
-        this.onValueChanged(newValue);
+    private _onChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.onValueChanged(e.target.value);
     }
 
     private async _setWorkItemFormError(error: string) {
@@ -73,7 +71,7 @@ export class PatternControl extends FieldControl<IPatternControlProps, IFieldCon
 
 export function init() {
     initializeIcons();
-    const inputs = FieldControl.getInputs<IPatternControlInputs>();
+    const inputs = WorkItemFieldControl.getInputs<IPatternControlInputs>();
 
     ReactDOM.render(
         <PatternControl

@@ -66,7 +66,7 @@ export class WorkItemTagPicker extends BaseFluxComponent<IWorkItemTagPickerProps
                 {label && <InfoLabel className="work-item-tag-picker-label" label={label} info={info} />}
                 <TagPicker
                     disabled={disabled}
-                    selectedItems={(this.state.internalSelectedTags || []).map(t => this._getTag(t))}
+                    selectedItems={(this.state.internalSelectedTags || []).map(this._getTag)}
                     onResolveSuggestions={this._onTagFilterChanged}
                     getTextFromItem={this._getTagText}
                     onChange={this._onChange}

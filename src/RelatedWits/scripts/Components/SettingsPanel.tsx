@@ -110,7 +110,7 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
                         <InfoLabel label="Fields to seek" info="Select a list of fields which will be used to seek related work items" />
                         <TagPicker
                             className="tagpicker"
-                            defaultSelectedItems={this.state.queryFields.map(f => this._getFieldTag(f))}
+                            defaultSelectedItems={this.state.queryFields.map(this._getFieldTag)}
                             onResolveSuggestions={this._onFieldFilterChanged}
                             getTextFromItem={this._getTagTextFromItem}
                             onChange={this._updateQueryFields}

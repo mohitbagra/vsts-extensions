@@ -75,9 +75,7 @@ export namespace RulesDataService {
     }
 
     export async function deleteRules(ruleGroupId: string, ruleIds: string[]) {
-        await Promise.all(ruleIds.map(async (ruleId: string) => {
-            await deleteRule(ruleGroupId, ruleId);
-        }));
+        await Promise.all(ruleIds.map(ruleId => deleteRule(ruleGroupId, ruleId)));
     }
 
     function getCollectionKey(ruleGroupId: string): string {

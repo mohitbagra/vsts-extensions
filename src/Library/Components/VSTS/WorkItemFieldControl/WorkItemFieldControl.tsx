@@ -5,16 +5,16 @@ import {
 import * as WitExtensionContracts from "TFS/WorkItemTracking/ExtensionContracts";
 import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
-export interface IFieldControlProps extends IBaseFluxComponentProps {
+export interface IWorkItemFieldControlProps extends IBaseFluxComponentProps {
     fieldName: string;
 }
 
-export interface IFieldControlState extends IBaseFluxComponentState {
+export interface IWorkItemFieldControlState<T> extends IBaseFluxComponentState {
     error?: string;
-    value?: any;
+    value?: T;
 }
 
-export abstract class FieldControl<TP extends IFieldControlProps, TS extends IFieldControlState> extends AutoResizableComponent<TP, TS> {
+export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldControlProps, TS extends IWorkItemFieldControlState<TDataType>> extends AutoResizableComponent<TP, TS> {
     public static getInputs<T>() {
         return VSS.getConfiguration().witInputs as T;
     }

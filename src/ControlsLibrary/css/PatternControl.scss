@@ -1,26 +1,35 @@
 @import "base";
 
 #ext-container {
+    .input-error {
+        margin-top: 5px;
+    }
+    
     .pattern-control {
         margin:0;
-        
-        > div {
-            border: 1px solid transparent;
+        padding: 2px;
+        box-sizing: border-box;
+        width: 100%;
+        border: 1px solid transparent;
+        height: 24px;
+        outline: none;
+        font-size: 14px;
+        @include TextOverflowEllipsis();
+
+        &:hover, &:focus {
+            border-color: #eaeaea;
         }
-        
-        .pattern-control-input {
-            height: 24px;
-            border: 1px solid transparent;
-            padding: 1px 2px;
-            color: #212121;
+
+        &.invalid-value {
+            border-color: #a80000;
 
             &:hover, &:focus {
-                border: 1px solid #dadada;
+                border-color: #a80000;
             }
+        }
 
-            &.invalid-value {
-                border: 1px solid #a80000;
-            }
+        &::-ms-clear {
+            display: none;
         }
     }
 }

@@ -77,7 +77,6 @@ module.exports = {
         alias: { 
             "OfficeFabric": path.resolve(__dirname, "node_modules/office-ui-fabric-react/lib"),
             "VSSUI": path.resolve(__dirname, "node_modules/vss-ui"),
-            "ReactWidgets": path.resolve(__dirname, "node_modules/react-widgets/lib"),
             "Library": path.resolve(__dirname, "src/Library"),
             "BugBashPro": path.resolve(__dirname, "src/BugBashPro/scripts"),
             "Checklist": path.resolve(__dirname, "src/Checklist/scripts"),

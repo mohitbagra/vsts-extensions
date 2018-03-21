@@ -14,10 +14,6 @@
             "addressable": true
         },
         {
-            "path": "../fonts",
-            "addressable": true
-        },
-        {
             "path": "../html",
             "addressable": true
         },

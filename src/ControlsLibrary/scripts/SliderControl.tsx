@@ -4,9 +4,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { initializeIcons } from "@uifabric/icons";
-import { InputError } from "Library/Components/InputError";
 import {
-    FieldControl, IFieldControlProps, IFieldControlState
+    IWorkItemFieldControlProps, IWorkItemFieldControlState, WorkItemFieldControl
 } from "Library/Components/VSTS/WorkItemFieldControl";
 import { Fabric } from "OfficeFabric/Fabric";
 import { Slider } from "OfficeFabric/Slider";
@@ -19,13 +18,13 @@ interface ISliderControlInputs {
     StepSize: string;
 }
 
-interface ISliderControlProps extends IFieldControlProps {
+interface ISliderControlProps extends IWorkItemFieldControlProps {
     minValue: number;
     maxValue: number;
     stepSize: number;
 }
 
-export class SliderControl extends FieldControl<ISliderControlProps, IFieldControlState> {
+export class SliderControl extends WorkItemFieldControl<number, ISliderControlProps, IWorkItemFieldControlState<number>> {
 
     public render(): JSX.Element {
         const className = "slider-control";
@@ -43,10 +42,8 @@ export class SliderControl extends FieldControl<ISliderControlProps, IFieldContr
                         onChange={this._onChange}
                     />
 
-                    <span className="slider-value" title={this.state.value || 0}>{this.state.value || 0}</span>
+                    <span className="slider-value" title={`${this.state.value || 0}`}>{this.state.value || 0}</span>
                 </div>
-
-                {this.state.error && (<InputError error={this.state.error} />)}
             </Fabric>
         );
     }
@@ -59,7 +56,7 @@ export class SliderControl extends FieldControl<ISliderControlProps, IFieldContr
 
 export function init() {
     initializeIcons();
-    const inputs = FieldControl.getInputs<ISliderControlInputs>();
+    const inputs = WorkItemFieldControl.getInputs<ISliderControlInputs>();
 
     ReactDOM.render(
         <SliderControl
