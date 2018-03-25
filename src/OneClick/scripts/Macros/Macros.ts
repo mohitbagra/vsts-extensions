@@ -1,8 +1,8 @@
+import { addDaysToDate, formatDate } from "Library/Utilities/Date";
 import { getCurrentUserName } from "Library/Utilities/Identity";
+import { isInteger } from "Library/Utilities/Number";
 import { startsWith, toString } from "Library/Utilities/String";
-import { isInteger } from "Library/Utilities/Validators";
 import * as WorkItemFormHelpers from "Library/Utilities/WorkItemFormHelpers";
-import * as DateUtils from "VSS/Utils/Date";
 
 export abstract class BaseMacro {
     public static getMacroType(macroStr: string): new() => BaseMacro {
@@ -65,10 +65,10 @@ export class MacroToday extends BaseMacro {
         if (operatorAndOperand) {
             switch (operatorAndOperand[0]) {
                 case "-":
-                    returnValue = DateUtils.addDays(returnValue, -1 * operatorAndOperand[1]);
+                    returnValue = addDaysToDate(returnValue, -1 * operatorAndOperand[1]);
                     break;
                 case "+":
-                    returnValue = DateUtils.addDays(returnValue, operatorAndOperand[1]);
+                    returnValue = addDaysToDate(returnValue, operatorAndOperand[1]);
                     break;
                 default:
                     break;
@@ -79,7 +79,7 @@ export class MacroToday extends BaseMacro {
             return returnValue;
         }
         else {
-            return DateUtils.format(returnValue);
+            return formatDate(returnValue);
         }
     }
 

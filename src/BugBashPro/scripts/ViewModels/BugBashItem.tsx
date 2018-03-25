@@ -8,7 +8,7 @@ import { IdentityView } from "Library/Components/IdentityView";
 import { WorkItemStateView } from "Library/Components/VSTS/WorkItemStateView";
 import { WorkItemTitleView } from "Library/Components/VSTS/WorkItemTitleView";
 import { WorkItemActions } from "Library/Flux/Actions/WorkItemActions";
-import { defaultDateComparer, format, friendly } from "Library/Utilities/Date";
+import { defaultDateComparer, formatDate, friendly } from "Library/Utilities/Date";
 import {
     getCurrentUser, getDistinctNameFromIdentityRef, IdentityRef
 } from "Library/Utilities/Identity";
@@ -417,7 +417,7 @@ export class BugBashItem {
         else if (BugBashItemKeyTypes[key] === "date") {
             return (
                 <TooltipHost
-                    content={format(value, "m/d/yyyy h:mm tt")}
+                    content={formatDate(value, "M/D/YYYY h:mm aa")}
                     delay={TooltipDelay.medium}
                     directionalHint={DirectionalHint.bottomLeftEdge}
                 >

@@ -2,8 +2,8 @@ import * as React from "react";
 
 import { Loading } from "Library/Components/Loading";
 import { getAsyncLoadedComponent } from "Library/Components/Utilities/AsyncLoadedComponent";
+import { isInteger } from "Library/Utilities/Number";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
-import { isInteger } from "Library/Utilities/Validators";
 import { IIconProps } from "OfficeFabric/Icon";
 import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";

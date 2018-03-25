@@ -1,4 +1,19 @@
-import * as dateFormat from "dateFormat";
+import * as addDays from "date-fns/add_days";
+import * as format from "date-fns/format";
+import * as isValid from "date-fns/is_valid";
+import * as parse from "date-fns/parse";
+
+export function isDate(value: string): boolean {
+    return isValid(parse(value));
+}
+
+export function addDaysToDate(date: Date, days: number): Date {
+    return addDays(date, days);
+}
+
+export function parseDateString(value: string): Date {
+    return parse(value);
+}
 
 export function defaultDateComparer(date1: Date, date2: Date): number {
     if (date1 instanceof Date && date2 instanceof Date) {
@@ -33,8 +48,8 @@ export function shiftToLocal(date: Date): Date {
     return new Date(date.getTime() - (date.getTimezoneOffset() * 1000 * 60));
 }
 
-export function format(date: Date, formatStr?: string): string {
-    return dateFormat(date, formatStr);
+export function formatDate(date: Date, formatStr?: string): string {
+    return format(date, formatStr);
 }
 
 export function ago(date: Date): string {
@@ -94,7 +109,7 @@ export function friendly(date: Date): string {
         {
             limit: Number.POSITIVE_INFINITY,
             format: (dt) => {
-                return format(dt, "m/d/yyyy");
+                return format(dt, "M/D/YYYY");
             }
         }
     ];

@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "vsts-wit-control-library",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "name": "Work item form control library",
     "description": "A control library extension for VSTS work item form",
     "publisher": "mohitbagra",

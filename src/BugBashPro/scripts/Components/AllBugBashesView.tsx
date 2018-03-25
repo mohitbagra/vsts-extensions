@@ -18,7 +18,7 @@ import {
 import { ErrorMessageActions } from "Library/Flux/Actions/ErrorMessageActions";
 import { BaseStore } from "Library/Flux/Stores/BaseStore";
 import { confirmAction, delegate } from "Library/Utilities/Core";
-import { defaultDateComparer, format } from "Library/Utilities/Date";
+import { defaultDateComparer, formatDate } from "Library/Utilities/Date";
 import {
     readLocalSetting, WebSettingsScope, writeLocalSetting
 } from "Library/Utilities/LocalSettingsService";
@@ -303,7 +303,7 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
                 isSortedDescending: !!(StoresHub.bugBashStore.sortState && StoresHub.bugBashStore.sortState.isSortedDescending),
                 onRender: (bugBash: BugBash) => {
                     const startTime = bugBash.getFieldValue<Date>(BugBashFieldNames.StartTime, true);
-                    const label = startTime ? format(startTime, "dddd, mmmm dd, yyyy") : "N/A";
+                    const label = startTime ? formatDate(startTime, "dddd, MMMM DD, YYYY") : "N/A";
                     return (
                         <TooltipHost
                             content={label}
@@ -326,7 +326,7 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
                 isSortedDescending: !!(StoresHub.bugBashStore.sortState && StoresHub.bugBashStore.sortState.isSortedDescending),
                 onRender: (bugBash: BugBash) => {
                     const endTime = bugBash.getFieldValue<Date>(BugBashFieldNames.EndTime, true);
-                    const label = endTime ? format(endTime, "dddd, mmmm dd, yyyy") : "N/A";
+                    const label = endTime ? formatDate(endTime, "dddd, MMMM DD, YYYY") : "N/A";
                     return (
                         <TooltipHost
                             content={label}

@@ -1,10 +1,10 @@
+import { parseDateString } from "Library/Utilities/Date";
+import { isInteger, isNumeric } from "Library/Utilities/Number";
 import { stringEquals } from "Library/Utilities/String";
-import { isInteger, isNumeric } from "Library/Utilities/Validators";
 import { Constants } from "OneClick/Constants";
 import { IRuleGroup } from "OneClick/Interfaces";
 import * as Macros from "OneClick/Macros/Macros";
 import * as WitContracts from "TFS/WorkItemTracking/Contracts";
-import * as Utils_Date from "VSS/Utils/Date";
 
 export function isPersonalRuleGroup(ruleGroup: IRuleGroup): boolean {
     return ruleGroup && ruleGroup.id === Constants.PersonalRuleGroupId;
@@ -34,7 +34,7 @@ export async function translateToFieldValue(value: string, fieldType: WitContrac
             case WitContracts.FieldType.Boolean:
                 return stringEquals(value, "True", true) || stringEquals(value, "1", true);
             case WitContracts.FieldType.DateTime:
-                return Utils_Date.parseDateString(value) || value;
+                return parseDateString(value) || value;
             case WitContracts.FieldType.Double:
                 return isNumeric(value) ? parseFloat(value) : value;
             case WitContracts.FieldType.Integer:

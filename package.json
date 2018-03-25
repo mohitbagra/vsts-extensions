@@ -15,6 +15,7 @@
         "@types/react": "^16.0.9",
         "@types/react-dom": "^16.0.0",
         "@types/jquery": "2.0.41",
+        "@types/lodash": "4.14.106",
         "react": "^15.3.2",
         "react-dom": "^15.3.2",
         "webpack": "3.10.0",
@@ -44,7 +45,8 @@
         "recharts": "0.22.4",
         "tslib": "~1.7.1",
         "trumbowyg": "2.9.4",
-        "dateformat": "3.0.2",
-        "react-sortable-hoc": "0.6.8"
+        "react-sortable-hoc": "0.6.8",
+        "lodash-amd": "4.17.5",
+        "date-fns": "1.29.0"
     }
 }
