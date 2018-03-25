@@ -65,34 +65,6 @@
             }
         },
         {
-            "id": "datetime-form-control",
-            "type": "ms.vss-work-web.work-item-form-control",
-            "description": "A custom date time control for work item form which lets users choose time as well.",
-            "targets": [
-                "ms.vss-work-web.work-item-form"
-            ],
-            "properties": {
-                "name": "Date Time control",
-                "uri": "html/datetimecontrol.html",
-                "height": 50,
-                "inputs": [
-                    {
-                        "id":"FieldName",
-                        "name": "Select field",
-                        "description": "Select the DateTime field for this control",
-                        "type": "WorkItemField",
-                        "properties": {
-                            "workItemFieldTypes": ["DateTime"]
-                        },
-                        "validation": {
-                            "dataType": "String",
-                            "isRequired": true
-                        }
-                    }
-                ]
-            }
-        },
-        {
             "id": "rating-form-control",
             "type": "ms.vss-work-web.work-item-form-control",
             "description": "A work item form control which shows the integer field value as a star rating control.",

@@ -3,7 +3,6 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const config = {
     entry: {
-        "ControlsLibrary/scripts/DateTimeControl": "./src/ControlsLibrary/scripts/DateTimeControl.tsx",
         "ControlsLibrary/scripts/MultiValueControl": "./src/ControlsLibrary/scripts/MultiValueControl.tsx",
         "ControlsLibrary/scripts/PatternControl": "./src/ControlsLibrary/scripts/PatternControl.tsx",
         "ControlsLibrary/scripts/PlainTextControl": "./src/ControlsLibrary/scripts/PlainTextControl.tsx",

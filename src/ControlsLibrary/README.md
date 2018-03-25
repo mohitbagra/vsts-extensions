@@ -9,32 +9,13 @@ A work item form custom control can take some user inputs to configure the contr
 
 This extension is an attempt to provide samples to other users to help them write their own extensions targeting work item form. There are 6 work item control contributions in this extension -
 
-* <a href="#datetime">DateTime Control</a>
 * <a href="#pattern">Pattern Control</a>
 * <a href="#slider">Slider Control</a>
 * <a href="#rating">Rating Control</a>
 * <a href="#multivalue">Autocomplete Multivalue Control</a>
 * <a href="#plaintext">Plain Text Control</a>
 
-The code for this extension is on <a href="https://github.com/mohitbagra/vsts-extensions-controllibrary">github</a>
-
-<a name="datetime"></a>
-#### DateTime Control ####
-A custom date time control for DateTime fields which also lets users pick time, which is not possible by the default DateTime control on work item form.
-
-![Group](images/datetime.png)
-
-To select a date, click the calendar icon on the right.
-
-![Group](images/datetime_date.png)
-
-To select a time, click the clock icon on the right.
-
-![Group](images/datetime_time.png)
-
->*Inputs* -
->1. **FieldName** *(required)* - A DateTime field associated with this control. The value of the datetime control would be bound to this field's value.
-
+The code for this extension is on <a href="https://github.com/mohitbagra/vsts-extensions/tree/master/src/ControlsLibrary">github</a>
 
 <a name="pattern"></a>
 #### Pattern Control ####
@@ -53,7 +34,7 @@ If the value matches the pattern, then no error would be shown. Note that work i
 >3. **ErrorMessage** *(required)* - A custom error message to be shown to user if the value entered in the control doesnt match the pattern.
 
 *Some common regex patterns*
-1. **Email** - ^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$
+1. **Email** - ^(([^<>()\[\\]\\.,;:\s@"]+(\.[^<>()\[\\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$
 2. **Phone Number** - ^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$
 3. **Guid** - ^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
 4. **URL** - https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)

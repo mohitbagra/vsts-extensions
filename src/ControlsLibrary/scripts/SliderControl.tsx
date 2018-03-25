@@ -27,23 +27,19 @@ interface ISliderControlProps extends IWorkItemFieldControlProps {
 export class SliderControl extends WorkItemFieldControl<number, ISliderControlProps, IWorkItemFieldControlState<number>> {
 
     public render(): JSX.Element {
-        const className = "slider-control";
-
         return (
             <Fabric className="fabric-container">
-                <div className="slider-container">
-                    <Slider
-                        className={className}
-                        value={this.state.value}
-                        min={this.props.minValue}
-                        max={this.props.maxValue}
-                        step={this.props.stepSize}
-                        showValue={false}
-                        onChange={this._onChange}
-                    />
+                <Slider
+                    className="slider-control"
+                    value={this.state.value}
+                    min={this.props.minValue}
+                    max={this.props.maxValue}
+                    step={this.props.stepSize}
+                    showValue={false}
+                    onChange={this._onChange}
+                />
 
-                    <span className="slider-value" title={`${this.state.value || 0}`}>{this.state.value || 0}</span>
-                </div>
+                <span className="slider-value" title={`${this.state.value || 0}`}>{this.state.value || 0}</span>
             </Fabric>
         );
     }
