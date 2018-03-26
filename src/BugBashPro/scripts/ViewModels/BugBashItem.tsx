@@ -361,37 +361,23 @@ export class BugBashItem {
         }
         else if (key === BugBashItemFieldNames.Title && this.isAccepted) {
             return (
-                <TooltipHost
-                    content={value}
-                    delay={TooltipDelay.medium}
-                    overflowMode={TooltipOverflowMode.Parent}
-                    directionalHint={DirectionalHint.bottomLeftEdge}
-                >
-                    <WorkItemTitleView
-                        className={className}
-                        showId={true}
-                        workItemId={this.workItem.id}
-                        onClick={this._onTitleClick}
-                        title={value}
-                        workItemType={this.workItem.fields[WorkItemFieldNames.WorkItemType]}
-                    />
-                </TooltipHost>
+                <WorkItemTitleView
+                    className={className}
+                    showId={true}
+                    workItemId={this.workItem.id}
+                    onClick={this._onTitleClick}
+                    title={value}
+                    workItemType={this.workItem.fields[WorkItemFieldNames.WorkItemType]}
+                />
             );
         }
         else if (key === WorkItemFieldNames.State) {
             return (
-                <TooltipHost
-                    content={value}
-                    delay={TooltipDelay.medium}
-                    overflowMode={TooltipOverflowMode.Parent}
-                    directionalHint={DirectionalHint.bottomLeftEdge}
-                >
-                    <WorkItemStateView
-                        className={className}
-                        state={value}
-                        workItemType={this.workItem.fields[WorkItemFieldNames.WorkItemType]}
-                    />
-                </TooltipHost>
+                <WorkItemStateView
+                    className={className}
+                    state={value}
+                    workItemType={this.workItem.fields[WorkItemFieldNames.WorkItemType]}
+                />
             );
         }
         else if (key === BugBashItemFieldNames.Title) {

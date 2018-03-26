@@ -30,7 +30,7 @@ import { RuleGroupsDataService } from "OneClick/DataServices/RuleGroupsDataServi
 import { RulesDataService } from "OneClick/DataServices/RulesDataService";
 import { SettingsDataService } from "OneClick/DataServices/SettingsDataService";
 import { IActionError, ILocalStorageRulesData, IRule } from "OneClick/Interfaces";
-import { trackEvent } from "OneClick/Telemetry";
+import { resetSession, trackEvent } from "OneClick/Telemetry";
 import { Rule } from "OneClick/ViewModels/Rule";
 import { TeamProject } from "TFS/Core/Contracts";
 import * as CoreClient from "TFS/Core/RestClient";
@@ -76,6 +76,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
         VSS.register(VSS.getContribution().id, {
             onLoaded: async (args: IWorkItemLoadedArgs) => {
                 // load data only if its not already loaded and not currently being loaded
+                resetSession();  // reset telemetry session id
                 let rules = this.state.rules;
                 if (!this.state.loading && !this.state.rules) {
                     rules = await this._initializeRules(false);

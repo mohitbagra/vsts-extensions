@@ -10,6 +10,9 @@ import { BaseStore, StoreFactory } from "Library/Flux/Stores/BaseStore";
 import { WorkItemTypeStore } from "Library/Flux/Stores/WorkItemTypeStore";
 import { stringEquals } from "Library/Utilities/String";
 import { Link } from "OfficeFabric/Link";
+import {
+    DirectionalHint, TooltipDelay, TooltipHost, TooltipOverflowMode
+} from "OfficeFabric/Tooltip";
 import { autobind, css } from "OfficeFabric/Utilities";
 import { WorkItemType } from "TFS/WorkItemTracking/Contracts";
 
@@ -55,34 +58,33 @@ export class WorkItemTitleView extends BaseFluxComponent<IWorkItemTitleViewProps
     public render(): JSX.Element {
         const wit = this.state.workItemType;
 
-        let witColor = wit ? wit.color : null;
-        const witIcon = wit ? (wit as any).icon : null;
+        const witIcon = wit ? wit.icon : null;
         const witIconUrl = (witIcon && witIcon.id) ? witIcon.url : null;
-
-        if (witColor) {
-            witColor = `#${witColor.substring(witColor.length - 6)}`;
-        }
-        else {
-            witColor = "#000000";
-        }
 
         const webContext = VSS.getWebContext();
         const witUrl = `${webContext.collection.uri}/${webContext.project.name}/_workitems/edit/${this.props.workItemId}`;
 
         return (
             <div
-                className={`${css("work-item-title-view", this.props.className)} ${(witIconUrl || !wit) ? "no-color" : ""}`}
-                style={(witIconUrl || !wit) ? undefined : {borderColor: witColor}}
+                className={`${css("work-item-title-view", this.props.className)}`}
             >
                 {witIconUrl && <img src={witIconUrl} alt="icon" />}
                 {this.props.showId && <span className="work-item-id">{this.props.workItemId}</span>}
-                <Link
-                    className="title-link"
-                    href={witUrl}
-                    onClick={this._onLinkClick}
-                >
-                    {this.props.title}
-                </Link>
+                <div className="title-link">
+                    <TooltipHost
+                        content={this.props.title}
+                        delay={TooltipDelay.medium}
+                        overflowMode={TooltipOverflowMode.Parent}
+                        directionalHint={DirectionalHint.bottomLeftEdge}
+                    >
+                        <Link
+                            href={witUrl}
+                            onClick={this._onLinkClick}
+                        >
+                            {this.props.title}
+                        </Link>
+                    </TooltipHost>
+                </div>
             </div>
         );
     }

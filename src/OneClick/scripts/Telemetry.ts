@@ -1,4 +1,5 @@
 import { DelayedFunction } from "Library/Utilities/Core";
+import { newGuid } from "Library/Utilities/Guid";
 import { getCurrentUserName, getDistinctNameFromIdentityRef } from "Library/Utilities/Identity";
 import { Constants } from "OneClick/Constants";
 import { RuleActionsHub, RuleGroupActionsHub } from "OneClick/Flux/Actions/ActionsHub";
@@ -11,6 +12,8 @@ const flush = new DelayedFunction(null, 100, () => {
     }
 });
 
+let SessionId: string;
+
 export function flushInsightsNow() {
     flush.invokeNow();
 }
@@ -20,11 +23,16 @@ export function trackEvent(name: string, properties?: IDictionaryStringTo<string
     if (insights) {
         properties = {
             ...(properties || {}),
-            host: VSS.getWebContext().host.authority
+            host: VSS.getWebContext().host.authority,
+            sessionId: SessionId
         };
         insights.trackEvent(name, properties, measurements);
         flush.reset();
     }
+}
+
+export function resetSession() {
+    SessionId = newGuid();
 }
 
 export function initTelemetry() {

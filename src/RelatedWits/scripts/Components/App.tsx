@@ -295,20 +295,13 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                 onRender: (workItem: WorkItem) => {
                     const title = workItem.fields[WorkItemFieldNames.Title];
                     return (
-                        <TooltipHost
-                            content={title}
-                            delay={TooltipDelay.medium}
-                            overflowMode={TooltipOverflowMode.Parent}
-                            directionalHint={DirectionalHint.bottomLeftEdge}
-                        >
-                            <WorkItemTitleView
-                                className="item-grid-cell"
-                                workItemId={workItem.id}
-                                onClick={delegate(this, this._openWorkItemDialog, workItem)}
-                                title={title}
-                                workItemType={workItem.fields[WorkItemFieldNames.WorkItemType]}
-                            />
-                        </TooltipHost>
+                        <WorkItemTitleView
+                            className="item-grid-cell"
+                            workItemId={workItem.id}
+                            onClick={delegate(this, this._openWorkItemDialog, workItem)}
+                            title={title}
+                            workItemType={workItem.fields[WorkItemFieldNames.WorkItemType]}
+                        />
                     );
                 }
             },
@@ -324,18 +317,11 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                 onRender: (workItem: WorkItem) => {
                     const state = workItem.fields[WorkItemFieldNames.State];
                     return (
-                        <TooltipHost
-                            content={state}
-                            delay={TooltipDelay.medium}
-                            overflowMode={TooltipOverflowMode.Parent}
-                            directionalHint={DirectionalHint.bottomLeftEdge}
-                        >
-                            <WorkItemStateView
-                                className="item-grid-cell"
-                                state={state}
-                                workItemType={workItem.fields[WorkItemFieldNames.WorkItemType]}
-                            />
-                        </TooltipHost>
+                        <WorkItemStateView
+                            className="item-grid-cell"
+                            state={state}
+                            workItemType={workItem.fields[WorkItemFieldNames.WorkItemType]}
+                        />
                     );
                 }
             },

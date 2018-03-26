@@ -10,3 +10,42 @@
     -webkit-user-select: none;
     -ms-user-select: none;
 }
+
+.vss-PickList .vss-PickList--element .vss-ItemIndicator--textIndicator {
+    padding-right: 5px;
+}
+
+.ms-font-m {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.ms-font-xl {
+    font-size: 21px;
+    font-weight: 100;
+}
+
+.ms-font-xxl {
+    font-size: 28px;
+    font-weight: 100;   
+}
+
+.callout-container {
+    max-height: 320px;
+}
+
+button[disabled], button[disabled]:hover, button[disabled]:focus {
+    border: none !important;
+}
+
+.overflow-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+
+.loading-overlay {
+    z-index: 10002;
+    background-color: rgba(255,255,255, 0.6) !important;
+}
