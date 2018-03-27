@@ -19,7 +19,7 @@ export namespace WorkItemTypeFieldAllowedValuesActions {
             workItemTypeFieldStore.setLoading(true, key);
             try {
                 const client = await VSS_Service.getClient<WitClient.WorkItemTrackingHttpClient4_1>(WitClient.WorkItemTrackingHttpClient4_1);
-                const workItemTypeField = await (client as any).getWorkItemTypeField(VSS.getWebContext().project.id, workItemType, fieldRefName, 1);
+                const workItemTypeField = await (client as any).getWorkItemTypeFieldWithReferences(VSS.getWebContext().project.id, workItemType, fieldRefName, 1);
 
                 WorkItemTypeFieldAllowedValuesActionsHub.InitializeAllowedValues.invoke({
                     workItemType: workItemType,
