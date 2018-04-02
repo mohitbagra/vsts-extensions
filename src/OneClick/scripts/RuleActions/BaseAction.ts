@@ -21,9 +21,18 @@ export abstract class BaseAction extends Observable<void> {
     constructor(model: IAction) {
         super();
         this._name = model.name;
-        this._originalAttributes = model.attributes ? {...model.attributes} : null; // for new models, origina would be null
-        this._updates = model.attributes ? {} : this.defaultAttributes();  // if its a new action, initialize updates with defaults
         this._id = newGuid();
+
+        if (model.attributes) {
+            // existing action
+            this._originalAttributes = this.preProcessAttributes(model.attributes);
+            this._updates = {};
+        }
+        else {
+            // new action
+            this._originalAttributes = null;
+            this._updates = this.defaultAttributes();
+        }
     }
 
     public get id(): string {
@@ -102,6 +111,10 @@ export abstract class BaseAction extends Observable<void> {
 
     protected defaultAttributes(): IDictionaryStringTo<any> {
         return {};
+    }
+
+    protected preProcessAttributes(attributes: IDictionaryStringTo<any>): IDictionaryStringTo<any> {
+        return {...attributes};
     }
 
     private _emitChanged() {

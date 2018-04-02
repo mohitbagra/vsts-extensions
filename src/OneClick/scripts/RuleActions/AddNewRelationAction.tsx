@@ -12,7 +12,7 @@ import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
 import { translateToFieldValue } from "OneClick/Helpers";
 import { BaseAction } from "OneClick/RuleActions/BaseAction";
 import { WorkItem, WorkItemField } from "TFS/WorkItemTracking/Contracts";
-import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
+import { WorkItemFormNavigationService, WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
 const AsyncAddNewRelationRenderer = getAsyncLoadedComponent(
     ["scripts/ActionRenderers"],
@@ -26,6 +26,7 @@ export class AddNewRelationAction extends BaseAction {
         const relationType = this.getAttribute<string>("relationType", true);
         const teamId = this.getAttribute<string>("teamId", true);
         const templateId = this.getAttribute<string>("templateId", true);
+        const autoCreate = this.getAttribute<boolean>("autoCreate", true);
         let savedWorkItem: WorkItem;
 
         const workItemFormService = await WorkItemFormService.getService();
@@ -41,30 +42,27 @@ export class AddNewRelationAction extends BaseAction {
         }
         delete templateMap["System.Tags-Add"];
         delete templateMap["System.Tags-Remove"];
-
-        // read form fields
-        const allFields = await workItemFormService.getFields();
-        const fieldRefNameMap: IDictionaryStringTo<WorkItemField> = {};
         const translatedFieldValuesMap: IDictionaryStringTo<any> = {};
-
-        for (const field of allFields) {
-            fieldRefNameMap[field.referenceName] = field;
-        }
 
         // translate field values (for macros usage)
         for (const templateFieldRefName of Object.keys(templateMap)) {
             const fieldValue = templateMap[templateFieldRefName];
-            const field = fieldRefNameMap[templateFieldRefName];
-            const translatedFieldValue = await translateToFieldValue(fieldValue || "", field.type);
+            const translatedFieldValue = await translateToFieldValue(fieldValue || "");
             translatedFieldValuesMap[templateFieldRefName] = translatedFieldValue;
         }
 
-        try {
-            // create work item
-            savedWorkItem = await WorkItemActions.createWorkItem(workItemType, translatedFieldValuesMap);
+        if (autoCreate) {
+            try {
+                // create work item
+                savedWorkItem = await WorkItemActions.createWorkItem(workItemType, translatedFieldValuesMap);
+            }
+            catch (e) {
+                throw `Could not create work item. Error: ${e}. Please check the template used in this action.`;
+            }
         }
-        catch (e) {
-            throw `Could not create work item. Error: ${e}. Please check the template used in this action.`;
+        else {
+            const workItemNavSvc = await WorkItemFormNavigationService.getService();
+            savedWorkItem = await workItemNavSvc.openNewWorkItem(workItemType, translatedFieldValuesMap);
         }
 
         const relationTypes = await workItemFormService.getWorkItemRelationTypes();
@@ -115,7 +113,8 @@ export class AddNewRelationAction extends BaseAction {
             || !stringEquals(this.getAttribute<string>("workItemType", true), this.getAttribute<string>("workItemType"), true)
             || !stringEquals(this.getAttribute<string>("relationType", true), this.getAttribute<string>("relationType"), true)
             || !stringEquals(this.getAttribute<string>("teamId", true), this.getAttribute<string>("teamId"), true)
-            || !stringEquals(this.getAttribute<string>("templateId", true), this.getAttribute<string>("templateId"), true);
+            || !stringEquals(this.getAttribute<string>("templateId", true), this.getAttribute<string>("templateId"), true)
+            || this.getAttribute<boolean>("autoCreate", true) !== this.getAttribute<boolean>("autoCreate");
     }
 
     public getIcon(): IIconProps {
@@ -132,6 +131,7 @@ export class AddNewRelationAction extends BaseAction {
         const relationType = this.getAttribute<string>("relationType");
         const teamId = this.getAttribute<string>("teamId");
         const templateId = this.getAttribute<string>("templateId");
+        const autoCreate = this.getAttribute<boolean>("autoCreate");
 
         return (
             <div>
@@ -140,10 +140,12 @@ export class AddNewRelationAction extends BaseAction {
                     relationType={relationType}
                     teamId={teamId}
                     templateId={templateId}
+                    autoCreate={autoCreate}
                     onWorkItemTypeChange={this._onWorkItemTypeChange}
                     onRelationTypeChange={this._onWorkItemRelationTypeChange}
                     onTeamChange={this._onTeamChange}
                     onTemplateChange={this._onTemplateChange}
+                    onAutoCreateChange={this._onAutoCreateChange}
                 />
             </div>
         );
@@ -154,8 +156,21 @@ export class AddNewRelationAction extends BaseAction {
             workItemType: "",
             relationType: "",
             teamId: "",
-            templateId: ""
+            templateId: "",
+            autoCreate: false
         };
+    }
+
+    protected preProcessAttributes(attributes: IDictionaryStringTo<any>): IDictionaryStringTo<any> {
+        if (attributes["autoCreate"] == null) {
+            return {...attributes, autoCreate: true};
+        }
+        return {...attributes};
+    }
+
+    @autobind
+    private _onAutoCreateChange(value: boolean) {
+        this.setAttribute<boolean>("autoCreate", value);
     }
 
     @autobind

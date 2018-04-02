@@ -17,6 +17,7 @@ import { WorkItemTemplateActions } from "Library/Flux/Actions/WorkItemTemplateAc
 import { WorkItemTypeActions } from "Library/Flux/Actions/WorkItemTypeActions";
 import { BaseStore } from "Library/Flux/Stores/BaseStore";
 import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
+import { Checkbox } from "OfficeFabric/Checkbox";
 import { Dropdown, IDropdownOption, IDropdownProps } from "OfficeFabric/Dropdown";
 import { Link } from "OfficeFabric/Link";
 import { autobind, css } from "OfficeFabric/Utilities";
@@ -31,10 +32,12 @@ export interface IAddNewRelationActionRendererProps extends IBaseFluxComponentPr
     relationType: string;
     teamId: string;
     templateId: string;
+    autoCreate: boolean;
     onWorkItemTypeChange(value: string): void;
     onRelationTypeChange(value: string): void;
     onTeamChange(value: string): void;
     onTemplateChange(value: string): void;
+    onAutoCreateChange(value: boolean): void;
 }
 
 export interface IAddNewRelationActionRendererState extends IBaseFluxComponentState {
@@ -92,6 +95,19 @@ export class AddNewRelationActionRenderer extends BaseFluxComponent<IAddNewRelat
 
         return (
             <div className={css("add-new-relation-picker", this.props.className)}>
+                <div className="action-property-control checkbox-control">
+                    <Checkbox
+                        className="auto-accept"
+                        label=""
+                        checked={this.props.autoCreate}
+                        onChange={this._onAutoCreateChange}
+                    />
+
+                    <InfoLabel
+                        label="Auto create work item?"
+                        info="If checked, this action will automatically create work item via rest API. If not, then it will popup a work item dialog and users will have to manually save the workitem from there."
+                    />
+                </div>
                 <WorkItemTypePicker
                     className="action-property-control"
                     selectedOption={selectedWit}
@@ -204,5 +220,10 @@ export class AddNewRelationActionRenderer extends BaseFluxComponent<IAddNewRelat
     @autobind
     private _onTemplateChange(option: IDropdownOption) {
         this.props.onTemplateChange(option.key as string);
+    }
+
+    @autobind
+    private _onAutoCreateChange(_ev: React.FormEvent<HTMLElement>, isChecked: boolean) {
+        this.props.onAutoCreateChange(isChecked);
     }
 }

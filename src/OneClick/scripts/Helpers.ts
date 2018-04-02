@@ -24,7 +24,7 @@ export function getRuleGroupUrl(witName: string, ruleGroupId: string): string {
     return `${collection.uri}/${project.name}/_apps/hub/${extensionId}.settings-hub?witName=${witName}&ruleGroup=${ruleGroupId}`;
 }
 
-export async function translateToFieldValue(value: string, fieldType: WitContracts.FieldType): Promise<any> {
+export async function translateToFieldValue(value: string, fieldType?: WitContracts.FieldType): Promise<any> {
     if (Macros.BaseMacro.isMacro(value) && Macros.BaseMacro.getMacroType(value)) {
         const macroType = Macros.BaseMacro.getMacroType(value);
         return await new macroType().translate(value, true);

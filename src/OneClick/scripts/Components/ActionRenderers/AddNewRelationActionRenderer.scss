@@ -1,4 +1,13 @@
 .add-new-relation-picker {
+    .checkbox-control {
+        display: flex;
+
+        .info-label {
+            margin-left: 5px;
+            flex: 1;
+        }
+    }
+    
     .template-info-container {
         display: flex;
         margin-bottom: 5px;
