@@ -11,7 +11,7 @@ import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
 import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
 import { translateToFieldValue } from "OneClick/Helpers";
 import { BaseAction } from "OneClick/RuleActions/BaseAction";
-import { WorkItem, WorkItemField } from "TFS/WorkItemTracking/Contracts";
+import { WorkItem } from "TFS/WorkItemTracking/Contracts";
 import { WorkItemFormNavigationService, WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
 const AsyncAddNewRelationRenderer = getAsyncLoadedComponent(
