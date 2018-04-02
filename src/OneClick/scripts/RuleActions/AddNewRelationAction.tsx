@@ -65,20 +65,22 @@ export class AddNewRelationAction extends BaseAction {
             savedWorkItem = await workItemNavSvc.openNewWorkItem(workItemType, translatedFieldValuesMap);
         }
 
-        const relationTypes = await workItemFormService.getWorkItemRelationTypes();
-        const selectedRelationType = relationTypes.filter(r => stringEquals(r.name, relationType, true));
-        if (!selectedRelationType) {
-            throw `Relation type "${relationType}" does not exist`;
-        }
+        if (savedWorkItem) {
+            const relationTypes = await workItemFormService.getWorkItemRelationTypes();
+            const selectedRelationType = relationTypes.filter(r => stringEquals(r.name, relationType, true));
+            if (!selectedRelationType) {
+                throw `Relation type "${relationType}" does not exist`;
+            }
 
-        const relation = {
-            rel: selectedRelationType[0].referenceName,
-            attributes: {
-                isLocked: false
-            },
-            url: savedWorkItem.url
-        };
-        workItemFormService.addWorkItemRelations([relation]);
+            const relation = {
+                rel: selectedRelationType[0].referenceName,
+                attributes: {
+                    isLocked: false
+                },
+                url: savedWorkItem.url
+            };
+            workItemFormService.addWorkItemRelations([relation]);
+        }
     }
 
     public getFriendlyName(): string {
