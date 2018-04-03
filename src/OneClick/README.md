@@ -5,7 +5,8 @@
 <a name="changelog" id="changelog"></a>
 **(03/03/18) Version 2.3:** 
 * Added "Field changed trigger" which will be fired when a field changes on work item form. To configure this trigger, provide a field name, its old value and new value. For eg - FieldName="System.State", OldValue="New", NewValue="Active" will fire when State changes from New to Active. Users can also use "@any" macro as fieldValue (both for old and new). For eg, if OldValue="@any", then the trigger will fire when State changes from any value to "Active". If NewValue="@any", then the trigger will fire when State changes from "New" to any value.
-
+* Added a support to hide a rule button in work item form. Just check the "Hide on form" checkbox in the rule editor to hide the rule button in the work item form. This would be useful for triggered rules which are meant to be fired automatically instead of manual clicks.
+* Added a new attribute in "Add new linked work item" action which allows user to specify how they want to save the new linked workitem - automatically via rest api or manually via a work item dialog.
 
 # Perform multiple actions from just a single click in work item form
 
@@ -137,6 +138,11 @@ This trigger would be fired whenever a new workitem form is opened. If this trig
 
 ![Group](images/trigger.png)
 
+#### Field changed ####
+This trigger would be fired whenever a field value changes from a specified value to another specified value. Users can either put specific old and new values or use macros like @any, @fieldValue, @today or @me.
+
+![Group](images/fieldchanged.png)
+
 <br />
 
 <a name="macros"></a>
@@ -163,6 +169,11 @@ This macro sets the value to the value of a given field. This can be used in "Se
 These macros can also be used in work item template which is configured for "Add a new linked work item" action
 
 ![Group](images/macrotemplate.png)
+
+#### @any Macro ####
+This macro is only applicable in field changed trigger. In field changed trigger. Setting old field value to @any means fire the trigger when the field changes to any value to specified new value. Setting new field value to @any means fire the trigger when the field changes to specified old value to any new value. 
+
+![Group](images/fieldchanged.png)
 
 <br />
 

@@ -101,7 +101,7 @@ export class MentionAction extends BaseAction {
                     className="action-property-control"
                     value={this.getAttribute<string>("personNames")}
                     label="Users"
-                    info="Enter semicolon separated list of email addresses"
+                    info="Enter semicolon separated list of email addresses. Supported macros - @fieldValue, @me."
                     required={true}
                     resizable={false}
                     multiline={true}

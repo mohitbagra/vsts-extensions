@@ -70,7 +70,7 @@ export class FieldChangedPicker extends BaseFluxComponent<IFieldChangedPickerPro
                     onChange={this._onOldFieldValueChange}
                     delay={200}
                     label="Old field value"
-                    info="Enter old field value"
+                    info="Enter old field value. Supported macros - @any, @fieldValue, @today, @me."
                     error={this.props.oldFieldValueError}
                 />
                 <WorkItemFieldValuePicker
@@ -81,7 +81,7 @@ export class FieldChangedPicker extends BaseFluxComponent<IFieldChangedPickerPro
                     onChange={this._onNewFieldValueChange}
                     delay={200}
                     label="New field value"
-                    info="Enter new field value"
+                    info="Enter new field value. Supported macros - @any, @fieldValue, @today, @me."
                     error={this.props.newFieldValueError}
                 />
             </div>

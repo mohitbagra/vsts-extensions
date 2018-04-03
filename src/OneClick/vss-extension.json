@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "witoneclickactions",
-    "version": "2.3.0",
+    "version": "2.3.2",
     "name": "Work item form one click actions",
     "description": "Work item form group extension with custom defined action buttons",
     "publisher": "mohitbagra",

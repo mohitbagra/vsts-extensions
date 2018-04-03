@@ -140,7 +140,10 @@ export class AddNewRelationActionRenderer extends BaseFluxComponent<IAddNewRelat
                 />
 
                 <div className="template-info-container">
-                    <InfoLabel label="Work item template" info="Select a work item template that would be applied during linked work item creation." />
+                    <InfoLabel
+                        label="Work item template"
+                        info="Select a work item template that would be applied during linked work item creation. Supported macros in template - @fieldValue, @me, @today."
+                    />
                     {selectedTeam && <Link href={this._getTemplatePageUrl(this.props.teamId, this.props.workItemType)} target="_blank">Add a template</Link>}
                 </div>
                 <Dropdown

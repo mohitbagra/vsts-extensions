@@ -67,7 +67,7 @@ export class FieldNameValuePicker extends BaseFluxComponent<IFieldNameValuePicke
                     onChange={this._onFieldValueChange}
                     delay={200}
                     label="Field value"
-                    info="Enter field value"
+                    info="Enter field value. Supported macros - @fieldValue, @today, @me."
                     error={this.props.valueError}
                 />
             </div>

@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "pr-workitems",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "name": "PR workitems",
     "description": "A pull request menu extension to create a new workitem and associate it with current pull request",
     "publisher": "mohitbagra",
@@ -10,8 +10,7 @@
     },
     "scopes": [
     	"vso.work",
-        "vso.work_write",
-        "vso.code_write"
+        "vso.work_write"
 	 ],
     "targets": [
         {
