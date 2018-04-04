@@ -91,10 +91,10 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
     }
 
     private _setValue(value: any) {
-        this.setState({value: value, error: this.getErrorMessage(value)} as any);
+        this.setState({value: value, error: this.getErrorMessage(value)});
     }
 
     private _onError(error: string) {
-        this.setState({error: error} as any);
+        this.setState({error: error});
     }
 }

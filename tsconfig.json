@@ -26,15 +26,16 @@
             "RelatedWits/*": ["src/RelatedWits/scripts/*"]
         },
         "types": [
-            "q",
-            "knockout",
-            "requirejs",
-            "jquery",
             "react",
-            "react-dom"
+            "react-dom",
+            "vss-web-extension-sdk"
         ]
     },
-    "exclude": [
-        "node_modules"
+    "typeAcquisition": {
+        "enable": true
+    },
+    "filesGlob": [
+        "src/**/*.ts",
+        "src/**/*.tsx"
     ]
 }

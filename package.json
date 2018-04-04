@@ -8,8 +8,7 @@
         "clean:all": "npm run clean && rimraf typings node_modules",
         "build": "npm run clean && mkdir dist && webpack --display-error-details --progress --colors --output-path ./dist -p",
         "start": "webpack-dev-server -d --hot --progress --colors --https --content-base ./src/ --port 8888",
-        "package": "npm run build && node buildPackages.js",
-        "postinstall": "typings install"
+        "package": "npm run build && node buildPackages.js"
     },
     "devDependencies": {
         "@types/react": "^16.0.9",
@@ -27,10 +26,9 @@
         "css-loader": "0.28.11",
         "ts-loader": "3.4.0",
         "node-sass": "4.7.2",
-        "typescript": "2.7.2",
-        "typings": "2.1.1",
-        "uglifyjs-webpack-plugin": "1.2.3",
-        "tfx-cli": "0.5.9",
+        "typescript": "2.8.1",
+        "uglifyjs-webpack-plugin": "1.2.4",
+        "tfx-cli": "0.5.10",
         "copy-webpack-plugin": "4.5.1",
         "url-loader": "1.0.1",
         "file-loader": "1.1.11",
@@ -40,7 +38,7 @@
     "dependencies": {
         "es6-promise": "4.2.4",
         "vss-ui": "4.131.2",
-        "vss-web-extension-sdk": "5.127.0",
+        "vss-web-extension-sdk": "5.131.0",
         "office-ui-fabric-react": "~5.46.0",
         "recharts": "0.22.4",
         "tslib": "~1.7.1",

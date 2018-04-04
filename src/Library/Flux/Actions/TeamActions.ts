@@ -34,7 +34,7 @@ export namespace TeamActions {
         const project = VSS.getWebContext().project.id;
 
         const getTeamDelegate = async (skip: number) => {
-            const result: WebApiTeam[] = await client.getTeams(project, top, skip);
+            const result: WebApiTeam[] = await client.getTeams(project, false, top, skip);
             if (result.length > 0) {
                 teams.push(...result);
             }

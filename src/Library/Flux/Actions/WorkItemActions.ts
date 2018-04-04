@@ -146,12 +146,12 @@ export namespace WorkItemActions {
         }
     }
 
-    export async function deleteWorkItem(workItemId: number, destroy?: boolean): Promise<void> {
+    export async function deleteWorkItem(workItemId: number, projectId?: string, destroy?: boolean): Promise<void> {
         if (!workItemStore.isLoading()) {
             workItemStore.setLoading(true);
 
             try {
-                await WitClient.getClient().deleteWorkItem(workItemId, destroy);
+                await WitClient.getClient().deleteWorkItem(workItemId, projectId, destroy);
                 WorkItemActionsHub.DeleteWorkItems.invoke([workItemId]);
                 workItemStore.setLoading(false);
             }

@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "pr-workitems",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "name": "PR workitems",
     "description": "A pull request menu extension to create a new workitem and associate it with current pull request",
     "publisher": "mohitbagra",
@@ -14,11 +14,8 @@
 	 ],
     "targets": [
         {
-            "id": "Microsoft.VisualStudio.Services"
+            "id": "Microsoft.VisualStudio.Services.Cloud"
         }
-    ],
-    "demands": [
-        "api-version/3.0"
     ],
     "tags": [
         "Work Item",
