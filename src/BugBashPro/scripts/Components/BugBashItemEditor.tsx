@@ -27,7 +27,6 @@ import { Checkbox } from "OfficeFabric/Checkbox";
 import { CommandBar } from "OfficeFabric/CommandBar";
 import { ActivityItem } from "OfficeFabric/components/ActivityItem";
 import { IContextualMenuItem } from "OfficeFabric/ContextualMenu";
-import { Label } from "OfficeFabric/Label";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
 import { Overlay } from "OfficeFabric/Overlay";
 import {
@@ -188,40 +187,38 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                         />
                     }
 
-                    <div className="item-description-container">
-                        <Label>Description</Label>
-                        <RichEditorComponent
-                            containerId="description-editor"
-                            value={description}
-                            delay={200}
-                            getPastedImageUrl={this._pasteImage}
-                            editorOptions={{
-                                svgPath: `${VSS.getExtensionContext().baseUri}/3rdParty/icons.png`,
-                                btns: [
-                                    ["bold", "italic"],
-                                    ["link"],
-                                    ["upload"],
-                                    ["removeformat"],
-                                    ["fullscreen"]
-                                ]
-                            }}
-                            onChange={this._onDescriptionChange}
-                        />
-                    </div>
+                    <RichEditorComponent
+                        containerId="description-editor"
+                        className="item-description-container"
+                        value={description}
+                        label="Description"
+                        delay={200}
+                        getPastedImageUrl={this._pasteImage}
+                        editorOptions={{
+                            svgPath: `${VSS.getExtensionContext().baseUri}/3rdParty/icons.png`,
+                            btns: [
+                                ["bold", "italic"],
+                                ["link"],
+                                ["upload"],
+                                ["removeformat"],
+                                ["fullscreen"]
+                            ]
+                        }}
+                        onChange={this._onDescriptionChange}
+                    />
 
-                    <div className="item-comments-editor-container">
-                        <Label>Discussion</Label>
-                        <RichEditorComponent
-                            containerId="comment-editor"
-                            value={item.newComment || ""}
-                            delay={200}
-                            editorOptions={{
-                                svgPath: `${VSS.getExtensionContext().baseUri}/3rdParty/icons.png`,
-                                btns: []
-                            }}
-                            onChange={this._onCommentChange}
-                        />
-                    </div>
+                    <RichEditorComponent
+                        containerId="comment-editor"
+                        className="item-comments-editor-container"
+                        label="Discussion"
+                        value={item.newComment || ""}
+                        delay={200}
+                        editorOptions={{
+                            svgPath: `${VSS.getExtensionContext().baseUri}/3rdParty/icons.png`,
+                            btns: []
+                        }}
+                        onChange={this._onCommentChange}
+                    />
 
                     <div className="item-comments-container">
                         {this._renderComments()}
