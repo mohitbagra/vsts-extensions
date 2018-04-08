@@ -1,8 +1,7 @@
 .bugbash-charts {
     display: flex;
     height: calc(100% - 10px);
-    padding: 8px;
-    padding-top: 0;
+    padding: 0 10px 10px 0;
     
     .chart-view-container {
         flex: 1;
