@@ -5,6 +5,8 @@ import * as React from "react";
 import { InfoLabel } from "Library/Components/InfoLabel";
 import { InputError } from "Library/Components/InputError";
 import { IFocussable } from "Library/Components/Interfaces";
+import { RichEditorToolbarButtonNames } from "Library/Components/RichEditor/Toolbar/Interfaces";
+import { RichEditorToolbar } from "Library/Components/RichEditor/Toolbar/RichEditorToolbar";
 import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
@@ -35,7 +37,7 @@ export interface IRichEditorState extends IBaseFluxComponentState {
 }
 
 export interface IEditorOptions {
-    buttons?: string[];
+    buttons?: RichEditorToolbarButtonNames[];
     getPastedImageUrl?(value: string): Promise<string>;
 }
 
@@ -120,7 +122,12 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
 
     private _renderToolbar(): JSX.Element {
         if (this.props.editorOptions && this.props.editorOptions.buttons && this.props.editorOptions.buttons.length > 0) {
-            return null;
+            return (
+                <RichEditorToolbar
+                    buttons={this.props.editorOptions.buttons}
+                    getEditor={this._getEditor}
+                />
+            );
         }
         return null;
     }
@@ -129,6 +136,11 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         if (this.props.required && isNullOrEmpty(this.state.value)) {
             return "A value is required";
         }
+    }
+
+    @autobind
+    private _getEditor(): Editor {
+        return this._editor;
     }
 
     @autobind
