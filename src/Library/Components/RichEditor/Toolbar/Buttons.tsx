@@ -2,11 +2,14 @@ import * as React from "react";
 
 import { IconNames } from "@uifabric/icons";
 import {
-    IRichEditorToolbarButton, RichEditorToolbarButtonNames, RichEditorToolbarButtonState
+    IRichEditorToolbarButton, RichEditorToolbarButtonState
 } from "Library/Components/RichEditor/Toolbar/Interfaces";
 import {
     blackColors, ColorPicker, FontNamePicker, FontSizePicker, textColors
 } from "Library/Components/RichEditor/Toolbar/Pickers";
+import {
+    RichEditorToolbarButtonNames
+} from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
 import {
     clearFormat, removeLink, setAlignment, setBackgroundColor, setFontName, setFontSize,
     setIndentation, setTextColor, toggleBlockQuote, toggleBold, toggleBullet, toggleItalic,
@@ -15,6 +18,10 @@ import {
 import Alignment from "roosterjs-editor-types/lib/format/Alignment";
 import Indentation from "roosterjs-editor-types/lib/format/Indentation";
 
+export const fullscreen: IRichEditorToolbarButton = {
+    iconName: IconNames.FullScreen,
+    onClick: toggleBold
+};
 export const bold: IRichEditorToolbarButton = {
     iconName: IconNames.Bold,
     buttonState: formatState =>
@@ -184,5 +191,6 @@ export const ButtonMap: IDictionaryStringTo<IRichEditorToolbarButton> = {
     [RichEditorToolbarButtonNames.btnBkColor]: backColor,
     [RichEditorToolbarButtonNames.btnFontColor]: textColor,
     [RichEditorToolbarButtonNames.btnFontSize]: fontSize,
-    [RichEditorToolbarButtonNames.btnFontName]: fontName
+    [RichEditorToolbarButtonNames.btnFontName]: fontName,
+    [RichEditorToolbarButtonNames.btnFullscreen]: fullscreen
 };

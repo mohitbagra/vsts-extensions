@@ -5,8 +5,10 @@ import * as React from "react";
 import { InfoLabel } from "Library/Components/InfoLabel";
 import { InputError } from "Library/Components/InputError";
 import { IFocussable } from "Library/Components/Interfaces";
-import { RichEditorToolbarButtonNames } from "Library/Components/RichEditor/Toolbar/Interfaces";
 import { RichEditorToolbar } from "Library/Components/RichEditor/Toolbar/RichEditorToolbar";
+import {
+    RichEditorToolbarButtonNames
+} from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
 import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
