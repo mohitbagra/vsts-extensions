@@ -40,8 +40,8 @@
         "vss-web-extension-sdk": "5.131.0",
         "office-ui-fabric-react": "~5.46.0",
         "recharts": "0.22.4",
+        "roosterjs": "6.9.3",
         "tslib": "~1.7.1",
-        "trumbowyg": "2.9.4",
         "react-sortable-hoc": "0.6.8",
         "lodash-amd": "4.17.5",
         "date-fns": "1.29.0"

@@ -188,34 +188,25 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                     }
 
                     <RichEditorComponent
-                        containerId="description-editor"
                         className="item-description-container"
                         value={description}
                         label="Description"
                         delay={200}
-                        getPastedImageUrl={this._pasteImage}
                         editorOptions={{
-                            svgPath: `${VSS.getExtensionContext().baseUri}/3rdParty/icons.png`,
-                            btns: [
-                                ["bold", "italic"],
-                                ["link"],
-                                ["upload"],
-                                ["removeformat"],
-                                ["fullscreen"]
-                            ]
+                            getPastedImageUrl: this._pasteImage,
+                            buttons: ["bold", "italic", "upload", "removeformat", "fullscreen"]
                         }}
                         onChange={this._onDescriptionChange}
                     />
 
                     <RichEditorComponent
-                        containerId="comment-editor"
                         className="item-comments-editor-container"
                         label="Discussion"
                         value={item.newComment || ""}
                         delay={200}
                         editorOptions={{
-                            svgPath: `${VSS.getExtensionContext().baseUri}/3rdParty/icons.png`,
-                            btns: []
+                            getPastedImageUrl: this._pasteImage,
+                            buttons: []
                         }}
                         onChange={this._onCommentChange}
                     />

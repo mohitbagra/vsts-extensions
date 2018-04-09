@@ -84,17 +84,6 @@ export class MentionAction extends BaseAction {
     }
 
     public render(): React.ReactNode {
-        const richEditorOptions = {
-            svgPath: `${VSS.getExtensionContext().baseUri}/3rdParty/icons.png`,
-            btns: [
-                ["bold", "italic"],
-                ["link"],
-                ["upload"],
-                ["removeformat"],
-                ["fullscreen"]
-            ]
-        };
-
         return (
             <div>
                 <AsyncThrottledTextField
@@ -114,7 +103,9 @@ export class MentionAction extends BaseAction {
                     label="Message"
                     info="Enter comment"
                     delay={200}
-                    editorOptions={richEditorOptions}
+                    editorOptions={{
+                        buttons: ["bold", "italic", "upload", "removeformat", "fullscreen"]
+                    }}
                     onChange={this._onMessageChange}
                 />
             </div>

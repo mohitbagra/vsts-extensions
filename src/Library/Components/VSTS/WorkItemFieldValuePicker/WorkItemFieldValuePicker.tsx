@@ -154,18 +154,6 @@ export class WorkItemFieldValuePicker extends BaseFluxComponent<IWorkItemFieldVa
                 );
             case FieldType.History:
             case FieldType.Html:
-                const richEditorOptions = {
-                    svgPath: `${VSS.getExtensionContext().baseUri}/3rdParty/icons.png`,
-                    btns: [
-                        ["bold", "italic"],
-                        ["superscript", "subscript"],
-                        ["unorderedList", "orderedList"],
-                        ["link"],
-                        ["removeformat"],
-                        ["fullscreen"]
-                    ]
-                };
-
                 return (
                     <RichEditor
                         className={className}
@@ -176,7 +164,9 @@ export class WorkItemFieldValuePicker extends BaseFluxComponent<IWorkItemFieldVa
                         delay={delay}
                         required={required}
                         error={error}
-                        editorOptions={richEditorOptions}
+                        editorOptions={{
+                            buttons: ["bold", "italic", "upload", "removeformat", "fullscreen"]
+                        }}
                         onChange={this._onFieldValueChange}
                     />
                 );

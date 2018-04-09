@@ -74,30 +74,20 @@
             margin-top: 10px;
         }
     
-        .item-description-container, .item-comments-editor-container {
+        .item-description-container {
             margin-top: 10px;
     
-            .trumbowyg-box {
-                min-height: 250px;
-    
-                #description-editor {
-                    min-height: 250px;
-                }
+            .rich-editor {
+                height: 250px;
             }
         }
     
         .item-comments-editor-container {
-            .trumbowyg-button-pane {
-                display: none;
+            margin-top: 10px;
+
+            .rich-editor {
+                height: 100px;
             }
-    
-            .trumbowyg-box {
-                min-height: 100px;
-    
-                #comment-editor {
-                    min-height: 100px;
-                }            
-            }  
         }
     
         .item-comments-container {

@@ -2,9 +2,6 @@ import "./RichEditor.scss";
 
 import * as React from "react";
 
-import "trumbowyg/dist/trumbowyg";
-import "trumbowyg/dist/ui/trumbowyg.min.css";
-
 import { InfoLabel } from "Library/Components/InfoLabel";
 import { InputError } from "Library/Components/InputError";
 import { IFocussable } from "Library/Components/Interfaces";
@@ -12,67 +9,71 @@ import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { delay, DelayedFunction } from "Library/Utilities/Core";
-import { newGuid } from "Library/Utilities/Guid";
-import "Library/Utilities/PasteImagePlugin";
-import { StaticObservable } from "Library/Utilities/StaticObservable";
 import { isNullOrEmpty } from "Library/Utilities/String";
-import "Library/Utilities/UploadImagePlugin";
 import { autobind, css } from "OfficeFabric/Utilities";
+import Editor from "roosterjs-editor-core/lib/editor/Editor";
+import EditorOptions from "roosterjs-editor-core/lib/editor/EditorOptions";
+import EditorPlugin from "roosterjs-editor-core/lib/editor/EditorPlugin";
+import ContentEdit from "roosterjs-editor-plugins/lib/ContentEdit/ContentEdit";
+import DefaultShortcut from "roosterjs-editor-plugins/lib/DefaultShortcut/DefaultShortcut";
+import HyperLink from "roosterjs-editor-plugins/lib/HyperLink/HyperLink";
 
 export interface IRichEditorProps extends IBaseFluxComponentProps {
-    containerId?: string;
     value?: string;
     delay?: number;
-    editorOptions?: any;
     label?: string;
     info?: string;
     error?: string;
     disabled?: boolean;
     required?: boolean;
+    editorOptions?: IEditorOptions;
     onChange(newValue: string): void;
-    getPastedImageUrl?(value: string): Promise<string>;
 }
 
 export interface IRichEditorState extends IBaseFluxComponentState {
     value?: string;
 }
 
+export interface IEditorOptions {
+    buttons?: string[];
+    getPastedImageUrl?(value: string): Promise<string>;
+}
+
 export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorState> implements IFocussable {
-    private _richEditorContainer: JQuery;
-    private _containerId: string;
+    private _contentDiv: HTMLDivElement;
     private _delayedFunction: DelayedFunction;
+    private _editor: Editor;
 
     public focus() {
-        if (this._richEditorContainer) {
-            this._richEditorContainer.focus();
+        if (this._editor) {
+            this._editor.focus();
         }
     }
 
     public componentDidMount() {
         super.componentDidMount();
-
-        StaticObservable.getInstance().unsubscribe(this._onImagePaste, "imagepasted");
-        StaticObservable.getInstance().subscribe(this._onImagePaste, "imagepasted");
-
-        this._richEditorContainer = $(`#${this._containerId}`);
-        this._richEditorContainer
-            .trumbowyg(this.props.editorOptions || {})
-            .on("tbwchange", this._onChange)
-            .on("tbwblur", this._fireChange);
-
-        this._richEditorContainer.trumbowyg("html", this.props.value || "");
+        const plugins: EditorPlugin[] = [
+            new DefaultShortcut(),
+            new HyperLink(),
+            new ContentEdit(),
+        ];
+        const options: EditorOptions = {
+            plugins: plugins,
+            initialContent: this.state.value
+        };
+        this._editor = new Editor(this._contentDiv, options);
+        this._editor.addDomEventHandler("keyup", this._onChange);
+        this._editor.addDomEventHandler("paste", this._onChange);
+        this._editor.addDomEventHandler("input", this._onChange);
 
         if (this.props.disabled) {
-            this._richEditorContainer.trumbowyg("disable");
+            this._contentDiv.setAttribute("contenteditable", "false");
         }
     }
 
     public componentWillUnmount() {
         super.componentWillUnmount();
-
-        StaticObservable.getInstance().unsubscribe(this._onImagePaste, "imagepasted");
-
-        this._richEditorContainer.trumbowyg("destroy");
+        this._editor.dispose();
         this._disposeDelayedFunction();
     }
 
@@ -81,7 +82,7 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         this._disposeDelayedFunction();
 
         if (nextProps.value !== this.state.value) {
-            this._richEditorContainer.trumbowyg("html", nextProps.value || "");
+            this._editor.setContent(nextProps.value || "");
             this.setState({
                 value: nextProps.value
             });
@@ -89,10 +90,10 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
 
         if (nextProps.disabled !== this.props.disabled) {
             if (nextProps.disabled) {
-                this._richEditorContainer.trumbowyg("disable");
+                this._contentDiv.setAttribute("contenteditable", "false");
             }
             else {
-                this._richEditorContainer.trumbowyg("disable");
+                this._contentDiv.setAttribute("contenteditable", "true");
             }
         }
     }
@@ -104,7 +105,8 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
             <div className={css("rich-editor-container", this.props.className)}>
                 {this.props.label && <InfoLabel className="rich-editor-label" label={this.props.label} info={this.props.info} />}
                 <div className="progress-bar" style={{visibility: this.state.loading ? "visible" : "hidden"}} />
-                <div id={this._containerId} className="rich-editor" />
+                {this._renderToolbar()}
+                <div className="rich-editor" ref={this._onContentDivRef} />
                 {error && <InputError className="rich-editor-error" error={error} />}
             </div>
         );
@@ -114,14 +116,24 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         this.state = {
             value: this.props.value || ""
         };
+    }
 
-        this._containerId = this.props.containerId || newGuid();
+    private _renderToolbar(): JSX.Element {
+        if (this.props.editorOptions && this.props.editorOptions.buttons && this.props.editorOptions.buttons.length > 0) {
+            return null;
+        }
+        return null;
     }
 
     private _getDefaultError(): string {
         if (this.props.required && isNullOrEmpty(this.state.value)) {
             return "A value is required";
         }
+    }
+
+    @autobind
+    private _onContentDivRef(ref: HTMLDivElement) {
+        this._contentDiv = ref;
     }
 
     @autobind
@@ -142,30 +154,30 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
     private _fireChange() {
         this._disposeDelayedFunction();
 
-        const value = this._richEditorContainer.trumbowyg("html");
+        const value = this._editor.getContent();
         this.setState({value: value}, () => {
             this.props.onChange(value);
         });
     }
 
-    @autobind
-    private async _onImagePaste(args: {data: string, callback(url: string): void}) {
-        if (!this.props.getPastedImageUrl) {
-            return;
-        }
+    // @autobind
+    // private async _onImagePaste(args: {data: string, callback(url: string): void}) {
+    //     if (!this.props.getPastedImageUrl) {
+    //         return;
+    //     }
 
-        this.setState({loading: true});
+    //     this.setState({loading: true});
 
-        try {
-            const imageUrl = await this.props.getPastedImageUrl(args.data);
-            args.callback(imageUrl);
-            this.setState({loading: false});
-        }
-        catch (e) {
-            args.callback(null);
-            this.setState({loading: false});
-        }
-    }
+    //     try {
+    //         const imageUrl = await this.props.getPastedImageUrl(args.data);
+    //         args.callback(imageUrl);
+    //         this.setState({loading: false});
+    //     }
+    //     catch (e) {
+    //         args.callback(null);
+    //         this.setState({loading: false});
+    //     }
+    // }
 
     private _disposeDelayedFunction() {
         if (this._delayedFunction) {

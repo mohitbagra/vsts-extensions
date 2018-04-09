@@ -24,11 +24,6 @@
             "regex": "^react",
             "orderLevel": 1,
             "numberOfEmptyLinesAfterGroup": 1
-        },
-        {
-            "regex": "^trumbowyg",
-            "orderLevel": 2,
-            "numberOfEmptyLinesAfterGroup": 1
         }
     ]
 }
