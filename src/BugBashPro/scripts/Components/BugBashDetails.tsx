@@ -10,9 +10,6 @@ import { StoresHub } from "BugBashPro/Stores/StoresHub";
 import { LongText } from "BugBashPro/ViewModels/LongText";
 import { Loading } from "Library/Components/Loading";
 import {
-    RichEditorToolbarButtonNames
-} from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
-import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { ErrorMessageActions } from "Library/Flux/Actions/ErrorMessageActions";
@@ -70,23 +67,7 @@ export class BugBashDetails extends BaseFluxComponent<IBugBashDetailsProps, IBug
                             value={this.state.longText.Text}
                             delay={200}
                             editorOptions={{
-                                getPastedImageUrl: this._pasteImage,
-                                buttons: [
-                                    RichEditorToolbarButtonNames.btnBold,
-                                    RichEditorToolbarButtonNames.btnItalic,
-                                    RichEditorToolbarButtonNames.btnUnformat,
-                                    RichEditorToolbarButtonNames.btnFullscreen,
-                                    RichEditorToolbarButtonNames.btnUndo,
-                                    RichEditorToolbarButtonNames.btnRedo,
-                                    RichEditorToolbarButtonNames.btnSuperScript,
-                                    RichEditorToolbarButtonNames.btnSubscript,
-                                    RichEditorToolbarButtonNames.btnStrikethrough,
-                                    RichEditorToolbarButtonNames.btnAlignLeft,
-                                    RichEditorToolbarButtonNames.btnAlignCenter,
-                                    RichEditorToolbarButtonNames.btnAlignRight,
-                                    RichEditorToolbarButtonNames.btnBullets,
-                                    RichEditorToolbarButtonNames.btnNumbering
-                                ]
+                                getPastedImageUrl: this._pasteImage
                             }}
                             onChange={this._onChange}
                         />

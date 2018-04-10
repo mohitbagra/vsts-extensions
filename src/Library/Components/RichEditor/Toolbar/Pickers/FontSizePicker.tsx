@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { ContextualMenu, DirectionalHint, IContextualMenuItem } from "OfficeFabric/ContextualMenu";
-import * as Styles from "./Picker.scss.g";
 
 const FONTSIZE_REGEX = /(\d+)pt/i;
 
@@ -41,7 +40,7 @@ export class FontSizePicker extends React.Component<IFontSizePickerProps, {}> {
         selectedSize = matches && matches.length === 2 ? matches[1] : selectedSize;
         return (
             <ContextualMenu
-                className={Styles.ribbonFontSizePicker}
+                className={"font-size-picker"}
                 shouldFocusOnMount={true}
                 target={menuTargetElement}
                 directionalHint={DirectionalHint.bottomLeftEdge}

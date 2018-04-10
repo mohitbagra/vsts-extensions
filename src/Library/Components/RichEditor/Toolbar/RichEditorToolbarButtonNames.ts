@@ -1,6 +1,6 @@
 export enum RichEditorToolbarButtonNames {
     btnFontName = "Font",
-    btnFontSize = "Font size",
+    btnFontSize = "FontSize",
     btnBold = "Bold",
     btnItalic = "Italic",
     btnUnderline = "Underline",
@@ -21,6 +21,5 @@ export enum RichEditorToolbarButtonNames {
     btnUnformat = "RemoveFormat",
     btnBkColor = "Highlight",
     btnFontColor = "FontColor",
-    btnFullscreen = "ToggleFullscreen",
-    seperator = "Seperator"
+    btnFullscreen = "ToggleFullscreen"
 }

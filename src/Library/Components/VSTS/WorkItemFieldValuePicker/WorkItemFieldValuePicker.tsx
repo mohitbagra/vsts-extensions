@@ -2,9 +2,6 @@ import * as React from "react";
 
 import { RichEditor } from "Library/Components/RichEditor";
 import {
-    RichEditorToolbarButtonNames
-} from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
-import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { ThrottledTextField } from "Library/Components/Utilities/ThrottledTextField";
@@ -167,9 +164,6 @@ export class WorkItemFieldValuePicker extends BaseFluxComponent<IWorkItemFieldVa
                         delay={delay}
                         required={required}
                         error={error}
-                        editorOptions={{
-                            buttons: [RichEditorToolbarButtonNames.btnBold, RichEditorToolbarButtonNames.btnItalic, RichEditorToolbarButtonNames.btnUnformat, RichEditorToolbarButtonNames.btnFullscreen]
-                        }}
                         onChange={this._onFieldValueChange}
                     />
                 );

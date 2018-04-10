@@ -13,9 +13,6 @@ import { StoresHub } from "BugBashPro/Stores/StoresHub";
 import { BugBashItem } from "BugBashPro/ViewModels/BugBashItem";
 import { Loading } from "Library/Components/Loading";
 import {
-    RichEditorToolbarButtonNames
-} from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
-import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { ThrottledTextField } from "Library/Components/Utilities/ThrottledTextField";
@@ -197,7 +194,6 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                         delay={200}
                         editorOptions={{
                             getPastedImageUrl: this._pasteImage,
-                            buttons: [RichEditorToolbarButtonNames.btnBold, RichEditorToolbarButtonNames.btnItalic, RichEditorToolbarButtonNames.btnUnformat, RichEditorToolbarButtonNames.btnFullscreen]
                         }}
                         onChange={this._onDescriptionChange}
                     />

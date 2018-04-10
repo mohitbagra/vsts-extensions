@@ -1,12 +1,15 @@
+import "./RichEditorToolbar.scss";
+
 import * as React from "react";
 
 import { ButtonMap } from "Library/Components/RichEditor/Toolbar/Buttons";
 import {
     RichEditorToolbarButtonNames
 } from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
-import { CommandBar } from "OfficeFabric/CommandBar";
-import { ContextualMenuItemType, IContextualMenuItem } from "OfficeFabric/ContextualMenu";
-import { autobind } from "OfficeFabric/Utilities";
+import { IconButton } from "office-ui-fabric-react";
+import { FocusZone, FocusZoneDirection } from "OfficeFabric/FocusZone";
+import { DirectionalHint, TooltipDelay, TooltipHost } from "OfficeFabric/Tooltip";
+import { autobind, css } from "OfficeFabric/Utilities";
 import Editor from "roosterjs-editor-core/lib/editor/Editor";
 
 export interface IRichEditorToolbarProps {
@@ -16,26 +19,41 @@ export interface IRichEditorToolbarProps {
 
 export class RichEditorToolbar extends React.Component<IRichEditorToolbarProps, {}> {
     public render(): JSX.Element {
+        const {buttons} = this.props;
+
         return (
-            <CommandBar
-                items={this.props.buttons.map(this._getCommandButton)}
-            />
+            <FocusZone className="richeditor-toolbar-focuszone" direction={FocusZoneDirection.horizontal}>
+                {buttons.map(this._getCommandButton)}
+            </FocusZone>
         );
     }
 
     @autobind
-    private _getCommandButton(button: RichEditorToolbarButtonNames): IContextualMenuItem {
-        if (button === RichEditorToolbarButtonNames.seperator) {
-            return {
-                key: button,
-                itemType: ContextualMenuItemType.Divider
-            };
+    private _getCommandButton(button: RichEditorToolbarButtonNames): JSX.Element {
+        const buttonObj = ButtonMap[button];
+        if (!buttonObj) {
+            return null;
         }
 
-        const buttonObj = ButtonMap[button];
-        return {
-            key: button,
-            onClick: buttonObj.onClick ? () => buttonObj.onClick(this.props.getEditor()) : null
+        const onClick = () => {
+            buttonObj.onClick(this.props.getEditor());
         };
+
+        return (
+            <TooltipHost
+                content={buttonObj.title}
+                delay={TooltipDelay.medium}
+                directionalHint={DirectionalHint.bottomCenter}
+                hostClassName={button}
+            >
+                <IconButton
+                    className={css("toolbar-button")}
+                    iconProps={{
+                        iconName: buttonObj.iconName
+                    }}
+                    onClick={onClick}
+                />
+            </TooltipHost>
+        );
     }
 }

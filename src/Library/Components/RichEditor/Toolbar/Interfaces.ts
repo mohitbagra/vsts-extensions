@@ -26,6 +26,7 @@ export const enum RichEditorToolbarButtonState {
  */
 export interface IRichEditorToolbarButton {
     iconName: string;
+    title: string;
     /**
      * A call back to get a drop down UI when click on this button
      */

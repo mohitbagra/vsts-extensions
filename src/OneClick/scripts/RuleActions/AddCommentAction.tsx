@@ -1,9 +1,6 @@
 import * as React from "react";
 
 import { Loading } from "Library/Components/Loading";
-import {
-    RichEditorToolbarButtonNames
-} from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
 import { getAsyncLoadedComponent } from "Library/Components/Utilities/AsyncLoadedComponent";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
 import * as WorkItemFormHelpers from "Library/Utilities/WorkItemFormHelpers";
@@ -57,9 +54,6 @@ export class AddCommentAction extends BaseAction {
                     label="Comment"
                     info="Enter comment"
                     delay={200}
-                    editorOptions={{
-                        buttons: [RichEditorToolbarButtonNames.btnBold, RichEditorToolbarButtonNames.btnItalic, RichEditorToolbarButtonNames.btnUnformat, RichEditorToolbarButtonNames.btnFullscreen]
-                    }}
                     onChange={this._onCommentChange}
                 />
             </div>

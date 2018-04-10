@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { ContextualMenu, DirectionalHint, IContextualMenuItem } from "OfficeFabric/ContextualMenu";
-import * as Styles from "./Picker.scss.g";
 
 const FIRSTFONT_REGEX: RegExp = /^['"]?([^'",]+)/i;
 
@@ -151,7 +150,7 @@ export class FontNamePicker extends React.Component<IFontNamePickerProps, {}> {
         selectedName = fontMatches && fontMatches.length === 2 ? fontMatches[1] : selectedName;
         return (
             <ContextualMenu
-                className={Styles.ribbonFontPicker}
+                className="font-picker"
                 target={menuTargetElement}
                 directionalHint={DirectionalHint.bottomLeftEdge}
                 onDismiss={onDismissMenu}

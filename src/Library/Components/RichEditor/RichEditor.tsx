@@ -22,6 +22,25 @@ import ContentEdit from "roosterjs-editor-plugins/lib/ContentEdit/ContentEdit";
 import DefaultShortcut from "roosterjs-editor-plugins/lib/DefaultShortcut/DefaultShortcut";
 import HyperLink from "roosterjs-editor-plugins/lib/HyperLink/HyperLink";
 
+const DEFAULT_BUTTONS = [
+    RichEditorToolbarButtonNames.btnBold,
+    RichEditorToolbarButtonNames.btnItalic,
+    RichEditorToolbarButtonNames.btnUnderline,
+    RichEditorToolbarButtonNames.btnUnformat,
+    RichEditorToolbarButtonNames.btnUnlink,
+    RichEditorToolbarButtonNames.btnBullets,
+    RichEditorToolbarButtonNames.btnNumbering,
+    RichEditorToolbarButtonNames.btnSuperScript,
+    RichEditorToolbarButtonNames.btnSubscript,
+    RichEditorToolbarButtonNames.btnStrikethrough,
+    RichEditorToolbarButtonNames.btnIndent,
+    RichEditorToolbarButtonNames.btnOutdent,
+    RichEditorToolbarButtonNames.btnAlignLeft,
+    RichEditorToolbarButtonNames.btnAlignCenter,
+    RichEditorToolbarButtonNames.btnAlignRight,
+    RichEditorToolbarButtonNames.btnFullscreen
+];
+
 export interface IRichEditorProps extends IBaseFluxComponentProps {
     value?: string;
     delay?: number;
@@ -123,10 +142,11 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
     }
 
     private _renderToolbar(): JSX.Element {
-        if (this.props.editorOptions && this.props.editorOptions.buttons && this.props.editorOptions.buttons.length > 0) {
+        const buttons = (this.props.editorOptions && this.props.editorOptions.buttons) || DEFAULT_BUTTONS;
+        if (buttons.length > 0) {
             return (
                 <RichEditorToolbar
-                    buttons={this.props.editorOptions.buttons}
+                    buttons={buttons}
                     getEditor={this._getEditor}
                 />
             );
