@@ -1,6 +1,9 @@
 import * as React from "react";
 
 import { Loading } from "Library/Components/Loading";
+import {
+    DEFAULT_BUTTONS
+} from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
 import { getAsyncLoadedComponent } from "Library/Components/Utilities/AsyncLoadedComponent";
 import { parseUniquefiedIdentityName } from "Library/Utilities/Identity";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
@@ -103,6 +106,9 @@ export class MentionAction extends BaseAction {
                     label="Message"
                     info="Enter comment"
                     delay={200}
+                    editorOptions={{
+                        buttons: DEFAULT_BUTTONS
+                    }}
                     onChange={this._onMessageChange}
                 />
             </div>

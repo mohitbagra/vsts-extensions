@@ -21,5 +21,53 @@ export enum RichEditorToolbarButtonNames {
     btnUnformat = "RemoveFormat",
     btnBkColor = "Highlight",
     btnFontColor = "FontColor",
-    btnFullscreen = "ToggleFullscreen"
+    btnFullscreen = "ToggleFullscreen",
+    btnUploadImage = "UploadImage"
 }
+
+export const ALL_BUTTONS = [
+    RichEditorToolbarButtonNames.btnBold,
+    RichEditorToolbarButtonNames.btnItalic,
+    RichEditorToolbarButtonNames.btnUnderline,
+    RichEditorToolbarButtonNames.btnFontName,
+    RichEditorToolbarButtonNames.btnFontSize,
+    RichEditorToolbarButtonNames.btnFontColor,
+    RichEditorToolbarButtonNames.btnBkColor,
+    RichEditorToolbarButtonNames.btnUnformat,
+    RichEditorToolbarButtonNames.btnUnlink,
+    RichEditorToolbarButtonNames.btnUploadImage,
+    RichEditorToolbarButtonNames.btnBullets,
+    RichEditorToolbarButtonNames.btnNumbering,
+    RichEditorToolbarButtonNames.btnSuperScript,
+    RichEditorToolbarButtonNames.btnSubscript,
+    RichEditorToolbarButtonNames.btnStrikethrough,
+    RichEditorToolbarButtonNames.btnIndent,
+    RichEditorToolbarButtonNames.btnOutdent,
+    RichEditorToolbarButtonNames.btnQuote,
+    RichEditorToolbarButtonNames.btnAlignLeft,
+    RichEditorToolbarButtonNames.btnAlignCenter,
+    RichEditorToolbarButtonNames.btnAlignRight,
+    RichEditorToolbarButtonNames.btnUndo,
+    RichEditorToolbarButtonNames.btnRedo,
+    RichEditorToolbarButtonNames.btnFullscreen
+];
+
+export const DEFAULT_BUTTONS = [
+    RichEditorToolbarButtonNames.btnBold,
+    RichEditorToolbarButtonNames.btnItalic,
+    RichEditorToolbarButtonNames.btnUnderline,
+    RichEditorToolbarButtonNames.btnUnformat,
+    RichEditorToolbarButtonNames.btnUnlink,
+    RichEditorToolbarButtonNames.btnUploadImage,
+    RichEditorToolbarButtonNames.btnBullets,
+    RichEditorToolbarButtonNames.btnNumbering,
+    RichEditorToolbarButtonNames.btnSuperScript,
+    RichEditorToolbarButtonNames.btnSubscript,
+    RichEditorToolbarButtonNames.btnStrikethrough,
+    RichEditorToolbarButtonNames.btnIndent,
+    RichEditorToolbarButtonNames.btnOutdent,
+    RichEditorToolbarButtonNames.btnAlignLeft,
+    RichEditorToolbarButtonNames.btnAlignCenter,
+    RichEditorToolbarButtonNames.btnAlignRight,
+    RichEditorToolbarButtonNames.btnFullscreen
+];

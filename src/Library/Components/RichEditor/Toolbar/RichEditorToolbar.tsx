@@ -3,6 +3,7 @@ import "./RichEditorToolbar.scss";
 import * as React from "react";
 
 import { ButtonMap } from "Library/Components/RichEditor/Toolbar/Buttons";
+import { IRichEditorToolbarButtonOptions } from "Library/Components/RichEditor/Toolbar/Interfaces";
 import {
     RichEditorToolbarButtonNames
 } from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
@@ -14,6 +15,7 @@ import Editor from "roosterjs-editor-core/lib/editor/Editor";
 
 export interface IRichEditorToolbarProps {
     buttons: RichEditorToolbarButtonNames[];
+    options?: IRichEditorToolbarButtonOptions;
     getEditor(): Editor;
 }
 
@@ -36,7 +38,7 @@ export class RichEditorToolbar extends React.Component<IRichEditorToolbarProps, 
         }
 
         const onClick = () => {
-            buttonObj.onClick(this.props.getEditor());
+            buttonObj.onClick(this.props.getEditor(), this.props.options);
         };
 
         return (

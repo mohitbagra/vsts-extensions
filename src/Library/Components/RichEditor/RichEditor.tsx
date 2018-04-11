@@ -5,9 +5,10 @@ import * as React from "react";
 import { InfoLabel } from "Library/Components/InfoLabel";
 import { InputError } from "Library/Components/InputError";
 import { IFocussable } from "Library/Components/Interfaces";
+import { Paste } from "Library/Components/RichEditor/Plugins/Paste";
 import { RichEditorToolbar } from "Library/Components/RichEditor/Toolbar/RichEditorToolbar";
 import {
-    RichEditorToolbarButtonNames
+    ALL_BUTTONS, RichEditorToolbarButtonNames
 } from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
 import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
@@ -21,25 +22,6 @@ import EditorPlugin from "roosterjs-editor-core/lib/editor/EditorPlugin";
 import ContentEdit from "roosterjs-editor-plugins/lib/ContentEdit/ContentEdit";
 import DefaultShortcut from "roosterjs-editor-plugins/lib/DefaultShortcut/DefaultShortcut";
 import HyperLink from "roosterjs-editor-plugins/lib/HyperLink/HyperLink";
-
-const DEFAULT_BUTTONS = [
-    RichEditorToolbarButtonNames.btnBold,
-    RichEditorToolbarButtonNames.btnItalic,
-    RichEditorToolbarButtonNames.btnUnderline,
-    RichEditorToolbarButtonNames.btnUnformat,
-    RichEditorToolbarButtonNames.btnUnlink,
-    RichEditorToolbarButtonNames.btnBullets,
-    RichEditorToolbarButtonNames.btnNumbering,
-    RichEditorToolbarButtonNames.btnSuperScript,
-    RichEditorToolbarButtonNames.btnSubscript,
-    RichEditorToolbarButtonNames.btnStrikethrough,
-    RichEditorToolbarButtonNames.btnIndent,
-    RichEditorToolbarButtonNames.btnOutdent,
-    RichEditorToolbarButtonNames.btnAlignLeft,
-    RichEditorToolbarButtonNames.btnAlignCenter,
-    RichEditorToolbarButtonNames.btnAlignRight,
-    RichEditorToolbarButtonNames.btnFullscreen
-];
 
 export interface IRichEditorProps extends IBaseFluxComponentProps {
     value?: string;
@@ -77,9 +59,13 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         super.componentDidMount();
         const plugins: EditorPlugin[] = [
             new DefaultShortcut(),
-            new HyperLink(),
-            new ContentEdit(),
+            new HyperLink(href => `${href}.\n Ctrl-Click to follow link.`),
+            new ContentEdit()
         ];
+        if (this.props.editorOptions && this.props.editorOptions.getPastedImageUrl) {
+            plugins.push(new Paste(this._getImageUrl));
+        }
+
         const options: EditorOptions = {
             plugins: plugins,
             initialContent: this.state.value
@@ -130,6 +116,7 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
                 <div className="progress-bar" style={{visibility: this.state.loading ? "visible" : "hidden"}} />
                 {this._renderToolbar()}
                 <div className="rich-editor" ref={this._onContentDivRef} />
+                <div className="rich-editor-dialog-container" />
                 {error && <InputError className="rich-editor-error" error={error} />}
             </div>
         );
@@ -142,12 +129,19 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
     }
 
     private _renderToolbar(): JSX.Element {
-        const buttons = (this.props.editorOptions && this.props.editorOptions.buttons) || DEFAULT_BUTTONS;
+        let buttons = (this.props.editorOptions && this.props.editorOptions.buttons) || ALL_BUTTONS;
+        if (!this.props.editorOptions || !this.props.editorOptions.getPastedImageUrl) {
+            buttons = buttons.filter(b => b === RichEditorToolbarButtonNames.btnUploadImage);
+        }
+
         if (buttons.length > 0) {
             return (
                 <RichEditorToolbar
                     buttons={buttons}
                     getEditor={this._getEditor}
+                    options={{
+                        getImageUrl: this._getImageUrl
+                    }}
                 />
             );
         }
@@ -194,24 +188,24 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         });
     }
 
-    // @autobind
-    // private async _onImagePaste(args: {data: string, callback(url: string): void}) {
-    //     if (!this.props.getPastedImageUrl) {
-    //         return;
-    //     }
+    @autobind
+    private async _getImageUrl(data: string): Promise<string> {
+        if (!this.props.editorOptions || !this.props.editorOptions.getPastedImageUrl) {
+            return null;
+        }
 
-    //     this.setState({loading: true});
+        this.setState({loading: true});
 
-    //     try {
-    //         const imageUrl = await this.props.getPastedImageUrl(args.data);
-    //         args.callback(imageUrl);
-    //         this.setState({loading: false});
-    //     }
-    //     catch (e) {
-    //         args.callback(null);
-    //         this.setState({loading: false});
-    //     }
-    // }
+        try {
+            const imageUrl = await this.props.editorOptions.getPastedImageUrl(data);
+            this.setState({loading: false});
+            return imageUrl;
+        }
+        catch (e) {
+            this.setState({loading: false});
+            return null;
+        }
+    }
 
     private _disposeDelayedFunction() {
         if (this._delayedFunction) {

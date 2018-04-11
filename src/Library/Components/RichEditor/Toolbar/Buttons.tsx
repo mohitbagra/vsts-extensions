@@ -1,6 +1,8 @@
 import * as React from "react";
+import { render, unmountComponentAtNode } from "react-dom";
 
 import { IconNames } from "@uifabric/icons";
+import { FileUploadDialog } from "Library/Components/FileUploadDialog";
 import {
     IRichEditorToolbarButton, RichEditorToolbarButtonState
 } from "Library/Components/RichEditor/Toolbar/Interfaces";
@@ -13,8 +15,10 @@ import {
     toggleBlockQuote, toggleBold, toggleBullet, toggleItalic, toggleNumbering, toggleStrikethrough,
     toggleSubscript, toggleSuperscript, toggleUnderline
 } from "roosterjs-editor-api";
+import Editor from "roosterjs-editor-core/lib/editor/Editor";
 import Alignment from "roosterjs-editor-types/lib/format/Alignment";
 import Indentation from "roosterjs-editor-types/lib/format/Indentation";
+import { FileInputResult } from "VSSUI/FileInput";
 import { closest } from "VSSUI/Utilities/Internal";
 
 export const fullscreen: IRichEditorToolbarButton = {
@@ -78,7 +82,7 @@ export const outdent: IRichEditorToolbarButton = {
 export const quote: IRichEditorToolbarButton = {
     iconName: IconNames.RightDoubleQuote,
     title: "Place under quotes",
-    onClick: toggleBlockQuote,
+    onClick: editor => toggleBlockQuote(editor, null),
     buttonState: formatState =>
         formatState.isBlockQuote ? RichEditorToolbarButtonState.Checked : RichEditorToolbarButtonState.Normal
 };
@@ -194,6 +198,57 @@ export const fontName: IRichEditorToolbarButton = {
         />
     )
 };
+export const uploadImage: IRichEditorToolbarButton = {
+    iconName: IconNames.Upload,
+    title: "Upload image",
+    onClick: (editor, options) => {
+        const dialogContainer = closest((editor as any).core.contentDiv, ".rich-editor-container").querySelector(".rich-editor-dialog-container");
+        const closeDialog = () => {
+            unmountComponentAtNode(dialogContainer);
+        };
+        const addImages = (files: FileInputResult[]) => {
+            onImageAdd(editor, files[0].file, options.getImageUrl);
+        };
+
+        render(
+            <FileUploadDialog
+                title="Upload image"
+                onDialogClose={closeDialog}
+                allowedFileExtensions={["png", "jpg", "gif"]}
+                onOkClick={addImages}
+            />,
+            dialogContainer
+        );
+    }
+};
+
+export function onImageAdd(editor: Editor, imageFile: File, getImageUrl: (data: string) => Promise<string>) {
+    if (!editor || !imageFile || !getImageUrl) {
+        return;
+    }
+
+    editor.addUndoSnapshot();
+    const reader = new FileReader();
+    reader.onload = async (event: ProgressEvent) => {
+        if (!editor.isDisposed()) {
+            const imageData = (event.target as any).result;
+            try {
+                const imageUrl = await getImageUrl(imageData);
+
+                if (imageUrl && !editor.isDisposed()) {
+                    const image = editor.getDocument().createElement("img");
+                    image.src = imageUrl;
+                    editor.insertNode(image);
+                    editor.addUndoSnapshot();
+                }
+            }
+            catch {
+                // no op
+            }
+        }
+    };
+    reader.readAsDataURL(imageFile);
+}
 
 export const ButtonMap: IDictionaryStringTo<IRichEditorToolbarButton> = {
     [RichEditorToolbarButtonNames.btnBold]: bold,
@@ -218,5 +273,6 @@ export const ButtonMap: IDictionaryStringTo<IRichEditorToolbarButton> = {
     // [RichEditorToolbarButtonNames.btnFontColor]: textColor,
     [RichEditorToolbarButtonNames.btnFontSize]: fontSize,
     [RichEditorToolbarButtonNames.btnFontName]: fontName,
-    [RichEditorToolbarButtonNames.btnFullscreen]: fullscreen
+    [RichEditorToolbarButtonNames.btnFullscreen]: fullscreen,
+    [RichEditorToolbarButtonNames.btnUploadImage]: uploadImage
 };

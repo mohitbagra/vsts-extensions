@@ -43,5 +43,9 @@ export interface IRichEditorToolbarButton {
     /**
      * onClick event handler
      */
-    onClick?(editor: Editor): void;
+    onClick?(editor: Editor, options?: IRichEditorToolbarButtonOptions): void;
+}
+
+export interface IRichEditorToolbarButtonOptions {
+    getImageUrl?(data: string): Promise<string>;
 }
