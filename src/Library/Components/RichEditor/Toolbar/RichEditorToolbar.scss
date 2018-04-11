@@ -1,0 +1,22 @@
+.richeditor-toolbar-focuszone {
+    .ToggleFullscreen {
+        float: right;
+    }
+    
+    .toolbar-button {
+        width: auto;
+        height: auto;
+        padding: 2px;
+        margin-right: 2px;
+
+        i {
+            margin: 0;
+            padding: 0;
+        }
+
+        &:hover {
+            background-color: #eaeaea;
+            color: #333333;
+        }
+    }
+}

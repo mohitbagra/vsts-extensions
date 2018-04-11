@@ -21,7 +21,6 @@ const config = {
             { from: "./node_modules/vss-web-extension-sdk/lib/VSS.SDK.min.js", to: "OneClick/3rdParty/VSS.SDK.min.js" },
             { from: "./node_modules/es6-promise/dist/es6-promise.min.js", to: "OneClick/3rdParty/es6-promise.min.js" },
             { from: "./node_modules/office-ui-fabric-react/dist/css/fabric.min.css", to: "OneClick/3rdParty/fabric.min.css" },
-            { from: "./node_modules/trumbowyg/dist/ui/icons.svg", to: "OneClick/3rdParty/icons.png" },
             
             { from: "./src/Library/ES5-Polyfills", to: "OneClick/Polyfills" },
 

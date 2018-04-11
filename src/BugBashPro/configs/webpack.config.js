@@ -23,7 +23,6 @@ const config = {
             { from: "./node_modules/vss-web-extension-sdk/lib/VSS.SDK.min.js", to: "BugBashPro/3rdParty/VSS.SDK.min.js" },
             { from: "./node_modules/es6-promise/dist/es6-promise.min.js", to: "BugBashPro/3rdParty/es6-promise.min.js" },
             { from: "./node_modules/office-ui-fabric-react/dist/css/fabric.min.css", to: "BugBashPro/3rdParty/fabric.min.css" },
-            { from: "./node_modules/trumbowyg/dist/ui/icons.svg", to: "BugBashPro/3rdParty/icons.png" },
             
             { from: "./src/BugBashPro/configs", to: "BugBashPro/configs" },
             { from: "./src/BugBashPro/images", to: "BugBashPro/images" },

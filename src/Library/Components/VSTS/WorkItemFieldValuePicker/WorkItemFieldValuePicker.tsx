@@ -2,6 +2,9 @@ import * as React from "react";
 
 import { RichEditor } from "Library/Components/RichEditor";
 import {
+    DEFAULT_BUTTONS
+} from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
+import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { ThrottledTextField } from "Library/Components/Utilities/ThrottledTextField";
@@ -154,18 +157,6 @@ export class WorkItemFieldValuePicker extends BaseFluxComponent<IWorkItemFieldVa
                 );
             case FieldType.History:
             case FieldType.Html:
-                const richEditorOptions = {
-                    svgPath: `${VSS.getExtensionContext().baseUri}/3rdParty/icons.png`,
-                    btns: [
-                        ["bold", "italic"],
-                        ["superscript", "subscript"],
-                        ["unorderedList", "orderedList"],
-                        ["link"],
-                        ["removeformat"],
-                        ["fullscreen"]
-                    ]
-                };
-
                 return (
                     <RichEditor
                         className={className}
@@ -176,7 +167,9 @@ export class WorkItemFieldValuePicker extends BaseFluxComponent<IWorkItemFieldVa
                         delay={delay}
                         required={required}
                         error={error}
-                        editorOptions={richEditorOptions}
+                        editorOptions={{
+                            buttons: DEFAULT_BUTTONS
+                        }}
                         onChange={this._onFieldValueChange}
                     />
                 );

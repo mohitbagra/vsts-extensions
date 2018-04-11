@@ -13,6 +13,9 @@ import { StoresHub } from "BugBashPro/Stores/StoresHub";
 import { BugBashItem } from "BugBashPro/ViewModels/BugBashItem";
 import { Loading } from "Library/Components/Loading";
 import {
+    DEFAULT_BUTTONS
+} from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
+import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { ThrottledTextField } from "Library/Components/Utilities/ThrottledTextField";
@@ -188,34 +191,25 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                     }
 
                     <RichEditorComponent
-                        containerId="description-editor"
                         className="item-description-container"
                         value={description}
                         label="Description"
                         delay={200}
-                        getPastedImageUrl={this._pasteImage}
                         editorOptions={{
-                            svgPath: `${VSS.getExtensionContext().baseUri}/3rdParty/icons.png`,
-                            btns: [
-                                ["bold", "italic"],
-                                ["link"],
-                                ["upload"],
-                                ["removeformat"],
-                                ["fullscreen"]
-                            ]
+                            getPastedImageUrl: this._pasteImage,
+                            buttons: DEFAULT_BUTTONS
                         }}
                         onChange={this._onDescriptionChange}
                     />
 
                     <RichEditorComponent
-                        containerId="comment-editor"
                         className="item-comments-editor-container"
                         label="Discussion"
                         value={item.newComment || ""}
                         delay={200}
                         editorOptions={{
-                            svgPath: `${VSS.getExtensionContext().baseUri}/3rdParty/icons.png`,
-                            btns: []
+                            getPastedImageUrl: this._pasteImage,
+                            buttons: []
                         }}
                         onChange={this._onCommentChange}
                     />

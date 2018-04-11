@@ -64,27 +64,10 @@ export class BugBashDetails extends BaseFluxComponent<IBugBashDetailsProps, IBug
 
                     { this.props.isEditMode &&
                         <RichEditorComponent
-                            containerId="bugbash-description-editor"
                             value={this.state.longText.Text}
-                            getPastedImageUrl={this._pasteImage}
                             delay={200}
                             editorOptions={{
-                                svgPath: `${VSS.getExtensionContext().baseUri}/3rdParty/icons.png`,
-                                btns: [
-                                    ["viewHTML"],
-                                    ["undo", "redo"],
-                                    ["formatting"],
-                                    ["strong", "em", "del"],
-                                    ["superscript", "subscript"],
-                                    ["link"],
-                                    ["insertImage"],
-                                    ["upload"],
-                                    ["justifyLeft", "justifyCenter", "justifyRight", "justifyFull"],
-                                    ["unorderedList", "orderedList"],
-                                    ["horizontalRule"],
-                                    ["removeformat"],
-                                    ["fullscreen"]
-                                ]
+                                getPastedImageUrl: this._pasteImage
                             }}
                             onChange={this._onChange}
                         />

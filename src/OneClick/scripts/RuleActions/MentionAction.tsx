@@ -1,6 +1,9 @@
 import * as React from "react";
 
 import { Loading } from "Library/Components/Loading";
+import {
+    DEFAULT_BUTTONS
+} from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
 import { getAsyncLoadedComponent } from "Library/Components/Utilities/AsyncLoadedComponent";
 import { parseUniquefiedIdentityName } from "Library/Utilities/Identity";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
@@ -84,17 +87,6 @@ export class MentionAction extends BaseAction {
     }
 
     public render(): React.ReactNode {
-        const richEditorOptions = {
-            svgPath: `${VSS.getExtensionContext().baseUri}/3rdParty/icons.png`,
-            btns: [
-                ["bold", "italic"],
-                ["link"],
-                ["upload"],
-                ["removeformat"],
-                ["fullscreen"]
-            ]
-        };
-
         return (
             <div>
                 <AsyncThrottledTextField
@@ -114,7 +106,9 @@ export class MentionAction extends BaseAction {
                     label="Message"
                     info="Enter comment"
                     delay={200}
-                    editorOptions={richEditorOptions}
+                    editorOptions={{
+                        buttons: DEFAULT_BUTTONS
+                    }}
                     onChange={this._onMessageChange}
                 />
             </div>
