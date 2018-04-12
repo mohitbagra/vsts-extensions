@@ -1,6 +1,5 @@
 export enum RichEditorToolbarButtonNames {
-    btnFontName = "Font",
-    btnFontSize = "FontSize",
+    btnFullscreen = "ToggleFullscreen",
     btnBold = "Bold",
     btnItalic = "Italic",
     btnUnderline = "Underline",
@@ -8,7 +7,6 @@ export enum RichEditorToolbarButtonNames {
     btnNumbering = "NumberedList",
     btnIndent = "IncreaseIndent",
     btnOutdent = "DecreaseIndent",
-    btnQuote = "Quote",
     btnAlignLeft = "AlignLeft",
     btnAlignCenter = "AlignCenter",
     btnAlignRight = "AlignRight",
@@ -19,9 +17,6 @@ export enum RichEditorToolbarButtonNames {
     btnUndo = "Undo",
     btnRedo = "Redo",
     btnUnformat = "RemoveFormat",
-    btnBkColor = "Highlight",
-    btnFontColor = "FontColor",
-    btnFullscreen = "ToggleFullscreen",
     btnUploadImage = "UploadImage"
 }
 
@@ -29,10 +24,6 @@ export const ALL_BUTTONS = [
     RichEditorToolbarButtonNames.btnBold,
     RichEditorToolbarButtonNames.btnItalic,
     RichEditorToolbarButtonNames.btnUnderline,
-    RichEditorToolbarButtonNames.btnFontName,
-    RichEditorToolbarButtonNames.btnFontSize,
-    RichEditorToolbarButtonNames.btnFontColor,
-    RichEditorToolbarButtonNames.btnBkColor,
     RichEditorToolbarButtonNames.btnUnformat,
     RichEditorToolbarButtonNames.btnUnlink,
     RichEditorToolbarButtonNames.btnUploadImage,
@@ -43,7 +34,6 @@ export const ALL_BUTTONS = [
     RichEditorToolbarButtonNames.btnStrikethrough,
     RichEditorToolbarButtonNames.btnIndent,
     RichEditorToolbarButtonNames.btnOutdent,
-    RichEditorToolbarButtonNames.btnQuote,
     RichEditorToolbarButtonNames.btnAlignLeft,
     RichEditorToolbarButtonNames.btnAlignCenter,
     RichEditorToolbarButtonNames.btnAlignRight,
@@ -61,8 +51,6 @@ export const DEFAULT_BUTTONS = [
     RichEditorToolbarButtonNames.btnUploadImage,
     RichEditorToolbarButtonNames.btnBullets,
     RichEditorToolbarButtonNames.btnNumbering,
-    RichEditorToolbarButtonNames.btnSuperScript,
-    RichEditorToolbarButtonNames.btnSubscript,
     RichEditorToolbarButtonNames.btnStrikethrough,
     RichEditorToolbarButtonNames.btnIndent,
     RichEditorToolbarButtonNames.btnOutdent,
