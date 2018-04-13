@@ -8,7 +8,7 @@ import { BugBashItemActions } from "BugBashPro/Actions/BugBashItemActions";
 import { BugBashItemCommentActions } from "BugBashPro/Actions/BugBashItemCommentActions";
 import { LongTextActions } from "BugBashPro/Actions/LongTextActions";
 import * as BugBashCharts_Async from "BugBashPro/Components/BugBashCharts";
-import { BugBashDetails } from "BugBashPro/Components/BugBashDetails";
+import * as BugBashDetails_Async from "BugBashPro/Components/BugBashDetails";
 import * as BugBashEditor_Async from "BugBashPro/Components/BugBashEditor";
 import * as BugBashResults_Async from "BugBashPro/Components/BugBashResults";
 import {
@@ -69,6 +69,11 @@ export interface IBugBashViewState extends IBaseFluxComponentState {
 const AsyncBugBashEditor = getAsyncLoadedComponent(
     ["scripts/BugBashEditor"],
     (m: typeof BugBashEditor_Async) => m.BugBashEditor,
+    () => <Loading />);
+
+const AsyncBugBashDetails = getAsyncLoadedComponent(
+    ["scripts/BugBashDetails"],
+    (m: typeof BugBashDetails_Async) => m.BugBashDetails,
     () => <Loading />);
 
 const AsyncBugBashResults = getAsyncLoadedComponent(
@@ -230,7 +235,7 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
                         commands={this._getDetailsViewCommands()}
                     >
                         <div className="bugbash-hub-contents bugbash-details-hub-contents">
-                            <BugBashDetails isEditMode={this.state.isDetailsInEditMode} id={this.props.bugBashId} />
+                            <AsyncBugBashDetails isEditMode={this.state.isDetailsInEditMode} id={this.props.bugBashId} />
                         </div>
                     </PivotBarItem>
                 }

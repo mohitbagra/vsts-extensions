@@ -7,14 +7,25 @@ const config = {
         "BugBashPro/scripts/AllBugBashesView": "./src/BugBashPro/scripts/Components/AllBugBashesView.tsx",
         "BugBashPro/scripts/BugBashEditor": "./src/BugBashPro/scripts/Components/BugBashEditor.tsx",
         "BugBashPro/scripts/BugBashResults": "./src/BugBashPro/scripts/Components/BugBashResults.tsx",
+        "BugBashPro/scripts/BugBashDetails": "./src/BugBashPro/scripts/Components/BugBashDetails.tsx",
         "BugBashPro/scripts/BugBashCharts": "./src/BugBashPro/scripts/Components/BugBashCharts.tsx",
-        "BugBashPro/scripts/SettingsPanel": "./src/BugBashPro/scripts/Components/SettingsPanel.tsx"
+        "BugBashPro/scripts/SettingsPanel": "./src/BugBashPro/scripts/Components/SettingsPanel.tsx",
+        "BugBashPro/scripts/FileUploadDialog": "./src/Library/Components/FileUploadDialog/FileUploadDialog.tsx"
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin(
             {
                 name: "bugbashpro_common_chunks",
-                chunks: ["BugBashPro/scripts/App", "BugBashPro/scripts/AllBugBashesView", "BugBashPro/scripts/BugBashEditor", "BugBashPro/scripts/BugBashResults", "BugBashPro/scripts/BugBashCharts", "BugBashPro/scripts/SettingsPanel"],
+                chunks: [
+                    "BugBashPro/scripts/App",
+                    "BugBashPro/scripts/AllBugBashesView",
+                    "BugBashPro/scripts/BugBashEditor",                    
+                    "BugBashPro/scripts/BugBashResults",
+                    "BugBashPro/scripts/BugBashDetails",
+                    "BugBashPro/scripts/BugBashCharts",
+                    "BugBashPro/scripts/SettingsPanel",
+                    "BugBashPro/scripts/FileUploadDialog"
+                ],
                 filename: "./BugBashPro/scripts/bugbashpro_common_chunks.js",
                 minChunks: 3
             }

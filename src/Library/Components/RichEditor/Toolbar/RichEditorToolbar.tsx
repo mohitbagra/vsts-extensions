@@ -7,7 +7,7 @@ import { IRichEditorToolbarButtonOptions } from "Library/Components/RichEditor/T
 import {
     RichEditorToolbarButtonNames
 } from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
-import { IconButton } from "office-ui-fabric-react";
+import { IconButton } from "OfficeFabric/Button";
 import { FocusZone, FocusZoneDirection } from "OfficeFabric/FocusZone";
 import { DirectionalHint, TooltipDelay, TooltipHost } from "OfficeFabric/Tooltip";
 import { autobind, css } from "OfficeFabric/Utilities";

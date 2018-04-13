@@ -12,7 +12,11 @@ const config = {
         new webpack.optimize.CommonsChunkPlugin(
             {
                 name: "oneclick_common_chunks",
-                chunks: ["OneClick/scripts/SettingsApp", "OneClick/scripts/RuleEditor", "OneClick/scripts/ActionRenderers"],
+                chunks: [
+                    "OneClick/scripts/SettingsApp",
+                    "OneClick/scripts/RuleEditor",
+                    "OneClick/scripts/ActionRenderers"
+                ],
                 filename: "./OneClick/scripts/oneclick_common_chunks.js",
                 minChunks: 2
             }

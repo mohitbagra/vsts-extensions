@@ -2,20 +2,34 @@ import * as React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 
 import { IconNames } from "@uifabric/icons";
-import { FileUploadDialog } from "Library/Components/FileUploadDialog";
+import * as FileUploadDialog_Async from "Library/Components/FileUploadDialog";
 import { IRichEditorToolbarButton } from "Library/Components/RichEditor/Toolbar/Interfaces";
 import {
     RichEditorToolbarButtonNames
 } from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
-import {
-    clearFormat, removeLink, setAlignment, setIndentation, toggleBold, toggleBullet, toggleItalic,
-    toggleNumbering, toggleStrikethrough, toggleSubscript, toggleSuperscript, toggleUnderline
-} from "roosterjs-editor-api";
+import { getAsyncLoadedComponent } from "Library/Components/Utilities/AsyncLoadedComponent";
+import clearFormat from "roosterjs-editor-api/lib/format/clearFormat";
+import removeLink from "roosterjs-editor-api/lib/format/removeLink";
+import setAlignment from "roosterjs-editor-api/lib/format/setAlignment";
+import setIndentation from "roosterjs-editor-api/lib/format/setIndentation";
+import toggleBold from "roosterjs-editor-api/lib/format/toggleBold";
+import toggleBullet from "roosterjs-editor-api/lib/format/toggleBullet";
+import toggleItalic from "roosterjs-editor-api/lib/format/toggleItalic";
+import toggleNumbering from "roosterjs-editor-api/lib/format/toggleNumbering";
+import toggleStrikethrough from "roosterjs-editor-api/lib/format/toggleStrikethrough";
+import toggleSubscript from "roosterjs-editor-api/lib/format/toggleSubscript";
+import toggleSuperscript from "roosterjs-editor-api/lib/format/toggleSuperscript";
+import toggleUnderline from "roosterjs-editor-api/lib/format/toggleUnderline";
 import Editor from "roosterjs-editor-core/lib/editor/Editor";
 import Alignment from "roosterjs-editor-types/lib/format/Alignment";
 import Indentation from "roosterjs-editor-types/lib/format/Indentation";
 import { FileInputResult } from "VSSUI/FileInput";
 import { closest } from "VSSUI/Utilities/Internal";
+
+const AsyncFileUploadDialog = getAsyncLoadedComponent(
+    ["scripts/FileUploadDialog"],
+    (m: typeof FileUploadDialog_Async) => m.FileUploadDialog,
+    () => null);
 
 export const fullscreen: IRichEditorToolbarButton = {
     iconName: IconNames.FullScreen,
@@ -128,7 +142,7 @@ export const uploadImage: IRichEditorToolbarButton = {
         };
 
         render(
-            <FileUploadDialog
+            <AsyncFileUploadDialog
                 title="Upload image"
                 onDialogClose={closeDialog}
                 allowedFileExtensions={["png", "jpg", "gif"]}

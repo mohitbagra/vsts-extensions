@@ -1,16 +1,25 @@
 import { onImageAdd } from "Library/Components/RichEditor/Toolbar/Buttons";
-import { buildSnapshot, Editor, EditorPlugin, restoreSnapshot } from "roosterjs-editor-core";
-import {
-    applyFormat, fromHtml, getFirstLeafNode, getNextLeafSibling, sanitizeHtml,
+import Editor from "roosterjs-editor-core/lib/editor/Editor";
+import EditorPlugin from "roosterjs-editor-core/lib/editor/EditorPlugin";
+import { buildSnapshot, restoreSnapshot } from "roosterjs-editor-core/lib/undo/snapshotUtils";
+import { getFirstLeafNode } from "roosterjs-editor-dom/lib/domWalker/getLeafNode";
+import { getNextLeafSibling } from "roosterjs-editor-dom/lib/domWalker/getLeafSibling";
+import applyFormat from "roosterjs-editor-dom/lib/utils/applyFormat";
+import fromHtml from "roosterjs-editor-dom/lib/utils/fromHtml";
+import sanitizeHtml, {
     SanitizeHtmlPropertyCallback
-} from "roosterjs-editor-dom";
+} from "roosterjs-editor-dom/lib/utils/sanitizeHtml";
 import buildClipboardData from "roosterjs-editor-plugins/lib/Paste/buildClipboardData";
 import textToHtml from "roosterjs-editor-plugins/lib/Paste/textToHtml";
 import convertPastedContentFromWord from "roosterjs-editor-plugins/lib/Paste/wordConverter/convertPastedContentFromWord";
-import {
-    BeforePasteEvent, ChangeSource, ClipboardData, DefaultFormat, NodeType, PasteOption,
-    PluginEvent, PluginEventType
-} from "roosterjs-editor-types";
+import NodeType from "roosterjs-editor-types/lib/browser/NodeType";
+import BeforePasteEvent from "roosterjs-editor-types/lib/clipboard/BeforePasteEvent";
+import ClipboardData from "roosterjs-editor-types/lib/clipboard/ClipboardData";
+import PasteOption from "roosterjs-editor-types/lib/clipboard/PasteOption";
+import { ChangeSource } from "roosterjs-editor-types/lib/editor/ContentChangedEvent";
+import DefaultFormat from "roosterjs-editor-types/lib/editor/DefaultFormat";
+import PluginEvent from "roosterjs-editor-types/lib/editor/PluginEvent";
+import PluginEventType from "roosterjs-editor-types/lib/editor/PluginEventType";
 
 /**
  * Paste plugin, handles onPaste event and paste content into editor
