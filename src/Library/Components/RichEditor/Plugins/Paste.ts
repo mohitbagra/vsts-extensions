@@ -21,15 +21,10 @@ export class Paste implements EditorPlugin {
 
     /**
      * Create an instance of Paste
-     * @param _useDirectPaste: This is a test parameter and may be removed in the future.
-     * When set to true, we retrieve HTML from clipboard directly rather than using a hidden pasting DIV,
-     * then filter out unsafe HTML tags and attributes. Although we removed some unsafe tags such as SCRIPT,
-     * OBJECT, ... But there is still risk to have other kinds of XSS scripts embeded. So please do NOT use
-     * this parameter if you don't have other XSS detecting logic outside the edtior.
      */
     constructor(
         private _getPastedImageUrl: (data: string) => Promise<string>,
-        private _useDirectPaste?: boolean,
+        private _postHandler: () => void,
         private _htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback
     ) {}
 
@@ -98,7 +93,7 @@ export class Paste implements EditorPlugin {
                 }
                 this.pasteOriginal(clipboardData);
             },
-            this._useDirectPaste
+            false
         );
     }
 
@@ -151,20 +146,21 @@ export class Paste implements EditorPlugin {
         switch (pasteOption) {
             case PasteOption.PasteHtml:
                 this._editor.insertNode(fragment);
+                this._editor.triggerContentChangedEvent(ChangeSource.Paste, clipboardData);
+                this._editor.addUndoSnapshot();
                 break;
 
             case PasteOption.PasteText:
                 const html = textToHtml(clipboardData.text);
                 this._editor.insertContent(html);
+                this._editor.triggerContentChangedEvent(ChangeSource.Paste, clipboardData);
+                this._editor.addUndoSnapshot();
                 break;
 
             default:
-                onImageAdd(this._editor, clipboardData.image, this._getPastedImageUrl);
+                onImageAdd(this._editor, clipboardData.image, this._getPastedImageUrl, this._postHandler);
                 break;
         }
-
-        this._editor.triggerContentChangedEvent(ChangeSource.Paste, clipboardData);
-        this._editor.addUndoSnapshot();
     }
 
     private _applyTextFormat(node: Node, format: DefaultFormat) {

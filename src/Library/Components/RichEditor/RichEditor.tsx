@@ -63,7 +63,7 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
             new ContentEdit()
         ];
         if (this.props.editorOptions && this.props.editorOptions.getPastedImageUrl) {
-            plugins.push(new Paste(this._getImageUrl));
+            plugins.push(new Paste(this._getImageUrl, this._onChange));
         }
 
         const options: EditorOptions = {
@@ -140,7 +140,8 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
                     buttons={buttons}
                     getEditor={this._getEditor}
                     options={{
-                        getImageUrl: this._getImageUrl
+                        getImageUrl: this._getImageUrl,
+                        postImageUploadHandler: this._onChange
                     }}
                 />
             );
