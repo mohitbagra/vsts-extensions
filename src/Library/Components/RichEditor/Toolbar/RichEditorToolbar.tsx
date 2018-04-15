@@ -31,7 +31,7 @@ export class RichEditorToolbar extends React.Component<IRichEditorToolbarProps, 
     }
 
     @autobind
-    private _getCommandButton(button: RichEditorToolbarButtonNames): JSX.Element {
+    private _getCommandButton(button: RichEditorToolbarButtonNames, index: number): JSX.Element {
         const buttonObj = ButtonMap[button];
         if (!buttonObj) {
             return null;
@@ -43,6 +43,7 @@ export class RichEditorToolbar extends React.Component<IRichEditorToolbarProps, 
 
         return (
             <TooltipHost
+                key={index}
                 content={buttonObj.title}
                 delay={TooltipDelay.medium}
                 directionalHint={DirectionalHint.bottomCenter}

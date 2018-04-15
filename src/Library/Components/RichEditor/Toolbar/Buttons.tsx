@@ -138,7 +138,7 @@ export const uploadImage: IRichEditorToolbarButton = {
             unmountComponentAtNode(dialogContainer);
         };
         const addImages = (files: FileInputResult[]) => {
-            onImageAdd(editor, files[0].file, options.getImageUrl, options.postImageUploadHandler);
+            onImageAdd(editor, files[0].file, options.getImageUrl);
         };
 
         render(
@@ -153,7 +153,7 @@ export const uploadImage: IRichEditorToolbarButton = {
     }
 };
 
-export function onImageAdd(editor: Editor, imageFile: File, getImageUrl: (data: string) => Promise<string>, postHandler?: () => void) {
+export function onImageAdd(editor: Editor, imageFile: File, getImageUrl: (data: string) => Promise<string>) {
     if (!editor || !imageFile || !getImageUrl) {
         return;
     }
@@ -170,11 +170,8 @@ export function onImageAdd(editor: Editor, imageFile: File, getImageUrl: (data: 
                     const image = editor.getDocument().createElement("img");
                     image.src = imageUrl;
                     editor.insertNode(image);
+                    editor.triggerContentChangedEvent();
                     editor.addUndoSnapshot();
-
-                    if (postHandler) {
-                        postHandler();
-                    }
                 }
             }
             catch {

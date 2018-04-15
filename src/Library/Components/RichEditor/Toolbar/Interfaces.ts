@@ -8,5 +8,4 @@ export interface IRichEditorToolbarButton {
 
 export interface IRichEditorToolbarButtonOptions {
     getImageUrl?(data: string): Promise<string>;
-    postImageUploadHandler?(): void;
 }

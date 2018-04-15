@@ -5,6 +5,7 @@ import * as React from "react";
 import { InfoLabel } from "Library/Components/InfoLabel";
 import { InputError } from "Library/Components/InputError";
 import { IFocussable } from "Library/Components/Interfaces";
+import { ContentChangedPlugin } from "Library/Components/RichEditor/Plugins/ContentChangedPlugin";
 import { Paste } from "Library/Components/RichEditor/Plugins/Paste";
 import { RichEditorToolbar } from "Library/Components/RichEditor/Toolbar/RichEditorToolbar";
 import {
@@ -60,10 +61,11 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         const plugins: EditorPlugin[] = [
             new DefaultShortcut(),
             new HyperLink(href => `${href}.\n Ctrl-Click to follow link.`),
-            new ContentEdit()
+            new ContentEdit(),
+            new ContentChangedPlugin(this._onChange)
         ];
         if (this.props.editorOptions && this.props.editorOptions.getPastedImageUrl) {
-            plugins.push(new Paste(this._getImageUrl, this._onChange));
+            plugins.push(new Paste(this._getImageUrl));
         }
 
         const options: EditorOptions = {
@@ -71,9 +73,6 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
             initialContent: this.state.value
         };
         this._editor = new Editor(this._contentDiv, options);
-        this._editor.addDomEventHandler("keyup", this._onChange);
-        this._editor.addDomEventHandler("paste", this._onChange);
-        this._editor.addDomEventHandler("input", this._onChange);
 
         if (this.props.disabled) {
             this._contentDiv.setAttribute("contenteditable", "false");
@@ -140,8 +139,7 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
                     buttons={buttons}
                     getEditor={this._getEditor}
                     options={{
-                        getImageUrl: this._getImageUrl,
-                        postImageUploadHandler: this._onChange
+                        getImageUrl: this._getImageUrl
                     }}
                 />
             );
@@ -184,9 +182,11 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         this._disposeDelayedFunction();
 
         const value = this._editor.getContent();
-        this.setState({value: value}, () => {
-            this.props.onChange(value);
-        });
+        if (value !== this.state.value) {
+            this.setState({value: value}, () => {
+                this.props.onChange(value);
+            });
+        }
     }
 
     @autobind

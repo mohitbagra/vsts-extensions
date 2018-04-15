@@ -33,7 +33,6 @@ export class Paste implements EditorPlugin {
      */
     constructor(
         private _getPastedImageUrl: (data: string) => Promise<string>,
-        private _postHandler: () => void,
         private _htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback
     ) {}
 
@@ -167,7 +166,7 @@ export class Paste implements EditorPlugin {
                 break;
 
             default:
-                onImageAdd(this._editor, clipboardData.image, this._getPastedImageUrl, this._postHandler);
+                onImageAdd(this._editor, clipboardData.image, this._getPastedImageUrl);
                 break;
         }
     }
