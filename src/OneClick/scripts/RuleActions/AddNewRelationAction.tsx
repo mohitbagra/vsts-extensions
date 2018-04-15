@@ -8,6 +8,7 @@ import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
 import { IIconProps } from "OfficeFabric/Icon";
 import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
+import { CoreFieldRefNames } from "OneClick/Constants";
 import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
 import { translateToFieldValue } from "OneClick/Helpers";
 import { BaseAction } from "OneClick/RuleActions/BaseAction";
@@ -30,9 +31,10 @@ export class AddNewRelationAction extends BaseAction {
         let savedWorkItem: WorkItem;
 
         const workItemFormService = await WorkItemFormService.getService();
+        const project = await workItemFormService.getFieldValue(CoreFieldRefNames.TeamProject) as string;
 
         // read template
-        await WorkItemTemplateItemActions.initializeWorkItemTemplateItem(teamId, templateId);
+        await WorkItemTemplateItemActions.initializeWorkItemTemplateItem(teamId, templateId, project);
         const template = StoresHub.workItemTemplateItemStore.getItem(templateId);
 
         // read fields from template
@@ -54,7 +56,7 @@ export class AddNewRelationAction extends BaseAction {
         if (autoCreate) {
             try {
                 // create work item
-                savedWorkItem = await WorkItemActions.createWorkItem(workItemType, translatedFieldValuesMap);
+                savedWorkItem = await WorkItemActions.createWorkItem(workItemType, translatedFieldValuesMap, project);
             }
             catch (e) {
                 throw `Could not create work item. Error: ${e}. Please check the template used in this action.`;

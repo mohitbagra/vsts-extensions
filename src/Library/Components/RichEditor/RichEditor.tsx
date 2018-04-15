@@ -131,7 +131,7 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
     private _renderToolbar(): JSX.Element {
         let buttons = (this.props.editorOptions && this.props.editorOptions.buttons) || ALL_BUTTONS;
         if (!this.props.editorOptions || !this.props.editorOptions.getPastedImageUrl) {
-            buttons = buttons.filter(b => b === RichEditorToolbarButtonNames.btnUploadImage);
+            buttons = buttons.filter(b => b !== RichEditorToolbarButtonNames.btnUploadImage);
         }
 
         if (buttons.length > 0) {

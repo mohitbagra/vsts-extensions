@@ -127,7 +127,7 @@ export const PersonalRuleGroup: IRuleGroup = {
     description: "This is your own personal rule group. Any rule created in this group would only be accessible to you.",
     createdBy: getCurrentUser(),
     workItemType: "",
-    projectId: VSS.getWebContext().project.id,
+    projectId: VSS.getWebContext().project && VSS.getWebContext().project.id,
     lastUpdatedBy: getCurrentUser()
 };
 
@@ -137,7 +137,7 @@ export const GlobalRuleGroup: IRuleGroup = {
     description: "This is the globally shared rule group. Any rule created in this group would be accessible to everyone in the account.",
     createdBy: null,
     workItemType: "",
-    projectId: VSS.getWebContext().project.id,
+    projectId: VSS.getWebContext().project && VSS.getWebContext().project.id,
     lastUpdatedBy: null
 };
 

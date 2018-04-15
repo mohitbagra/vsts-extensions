@@ -45,7 +45,7 @@ export function removeLocalSetting(key: string, scope: WebSettingsScope) {
 function _getScopedKey(key: string, scope: WebSettingsScope): string {
     const context = VSS.getWebContext();
     const user = context.user.id;
-    const project = context.project.id;
+    const project = (context.project && context.project.id) || "";
     const collection = context.collection.id;
 
     switch (scope) {

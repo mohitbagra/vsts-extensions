@@ -1,3 +1,5 @@
+import "./WorkItemFieldValuePicker.scss";
+
 import * as React from "react";
 
 import { RichEditor } from "Library/Components/RichEditor";

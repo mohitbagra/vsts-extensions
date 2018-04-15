@@ -94,7 +94,7 @@ export namespace WorkItemActions {
         }
     }
 
-    export async function createWorkItem(workItemType: string, fieldValues: IDictionaryStringTo<string>): Promise<WorkItem> {
+    export async function createWorkItem(workItemType: string, fieldValues: IDictionaryStringTo<string>, projectId?: string): Promise<WorkItem> {
         if (!workItemStore.isLoading()) {
             workItemStore.setLoading(true);
 
@@ -108,7 +108,7 @@ export namespace WorkItemActions {
             }
 
             try {
-                const workItem = await WitClient.getClient().createWorkItem(patchDocument, VSS.getWebContext().project.id, workItemType);
+                const workItem = await WitClient.getClient().createWorkItem(patchDocument, projectId || VSS.getWebContext().project.id, workItemType);
                 WorkItemActionsHub.AddOrUpdateWorkItems.invoke([workItem]);
                 workItemStore.setLoading(false);
                 return workItem;
