@@ -15,6 +15,11 @@ async function getFormService(): Promise<IWorkItemFormService> {
     return workItemFormService;
 }
 
+export async function getId(): Promise<number> {
+    const formService = await getFormService();
+    return await formService.getId();
+}
+
 export async function openWorkItemDialog(e: React.MouseEvent<HTMLElement>, item: WorkItem): Promise<WorkItem> {
     const newTab = e ? e.ctrlKey : false;
     const workItemNavSvc = await WorkItemFormNavigationService.getService();

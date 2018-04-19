@@ -42,6 +42,7 @@
         "tslib": "~1.7.1",
         "react-sortable-hoc": "0.6.8",
         "lodash-amd": "4.17.5",
-        "date-fns": "1.29.0"
+        "date-fns": "1.29.0",
+        "markdown-it": "8.4.1"
     }
 }
