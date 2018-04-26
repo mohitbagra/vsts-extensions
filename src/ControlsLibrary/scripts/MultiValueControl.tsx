@@ -7,11 +7,12 @@ import { initializeIcons } from "@uifabric/icons";
 import {
     IWorkItemFieldControlProps, IWorkItemFieldControlState, WorkItemFieldControl
 } from "Library/Components/VSTS/WorkItemFieldControl";
-import { isNullOrWhiteSpace } from "Library/Utilities/String";
+import { findIndex } from "Library/Utilities/Array";
+import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
+import { ITag } from "OfficeFabric/components/pickers/TagPicker/TagPicker";
 import { Fabric } from "OfficeFabric/Fabric";
-import { SelectionMode } from "OfficeFabric/Selection";
 import { autobind } from "OfficeFabric/Utilities";
-import { IPickListSelection, PickList } from "VSSUI/PickList";
+import { CustomTagPicker } from "./CustomTagPicker";
 
 interface IMultiValueControlInputs {
     FieldName: string;
@@ -22,64 +23,83 @@ interface IMultiValueControlProps extends IWorkItemFieldControlProps {
     suggestedValues: string[];
 }
 
-interface IMultiValueControlState extends IWorkItemFieldControlState<string> {
-    isPickListOpen?: boolean;
-}
+export class MultiValueControl extends WorkItemFieldControl<string, IMultiValueControlProps, IWorkItemFieldControlState<string>> {
+    private _isCalloutOpen: boolean = false;
 
-export class MultiValueControl extends WorkItemFieldControl<string, IMultiValueControlProps, IMultiValueControlState> {
     public render(): JSX.Element {
         const values = this._parseFieldValue();
-        let className = "multi-value-control";
-        if (this.state.isPickListOpen) {
-            className += " expanded";
-        }
         return (
             <Fabric>
-                <div className={className} tabIndex={0}>
-                    <div onClick={this._togglePicklist} className="selected-values">
-                        {values.length === 0 && <label className="no-items-text">No items selected</label>}
-                        {values.length > 0 &&
-                            <ul className="selected-values-list">
-                                {values.map((value: string, index: number) => (
-                                    <li
-                                        key={index}
-                                        title={value.trim()}
-                                        className="selected-value"
-                                    >
-                                        {value.trim()}
-                                    </li>
-                                ))}
-                            </ul>
+                <CustomTagPicker
+                    className="multi-value-control"
+                    onToggleCallout={this._onToggleCallout}
+                    selectedItems={(values || []).map(this._getTag)}
+                    onResolveSuggestions={this._onTagFilterChanged}
+                    getTextFromItem={this._getTagText}
+                    onChange={this._onChange}
+                    inputProps={{
+                        style: {
+                            height: "26px"
                         }
-                    </div>
-                    {this.state.isPickListOpen &&
-                        <PickList
-                            className="picklist"
-                            items={this.props.suggestedValues}
-                            selectedItems={values}
-                            onSelectionChanged={this._onSelectionChanged}
-                            selectionMode={SelectionMode.multiple}
-                            noItemsText="No items"
-                            showSelectAll={true}
-                            isSearchable={true}
-                            searchTextPlaceholder="Search"
-                            minItemsForSearchBox={4}
-                        />
+                    }}
+                    pickerSuggestionsProps={
+                        {
+                            suggestionsHeaderText: "Suggested values",
+                            noResultsFoundText: "No suggested values."
+                        }
                     }
-                </div>
+                />
             </Fabric>
         );
     }
 
     @autobind
-    private _togglePicklist() {
-        this.setState({isPickListOpen: !this.state.isPickListOpen});
+    private _getTag(tag: string): ITag {
+        return {
+            key: tag,
+            name: tag
+        };
     }
 
     @autobind
-    private _onSelectionChanged(selection: IPickListSelection) {
-        const newValues: string[] = selection.selectedItems;
-        this.onValueChanged((newValues || []).join(";"));
+    private _getTagText(tag: ITag): string {
+        return tag.name;
+    }
+
+    @autobind
+    private _onTagFilterChanged(filterText: string, tagList: ITag[]): ITag[] {
+        if (isNullOrWhiteSpace(filterText)) {
+            return [];
+        }
+
+        const tags = this.props.suggestedValues.map(this._getTag);
+
+        return tags
+            .filter(tag => tag.name.toLowerCase().indexOf(filterText.toLowerCase()) === 0 && findIndex(tagList, (t: ITag) => stringEquals(t.key, tag.name, true)) === -1)
+            .map(tag => {
+                return { key: tag.name, name: tag.name};
+            });
+    }
+
+    @autobind
+    private _onChange(items: ITag[]) {
+        const selectedTags = items.map(i => i.name);
+        this.onValueChanged((selectedTags || []).join(";"));
+    }
+
+    @autobind
+    private _onToggleCallout(on: boolean) {
+        if (this._isCalloutOpen !== on) {
+            this._isCalloutOpen = on;
+            if (on) {
+                $("#ext-container").height(260);
+            }
+            else {
+                $("#ext-container").css("height", "auto");
+            }
+
+            this.resize();
+        }
     }
 
     private _parseFieldValue(): string[] {

@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "vsts-wit-control-library",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "name": "Work item form control library",
     "description": "A control library extension for VSTS work item form",
     "publisher": "mohitbagra",
@@ -243,6 +243,34 @@
                         "name": "Suggested Values",
                         "description": "Enter suggested values for the control (semicolon separated)",
                         "inputMode": "TextArea",
+                        "validation": {
+                            "dataType": "String",
+                            "isRequired": true
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": "datetime-form-control",
+            "type": "ms.vss-work-web.work-item-form-control",
+            "description": "A custom date time control for work item form which lets users choose time as well.",
+            "targets": [
+                "ms.vss-work-web.work-item-form"
+            ],
+            "properties": {
+                "name": "Date Time control",
+                "uri": "html/datetimecontrol.html",
+                "height": 50,
+                "inputs": [
+                    {
+                        "id":"FieldName",
+                        "name": "Select field",
+                        "description": "Select the DateTime field for this control",
+                        "type": "WorkItemField",
+                        "properties": {
+                            "workItemFieldTypes": ["DateTime"]
+                        },
                         "validation": {
                             "dataType": "String",
                             "isRequired": true

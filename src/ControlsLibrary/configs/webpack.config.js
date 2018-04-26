@@ -7,7 +7,8 @@ const config = {
         "ControlsLibrary/scripts/PatternControl": "./src/ControlsLibrary/scripts/PatternControl.tsx",
         "ControlsLibrary/scripts/PlainTextControl": "./src/ControlsLibrary/scripts/PlainTextControl.tsx",
         "ControlsLibrary/scripts/SliderControl": "./src/ControlsLibrary/scripts/SliderControl.tsx",
-        "ControlsLibrary/scripts/RatingControl": "./src/ControlsLibrary/scripts/RatingControl.tsx"
+        "ControlsLibrary/scripts/RatingControl": "./src/ControlsLibrary/scripts/RatingControl.tsx",
+        "ControlsLibrary/scripts/DateTimeControl": "./src/ControlsLibrary/scripts/DateTimeControl.tsx",
     },
     plugins: [
         new CopyWebpackPlugin([

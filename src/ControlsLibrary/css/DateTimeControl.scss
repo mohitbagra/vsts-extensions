@@ -1,0 +1,51 @@
+@import "base";
+
+#ext-container {
+    padding: 2px 15px 2px 1px !important;
+
+    .date-time-control {
+        .date-time-picker-input-container {
+            display: flex;
+
+            .date-time-picker-input {
+                flex: 1;
+                margin:0;
+                padding: 2px;
+                box-sizing: border-box;
+                width: 100%;
+                border: 1px solid transparent;
+                height: 24px;
+                outline: none;
+                font-size: 14px;
+                @include TextOverflowEllipsis();
+
+                &:hover, &:focus {
+                    border-color: #eaeaea;
+                }
+
+                &.invalid-value {
+                    border-color: #a80000;
+
+                    &:hover, &:focus {
+                        border-color: #a80000;
+                    }
+                }
+
+                &::-ms-clear {
+                    display: none;
+                }
+            }
+
+            .date-time-picker-icon {
+                margin-left: 5px;
+            }
+        }
+        &.invalid-value {
+            .rw-datetimepicker {
+                input.rw-input {
+                    border: 1px solid #a80000;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,30 @@
+$ValueSpinner-element-width:40px;
+$ValueSpinner-button-color: #666666; // $ms-color-neutralSecondary in office fabric
+
+.value-spinner {
+    white-space: nowrap;
+
+    .spinner-up, .spinner-down {
+        @include unstyled();
+        line-height: 40px;
+        width: $ValueSpinner-element-width;
+        height: 40px;
+        color: $ValueSpinner-button-color;
+        display: block;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .spinner-value {
+        line-height: 30px;
+        width: $ValueSpinner-element-width;
+        height: 30px;
+        display: block;
+        text-align: center;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: moz-none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+}

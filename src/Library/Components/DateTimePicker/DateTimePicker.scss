@@ -1,0 +1,79 @@
+$TimeControl-element-width:40px;
+$Fabric-focus-border-color:#0078d4;
+$DateTimePickerHeaderHeight: 48px;
+
+.date-time-picker {
+    text-align: center;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    .date-time-picker-header {
+        border-top: 1px solid #71afe5;
+        border-bottom: 1px solid #71afe5;
+        height: $DateTimePickerHeaderHeight;
+        padding-top: 7px;
+
+        .date-time-picker-textfield {
+            float: left;
+            font-size: 14px;
+            font-weight: 400;
+            padding-left: 5px;
+            padding-top: 7px;
+
+            .bowtie-calendar {
+                padding-left: 5px;
+                padding-right: 10px;
+                font-size: 18px;
+            }
+        }
+
+        .date-time-picker-delete {
+            float: right;
+            right: 0px;
+
+            button {
+                @include unstyled();
+                width: 35px;
+                height: 35px;
+                text-align: center;
+            }
+
+            .date-time-picker-delete-icon {
+                font-size: 18px;
+                color: #333;
+            }
+        }
+
+        .placeholder {
+            color: #666;
+        }
+    }
+
+    .date-time-picker-calendar, 
+    .date-time-picker-time {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .date-time-picker-calendar {
+        padding-top: 1px;
+        margin-left: 20px;
+        margin-right: 20px; 
+
+         .ms-DatePicker {
+            margin-bottom: 0px; /* overriding Fabric calendar margin-bottom 17px to 0. This can be removed once office fabric issue gets resolved. */
+         }
+    }
+}
+
+.time-control {
+    > div {
+        float: left;
+    }
+
+    .time-hour, .time-minute, .time-ampm {
+        padding-right: 10px;
+        width: $TimeControl-element-width;
+    }
+}

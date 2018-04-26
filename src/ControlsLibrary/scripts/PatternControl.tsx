@@ -36,7 +36,7 @@ export class PatternControl extends WorkItemFieldControl<string, IPatternControl
                     spellCheck={false}
                     autoComplete="off"
                     className={className}
-                    value={this.state.value}
+                    value={this.state.value || ""}
                     onChange={this._onChange}
                 />
             </Fabric>

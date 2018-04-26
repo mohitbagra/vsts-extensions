@@ -25,12 +25,10 @@
         "css-loader": "0.28.11",
         "ts-loader": "3.4.0",
         "node-sass": "4.8.3",
-        "typescript": "2.8.1",
-        "uglifyjs-webpack-plugin": "1.2.4",
+        "typescript": "2.8.3",
+        "uglifyjs-webpack-plugin": "1.2.5",
         "tfx-cli": "0.5.10",
-        "copy-webpack-plugin": "4.5.1",
-        "url-loader": "1.0.1",
-        "file-loader": "1.1.11"
+        "copy-webpack-plugin": "4.5.1"
     },
     "dependencies": {
         "es6-promise": "4.2.4",
@@ -41,7 +39,7 @@
         "roosterjs": "6.9.4",
         "tslib": "~1.7.1",
         "react-sortable-hoc": "0.6.8",
-        "lodash-amd": "4.17.5",
+        "lodash-amd": "4.17.10",
         "date-fns": "1.29.0",
         "markdown-it": "8.4.1"
     }

@@ -93,10 +93,9 @@ export class PlainTextControl extends AutoResizableComponent<IPlainTextControlPr
 
     public render(): JSX.Element {
         if (this.state.translatedText != null) {
-            const html = unescape(this._markdown.render(this.state.translatedText));
             return (
                 <Fabric className="plaintext-control">
-                    <div dangerouslySetInnerHTML={{__html: html}} />
+                    <div dangerouslySetInnerHTML={{__html: this.state.translatedText}} />
                 </Fabric>
             );
         }
@@ -124,7 +123,7 @@ export class PlainTextControl extends AutoResizableComponent<IPlainTextControlPr
 
     private async _setText() {
         const translatedText = await processString(this.props.text);
-        this.setState({translatedText: translatedText});
+        this.setState({translatedText: unescape(this._markdown.render(translatedText))});
     }
 }
 

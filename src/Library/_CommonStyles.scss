@@ -11,6 +11,24 @@
     -ms-user-select: none;
 }
 
+@mixin box-shadow-none {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+}
+
+@mixin unstyled() {
+    border: none;
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: auto;
+    @include box-shadow-none;
+    text-align: initial;
+    border-radius: 0;
+}
+
 .vss-PickList .vss-PickList--element .vss-ItemIndicator--textIndicator {
     padding-right: 5px;
 }
