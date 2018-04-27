@@ -92,20 +92,14 @@ export class PlainTextControl extends AutoResizableComponent<IPlainTextControlPr
     }
 
     public render(): JSX.Element {
-        if (this.state.translatedText != null) {
-            return (
-                <Fabric className="plaintext-control">
-                    <div dangerouslySetInnerHTML={{__html: this.state.translatedText}} />
-                </Fabric>
-            );
-        }
-        else {
-            return null;
-        }
+        return (
+            <Fabric className="plaintext-control">
+                {this.state.translatedText && <div dangerouslySetInnerHTML={{__html: this.state.translatedText}} />}
+            </Fabric>
+        );
     }
 
     public componentDidMount() {
-        super.componentDidMount();
         VSS.register(VSS.getContribution().id, {
             onLoaded: (_args: IWorkItemLoadedArgs) => {
                 this._setText();
@@ -117,7 +111,6 @@ export class PlainTextControl extends AutoResizableComponent<IPlainTextControlPr
     }
 
     public componentWillUnmount() {
-        super.componentWillUnmount();
         VSS.unregister(VSS.getContribution().id);
     }
 
