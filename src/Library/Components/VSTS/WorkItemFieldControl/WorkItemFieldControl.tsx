@@ -2,8 +2,9 @@ import { AutoResizableComponent } from "Library/Components/Utilities/AutoResizab
 import {
     IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
+import { delay, DelayedFunction } from "Library/Utilities/Core";
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import * as WitExtensionContracts from "TFS/WorkItemTracking/ExtensionContracts";
-import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
 export interface IWorkItemFieldControlProps extends IBaseFluxComponentProps {
     fieldName: string;
@@ -20,6 +21,7 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
     }
 
     private _flushing: boolean;
+    private _delayedFunction: DelayedFunction;
 
     public componentDidMount() {
         super.componentDidMount();
@@ -43,23 +45,36 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
     public componentWillUnmount() {
         super.componentWillUnmount();
         VSS.unregister(VSS.getContribution().id);
+        this._disposeDelayedFunction();
     }
 
     /**
      * Flushes the control's value to the field
      */
-    protected async onValueChanged(newValue: TDataType): Promise<void> {
-        this._setValue(newValue);
+    protected onValueChanged(newValue: TDataType, immediate: boolean = true) {
+        this._disposeDelayedFunction();
 
-        this._flushing = true;
-        const workItemFormService = await WorkItemFormService.getService();
-        try {
-            await workItemFormService.setFieldValue(this.props.fieldName, newValue);
-            this._flushing = false;
+        const setValue = async () => {
+            this._setValue(newValue);
+            const formService = await getFormService();
+            this._flushing = true;
+            try {
+                await formService.setFieldValue(this.props.fieldName, newValue);
+                this._flushing = false;
+            }
+            catch (e) {
+                this._flushing = false;
+                this._onError(`Error in storing the field value: ${e.message}`);
+            }
+        };
+
+        if (immediate) {
+            setValue();
         }
-        catch (e) {
-            this._flushing = false;
-            this._onError(`Error in storing the field value: ${e.message}`);
+        else {
+            this._delayedFunction = delay(this, 200, async () => {
+                setValue();
+            });
         }
     }
 
@@ -80,9 +95,9 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
     }
 
     private async _getCurrentFieldValue(): Promise<TDataType> {
-        const workItemFormService = await WorkItemFormService.getService();
         try {
-            return await workItemFormService.getFieldValue(this.props.fieldName) as TDataType;
+            const formService = await getFormService();
+            return await formService.getFieldValue(this.props.fieldName) as TDataType;
         }
         catch (e) {
             this._onError(`Error in loading the field value: ${e.message}`);
@@ -91,10 +106,18 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
     }
 
     private _setValue(value: TDataType) {
+        this._disposeDelayedFunction();
         this.setState({value: value, error: this.getErrorMessage(value)});
     }
 
     private _onError(error: string) {
         this.setState({error: error});
+    }
+
+    private _disposeDelayedFunction() {
+        if (this._delayedFunction) {
+            this._delayedFunction.cancel();
+            this._delayedFunction = null;
+        }
     }
 }

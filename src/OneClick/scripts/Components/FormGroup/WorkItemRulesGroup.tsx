@@ -17,7 +17,7 @@ import {
 } from "Library/Utilities/LocalSettingsService";
 import { stringEquals } from "Library/Utilities/String";
 import { getMarketplaceUrl, getWorkItemTypeSettingsUrl } from "Library/Utilities/UrlHelper";
-import * as WorkItemFormHelpers from "Library/Utilities/WorkItemFormHelpers";
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IconButton } from "OfficeFabric/Button";
 import { Fabric } from "OfficeFabric/Fabric";
 import { DirectionalHint, TooltipDelay, TooltipHost } from "OfficeFabric/Tooltip";
@@ -306,7 +306,8 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
 
         if (!this._project) {
             // read work item type and project from current workitem
-            const fieldValues = await WorkItemFormHelpers.getWorkItemFieldValues([CoreFieldRefNames.WorkItemType, CoreFieldRefNames.TeamProject]);
+            const formService = await getFormService();
+            const fieldValues = await formService.getFieldValues([CoreFieldRefNames.WorkItemType, CoreFieldRefNames.TeamProject]);
             this._workItemTypeName = fieldValues[CoreFieldRefNames.WorkItemType] as string;
             const projectName = fieldValues[CoreFieldRefNames.TeamProject] as string;
             this._project = await CoreClient.getClient().getProject(projectName);
@@ -467,8 +468,13 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
     private _onKeyDown(e: React.KeyboardEvent<any>) {
         if (e.ctrlKey && e.keyCode === 83) {
             e.preventDefault();
-            WorkItemFormHelpers.saveWorkItem(null, null);
+            this._saveWorkItem();
         }
+    }
+
+    private async _saveWorkItem() {
+        const formService = await getFormService();
+        formService.save();
     }
 }
 

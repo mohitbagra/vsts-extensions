@@ -6,12 +6,12 @@ import * as ReactDOM from "react-dom";
 import { AutoResizableComponent } from "Library/Components/Utilities/AutoResizableComponent";
 import { first } from "Library/Utilities/Array";
 import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import * as MarkdownIt from "markdown-it";
 import { Fabric } from "OfficeFabric/Fabric";
 import {
     IWorkItemChangedArgs, IWorkItemLoadedArgs, IWorkItemNotificationListener
 } from "TFS/WorkItemTracking/ExtensionContracts";
-import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
 interface IPlainTextControlInputs {
     Text: string;
@@ -58,18 +58,18 @@ async function processString(str: string): Promise<string> {
 }
 
 async function getFieldValue(fieldName: string): Promise<any> {
-    const service = await WorkItemFormService.getService();
+    const formService = await getFormService();
     if (stringEquals(fieldName, "id", true)) {
-        return await service.getId();
+        return await formService.getId();
     }
     try {
-        const fields = await service.getFields();
+        const fields = await formService.getFields();
         const field = first(fields, (f) => {
             return stringEquals(f.name, fieldName, true) || stringEquals(f.referenceName, fieldName, true);
         });
 
         if (field) {
-            return await service.getFieldValue(field.referenceName);
+            return await formService.getFieldValue(field.referenceName);
         }
         else {
             return null;

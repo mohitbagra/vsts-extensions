@@ -5,6 +5,7 @@ import { getAsyncLoadedComponent } from "Library/Components/Utilities/AsyncLoade
 import { WorkItemActions } from "Library/Flux/Actions/WorkItemActions";
 import { WorkItemTemplateItemActions } from "Library/Flux/Actions/WorkItemTemplateItemActions";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
+import { getFormNavigationService, getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
 import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
@@ -13,7 +14,6 @@ import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
 import { translateToFieldValue } from "OneClick/Helpers";
 import { BaseAction } from "OneClick/RuleActions/BaseAction";
 import { WorkItem } from "TFS/WorkItemTracking/Contracts";
-import { WorkItemFormNavigationService, WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
 const AsyncAddNewRelationRenderer = getAsyncLoadedComponent(
     ["scripts/ActionRenderers"],
@@ -30,7 +30,7 @@ export class AddNewRelationAction extends BaseAction {
         const autoCreate = this.getAttribute<boolean>("autoCreate", true);
         let savedWorkItem: WorkItem;
 
-        const workItemFormService = await WorkItemFormService.getService();
+        const workItemFormService = await getFormService();
         const project = await workItemFormService.getFieldValue(CoreFieldRefNames.TeamProject) as string;
 
         // read template
@@ -63,7 +63,7 @@ export class AddNewRelationAction extends BaseAction {
             }
         }
         else {
-            const workItemNavSvc = await WorkItemFormNavigationService.getService();
+            const workItemNavSvc = await getFormNavigationService();
             savedWorkItem = await workItemNavSvc.openNewWorkItem(workItemType, translatedFieldValuesMap);
         }
 

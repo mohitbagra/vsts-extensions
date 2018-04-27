@@ -6,7 +6,7 @@ import {
 } from "Library/Components/RichEditor/Toolbar/RichEditorToolbarButtonNames";
 import { getAsyncLoadedComponent } from "Library/Components/Utilities/AsyncLoadedComponent";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
-import * as WorkItemFormHelpers from "Library/Utilities/WorkItemFormHelpers";
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
 import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
@@ -20,7 +20,8 @@ const AsyncRichEditor = getAsyncLoadedComponent(
 
 export class AddCommentAction extends BaseAction {
     public async run() {
-        await WorkItemFormHelpers.setWorkItemFieldValue(CoreFieldRefNames.History, this.getAttribute<string>("comment", true) || "");
+        const formService = await getFormService();
+        await formService.setFieldValue(CoreFieldRefNames.History, this.getAttribute<string>("comment", true) || "");
     }
 
     public getFriendlyName(): string {

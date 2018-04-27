@@ -6,7 +6,7 @@ import { contains } from "Library/Utilities/Array";
 import { isDate } from "Library/Utilities/Date";
 import { isInteger, isNumeric } from "Library/Utilities/Number";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
-import * as WorkItemFormHelpers from "Library/Utilities/WorkItemFormHelpers";
+import { getFormService, getWorkItemField } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
 import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
@@ -27,11 +27,11 @@ export class SetFieldValueAction extends BaseAction {
 
     public async run() {
         const fieldName = this.getAttribute<string>("fieldName", true);
-
-        const field = await WorkItemFormHelpers.getWorkItemField(fieldName);
+        const formService = await getFormService();
+        const field = await getWorkItemField(fieldName);
         if (field) {
             const fieldValue: string = await translateToFieldValue(this.getAttribute<string>("fieldValue", true) || "", field.type);
-            await WorkItemFormHelpers.setWorkItemFieldValue(fieldName, fieldValue);
+            await formService.setFieldValue(fieldName, fieldValue);
         }
     }
 

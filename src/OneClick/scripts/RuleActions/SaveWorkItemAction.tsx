@@ -1,13 +1,13 @@
 import * as React from "react";
 
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
 import { BaseAction } from "OneClick/RuleActions/BaseAction";
-import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
 export class SaveWorkItemAction extends BaseAction {
     public async run() {
-        const workItemFormService = await WorkItemFormService.getService();
+        const workItemFormService = await getFormService();
         const isValid = await workItemFormService.isValid();
         const isDirty = await workItemFormService.isDirty();
 

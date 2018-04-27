@@ -7,7 +7,7 @@ import {
 import { getAsyncLoadedComponent } from "Library/Components/Utilities/AsyncLoadedComponent";
 import { parseUniquefiedIdentityName } from "Library/Utilities/Identity";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
-import * as WorkItemFormHelpers from "Library/Utilities/WorkItemFormHelpers";
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
 import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
@@ -49,7 +49,8 @@ export class MentionAction extends BaseAction {
                 }
             }
 
-            await WorkItemFormHelpers.setWorkItemFieldValue(CoreFieldRefNames.History, `${mentionsString} ${message}`);
+            const formService = await getFormService();
+            await formService.setFieldValue(CoreFieldRefNames.History, `${mentionsString} ${message}`);
         }
     }
 

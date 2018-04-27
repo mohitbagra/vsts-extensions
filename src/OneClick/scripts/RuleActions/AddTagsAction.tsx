@@ -6,7 +6,7 @@ import { union } from "Library/Utilities/Array";
 import {
     isNullOrWhiteSpace, localeIgnoreCaseComparer, stringEquals
 } from "Library/Utilities/String";
-import * as WorkItemFormHelpers from "Library/Utilities/WorkItemFormHelpers";
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
 import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
@@ -20,7 +20,8 @@ const AsyncWorkItemTagPicker = getAsyncLoadedComponent(
 
 export class AddTagsAction extends BaseAction {
     public async run() {
-        const tags = await WorkItemFormHelpers.getWorkItemFieldValue(CoreFieldRefNames.Tags) as string;
+        const formService = await getFormService();
+        const tags = await formService.getFieldValue(CoreFieldRefNames.Tags) as string;
         let newTags: string[];
         const addedTags = (this.getAttribute<string>("tags", true) as string).split(";").map(t => t.trim());
         if (tags) {
@@ -31,7 +32,7 @@ export class AddTagsAction extends BaseAction {
             newTags = addedTags;
         }
 
-        await WorkItemFormHelpers.setWorkItemFieldValue(CoreFieldRefNames.Tags, newTags.join(";"));
+        await formService.setFieldValue(CoreFieldRefNames.Tags, newTags.join(";"));
     }
 
     public getFriendlyName(): string {

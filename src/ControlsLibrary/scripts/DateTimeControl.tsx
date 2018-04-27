@@ -8,7 +8,7 @@ import { DateTimePicker } from "Library/Components/DateTimePicker";
 import {
     IWorkItemFieldControlProps, IWorkItemFieldControlState, WorkItemFieldControl
 } from "Library/Components/VSTS/WorkItemFieldControl";
-import { formatDate, isValidDate, parseDateString } from "Library/Utilities/Date";
+import { formatDate } from "Library/Utilities/Date";
 import { IconButton } from "OfficeFabric/Button";
 import { Fabric } from "OfficeFabric/Fabric";
 import { autobind, css } from "OfficeFabric/Utilities";
@@ -19,7 +19,6 @@ interface IDateTimeControlInputs {
 
 interface IDateTimeControlState extends IWorkItemFieldControlState<Date> {
     expanded?: boolean;
-    textValue?: string;
     hovered?: boolean;
     focussed?: boolean;
 }
@@ -34,22 +33,13 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
     }
 
     public render(): JSX.Element {
-        let className = "date-time-control";
-        if (this.state.error) {
-            className += " invalid-value";
-        }
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const {value, expanded, hovered, focussed} = this.state;
+        const isActive = hovered || focussed || expanded;
 
-        const todayInUserTimeZone = new Date();
-        todayInUserTimeZone.setHours(0, 0, 0, 0);
-        const {value, expanded, hovered, focussed, error} = this.state;
-        let textValue = this.state.textValue;
-        const isActive = hovered || focussed || expanded || error;
-
-        if (!textValue && value) {
-            textValue = formatDate(value, "M/D/YYYY hh:mm A");
-        }
         return (
-            <Fabric className={className}>
+            <Fabric className="date-time-control">
                 <div
                     className={css("date-time-picker-input-container", {borderless: !isActive})}
                     onMouseOver={this._onMouseOver}
@@ -59,12 +49,21 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
                         type="text"
                         spellCheck={false}
                         autoComplete="off"
+                        readOnly={true}
                         className="date-time-picker-input"
-                        value={textValue || ""}
+                        value={value ? formatDate(value, "M/D/YYYY hh:mm A") : ""}
                         onFocus={this._onFocus}
                         onBlur={this._onBlur}
-                        onChange={this._onInputChange}
                     />
+                    { value &&
+                        <IconButton
+                            iconProps={{
+                                iconName: "Cancel",
+                            }}
+                            className="date-time-picker-icon clear-icon"
+                            onClick={this._clearValue}
+                        />
+                    }
                     <IconButton
                         iconProps={{
                             iconName: "Calendar"
@@ -77,18 +76,14 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
                     <div className="arrow-box">
                         <DateTimePicker
                             onSelectDate={this._onSelectDate}
-                            today={todayInUserTimeZone}
-                            value={isValidDate(value) ? value : todayInUserTimeZone}
+                            today={today}
+                            value={value || today}
                         />
                     </div>
                 }
                 {expanded && <div style={{clear: "both"}} />}
             </Fabric>
         );
-    }
-
-    protected getErrorMessage(value: Date): string {
-        return value && !isValidDate(value) ? "Not a valid date" : "";
     }
 
     @autobind
@@ -117,15 +112,12 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
     }
 
     @autobind
-    private _onInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const value = e.target.value;
-        this.setState({textValue: value});
-        this.onValueChanged(parseDateString(value));
+    private _clearValue() {
+        this.onValueChanged(null);
     }
 
     @autobind
     private _onSelectDate(newDate: Date) {
-        this.setState({textValue: formatDate(newDate, "M/D/YYYY hh:mm A")});
         this.onValueChanged(newDate);
     }
 }

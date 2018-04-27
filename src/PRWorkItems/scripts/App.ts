@@ -1,6 +1,6 @@
 import { reloadPage } from "Library/Utilities/Navigation";
+import { getFormNavigationService } from "Library/Utilities/WorkItemFormHelpers";
 import * as WitClient from "TFS/WorkItemTracking/RestClient";
-import { WorkItemFormNavigationService } from "TFS/WorkItemTracking/Services";
 import { JsonPatchDocument, JsonPatchOperation, Operation } from "VSS/WebApi/Contracts";
 
 const extensionContext = VSS.getExtensionContext();
@@ -8,7 +8,7 @@ const extensionContext = VSS.getExtensionContext();
 VSS.register(`${extensionContext.publisherId}.${extensionContext.extensionId}.context-menu`, () => ({
     execute: async (actionContext) => {
         if (actionContext && actionContext.pullRequest && actionContext.pullRequest.artifactId) {
-            const workItemNavSvc = await WorkItemFormNavigationService.getService();
+            const workItemNavSvc = await getFormNavigationService();
             const workItem = await workItemNavSvc.openNewWorkItem("Bug");
 
             if (workItem && workItem.id) {

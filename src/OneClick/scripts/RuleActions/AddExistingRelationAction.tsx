@@ -4,6 +4,7 @@ import { Loading } from "Library/Components/Loading";
 import { getAsyncLoadedComponent } from "Library/Components/Utilities/AsyncLoadedComponent";
 import { isInteger } from "Library/Utilities/Number";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
 import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
@@ -12,7 +13,6 @@ import { translateToFieldValue } from "OneClick/Helpers";
 import { BaseMacro } from "OneClick/Macros/Macros";
 import { BaseAction } from "OneClick/RuleActions/BaseAction";
 import { FieldType } from "TFS/WorkItemTracking/Contracts";
-import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
 const AsyncAddExistingRelationRenderer = getAsyncLoadedComponent(
     ["scripts/ActionRenderers"],
@@ -31,7 +31,7 @@ export class AddExistingRelationAction extends BaseAction {
 
         const relationType = this.getAttribute<string>("relationType", true);
 
-        const workItemFormService = await WorkItemFormService.getService();
+        const workItemFormService = await getFormService();
         const relationTypes = await workItemFormService.getWorkItemRelationTypes();
         const selectedRelationType = relationTypes.filter(r => stringEquals(r.name, relationType, true));
         if (!selectedRelationType) {

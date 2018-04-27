@@ -6,7 +6,7 @@ import { contains } from "Library/Utilities/Array";
 import { isDate } from "Library/Utilities/Date";
 import { isInteger, isNumeric } from "Library/Utilities/Number";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
-import * as WorkItemFormHelpers from "Library/Utilities/WorkItemFormHelpers";
+import { getFormService, getWorkItemField } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
 import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
@@ -27,8 +27,9 @@ export class FieldChangedTrigger extends BaseTrigger {
     private _workItemType: string;
 
     public async shouldTrigger(args: IWorkItemFieldChangedArgs): Promise<boolean> {
+        const formService = await getFormService();
         const fieldName = this.getAttribute<string>("fieldName", true);
-        const field = await WorkItemFormHelpers.getWorkItemField(fieldName);
+        const field = await getWorkItemField(fieldName);
         if (field == null) {
             return false;
         }
@@ -36,8 +37,8 @@ export class FieldChangedTrigger extends BaseTrigger {
         const newFieldValue: string = await translateToFieldValue(this.getAttribute<string>("newFieldValue", true) || "", field.type);
 
         if (args && args.changedFields && args.changedFields[fieldName]) {
-            const oldValue = await WorkItemFormHelpers.getWorkItemFieldValue(fieldName, true);
-            const newValue = await WorkItemFormHelpers.getWorkItemFieldValue(fieldName);
+            const oldValue = await formService.getFieldValue(fieldName, true);
+            const newValue = await formService.getFieldValue(fieldName);
 
             return (oldValue !== newValue) && (isAnyMacro(oldFieldValue) || oldFieldValue === oldValue) && (isAnyMacro(newFieldValue) || newFieldValue === newValue);
         }

@@ -7,6 +7,7 @@ import { Loading } from "Library/Components/Loading";
 import { arrayEquals, contains, findIndex, first } from "Library/Utilities/Array";
 import * as ExtensionDataManager from "Library/Utilities/ExtensionDataManager";
 import { stringEquals } from "Library/Utilities/String";
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { PrimaryButton } from "OfficeFabric/Button";
 import { ITag, TagPicker } from "OfficeFabric/components/pickers/TagPicker/TagPicker";
 import { Dropdown, IDropdownOption, IDropdownProps } from "OfficeFabric/Dropdown";
@@ -14,7 +15,6 @@ import { TextField } from "OfficeFabric/TextField";
 import { autobind } from "OfficeFabric/Utilities";
 import { Constants, ISettings } from "RelatedWits/Models";
 import { WorkItemField } from "TFS/WorkItemTracking/Contracts";
-import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
 export interface ISettingsPanelProps {
     settings: ISettings;
@@ -46,7 +46,7 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
     }
 
     public async initialize(): Promise<void> {
-        const workItemFormService = await WorkItemFormService.getService();
+        const workItemFormService = await getFormService();
         const fields = await workItemFormService.getFields();
 
         const sortableFields = fields.filter(field =>
@@ -182,7 +182,7 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
         };
 
         this.setState({saving: true});
-        const workItemFormService = await WorkItemFormService.getService();
+        const workItemFormService = await getFormService();
         const workItemType = await workItemFormService.getFieldValue("System.WorkItemType") as string;
         const project = await workItemFormService.getFieldValue("System.TeamProject") as string;
         await ExtensionDataManager.writeSetting<ISettings>(`${Constants.StorageKey}_${project}_${workItemType}`, userPreferenceModel, true);

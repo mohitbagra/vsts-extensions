@@ -2,12 +2,14 @@ import { first } from "Library/Utilities/Array";
 import { stringEquals } from "Library/Utilities/String";
 import { WorkItem, WorkItemField } from "TFS/WorkItemTracking/Contracts";
 import {
-    IWorkItemFormService, WorkItemFormNavigationService, WorkItemFormService
+    IWorkItemFormNavigationService, IWorkItemFormService, WorkItemFormNavigationService,
+    WorkItemFormService
 } from "TFS/WorkItemTracking/Services";
 
 let workItemFormService: IWorkItemFormService;
+let workItemFormNavigationService: IWorkItemFormNavigationService;
 
-async function getFormService(): Promise<IWorkItemFormService> {
+export async function getFormService(): Promise<IWorkItemFormService> {
     if (!workItemFormService) {
         workItemFormService = await WorkItemFormService.getService();
     }
@@ -15,30 +17,18 @@ async function getFormService(): Promise<IWorkItemFormService> {
     return workItemFormService;
 }
 
-export async function getId(): Promise<number> {
-    const formService = await getFormService();
-    return await formService.getId();
+export async function getFormNavigationService(): Promise<IWorkItemFormNavigationService> {
+    if (!workItemFormNavigationService) {
+        workItemFormNavigationService = await WorkItemFormNavigationService.getService();
+    }
+
+    return workItemFormNavigationService;
 }
 
 export async function openWorkItemDialog(e: React.MouseEvent<HTMLElement>, item: WorkItem): Promise<WorkItem> {
     const newTab = e ? e.ctrlKey : false;
     const workItemNavSvc = await WorkItemFormNavigationService.getService();
     return await workItemNavSvc.openWorkItem(item.id, newTab);
-}
-
-export async function getWorkItemAllowedFieldValues(fieldRefName: string): Promise<string[]> {
-    const formService = await getFormService();
-    return await formService.getAllowedFieldValues(fieldRefName) as string[];
-}
-
-export async function getWorkItemFieldValue(fieldName: string, original?: boolean): Promise<Object> {
-    const formService = await getFormService();
-    return await formService.getFieldValue(fieldName, original);
-}
-
-export async function getWorkItemFieldValues(fieldNames: string[], original?: boolean): Promise<IDictionaryStringTo<Object>> {
-    const formService = await getFormService();
-    return await formService.getFieldValues(fieldNames, original);
 }
 
 export async function getWorkItemType(): Promise<string> {
@@ -51,13 +41,9 @@ export async function getWorkItemProject(): Promise<string> {
     return await formService.getFieldValue("System.TeamProject", true) as string;
 }
 
-export async function getWorkItemFields(): Promise<WorkItemField[]> {
-    const formService = await getFormService();
-    return await formService.getFields();
-}
-
 export async function getWorkItemField(fieldName: string): Promise<WorkItemField> {
-    const fields = await getWorkItemFields();
+    const service = await getFormService();
+    const fields = await service.getFields();
     const field = first(fields, (f: WorkItemField) => {
         return stringEquals(f.name, fieldName, true) || stringEquals(f.referenceName, fieldName, true);
     });
@@ -68,19 +54,4 @@ export async function getWorkItemField(fieldName: string): Promise<WorkItemField
     else {
         throw `Field '${fieldName}' does not exist in this work item type`;
     }
-}
-
-export async function setWorkItemFieldValue(fieldRefName: string, value: Object): Promise<boolean> {
-    const formService = await getFormService();
-    return await formService.setFieldValue(fieldRefName, value);
-}
-
-export async function setWorkItemFieldValues(fieldToValueMap: IDictionaryStringTo<Object>): Promise<IDictionaryStringTo<boolean>> {
-    const formService = await getFormService();
-    return await formService.setFieldValues(fieldToValueMap);
-}
-
-export async function saveWorkItem(successCallback: () => void, errorCallback: () => void): Promise<void> {
-    const formService = await getFormService();
-    return await formService.beginSaveWorkItem(successCallback, errorCallback);
 }

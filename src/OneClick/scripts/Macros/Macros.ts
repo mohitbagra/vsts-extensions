@@ -2,7 +2,7 @@ import { addDaysToDate, formatDate } from "Library/Utilities/Date";
 import { getCurrentUserName } from "Library/Utilities/Identity";
 import { isInteger } from "Library/Utilities/Number";
 import { startsWith, toString } from "Library/Utilities/String";
-import * as WorkItemFormHelpers from "Library/Utilities/WorkItemFormHelpers";
+import { getFormService, getWorkItemField } from "Library/Utilities/WorkItemFormHelpers";
 
 export abstract class BaseMacro {
     public static getMacroType(macroStr: string): new() => BaseMacro {
@@ -118,8 +118,9 @@ export class MacroFieldValue extends BaseMacro {
         }
         else {
             try {
-                const field = await WorkItemFormHelpers.getWorkItemField(fieldName);
-                const fieldValue = await WorkItemFormHelpers.getWorkItemFieldValue(field.referenceName);
+                const formService = await getFormService();
+                const field = await getWorkItemField(fieldName);
+                const fieldValue = await formService.getFieldValue(field.referenceName);
 
                 return typed ? fieldValue : toString(fieldValue);
             }

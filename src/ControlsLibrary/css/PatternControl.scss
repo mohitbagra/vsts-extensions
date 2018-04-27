@@ -2,30 +2,15 @@
 
 #ext-container {
     .pattern-control {
-        margin:0;
-        padding: 2px;
-        box-sizing: border-box;
-        width: 100%;
-        border: 1px solid transparent;
-        height: 24px;
-        outline: none;
-        font-size: 14px;
-        @include TextOverflowEllipsis();
-
-        &:hover, &:focus {
+        .ms-TextField-fieldGroup {
+            height: 24px;
             border-color: #eaeaea;
         }
 
-        &.invalid-value {
-            border-color: #a80000;
-
-            &:hover, &:focus {
-                border-color: #a80000;
-            }
-        }
-
-        &::-ms-clear {
-            display: none;
+        input {
+            margin:0;
+            padding: 2px;
+            @include TextOverflowEllipsis();
         }
     }
 }

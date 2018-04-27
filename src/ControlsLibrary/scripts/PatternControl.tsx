@@ -7,9 +7,10 @@ import { initializeIcons } from "@uifabric/icons";
 import {
     IWorkItemFieldControlProps, IWorkItemFieldControlState, WorkItemFieldControl
 } from "Library/Components/VSTS/WorkItemFieldControl";
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { Fabric } from "OfficeFabric/Fabric";
+import { TextField } from "OfficeFabric/TextField";
 import { autobind } from "OfficeFabric/Utilities";
-import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 
 interface IPatternControlInputs {
     FieldName: string;
@@ -22,22 +23,26 @@ interface IPatternControlProps extends IWorkItemFieldControlProps {
     errorMessage: string;
 }
 
-export class PatternControl extends WorkItemFieldControl<string, IPatternControlProps, IWorkItemFieldControlState<string>> {
-    public render(): JSX.Element {
-        let className = "pattern-control";
-        if (this.state.error) {
-            className += " invalid-value";
-        }
+interface IPatternControlState extends IWorkItemFieldControlState<string> {
+    hovered?: boolean;
+    focussed?: boolean;
+}
 
+export class PatternControl extends WorkItemFieldControl<string, IPatternControlProps, IPatternControlState> {
+    public render(): JSX.Element {
+        const {value, hovered, focussed, error} = this.state;
+        const isActive = hovered || focussed || error;
         return (
             <Fabric className="fabric-container">
-                <input
-                    type="text"
-                    spellCheck={false}
-                    autoComplete="off"
-                    className={className}
-                    value={this.state.value || ""}
-                    onChange={this._onChange}
+                <TextField
+                    className="pattern-control"
+                    value={value || ""}
+                    borderless={!isActive}
+                    onChanged={this._onChange}
+                    onMouseOver={this._onMouseOver}
+                    onMouseOut={this._onMouseOut}
+                    onFocus={this._onFocus}
+                    onBlur={this._onBlur}
                 />
             </Fabric>
         );
@@ -54,12 +59,32 @@ export class PatternControl extends WorkItemFieldControl<string, IPatternControl
     }
 
     @autobind
-    private _onChange(e: React.ChangeEvent<HTMLInputElement>) {
-        this.onValueChanged(e.target.value);
+    private _onMouseOver() {
+        this.setState({hovered: true});
+    }
+
+    @autobind
+    private _onMouseOut() {
+        this.setState({hovered: false});
+    }
+
+    @autobind
+    private _onFocus() {
+        this.setState({focussed: true});
+    }
+
+    @autobind
+    private _onBlur() {
+        this.setState({focussed: false});
+    }
+
+    @autobind
+    private _onChange(value: string) {
+        this.onValueChanged(value);
     }
 
     private async _setWorkItemFormError(error: string) {
-        const service: any = await WorkItemFormService.getService();
+        const service: any = await getFormService();
         if (error) {
             service.setError(error);
         }

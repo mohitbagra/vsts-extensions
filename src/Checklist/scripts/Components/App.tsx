@@ -13,7 +13,7 @@ import {
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { ErrorMessageActions } from "Library/Flux/Actions/ErrorMessageActions";
 import { getMarketplaceUrl, getWorkItemTypeSettingsUrl } from "Library/Utilities/UrlHelper";
-import { getWorkItemFieldValues } from "Library/Utilities/WorkItemFormHelpers";
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IconButton } from "OfficeFabric/Button";
 import { Fabric } from "OfficeFabric/Fabric";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
@@ -163,7 +163,8 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
     @autobind
     private async _onWorkItemLoad(workItemId: number, isNew: boolean) {
         if (!this._project) {
-            const fieldValues = await getWorkItemFieldValues(["System.WorkItemType", "System.TeamProject"]);
+            const formService = await getFormService();
+            const fieldValues = await formService.getFieldValues(["System.WorkItemType", "System.TeamProject"]);
             this._workItemTypeName = fieldValues["System.WorkItemType"] as string;
             const projectName = fieldValues["System.TeamProject"] as string;
             this._project = await CoreClient.getClient().getProject(projectName);

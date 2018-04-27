@@ -4,7 +4,7 @@ import { Loading } from "Library/Components/Loading";
 import { getAsyncLoadedComponent } from "Library/Components/Utilities/AsyncLoadedComponent";
 import { subtract } from "Library/Utilities/Array";
 import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
-import * as WorkItemFormHelpers from "Library/Utilities/WorkItemFormHelpers";
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
 import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
@@ -18,13 +18,14 @@ const AsyncWorkItemTagPicker = getAsyncLoadedComponent(
 
 export class RemoveTagsAction extends BaseAction {
     public async run() {
-        const tags = await WorkItemFormHelpers.getWorkItemFieldValue(CoreFieldRefNames.Tags) as string;
+        const formService = await getFormService();
+        const tags = await formService.getFieldValue(CoreFieldRefNames.Tags) as string;
         const tagsToRemove = (this.getAttribute<string>("tags", true) as string).split(";").map((t: string) => t.trim());
         if (tags) {
             const existingTags = tags.split(";").map((t: string) => t.trim());
             const newTags = subtract(existingTags, tagsToRemove, (s1, s2) => stringEquals(s1, s2, true));
 
-            await WorkItemFormHelpers.setWorkItemFieldValue(CoreFieldRefNames.Tags, newTags.join(";"));
+            await formService.setFieldValue(CoreFieldRefNames.Tags, newTags.join(";"));
         }
     }
 

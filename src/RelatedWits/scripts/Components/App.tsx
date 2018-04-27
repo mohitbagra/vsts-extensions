@@ -19,7 +19,7 @@ import * as ExtensionDataManager from "Library/Utilities/ExtensionDataManager";
 import { parseUniquefiedIdentityName } from "Library/Utilities/Identity";
 import { stringEquals } from "Library/Utilities/String";
 import { getQueryUrl } from "Library/Utilities/UrlHelper";
-import { openWorkItemDialog } from "Library/Utilities/WorkItemFormHelpers";
+import { getFormService, openWorkItemDialog } from "Library/Utilities/WorkItemFormHelpers";
 import { IContextualMenuItem } from "OfficeFabric/ContextualMenu";
 import {
     CheckboxVisibility, ConstrainMode, DetailsListLayoutMode, IColumn
@@ -40,7 +40,6 @@ import { WorkItem, WorkItemRelation, WorkItemRelationType } from "TFS/WorkItemTr
 import {
     IWorkItemChangedArgs, IWorkItemLoadedArgs, IWorkItemNotificationListener
 } from "TFS/WorkItemTracking/ExtensionContracts";
-import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 import { FilterBar, IFilterBar, KeywordFilterBarItem } from "VSSUI/FilterBar";
 import { Hub } from "VSSUI/Hub";
 import { HubHeader } from "VSSUI/HubHeader";
@@ -515,7 +514,7 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                         key: relationType.referenceName,
                         name: relationType.name,
                         onClick: async () => {
-                            const workItemFormService = await WorkItemFormService.getService();
+                            const workItemFormService = await getFormService();
                             const workItemRelations = selectedItems.filter(wi => !this.state.relationsMap[`${wi.url}_${relationType.referenceName}`]).map(w => {
                                 return {
                                     rel: relationType.referenceName,
@@ -553,7 +552,7 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
     }
 
     private async _createQuery(fieldsToSeek: string[], sortByField: string): Promise<{project: string, wiql: string}> {
-        const workItemFormService = await WorkItemFormService.getService();
+        const workItemFormService = await getFormService();
         const fieldValues = await workItemFormService.getFieldValues(fieldsToSeek, true);
         const witId = await workItemFormService.getId();
         const project = await workItemFormService.getFieldValue("System.TeamProject") as string;
@@ -599,7 +598,7 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
     }
 
     private async _initializeSettings() {
-        const workItemFormService = await WorkItemFormService.getService();
+        const workItemFormService = await getFormService();
         const workItemType = await workItemFormService.getFieldValue("System.WorkItemType") as string;
         const project = await workItemFormService.getFieldValue("System.TeamProject") as string;
         const settings = await ExtensionDataManager.readSetting<ISettings>(`${Constants.StorageKey}_${project}_${workItemType}`, Constants.DEFAULT_SETTINGS, true);
@@ -611,13 +610,13 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
     }
 
     private async _initializeWorkItemRelationTypes() {
-        const workItemFormService = await WorkItemFormService.getService();
+        const workItemFormService = await getFormService();
         const relationTypes = await workItemFormService.getWorkItemRelationTypes();
         this.setState({relationTypes: relationTypes});
     }
 
     private async _initializeLinksData() {
-        const workItemFormService = await WorkItemFormService.getService();
+        const workItemFormService = await getFormService();
         const relations = await workItemFormService.getWorkItemRelations();
 
         const relationsMap = {};

@@ -10,8 +10,15 @@
             border: 1px solid #eaeaea;
 
             .date-time-picker-icon {
-                margin-left: 5px;
+                margin: 0;
+                padding: 0;
+                width: 24px;
                 height: 24px;
+
+                &.clear-icon {
+                    color: #e81123;
+                    margin: 0 5px;
+                }
             }
 
             &.borderless {
