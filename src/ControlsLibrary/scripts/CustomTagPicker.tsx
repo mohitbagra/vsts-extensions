@@ -5,9 +5,10 @@ import { IBasePickerProps } from "OfficeFabric/components/pickers/BasePicker.typ
 import { IPickerItemProps } from "OfficeFabric/components/pickers/PickerItem.types";
 import { TagItem } from "OfficeFabric/components/pickers/TagPicker/TagItem";
 import { ITag } from "OfficeFabric/components/pickers/TagPicker/TagPicker";
-import { css } from "OfficeFabric/Utilities";
+import { autobind, css } from "OfficeFabric/Utilities";
 
 export interface ICustomTagPickerProps extends IBasePickerProps<ITag> {
+    suggestionsListClassName?: string;
     onToggleCallout(show: boolean): void;
 }
 
@@ -17,11 +18,12 @@ export class CustomTagPicker extends BasePicker<ITag, ICustomTagPickerProps> {
         onRenderSuggestionsItem: (props: ITag) => <div className={css("ms-TagItem-TextOverflow")}>{props.name}</div>
     };
 
-    public dismissSuggestions(ev?: any) {
-        if (ev.type === "resize") {
-            return;
+    @autobind
+    protected onInputBlur(ev: React.FocusEvent<HTMLInputElement>): void {
+        super.onInputBlur(ev);
+        if (this.props.inputProps && this.props.inputProps.onBlur) {
+            this.props.inputProps.onBlur(ev);
         }
-        super.dismissSuggestions();
     }
 
     protected renderSuggestions(): JSX.Element | null {
@@ -30,11 +32,12 @@ export class CustomTagPicker extends BasePicker<ITag, ICustomTagPickerProps> {
         const TypedSuggestion = this.SuggestionOfProperType;
         return this.state.suggestionsVisible && this.input ? (
             <TypedSuggestion
+                className={this.props.suggestionsListClassName}
                 onRenderSuggestion={this.props.onRenderSuggestionsItem}
                 onSuggestionClick={this.onSuggestionClick}
                 onSuggestionRemove={this.onSuggestionRemove}
                 suggestions={this.suggestionStore.getSuggestions()}
-                ref={this.suggestionElement}
+                ref={this._resolveRef("suggestionElement")}
                 onGetMoreResults={this.onGetMoreResults}
                 moreSuggestionsAvailable={this.state.moreSuggestionsAvailable}
                 isLoading={this.state.suggestionsLoading}

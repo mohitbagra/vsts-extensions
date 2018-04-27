@@ -39,6 +39,7 @@ export class PatternControl extends WorkItemFieldControl<string, IPatternControl
                     value={value || ""}
                     borderless={!isActive}
                     onChanged={this._onChange}
+                    onKeyDown={this._onInputKeyDown}
                     onMouseOver={this._onMouseOver}
                     onMouseOut={this._onMouseOut}
                     onFocus={this._onFocus}
@@ -56,6 +57,15 @@ export class PatternControl extends WorkItemFieldControl<string, IPatternControl
         }
         this._setWorkItemFormError(error);
         return error;
+    }
+
+    @autobind
+    private async _onInputKeyDown(e: React.KeyboardEvent<any>) {
+        if (e.ctrlKey && e.keyCode === 83) {
+            e.preventDefault();
+            const formService = await getFormService();
+            formService.save();
+        }
     }
 
     @autobind

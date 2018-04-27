@@ -9,9 +9,11 @@ import {
 } from "Library/Components/VSTS/WorkItemFieldControl";
 import { findIndex } from "Library/Utilities/Array";
 import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
+import { ValidationState } from "OfficeFabric/components/pickers/BasePicker.types";
 import { ITag } from "OfficeFabric/components/pickers/TagPicker/TagPicker";
 import { Fabric } from "OfficeFabric/Fabric";
-import { autobind } from "OfficeFabric/Utilities";
+import { autobind, css } from "OfficeFabric/Utilities";
 import { CustomTagPicker } from "./CustomTagPicker";
 
 interface IMultiValueControlInputs {
@@ -23,34 +25,91 @@ interface IMultiValueControlProps extends IWorkItemFieldControlProps {
     suggestedValues: string[];
 }
 
-export class MultiValueControl extends WorkItemFieldControl<string, IMultiValueControlProps, IWorkItemFieldControlState<string>> {
+interface IMultiValueControlState extends IWorkItemFieldControlState<string> {
+    hovered?: boolean;
+    focussed?: boolean;
+}
+
+export class MultiValueControl extends WorkItemFieldControl<string, IMultiValueControlProps, IMultiValueControlState> {
     private _isCalloutOpen: boolean = false;
 
     public render(): JSX.Element {
         const values = this._parseFieldValue();
+        const {hovered, focussed} = this.state;
+        const isActive = hovered || focussed;
         return (
             <Fabric>
                 <CustomTagPicker
-                    className="multi-value-control"
+                    className={css("multi-value-control", {borderless: !isActive})}
+                    suggestionsListClassName="suggestions-list"
                     onToggleCallout={this._onToggleCallout}
                     selectedItems={(values || []).map(this._getTag)}
                     onResolveSuggestions={this._onTagFilterChanged}
                     getTextFromItem={this._getTagText}
                     onChange={this._onChange}
+                    createGenericItem={this._createGenericItem}
+                    onValidateInput={this._onValidateInput}
                     inputProps={{
                         style: {
                             height: "26px"
-                        }
+                        },
+                        onKeyDown: this._onInputKeyDown,
+                        onMouseOver: this._onMouseOver,
+                        onMouseOut: this._onMouseOut,
+                        onFocus: this._onFocus,
+                        onBlur: this._onBlur
                     }}
                     pickerSuggestionsProps={
                         {
                             suggestionsHeaderText: "Suggested values",
-                            noResultsFoundText: "No suggested values."
+                            noResultsFoundText: "No suggested values. Press enter to select current input."
                         }
                     }
                 />
             </Fabric>
         );
+    }
+
+    @autobind
+    private async _onInputKeyDown(e: React.KeyboardEvent<any>) {
+        if (e.ctrlKey && e.keyCode === 83) {
+            e.preventDefault();
+            const formService = await getFormService();
+            formService.save();
+        }
+    }
+
+    @autobind
+    private _onMouseOver() {
+        this.setState({hovered: true});
+    }
+
+    @autobind
+    private _onMouseOut() {
+        this.setState({hovered: false});
+    }
+
+    @autobind
+    private _onFocus() {
+        this.setState({focussed: true});
+    }
+
+    @autobind
+    private _onBlur() {
+        this.setState({focussed: false});
+    }
+
+    @autobind
+    private _onValidateInput(value: string): ValidationState {
+        return isNullOrWhiteSpace(value) ? ValidationState.invalid : ValidationState.valid;
+    }
+
+    @autobind
+    private _createGenericItem(input: string): any {
+        return {
+            key: input,
+            name: input
+        };
     }
 
     @autobind
@@ -90,15 +149,12 @@ export class MultiValueControl extends WorkItemFieldControl<string, IMultiValueC
     @autobind
     private _onToggleCallout(on: boolean) {
         if (this._isCalloutOpen !== on) {
-            this._isCalloutOpen = on;
-            if (on) {
-                $("#ext-container").height(260);
-            }
-            else {
-                $("#ext-container").css("height", "auto");
-            }
-
-            this.resize();
+            setTimeout(
+                () => {
+                    this.resize();
+                },
+                100
+            );
         }
     }
 

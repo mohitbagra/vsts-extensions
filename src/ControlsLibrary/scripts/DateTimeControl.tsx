@@ -9,6 +9,7 @@ import { DateTimePicker } from "Library/Components/DateTimePicker";
 import {
     IWorkItemFieldControlProps, IWorkItemFieldControlState, WorkItemFieldControl
 } from "Library/Components/VSTS/WorkItemFieldControl";
+import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IconButton } from "OfficeFabric/Button";
 import { Fabric } from "OfficeFabric/Fabric";
 import { autobind, css } from "OfficeFabric/Utilities";
@@ -52,6 +53,7 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
                         readOnly={true}
                         className="date-time-picker-input"
                         value={value ? format(value, "M/D/YYYY hh:mm A") : ""}
+                        onKeyDown={this._onInputKeyDown}
                         onFocus={this._onFocus}
                         onBlur={this._onBlur}
                     />
@@ -84,6 +86,15 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
                 {expanded && <div style={{clear: "both"}} />}
             </Fabric>
         );
+    }
+
+    @autobind
+    private async _onInputKeyDown(e: React.KeyboardEvent<any>) {
+        if (e.ctrlKey && e.keyCode === 83) {
+            e.preventDefault();
+            const formService = await getFormService();
+            formService.save();
+        }
     }
 
     @autobind
