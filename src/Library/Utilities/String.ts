@@ -1,4 +1,4 @@
-import { formatDate } from "Library/Utilities/Date";
+import * as format from "date-fns/format";
 
 function convertToString(value: any, upperCase: boolean, useLocale: boolean): string {
     let result: string;
@@ -115,7 +115,7 @@ export function toString(val: any): string {
         return `${val}`;
     }
     else if (val instanceof Date) {
-        formatDate(val);
+        format(val);
     }
     else {
         return val;

@@ -1,22 +1,9 @@
-import * as addDays from "date-fns/add_days";
 import * as format from "date-fns/format";
 import * as isValid from "date-fns/is_valid";
 import * as parse from "date-fns/parse";
 
 export function isDate(value: string): boolean {
     return isValid(parse(value));
-}
-
-export function isValidDate(date: Date): boolean {
-    return isValid(date);
-}
-
-export function addDaysToDate(date: Date, days: number): Date {
-    return addDays(date, days);
-}
-
-export function parseDateString(value: string): Date {
-    return parse(value);
 }
 
 export function defaultDateComparer(date1: Date, date2: Date): number {
@@ -50,10 +37,6 @@ export function shiftToUTC(date: Date): Date {
 
 export function shiftToLocal(date: Date): Date {
     return new Date(date.getTime() - (date.getTimezoneOffset() * 1000 * 60));
-}
-
-export function formatDate(date: Date, formatStr?: string): string {
-    return format(date, formatStr);
 }
 
 export function ago(date: Date): string {

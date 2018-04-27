@@ -4,11 +4,12 @@ import { BugBashItemActions } from "BugBashPro/Actions/BugBashItemActions";
 import { BugBashItemFieldNames, SizeLimits, WorkItemFieldNames } from "BugBashPro/Constants";
 import { IBugBashItem, ISortState } from "BugBashPro/Interfaces";
 import { StoresHub } from "BugBashPro/Stores/StoresHub";
+import * as format from "date-fns/format";
 import { IdentityView } from "Library/Components/IdentityView";
 import { WorkItemStateView } from "Library/Components/VSTS/WorkItemStateView";
 import { WorkItemTitleView } from "Library/Components/VSTS/WorkItemTitleView";
 import { WorkItemActions } from "Library/Flux/Actions/WorkItemActions";
-import { defaultDateComparer, formatDate, friendly } from "Library/Utilities/Date";
+import { defaultDateComparer, friendly } from "Library/Utilities/Date";
 import {
     getCurrentUser, getDistinctNameFromIdentityRef, IdentityRef
 } from "Library/Utilities/Identity";
@@ -403,7 +404,7 @@ export class BugBashItem {
         else if (BugBashItemKeyTypes[key] === "date") {
             return (
                 <TooltipHost
-                    content={formatDate(value, "M/D/YYYY h:mm aa")}
+                    content={format(value, "M/D/YYYY h:mm aa")}
                     delay={TooltipDelay.medium}
                     directionalHint={DirectionalHint.bottomLeftEdge}
                 >

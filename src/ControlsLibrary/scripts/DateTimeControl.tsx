@@ -4,11 +4,11 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { initializeIcons } from "@uifabric/icons";
+import * as format from "date-fns/format";
 import { DateTimePicker } from "Library/Components/DateTimePicker";
 import {
     IWorkItemFieldControlProps, IWorkItemFieldControlState, WorkItemFieldControl
 } from "Library/Components/VSTS/WorkItemFieldControl";
-import { formatDate } from "Library/Utilities/Date";
 import { IconButton } from "OfficeFabric/Button";
 import { Fabric } from "OfficeFabric/Fabric";
 import { autobind, css } from "OfficeFabric/Utilities";
@@ -51,7 +51,7 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
                         autoComplete="off"
                         readOnly={true}
                         className="date-time-picker-input"
-                        value={value ? formatDate(value, "M/D/YYYY hh:mm A") : ""}
+                        value={value ? format(value, "M/D/YYYY hh:mm A") : ""}
                         onFocus={this._onFocus}
                         onBlur={this._onBlur}
                     />

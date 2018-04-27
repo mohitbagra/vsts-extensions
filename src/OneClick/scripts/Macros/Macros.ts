@@ -1,4 +1,5 @@
-import { addDaysToDate, formatDate } from "Library/Utilities/Date";
+import * as addDays from "date-fns/add_days";
+import * as format from "date-fns/format";
 import { getCurrentUserName } from "Library/Utilities/Identity";
 import { isInteger } from "Library/Utilities/Number";
 import { startsWith, toString } from "Library/Utilities/String";
@@ -65,10 +66,10 @@ export class MacroToday extends BaseMacro {
         if (operatorAndOperand) {
             switch (operatorAndOperand[0]) {
                 case "-":
-                    returnValue = addDaysToDate(returnValue, -1 * operatorAndOperand[1]);
+                    returnValue = addDays(returnValue, -1 * operatorAndOperand[1]);
                     break;
                 case "+":
-                    returnValue = addDaysToDate(returnValue, operatorAndOperand[1]);
+                    returnValue = addDays(returnValue, operatorAndOperand[1]);
                     break;
                 default:
                     break;
@@ -79,7 +80,7 @@ export class MacroToday extends BaseMacro {
             return returnValue;
         }
         else {
-            return formatDate(returnValue);
+            return format(returnValue);
         }
     }
 
