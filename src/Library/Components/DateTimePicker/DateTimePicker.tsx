@@ -3,15 +3,14 @@ import "./DateTimePicker.scss";
 import * as React from "react";
 
 import { Calendar } from "OfficeFabric/Calendar";
-import { DayOfWeek, IDatePickerStrings } from "OfficeFabric/DatePicker";
+import { IDatePickerStrings } from "OfficeFabric/components/DatePicker/DatePicker.types";
 import { autobind, css } from "OfficeFabric/Utilities";
-import { ITimeStrings, Time } from "./Time";
+import { Time } from "./Time";
 
 export interface IDateTimePickerProps {
     today: Date;
     value: Date;
     className?: string;
-    dateTimePickerCulture: IDateTimePickerCulture;
     onSelectDate?(date: Date): void;
 }
 
@@ -19,13 +18,63 @@ export interface IDateTimePickerState {
     selectedDate: Date;
 }
 
-export interface IDateTimePickerCulture {
-    calendarStrings: IDatePickerStrings;
-    timeStrings: ITimeStrings;
-    firstDayOfWeek?: DayOfWeek;
-    use24HourFormat: boolean;
-    renderAmPmBeforeTime: boolean;
-}
+const DEFAULT_STRINGS: IDatePickerStrings = {
+    months: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+
+    shortMonths: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+
+    days: [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+
+    shortDays: [
+      "S",
+      "M",
+      "T",
+      "W",
+      "T",
+      "F",
+      "S"
+    ],
+
+    goToToday: "Go to today",
+    prevMonthAriaLabel: "Go to previous month",
+    nextMonthAriaLabel: "Go to next month",
+    prevYearAriaLabel: "Go to previous year",
+    nextYearAriaLabel: "Go to next year"
+  };
 
 export class DateTimePicker extends React.Component<IDateTimePickerProps, IDateTimePickerState> {
     constructor(props: IDateTimePickerProps) {
@@ -48,7 +97,7 @@ export class DateTimePicker extends React.Component<IDateTimePickerProps, IDateT
     }
 
     public render(): JSX.Element {
-        const { dateTimePickerCulture, today, className } = this.props;
+        const { today, className } = this.props;
         const { selectedDate } = this.state;
 
         return (
@@ -59,7 +108,7 @@ export class DateTimePicker extends React.Component<IDateTimePickerProps, IDateT
                         isMonthPickerVisible={true}
                         today={today}
                         value={selectedDate}
-                        strings={dateTimePickerCulture.calendarStrings}
+                        strings={DEFAULT_STRINGS}
                     />
                 </div>
                 <div className="date-time-picker-time">
@@ -67,9 +116,6 @@ export class DateTimePicker extends React.Component<IDateTimePickerProps, IDateT
                         onSelectTime={this._onSelectTime}
                         hour={selectedDate ? selectedDate.getHours() : 12}
                         minute={selectedDate ? selectedDate.getMinutes() : 0}
-                        timeStrings={dateTimePickerCulture.timeStrings}
-                        use24HourFormat={dateTimePickerCulture.use24HourFormat}
-                        renderAmPmBeforeTime={dateTimePickerCulture.renderAmPmBeforeTime}
                     />
                 </div>
             </div >

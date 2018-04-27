@@ -6,45 +6,72 @@
     .date-time-control {
         .date-time-picker-input-container {
             display: flex;
+            align-items: center;
+            border: 1px solid #eaeaea;
+
+            .date-time-picker-icon {
+                margin-left: 5px;
+                height: 24px;
+            }
+
+            &.borderless {
+                border: 1px solid transparent;
+
+                .date-time-picker-icon {
+                    display: none;
+                }
+            }
 
             .date-time-picker-input {
                 flex: 1;
                 margin:0;
                 padding: 2px;
                 box-sizing: border-box;
-                width: 100%;
-                border: 1px solid transparent;
                 height: 24px;
+                border: none;
                 outline: none;
                 font-size: 14px;
                 @include TextOverflowEllipsis();
-
-                &:hover, &:focus {
-                    border-color: #eaeaea;
-                }
-
-                &.invalid-value {
-                    border-color: #a80000;
-
-                    &:hover, &:focus {
-                        border-color: #a80000;
-                    }
-                }
 
                 &::-ms-clear {
                     display: none;
                 }
             }
-
-            .date-time-picker-icon {
-                margin-left: 5px;
-            }
         }
-        &.invalid-value {
-            .rw-datetimepicker {
-                input.rw-input {
-                    border: 1px solid #a80000;
-                }
+
+        .arrow-box {
+            float: right;
+            position: relative;
+            margin-top: 12px;
+            background: #fff;
+
+            &:after, &:before {
+                bottom: calc(100% - 1px);
+                left: calc(100% - 20px);
+                border: solid transparent;
+                content: " ";
+                height: 0;
+                width: 0;
+                position: absolute;
+                pointer-events: none;
+            }
+            
+            &:after {
+                border-color: rgba(255, 255, 255, 0);
+                border-bottom-color: #fff;
+                border-width: 9px;
+                margin-left: -9px;
+            }
+
+            &:before {
+                border-color: rgba(234, 234, 234, 0);
+                border-bottom-color: #eaeaea;
+                border-width: 11px;
+                margin-left: -11px;
+            }
+            
+            .date-time-picker {
+                border: 1px solid #eaeaea;
             }
         }
     }

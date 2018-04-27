@@ -4,20 +4,14 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { initializeIcons } from "@uifabric/icons";
-import {
-    DateTimePicker, IDateTimePickerCulture, ITimeStrings
-} from "Library/Components/DateTimePicker";
-import { InputError } from "Library/Components/InputError";
+import { DateTimePicker } from "Library/Components/DateTimePicker";
 import {
     IWorkItemFieldControlProps, IWorkItemFieldControlState, WorkItemFieldControl
 } from "Library/Components/VSTS/WorkItemFieldControl";
-import { formatDate } from "Library/Utilities/Date";
-import { IDatePickerStrings } from "OfficeFabric/components/DatePicker/DatePicker.types";
+import { formatDate, isValidDate, parseDateString } from "Library/Utilities/Date";
+import { IconButton } from "OfficeFabric/Button";
 import { Fabric } from "OfficeFabric/Fabric";
-import { autobind } from "OfficeFabric/Utilities";
-import * as Culture from "VSS/Utils/Culture";
-import * as Utils_Date from "VSS/Utils/Date";
-import { VssIcon, VssIconType } from "VSSUI/VssIcon";
+import { autobind, css } from "OfficeFabric/Utilities";
 
 interface IDateTimeControlInputs {
     FieldName: string;
@@ -25,15 +19,18 @@ interface IDateTimeControlInputs {
 
 interface IDateTimeControlState extends IWorkItemFieldControlState<Date> {
     expanded?: boolean;
+    textValue?: string;
+    hovered?: boolean;
+    focussed?: boolean;
 }
 
 export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldControlProps, IDateTimeControlState> {
-    private _dateTimePickerCulture: IDateTimePickerCulture;
-
     constructor(props: IWorkItemFieldControlProps) {
         super(props);
 
-        this._initializeDateTimePickerCulture();
+        this.state = {
+            expanded: false
+        };
     }
 
     public render(): JSX.Element {
@@ -42,84 +39,94 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
             className += " invalid-value";
         }
 
-        const todayInUserTimeZone: Date = Utils_Date.convertClientTimeToUserTimeZone(new Date(), true);
+        const todayInUserTimeZone = new Date();
         todayInUserTimeZone.setHours(0, 0, 0, 0);
-        const {value} = this.state;
+        const {value, expanded, hovered, focussed, error} = this.state;
+        let textValue = this.state.textValue;
+        const isActive = hovered || focussed || expanded || error;
 
+        if (!textValue && value) {
+            textValue = formatDate(value, "M/D/YYYY hh:mm A");
+        }
         return (
             <Fabric className={className}>
-                <div className="date-time-picker-input-container">
+                <div
+                    className={css("date-time-picker-input-container", {borderless: !isActive})}
+                    onMouseOver={this._onMouseOver}
+                    onMouseOut={this._onMouseOut}
+                >
                     <input
                         type="text"
                         spellCheck={false}
                         autoComplete="off"
                         className="date-time-picker-input"
-                        value={value ? formatDate(value, "M/D/YYYY h:mm aa") : ""}
+                        value={textValue || ""}
+                        onFocus={this._onFocus}
+                        onBlur={this._onBlur}
                         onChange={this._onInputChange}
                     />
-                    <VssIcon
+                    <IconButton
+                        iconProps={{
+                            iconName: "Calendar"
+                        }}
                         className="date-time-picker-icon"
-                        iconName="Calendar"
-                        iconType={VssIconType.fabric}
+                        onClick={this._toggleCalendar}
                     />
                 </div>
-                <DateTimePicker
-                    onSelectDate={this._onChange}
-                    today={todayInUserTimeZone}
-                    value={this.state.value}
-                    dateTimePickerCulture={this._dateTimePickerCulture}
-                />
-                {this.state.error && (<InputError error={this.state.error} />)}
+                { expanded &&
+                    <div className="arrow-box">
+                        <DateTimePicker
+                            onSelectDate={this._onSelectDate}
+                            today={todayInUserTimeZone}
+                            value={isValidDate(value) ? value : todayInUserTimeZone}
+                        />
+                    </div>
+                }
+                {expanded && <div style={{clear: "both"}} />}
             </Fabric>
         );
     }
 
+    protected getErrorMessage(value: Date): string {
+        return value && !isValidDate(value) ? "Not a valid date" : "";
+    }
+
+    @autobind
+    private _onMouseOver() {
+        this.setState({hovered: true});
+    }
+
+    @autobind
+    private _onMouseOut() {
+        this.setState({hovered: false});
+    }
+
+    @autobind
+    private _onFocus() {
+        this.setState({focussed: true});
+    }
+
+    @autobind
+    private _onBlur() {
+        this.setState({focussed: false});
+    }
+
+    @autobind
+    private _toggleCalendar() {
+        this.setState({expanded: !this.state.expanded});
+    }
+
     @autobind
     private _onInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-        this.onValueChanged(new Date(e.target.value));
+        const value = e.target.value;
+        this.setState({textValue: value});
+        this.onValueChanged(parseDateString(value));
     }
 
     @autobind
-    private _onChange(newDate: Date) {
+    private _onSelectDate(newDate: Date) {
+        this.setState({textValue: formatDate(newDate, "M/D/YYYY hh:mm A")});
         this.onValueChanged(newDate);
-    }
-
-    private _initializeDateTimePickerCulture() {
-        const dateTimeFormat = Culture.getDateTimeFormat();
-
-        // build calendar strings
-        const calendarStrings = {
-            months: dateTimeFormat.MonthNames,
-            days: dateTimeFormat.DayNames,
-            shortMonths: dateTimeFormat.AbbreviatedMonthNames,
-            shortDays: dateTimeFormat.AbbreviatedDayNames,
-            goToToday: "Go to today"
-        } as IDatePickerStrings;
-
-        // build time strings
-        const timeStrings = {
-            AMDesignator: dateTimeFormat.AMDesignator,
-            PMDesignator: dateTimeFormat.PMDesignator
-        } as ITimeStrings;
-
-        // build time format
-        let use24HourFormat = false;
-        let renderAmPmBeforeTime = false;
-        const ttIndex = dateTimeFormat.ShortTimePattern.indexOf("tt");
-        if (ttIndex === -1) {
-            use24HourFormat = true;
-        }
-        else if (ttIndex === 0) {
-            renderAmPmBeforeTime = true;
-        }
-
-        this._dateTimePickerCulture = {
-            calendarStrings: calendarStrings,
-            timeStrings: timeStrings,
-            use24HourFormat: use24HourFormat,
-            renderAmPmBeforeTime: renderAmPmBeforeTime,
-            firstDayOfWeek: dateTimeFormat.FirstDayOfWeek
-        } as IDateTimePickerCulture;
     }
 }
 

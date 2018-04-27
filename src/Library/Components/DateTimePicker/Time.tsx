@@ -6,17 +6,8 @@ import { CategoryRange, NumericValueRange, ValueSpinner } from "./ValueSpinner";
 export interface ITimeProps {
     hour: number;
     minute: number;
-    use24HourFormat: boolean;
-    renderAmPmBeforeTime?: boolean;
-    timeStrings: ITimeStrings;
     onSelectTime?(hour: number, minute: number): void;
 }
-
-export interface ITimeStrings {
-    AMDesignator: string;
-    PMDesignator: string;
-}
-
 export interface ITimeState {
     /**
      * hour value displayed in the control
@@ -63,16 +54,6 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
     }
 
     public render(): JSX.Element {
-        if (this.props.renderAmPmBeforeTime) {
-            return (
-                <div className="time-control">
-                    {this._renderAMPM()}
-                    {this._renderHour()}
-                    {this._renderMinute()}
-                </div>
-            );
-        }
-
         return (
             <div className="time-control">
                 {this._renderHour()}
@@ -83,22 +64,17 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
     }
 
     private _renderAMPM(): JSX.Element {
-        if (!this.props.use24HourFormat) {
-            const { AMDesignator, PMDesignator } = this.props.timeStrings;
-            const value = this.state.isAM ? AMDesignator : PMDesignator;
+        const value = this.state.isAM ? "AM" : "PM";
 
-            return (
-                <div className="time-ampm">
-                    <StringSpinner
-                        value={value}
-                        valueRange={this._AMPMRange}
-                        onValueChange={this._onAMPMChange}
-                    />
-                </div>
-            );
-        }
-
-        return null;
+        return (
+            <div className="time-ampm">
+                <StringSpinner
+                    value={value}
+                    valueRange={this._AMPMRange}
+                    onValueChange={this._onAMPMChange}
+                />
+            </div>
+        );
     }
 
     private _renderHour(): JSX.Element {
@@ -131,35 +107,28 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
      * @param minute minute value
      */
     private _initializeTime(props: ITimeProps) {
-        const { use24HourFormat } = props;
-        const { AMDesignator, PMDesignator } = props.timeStrings;
-
         this.state = this._calculateTimeRange(props);
 
-        this._minHour = use24HourFormat ? 0 : 1;
-        this._maxHour = use24HourFormat ? 23 : 12;
+        this._minHour = 1;
+        this._maxHour = 12;
         this._hourRange = new NumericValueRange(this._minHour, this._maxHour);
         this._minuteRange = new NumericValueRange(0, 59, (n: number) => (n < 10) ? `0${n}` : n.toString());
-        this._AMPMRange = new CategoryRange([AMDesignator, PMDesignator]);
+        this._AMPMRange = new CategoryRange(["AM", "PM"]);
     }
 
     private _calculateTimeRange(props: ITimeProps): ITimeState {
-        const { hour, minute, use24HourFormat } = props;
+        const { hour, minute } = props;
 
         let displayedHour = hour;
-        let isAM;
+        let isAM = true;
 
-        if (!use24HourFormat) {
-            isAM = true;
-
-            if (hour === 0) {
-                displayedHour = 12;
-            }
-            else if (hour >= 12) {
-                isAM = false;
-                if (hour > 12) {
-                    displayedHour = hour - 12;
-                }
+        if (hour === 0) {
+            displayedHour = 12;
+        }
+        else if (hour >= 12) {
+            isAM = false;
+            if (hour > 12) {
+                displayedHour = hour - 12;
             }
         }
 
@@ -178,13 +147,11 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
         });
 
         if (this.props.onSelectTime) {
-            if (!this.props.use24HourFormat) {
-                if (!isAM && hour !== 12) {
-                    hour = hour + 12;
-                }
-                else if (isAM && hour === 12) {
-                    hour = 0;
-                }
+            if (!isAM && hour !== 12) {
+                hour = hour + 12;
+            }
+            else if (isAM && hour === 12) {
+                hour = 0;
             }
             this.props.onSelectTime(hour, minute);
         }
@@ -202,7 +169,7 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
 
     @autobind
     private _onAMPMChange(value: string) {
-        const isAM = this.props.timeStrings.AMDesignator === value;
+        const isAM = value && value.toLowerCase() === "am";
         this._changeTime(this.state.hour, this.state.minute, isAM);
     }
 }

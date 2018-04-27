@@ -7,6 +7,10 @@ export function isDate(value: string): boolean {
     return isValid(parse(value));
 }
 
+export function isValidDate(date: Date): boolean {
+    return isValid(date);
+}
+
 export function addDaysToDate(date: Date, days: number): Date {
     return addDays(date, days);
 }

@@ -48,7 +48,7 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
     /**
      * Flushes the control's value to the field
      */
-    protected async onValueChanged(newValue: any): Promise<void> {
+    protected async onValueChanged(newValue: TDataType): Promise<void> {
         this._setValue(newValue);
 
         this._flushing = true;
@@ -63,7 +63,7 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
         }
     }
 
-    protected getErrorMessage(_value: string): string {
+    protected getErrorMessage(_value: TDataType): string {
         return "";
     }
 
@@ -73,16 +73,16 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
     private async _invalidate(): Promise<void> {
         if (!this._flushing) {
             const value = await this._getCurrentFieldValue();
-            this._setValue(value);
+            this._setValue(value as TDataType);
         }
 
         this.resize();
     }
 
-    private async _getCurrentFieldValue(): Promise<Object> {
+    private async _getCurrentFieldValue(): Promise<TDataType> {
         const workItemFormService = await WorkItemFormService.getService();
         try {
-            return await workItemFormService.getFieldValue(this.props.fieldName);
+            return await workItemFormService.getFieldValue(this.props.fieldName) as TDataType;
         }
         catch (e) {
             this._onError(`Error in loading the field value: ${e.message}`);
@@ -90,7 +90,7 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
         }
     }
 
-    private _setValue(value: any) {
+    private _setValue(value: TDataType) {
         this.setState({value: value, error: this.getErrorMessage(value)});
     }
 
