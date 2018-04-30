@@ -1,22 +1,22 @@
 import { HostNavigationService } from "VSS/SDK/Services/Navigation";
 
-let navigationService: HostNavigationService;
+let hostNavigationService: HostNavigationService;
 
-async function getNavigationService(): Promise<HostNavigationService> {
-    if (!navigationService) {
-        navigationService = await VSS.getService(VSS.ServiceIds.Navigation) as HostNavigationService;
+export async function getHostNavigationService(): Promise<HostNavigationService> {
+    if (!hostNavigationService) {
+        hostNavigationService = await VSS.getService(VSS.ServiceIds.Navigation) as HostNavigationService;
     }
 
-    return navigationService;
+    return hostNavigationService;
 }
 
 // tslint:disable-next-line:export-name
 export async function navigate(data?: IDictionaryStringTo<any>, replaceHistoryEntry?: boolean, mergeWithCurrentState?: boolean, windowTitle?: string, suppressNavigate?: boolean) {
-    const navService = await getNavigationService();
+    const navService = await getHostNavigationService();
     navService.updateHistoryEntry(null, data, replaceHistoryEntry, mergeWithCurrentState, windowTitle, suppressNavigate);
 }
 
 export async function reloadPage() {
-    const navService = await getNavigationService();
+    const navService = await getHostNavigationService();
     navService.reload();
 }

@@ -17,7 +17,7 @@ import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { BaseStore } from "Library/Flux/Stores/BaseStore";
-import { navigate } from "Library/Utilities/Navigation";
+import { getHostNavigationService, navigate } from "Library/Utilities/Navigation";
 import { Fabric } from "OfficeFabric/Fabric";
 import { Link } from "OfficeFabric/Link";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
@@ -183,7 +183,7 @@ export class App extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
     }
 
     private async _attachNavigate() {
-        this._navigationService = await VSS.getService(VSS.ServiceIds.Navigation) as HostNavigationService;
+        this._navigationService = await getHostNavigationService();
         this._navigationService.attachNavigate(null, this._onNavigate, true);
     }
 

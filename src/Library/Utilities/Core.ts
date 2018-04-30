@@ -76,6 +76,16 @@ export class DelayedFunction {
     }
 }
 
+let hostDialogService: IHostDialogService;
+
+export async function getHostDialogService(): Promise<IHostDialogService> {
+    if (!hostDialogService) {
+        hostDialogService = await VSS.getService(VSS.ServiceIds.Dialog) as IHostDialogService;
+    }
+
+    return hostDialogService;
+}
+
 export function delay(instance: any, ms: number, method: Function, data?: any[]): DelayedFunction {
     const delayedFunc = new DelayedFunction(instance, ms, method, data);
     delayedFunc.start();
@@ -92,7 +102,7 @@ export function throttledDelegate(instance: any, ms: number, method: Function, d
 
 export async function confirmAction(condition: boolean, msg: string): Promise<boolean> {
     if (condition) {
-        const dialogService: IHostDialogService = await VSS.getService(VSS.ServiceIds.Dialog) as IHostDialogService;
+        const dialogService = await getHostDialogService();
         try {
             await dialogService.openMessageDialog(msg, { useBowtieStyle: true });
             return true;
@@ -110,7 +120,7 @@ export async function showErrorDialog(message: string, reason?: any): Promise<vo
     const reasonStr = typeof reason === "string" ? reason : reason && reason.message;
     const errorMsg = reasonStr ? `${message} Reason: ${reasonStr}` : message;
 
-    const dialogService: IHostDialogService = <IHostDialogService>await VSS.getService(VSS.ServiceIds.Dialog);
+    const dialogService = await getHostDialogService();
     try {
         await dialogService.openMessageDialog(errorMsg, { useBowtieStyle: true });
     }

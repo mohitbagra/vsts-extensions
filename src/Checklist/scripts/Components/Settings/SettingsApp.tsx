@@ -12,7 +12,7 @@ import {
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { WorkItemTypeActions } from "Library/Flux/Actions/WorkItemTypeActions";
 import { BaseStore } from "Library/Flux/Stores/BaseStore";
-import { navigate } from "Library/Utilities/Navigation";
+import { getHostNavigationService, navigate } from "Library/Utilities/Navigation";
 import { getMarketplaceUrl, getWorkItemTypeSettingsUrl } from "Library/Utilities/UrlHelper";
 import { IconButton } from "OfficeFabric/Button";
 import { Fabric } from "OfficeFabric/Fabric";
@@ -134,7 +134,7 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
     }
 
     private async _attachNavigate() {
-        this._navigationService = await VSS.getService(VSS.ServiceIds.Navigation) as HostNavigationService;
+        this._navigationService = await getHostNavigationService();
         this._navigationService.attachNavigate(null, this._onNavigate, true);
     }
 
