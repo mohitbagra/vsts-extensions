@@ -15,10 +15,12 @@ import {
 
 interface IPlainTextControlInputs {
     Text: string;
+    MaxHeight: number;
 }
 
 interface IPlainTextControlProps {
     text: string;
+    maxHeight: number;
 }
 
 interface IPlainTextControlState {
@@ -89,11 +91,32 @@ export class PlainTextControl extends AutoResizableComponent<IPlainTextControlPr
         this._markdown = new MarkdownIt({
             linkify: true
         });
+
+        // Remember old renderer, if overriden, or proxy to default renderer
+
+        const defaultRender = (tokens, idx, options, _env, self) => {
+            return self.renderToken(tokens, idx, options);
+        };
+        const renderer = this._markdown.renderer.rules.link_open || defaultRender;
+
+        this._markdown.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+            // If you are sure other plugins can't add `target` - drop check below
+            const aIndex = tokens[idx].attrIndex("target");
+
+            if (aIndex < 0) {
+                tokens[idx].attrPush(["target", "_blank"]); // add new attribute
+            } else {
+                tokens[idx].attrs[aIndex][1] = "_blank";    // replace value of existing attr
+            }
+
+            // pass token to default renderer.
+            return renderer(tokens, idx, options, env, self);
+        };
     }
 
     public render(): JSX.Element {
         return (
-            <Fabric className="plaintext-control">
+            <Fabric className="plaintext-control" style={{maxHeight: this.props.maxHeight}}>
                 {this.state.translatedText && <div dangerouslySetInnerHTML={{__html: this.state.translatedText}} />}
             </Fabric>
         );
@@ -126,6 +149,7 @@ export function init() {
     ReactDOM.render(
         <PlainTextControl
             text={inputs.Text}
+            maxHeight={inputs.MaxHeight || 350}
         />,
         document.getElementById("ext-container"));
 }

@@ -16,6 +16,16 @@ function convertToString(value: any, upperCase: boolean, useLocale: boolean): st
     return result;
 }
 
+export function htmlEncode(str: string): string {
+    const div = document.createElement("div");
+    div.appendChild(document.createTextNode(str));
+
+    // The trick we are using here doesnt encode quotes. So we have to replace them using regexp search
+    return div.innerHTML
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 export function isNullOrWhiteSpace(str: string): boolean {
     return str == null || str.trim() === "";
 }

@@ -10,7 +10,7 @@ import {
 import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { Fabric } from "OfficeFabric/Fabric";
 import { TextField } from "OfficeFabric/TextField";
-import { autobind } from "OfficeFabric/Utilities";
+import { autobind, css } from "OfficeFabric/Utilities";
 
 interface IPatternControlInputs {
     FieldName: string;
@@ -35,7 +35,7 @@ export class PatternControl extends WorkItemFieldControl<string, IPatternControl
         return (
             <Fabric className="fabric-container">
                 <TextField
-                    className="pattern-control"
+                    className={css("pattern-control", {invalid: !!error})}
                     value={value || ""}
                     borderless={!isActive}
                     onChanged={this._onChange}

@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "vsts-wit-control-library",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "name": "Work item form control library",
     "description": "A control library extension for VSTS work item form",
     "publisher": "mohitbagra",
@@ -59,6 +59,15 @@
                         "validation": {
                             "dataType": "String",
                             "isRequired": true
+                        }
+                    },
+                    {
+                        "id":"MaxHeight",
+                        "name": "Max height",
+                        "description": "Maximum height for the control",
+                        "validation": {
+                            "dataType": "Number",
+                            "isRequired": false
                         }
                     }
                 ]

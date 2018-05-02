@@ -7,6 +7,12 @@
             border-color: #eaeaea;
         }
 
+        &.invalid {
+            .ms-TextField-fieldGroup {
+                border-color: #da0a00;
+            }
+        }
+
         input {
             margin:0;
             padding: 2px;
