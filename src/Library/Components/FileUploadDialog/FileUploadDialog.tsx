@@ -7,7 +7,7 @@ import {
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { DefaultButton, PrimaryButton } from "OfficeFabric/Button";
 import { Dialog, DialogFooter, DialogType } from "OfficeFabric/Dialog";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import {
     FileInput, FileInputContentType, FileInputResult, FileInputUpdateEventData
 } from "VSSUI/FileInput";
@@ -81,21 +81,18 @@ export class FileUploadDialog extends BaseFluxComponent<IFileInputDialogProps, I
         }
     }
 
-    @autobind
-    private _onDialogClose(): void {
+    private _onDialogClose = () => {
         this._closeDialog();
     }
 
-    @autobind
-    private _onOkClicked(): void {
+    private _onOkClicked = () => {
         if (!!this.props.onOkClick) {
             this.props.onOkClick(this.state.files);
         }
         this._closeDialog();
     }
 
-    @autobind
-    private _onFileInputUpdate(updateEvent: FileInputUpdateEventData): void {
+    private _onFileInputUpdate = (updateEvent: FileInputUpdateEventData) => {
         let files: FileInputResult[] = null;
         if (updateEvent && updateEvent.files && updateEvent.files.length) {
             files = updateEvent.files.map(f => f.result);

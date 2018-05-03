@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { Calendar } from "OfficeFabric/Calendar";
 import { IDatePickerStrings } from "OfficeFabric/components/DatePicker/DatePicker.types";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import { Time } from "./Time";
 
 export interface IDateTimePickerProps {
@@ -122,8 +122,7 @@ export class DateTimePicker extends React.Component<IDateTimePickerProps, IDateT
         );
     }
 
-    @autobind
-    private _onSelectDate(date: Date) {
+    private _onSelectDate = (date: Date) => {
         const { onSelectDate } = this.props;
         const newDate = new Date(date.getTime());
         const hour = this.state.selectedDate.getHours();
@@ -140,8 +139,7 @@ export class DateTimePicker extends React.Component<IDateTimePickerProps, IDateT
         }
     }
 
-    @autobind
-    private _onSelectTime(hour: number, minute: number) {
+    private _onSelectTime = (hour: number, minute: number) => {
         const { onSelectDate } = this.props;
         const { selectedDate } = this.state;
 

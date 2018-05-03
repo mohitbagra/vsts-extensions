@@ -15,7 +15,7 @@ import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
 import { ValidationState } from "OfficeFabric/components/pickers/BasePicker.types";
 import { ITag, TagPicker } from "OfficeFabric/components/pickers/TagPicker/TagPicker";
 import { Spinner, SpinnerSize } from "OfficeFabric/Spinner";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import { WebApiTagDefinition } from "TFS/Core/Contracts";
 
 export interface IWorkItemTagPickerProps extends IBaseFluxComponentProps {
@@ -113,21 +113,18 @@ export class WorkItemTagPicker extends BaseFluxComponent<IWorkItemTagPickerProps
         return null;
     }
 
-    @autobind
-    private _onValidateInput(value: string): ValidationState {
+    private _onValidateInput = (value: string): ValidationState => {
         return isNullOrWhiteSpace(value) ? ValidationState.invalid : ValidationState.valid;
     }
 
-    @autobind
-    private _createGenericItem(input: string): any {
+    private _createGenericItem = (input: string): any => {
         return {
             key: input,
             name: input
         };
     }
 
-    @autobind
-    private _onChange(items: ITag[]) {
+    private _onChange = (items: ITag[]) => {
         const selectedTags = items.map(i => i.name);
         this.setState(
             {
@@ -141,21 +138,18 @@ export class WorkItemTagPicker extends BaseFluxComponent<IWorkItemTagPickerProps
         );
     }
 
-    @autobind
-    private _getTag(tag: string): ITag {
+    private _getTag = (tag: string): ITag => {
         return {
             key: tag,
             name: tag
         };
     }
 
-    @autobind
-    private _getTagText(tag: ITag): string {
+    private _getTagText = (tag: ITag): string => {
         return tag.name;
     }
 
-    @autobind
-    private _onTagFilterChanged(filterText: string, tagList: ITag[]): ITag[] {
+    private _onTagFilterChanged = (filterText: string, tagList: ITag[]): ITag[] => {
         if (isNullOrWhiteSpace(filterText)) {
             return [];
         }

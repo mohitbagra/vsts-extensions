@@ -24,7 +24,7 @@ import {
 } from "Library/Flux/Stores/WorkItemTypeFieldAllowedValuesStore";
 import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
 import { Checkbox } from "OfficeFabric/Checkbox";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import { FieldType, WorkItemField } from "TFS/WorkItemTracking/Contracts";
 
 export interface IWorkItemFieldValuePickerProps extends IBaseFluxComponentProps {
@@ -260,23 +260,19 @@ export class WorkItemFieldValuePicker extends BaseFluxComponent<IWorkItemFieldVa
         return field && !field.isIdentity && WorkItemFieldValuePicker.FieldTypesSupportingAllowedValues.indexOf(field.type) !== -1;
     }
 
-    @autobind
-    private _onCheckboxChange(_ev: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean) {
+    private _onCheckboxChange = (_ev: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean) => {
         return this._onFieldValueChange(checked ? "1" : "0");
     }
 
-    @autobind
-    private _onComboValueChange(option: string, value: string) {
+    private _onComboValueChange = (option: string, value: string) => {
         this._onFieldValueChange(option || value);
     }
 
-    @autobind
-    private _onTagsChange(tags: string[]) {
+    private _onTagsChange = (tags: string[]) => {
         this._onFieldValueChange(tags.join(";"));
     }
 
-    @autobind
-    private _onFieldValueChange(value: any) {
+    private _onFieldValueChange = (value: any) => {
         this.setState(
             {
                 internalValue: value

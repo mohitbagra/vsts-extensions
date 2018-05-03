@@ -13,7 +13,7 @@ import { Link } from "OfficeFabric/Link";
 import {
     DirectionalHint, TooltipDelay, TooltipHost, TooltipOverflowMode
 } from "OfficeFabric/Tooltip";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import { WorkItemType } from "TFS/WorkItemTracking/Contracts";
 
 export interface IWorkItemTitleViewProps extends IBaseFluxComponentProps {
@@ -103,8 +103,7 @@ export class WorkItemTitleView extends BaseFluxComponent<IWorkItemTitleViewProps
         };
     }
 
-    @autobind
-    private _onLinkClick(e: React.MouseEvent<HTMLElement>) {
+    private _onLinkClick = (e: React.MouseEvent<HTMLElement>) => {
         if (this.props.onClick && !e.ctrlKey) {
             e.preventDefault();
             this.props.onClick(e);

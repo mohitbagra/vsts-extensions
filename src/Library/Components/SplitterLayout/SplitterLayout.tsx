@@ -3,7 +3,6 @@ import "./SplitterLayout.scss";
 import * as React from "react";
 
 import { Pane } from "Library/Components/SplitterLayout/Pane";
-import { autobind } from "OfficeFabric/Utilities";
 
 function clearSelection() {
     if (window.getSelection) {
@@ -183,8 +182,7 @@ export class SplitterLayout extends React.Component<ISplitterLayoutProps, ISplit
         return secondaryPaneSize;
     }
 
-    @autobind
-    private _handleResize() {
+    private _handleResize = () => {
         if (this._splitterElement && !this.props.percentage) {
             const containerRect = this._containerElement.getBoundingClientRect();
             const splitRect = this._splitterElement.getBoundingClientRect();
@@ -200,8 +198,7 @@ export class SplitterLayout extends React.Component<ISplitterLayoutProps, ISplit
         }
     }
 
-    @autobind
-    private _handleMouseMove(e: MouseEvent) {
+    private _handleMouseMove = (e: MouseEvent) => {
         if (this.state.resizing) {
             const containerRect = this._containerElement.getBoundingClientRect();
             const splitRect = this._splitterElement.getBoundingClientRect();
@@ -222,14 +219,12 @@ export class SplitterLayout extends React.Component<ISplitterLayoutProps, ISplit
         }
     }
 
-    @autobind
-    private _handleSplitterMouseDown() {
+    private _handleSplitterMouseDown = () => {
         clearSelection();
         this.setState({ resizing: true });
     }
 
-    @autobind
-    private _handleMouseUp() {
+    private _handleMouseUp = () => {
         if (this.state.resizing) {
             this.setState({ resizing: false });
         }

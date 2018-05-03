@@ -72,7 +72,7 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
             setValue();
         }
         else {
-            this._delayedFunction = delay(this, 200, async () => {
+            this._delayedFunction = delay(this, 200, () => {
                 setValue();
             });
         }

@@ -1,5 +1,5 @@
 import { BaseStore } from "Library/Flux/Stores/BaseStore";
-import { autobind, BaseComponent, IBaseProps } from "OfficeFabric/Utilities";
+import { BaseComponent, IBaseProps } from "OfficeFabric/Utilities";
 
 export interface IBaseFluxComponentProps extends IBaseProps {
     className?: string;
@@ -41,8 +41,7 @@ export class BaseFluxComponent<TProps extends IBaseFluxComponentProps, TState ex
         this.state = {} as TState;
     }
 
-    @autobind
-    private _onStoreChanged(): void {
+    private _onStoreChanged = () => {
         const newStoreState = this.getStoresState();
         this.setState(newStoreState);
     }

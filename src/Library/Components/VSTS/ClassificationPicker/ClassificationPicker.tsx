@@ -11,7 +11,7 @@ import {
 } from "Library/Flux/Stores/ClassificationNodeStore";
 import { isNullOrEmpty } from "Library/Utilities/String";
 import { Spinner, SpinnerSize } from "OfficeFabric/Spinner";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import { WorkItemClassificationNode } from "TFS/WorkItemTracking/Contracts";
 import { TreeNode } from "VSS/Controls/TreeView";
 
@@ -121,13 +121,6 @@ export class ClassificationPicker extends BaseFluxComponent<IClassificationPicke
         return uiNode;
     }
 
-    @autobind
-    private _onChange(value: string) {
-        this.setState({value: value}, () => {
-            this.props.onChange(value);
-        });
-    }
-
     private _getDefaultError(): string {
         const nodePath = this.state.value;
         if (isNullOrEmpty(nodePath)) {
@@ -141,5 +134,11 @@ export class ClassificationPicker extends BaseFluxComponent<IClassificationPicke
         }
 
         return null;
+    }
+
+    private _onChange = (value: string) => {
+        this.setState({value: value}, () => {
+            this.props.onChange(value);
+        });
     }
 }

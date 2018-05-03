@@ -10,7 +10,7 @@ import {
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { delay, DelayedFunction } from "Library/Utilities/Core";
 import { isNullOrEmpty } from "Library/Utilities/String";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import { Control } from "VSS/Controls";
 import { Combo, IComboOptions } from "VSS/Controls/Combos";
 
@@ -109,8 +109,16 @@ export class DatePickerCombo extends BaseFluxComponent<IDatePickerComboProps, ID
         }
     }
 
-    @autobind
-    private _onChange() {
+    private _disposeDelayedFunction() {
+        if (this._delayedFunction) {
+            this._delayedFunction.cancel();
+            this._delayedFunction = null;
+        }
+    }
+
+    private _containerRefCallback = (container: HTMLDivElement) => { this._container = container; };
+
+    private _onChange = () => {
         this._disposeDelayedFunction();
 
         const fireChange = () => {
@@ -133,13 +141,4 @@ export class DatePickerCombo extends BaseFluxComponent<IDatePickerComboProps, ID
             });
         }
     }
-
-    private _disposeDelayedFunction() {
-        if (this._delayedFunction) {
-            this._delayedFunction.cancel();
-            this._delayedFunction = null;
-        }
-    }
-
-    private _containerRefCallback = (container: HTMLDivElement) => { this._container = container; };
 }

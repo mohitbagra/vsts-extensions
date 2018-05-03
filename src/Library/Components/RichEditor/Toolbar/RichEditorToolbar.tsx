@@ -10,7 +10,7 @@ import {
 import { IconButton } from "OfficeFabric/Button";
 import { FocusZone, FocusZoneDirection } from "OfficeFabric/FocusZone";
 import { DirectionalHint, TooltipDelay, TooltipHost } from "OfficeFabric/Tooltip";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import Editor from "roosterjs-editor-core/lib/editor/Editor";
 
 export interface IRichEditorToolbarProps {
@@ -30,8 +30,7 @@ export class RichEditorToolbar extends React.Component<IRichEditorToolbarProps, 
         );
     }
 
-    @autobind
-    private _getCommandButton(button: RichEditorToolbarButtonNames, index: number): JSX.Element {
+    private _getCommandButton = (button: RichEditorToolbarButtonNames, index: number): JSX.Element => {
         const buttonObj = ButtonMap[button];
         if (!buttonObj) {
             return null;

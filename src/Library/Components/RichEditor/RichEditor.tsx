@@ -16,7 +16,7 @@ import {
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { delay, DelayedFunction } from "Library/Utilities/Core";
 import { isNullOrEmpty } from "Library/Utilities/String";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import Editor from "roosterjs-editor-core/lib/editor/Editor";
 import EditorOptions from "roosterjs-editor-core/lib/editor/EditorOptions";
 import EditorPlugin from "roosterjs-editor-core/lib/editor/EditorPlugin";
@@ -153,18 +153,22 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         }
     }
 
-    @autobind
-    private _getEditor(): Editor {
+    private _disposeDelayedFunction() {
+        if (this._delayedFunction) {
+            this._delayedFunction.cancel();
+            this._delayedFunction = null;
+        }
+    }
+
+    private _getEditor = (): Editor => {
         return this._editor;
     }
 
-    @autobind
-    private _onContentDivRef(ref: HTMLDivElement) {
+    private _onContentDivRef = (ref: HTMLDivElement) => {
         this._contentDiv = ref;
     }
 
-    @autobind
-    private _onChange() {
+    private _onChange = () => {
         this._disposeDelayedFunction();
 
         if (this.props.delay == null) {
@@ -177,8 +181,7 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         }
     }
 
-    @autobind
-    private _fireChange() {
+    private _fireChange = () => {
         this._disposeDelayedFunction();
 
         const value = this._editor.getContent();
@@ -189,8 +192,7 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         }
     }
 
-    @autobind
-    private async _getImageUrl(data: string): Promise<string> {
+    private _getImageUrl = async (data: string): Promise<string> => {
         if (!this.props.editorOptions || !this.props.editorOptions.getPastedImageUrl) {
             return null;
         }
@@ -205,13 +207,6 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         catch (e) {
             this.setState({loading: false});
             return null;
-        }
-    }
-
-    private _disposeDelayedFunction() {
-        if (this._delayedFunction) {
-            this._delayedFunction.cancel();
-            this._delayedFunction = null;
         }
     }
 }

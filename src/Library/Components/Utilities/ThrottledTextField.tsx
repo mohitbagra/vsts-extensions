@@ -11,7 +11,7 @@ import {
 import { delay, DelayedFunction } from "Library/Utilities/Core";
 import { isNullOrEmpty } from "Library/Utilities/String";
 import { ITextField, ITextFieldProps, TextField } from "OfficeFabric/TextField";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 
 export interface IThrottledTextFieldProps extends ITextFieldProps {
     delay?: number;
@@ -81,13 +81,24 @@ export class ThrottledTextField extends BaseFluxComponent<IThrottledTextFieldPro
         };
     }
 
-    @autobind
-    private _refCallback(component: ITextField) {
+    private _disposeDelayedFunction() {
+        if (this._delayedFunction) {
+            this._delayedFunction.cancel();
+            this._delayedFunction = null;
+        }
+    }
+
+    private _getDefaultError(): string {
+        if (this.props.required && isNullOrEmpty(this.state.internalValue)) {
+            return "A value is required";
+        }
+    }
+
+    private _refCallback = (component: ITextField) => {
         this._component = component;
     }
 
-    @autobind
-    private _onChange(value: string) {
+    private _onChange = (value: string) => {
         this._disposeDelayedFunction();
 
         const fireChange = () => {
@@ -110,19 +121,6 @@ export class ThrottledTextField extends BaseFluxComponent<IThrottledTextFieldPro
             this._delayedFunction = delay(this, this.props.delay, () => {
                 fireChange();
             });
-        }
-    }
-
-    private _disposeDelayedFunction() {
-        if (this._delayedFunction) {
-            this._delayedFunction.cancel();
-            this._delayedFunction = null;
-        }
-    }
-
-    private _getDefaultError(): string {
-        if (this.props.required && isNullOrEmpty(this.state.internalValue)) {
-            return "A value is required";
         }
     }
 }

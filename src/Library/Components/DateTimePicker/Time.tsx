@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { autobind } from "OfficeFabric/Utilities";
 import { CategoryRange, NumericValueRange, ValueSpinner } from "./ValueSpinner";
 
 export interface ITimeProps {
@@ -157,18 +156,15 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
         }
     }
 
-    @autobind
-    private _onHourChange(value: number) {
+    private _onHourChange = (value: number) => {
         this._changeTime(value, this.state.minute, this.state.isAM);
     }
 
-    @autobind
-    private _onMinuteChange(value: number) {
+    private _onMinuteChange = (value: number) => {
         this._changeTime(this.state.hour, value, this.state.isAM);
     }
 
-    @autobind
-    private _onAMPMChange(value: string) {
+    private _onAMPMChange = (value: string) => {
         const isAM = value && value.toLowerCase() === "am";
         this._changeTime(this.state.hour, this.state.minute, isAM);
     }

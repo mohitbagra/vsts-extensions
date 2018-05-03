@@ -3,7 +3,6 @@ import "./ValueSpinner.scss";
 import * as React from "react";
 
 import { IconButton } from "OfficeFabric/Button";
-import { autobind } from "OfficeFabric/Utilities";
 
 export class NumericValueRange implements IValueRange<number> {
     constructor(
@@ -122,21 +121,19 @@ export class ValueSpinner<T> extends React.Component<IValueSpinnerProp<T>, IValu
         );
     }
 
-    @autobind
-    private _setPreviousValue() {
-        this._onValueChange(this.props.valueRange.getPreviousValue(this.state.value));
-    }
-
-    @autobind
-    private _setNextValue() {
-        this._onValueChange(this.props.valueRange.getNextValue(this.state.value));
-    }
-
     private _onValueChange(value: T) {
         this.setState({ value });
 
         if (this.props.onValueChange) {
             this.props.onValueChange(value);
         }
+    }
+
+    private _setPreviousValue = () => {
+        this._onValueChange(this.props.valueRange.getPreviousValue(this.state.value));
+    }
+
+    private _setNextValue = () => {
+        this._onValueChange(this.props.valueRange.getNextValue(this.state.value));
     }
 }

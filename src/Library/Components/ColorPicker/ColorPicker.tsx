@@ -10,7 +10,7 @@ import {
 import { stringEquals } from "Library/Utilities/String";
 import { DefaultButton } from "OfficeFabric/Button";
 import { Callout } from "OfficeFabric/Callout";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 
 export interface IColorPickerProps extends IBaseFluxComponentProps {
     selectedColor?: string;
@@ -69,8 +69,12 @@ export class ColorPicker extends BaseFluxComponent<IColorPickerProps, IColorPick
         };
     }
 
-    @autobind
-    private _renderColorItem(color: AccessibilityColor, index: number) {
+    private _selectColor(color: string) {
+        this.setState({selectedColor: color, isCalloutOpen: false});
+        this.props.onChange(color);
+    }
+
+    private _renderColorItem = (color: AccessibilityColor, index: number) => {
         const isSelected = stringEquals(this.state.selectedColor, color.asHex(), true);
 
         const onSelectColor: () => void = () => this._selectColor(color.asHex());
@@ -88,18 +92,11 @@ export class ColorPicker extends BaseFluxComponent<IColorPickerProps, IColorPick
         );
     }
 
-    private _selectColor(color: string) {
-        this.setState({selectedColor: color, isCalloutOpen: false});
-        this.props.onChange(color);
-    }
-
-    @autobind
-    private _toggleCallout() {
+    private _toggleCallout = () => {
         this.setState({isCalloutOpen: !this.state.isCalloutOpen});
     }
 
-    @autobind
-    private _onCalloutDismiss() {
+    private _onCalloutDismiss = () => {
         this.setState({isCalloutOpen: false});
     }
 }
