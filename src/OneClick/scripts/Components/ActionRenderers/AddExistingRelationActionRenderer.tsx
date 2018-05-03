@@ -8,7 +8,7 @@ import { ThrottledTextField } from "Library/Components/Utilities/ThrottledTextFi
 import { WorkItemRelationTypePicker } from "Library/Components/VSTS/WorkItemRelationTypePicker";
 import { WorkItemRelationTypeActions } from "Library/Flux/Actions/WorkItemRelationTypeActions";
 import { BaseStore } from "Library/Flux/Stores/BaseStore";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
 import { WorkItemRelationType } from "TFS/WorkItemTracking/Contracts";
 
@@ -75,13 +75,11 @@ export class AddExistingRelationActionRenderer extends BaseFluxComponent<IAddExi
         };
     }
 
-    @autobind
-    private _onWorkItemIdChange(value: string) {
+    private _onWorkItemIdChange = (value: string) => {
         this.props.onWorkItemIdChange(value);
     }
 
-    @autobind
-    private _onWorkItemRelationTypeChange(witRelationType: WorkItemRelationType, value?: string) {
+    private _onWorkItemRelationTypeChange = (witRelationType: WorkItemRelationType, value?: string) => {
         this.props.onRelationTypeChange(witRelationType ? witRelationType.name : value);
     }
 }

@@ -8,7 +8,6 @@ import { BaseStore } from "Library/Flux/Stores/BaseStore";
 import { confirmAction } from "Library/Utilities/Core";
 import { getCurrentUserName } from "Library/Utilities/Identity";
 import { stringEquals } from "Library/Utilities/String";
-import { autobind } from "OfficeFabric/Utilities";
 import { RuleGroupList } from "OneClick/Components/Settings/RuleGroupList";
 import { RuleGroupView } from "OneClick/Components/Settings/RuleGroupView";
 import { SettingKey } from "OneClick/Constants";
@@ -105,8 +104,16 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
         };
     }
 
-    @autobind
-    private async _toggleWorkItemType() {
+    private _clearStores(currentWorkItemType?: string) {
+        StoresHub.ruleGroupStore.clear();
+        StoresHub.settingsStore.clear();
+        StoresHub.ruleStore.clear();
+
+        StoresHub.ruleGroupStore.setCurrentWorkItemType(currentWorkItemType);
+        StoresHub.settingsStore.setCurrentWorkItemType(currentWorkItemType);
+    }
+
+    private _toggleWorkItemType = async () => {
         const confirm = await confirmAction(true, `This setting would be globally applied for "${this.props.workItemTypeName}" work item type in the current project.
         Are you sure you still want to enable this work item type? If you are unsure, please consult your administrator first.`);
 
@@ -115,8 +122,7 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
         }
     }
 
-    @autobind
-    private _refresh(workItemType?: string) {
+    private _refresh = (workItemType?: string) => {
         const workItemTypeName = workItemType || this.props.workItemTypeName;
         this._clearStores(workItemTypeName);
 
@@ -127,17 +133,7 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
         SettingsActions.initializeSetting<boolean>(workItemTypeName, SettingKey.WorkItemTypeEnabled, false, true);
     }
 
-    private _clearStores(currentWorkItemType?: string) {
-        StoresHub.ruleGroupStore.clear();
-        StoresHub.settingsStore.clear();
-        StoresHub.ruleStore.clear();
-
-        StoresHub.ruleGroupStore.setCurrentWorkItemType(currentWorkItemType);
-        StoresHub.settingsStore.setCurrentWorkItemType(currentWorkItemType);
-    }
-
-    @autobind
-    private _toggleSubscription(subscribe: boolean, ruleGroup: IRuleGroup) {
+    private _toggleSubscription = (subscribe: boolean, ruleGroup: IRuleGroup) => {
         if (isPersonalOrGlobalRuleGroup(ruleGroup)) {
             return;
         }

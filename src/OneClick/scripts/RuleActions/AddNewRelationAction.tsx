@@ -7,7 +7,6 @@ import { WorkItemTemplateItemActions } from "Library/Flux/Actions/WorkItemTempla
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
 import { getFormNavigationService, getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
-import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
 import { CoreFieldRefNames } from "OneClick/Constants";
 import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
@@ -172,29 +171,24 @@ export class AddNewRelationAction extends BaseAction {
         return {...attributes};
     }
 
-    @autobind
-    private _onAutoCreateChange(value: boolean) {
+    private _onAutoCreateChange = (value: boolean) => {
         this.setAttribute<boolean>("autoCreate", value);
     }
 
-    @autobind
-    private _onWorkItemTypeChange(value: string) {
+    private _onWorkItemTypeChange = (value: string) => {
         this.setAttribute<string>("workItemType", value);
     }
 
-    @autobind
-    private _onWorkItemRelationTypeChange(value: string) {
+    private _onWorkItemRelationTypeChange = (value: string) => {
         this.setAttribute<string>("relationType", value);
     }
 
-    @autobind
-    private _onTeamChange(value: string) {
+    private _onTeamChange = (value: string) => {
         this.setAttribute<string>("teamId", value, false);
         this.setAttribute<string>("templateId", "");
     }
 
-    @autobind
-    private _onTemplateChange(value: string) {
+    private _onTemplateChange = (value: string) => {
         this.setAttribute<string>("templateId", value);
     }
 }

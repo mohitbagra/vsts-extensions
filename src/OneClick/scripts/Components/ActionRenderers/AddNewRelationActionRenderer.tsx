@@ -20,7 +20,7 @@ import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
 import { Checkbox } from "OfficeFabric/Checkbox";
 import { Dropdown, IDropdownOption, IDropdownProps } from "OfficeFabric/Dropdown";
 import { Link } from "OfficeFabric/Link";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
 import { WebApiTeam } from "TFS/Core/Contracts";
 import {
@@ -196,8 +196,7 @@ export class AddNewRelationActionRenderer extends BaseFluxComponent<IAddNewRelat
         }
     }
 
-    @autobind
-    private _onRenderCallout(props?: IDropdownProps, defaultRender?: (props?: IDropdownProps) => JSX.Element): JSX.Element {
+    private _onRenderCallout = (props?: IDropdownProps, defaultRender?: (props?: IDropdownProps) => JSX.Element): JSX.Element => {
         return (
             <div className="callout-container">
                 {defaultRender(props)}
@@ -205,28 +204,23 @@ export class AddNewRelationActionRenderer extends BaseFluxComponent<IAddNewRelat
         );
     }
 
-    @autobind
-    private _onWorkItemTypeChange(witType: WorkItemType, value?: string) {
+    private _onWorkItemTypeChange = (witType: WorkItemType, value?: string) => {
         this.props.onWorkItemTypeChange(witType ? witType.name : value);
     }
 
-    @autobind
-    private _onWorkItemRelationTypeChange(witRelationType: WorkItemRelationType, value?: string) {
+    private _onWorkItemRelationTypeChange = (witRelationType: WorkItemRelationType, value?: string) => {
         this.props.onRelationTypeChange(witRelationType ? witRelationType.name : value);
     }
 
-    @autobind
-    private _onTeamChange(team: WebApiTeam, value?: string) {
+    private _onTeamChange = (team: WebApiTeam, value?: string) => {
         this.props.onTeamChange(team ? team.id : value);
     }
 
-    @autobind
-    private _onTemplateChange(option: IDropdownOption) {
+    private _onTemplateChange = (option: IDropdownOption) => {
         this.props.onTemplateChange(option.key as string);
     }
 
-    @autobind
-    private _onAutoCreateChange(_ev: React.FormEvent<HTMLElement>, isChecked: boolean) {
+    private _onAutoCreateChange = (_ev: React.FormEvent<HTMLElement>, isChecked: boolean) => {
         this.props.onAutoCreateChange(isChecked);
     }
 }

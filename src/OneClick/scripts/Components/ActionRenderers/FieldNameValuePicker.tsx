@@ -10,7 +10,7 @@ import { WorkItemFieldActions } from "Library/Flux/Actions/WorkItemFieldActions"
 import { BaseStore } from "Library/Flux/Stores/BaseStore";
 import { contains } from "Library/Utilities/Array";
 import { stringEquals } from "Library/Utilities/String";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import { ExcludedFields } from "OneClick/Constants";
 import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
 import { WorkItemField } from "TFS/WorkItemTracking/Contracts";
@@ -90,13 +90,11 @@ export class FieldNameValuePicker extends BaseFluxComponent<IFieldNameValuePicke
         };
     }
 
-    @autobind
-    private _onFieldChange(field: WorkItemField, value?: string) {
+    private _onFieldChange = (field: WorkItemField, value?: string) => {
         this.props.onFieldChange(field ? field.referenceName : value);
     }
 
-    @autobind
-    private _onFieldValueChange(value: any) {
+    private _onFieldValueChange = (value: any) => {
         this.props.onFieldValueChange(value);
     }
 }

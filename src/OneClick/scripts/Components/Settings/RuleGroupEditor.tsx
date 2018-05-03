@@ -12,7 +12,6 @@ import { Checkbox } from "OfficeFabric/Checkbox";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
 import { Overlay } from "OfficeFabric/Overlay";
 import { Panel, PanelType } from "OfficeFabric/Panel";
-import { autobind } from "OfficeFabric/Utilities";
 import { RuleGroupFieldNames, SizeLimits } from "OneClick/Constants";
 import { RuleGroupActions } from "OneClick/Flux/Actions/RuleGroupActions";
 import { IRuleGroup } from "OneClick/Interfaces";
@@ -95,8 +94,7 @@ export class RuleGroupEditor extends BaseFluxComponent<IRuleGroupEditorProps, IR
         };
     }
 
-    @autobind
-    private _onRenderFooter(): JSX.Element {
+    private _onRenderFooter = (): JSX.Element => {
         return (
             <div style={{ textAlign: "right" }}>
                 <PrimaryButton
@@ -116,31 +114,26 @@ export class RuleGroupEditor extends BaseFluxComponent<IRuleGroupEditorProps, IR
         );
     }
 
-    @autobind
-    private _onNameChange(value: string) {
+    private _onNameChange = (value: string) => {
         this.state.ruleGroup.setFieldValue<string>(RuleGroupFieldNames.Name, value);
     }
 
-    @autobind
-    private _onDescriptionChange(value: string) {
+    private _onDescriptionChange = (value: string) => {
         this.state.ruleGroup.setFieldValue<string>(RuleGroupFieldNames.Description, value);
     }
 
-    @autobind
-    private _onToggleDisable(_ev: React.FormEvent<HTMLElement>, isChecked: boolean) {
+    private _onToggleDisable = (_ev: React.FormEvent<HTMLElement>, isChecked: boolean) => {
         this.state.ruleGroup.setFieldValue<boolean>(RuleGroupFieldNames.Disabled, isChecked);
     }
 
-    @autobind
-    private _onKeyDown(e: React.KeyboardEvent<any>) {
+    private _onKeyDown = (e: React.KeyboardEvent<any>) => {
         if (e.ctrlKey && e.keyCode === 83) {
             e.preventDefault();
             this._saveRuleGroup();
         }
     }
 
-    @autobind
-    private async _saveRuleGroup() {
+    private _saveRuleGroup = async () => {
         if (!this.state.ruleGroup.isDirty() || !this.state.ruleGroup.isValid() || this.state.saving) {
             return;
         }
@@ -162,8 +155,7 @@ export class RuleGroupEditor extends BaseFluxComponent<IRuleGroupEditorProps, IR
         }
     }
 
-    @autobind
-    private _onModelChanged() {
+    private _onModelChanged = () => {
         this.setState({ruleGroup: this.state.ruleGroup});
     }
 }

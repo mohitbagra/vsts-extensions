@@ -21,7 +21,6 @@ import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IconButton } from "OfficeFabric/Button";
 import { Fabric } from "OfficeFabric/Fabric";
 import { DirectionalHint, TooltipDelay, TooltipHost } from "OfficeFabric/Tooltip";
-import { autobind } from "OfficeFabric/Utilities";
 import { WorkItemFormRuleButton } from "OneClick/Components/FormGroup/WorkItemFormRuleButton";
 import {
     Constants, CoreFieldRefNames, FormEvents, RuleFieldNames, SettingKey
@@ -188,13 +187,6 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
         return null;
     }
 
-    @autobind
-    private _showErrorsDialog(e: React.MouseEvent<HTMLAnchorElement>) {
-        e.preventDefault();
-        const {ruleExecutionError} = this.state;
-        alert(`${ruleExecutionError.actionName.toUpperCase()} : ${ruleExecutionError.error}`);
-    }
-
     private _renderRules(): JSX.Element {
         if (this.state.loading || !this.state.rules) {
             return <Loading />;
@@ -237,68 +229,6 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
                 onSortEnd={this._reorderRules}
             />
         );
-    }
-
-    @autobind
-    private _renderRuleButton(rule: Rule): JSX.Element {
-        return <WorkItemFormRuleButton rule={rule} onExecute={this._setError} />;
-    }
-
-    @autobind
-    private _setError(ruleExecutionError: IActionError) {
-        this.setState({ruleExecutionError: ruleExecutionError});
-    }
-
-    @autobind
-    private async _reorderRules(data: {oldIndex: number, newIndex: number}) {
-        const {oldIndex, newIndex} = data;
-        if (oldIndex !== newIndex) {
-            let newRules = [...this.state.rules];
-            newRules = arrayMove(newRules, oldIndex, newIndex);
-            this.setState({rules: newRules});
-
-            const newRuleOrder: IDictionaryStringTo<number> = {};
-            for (let i = 0; i < newRules.length; i++) {
-                newRuleOrder[newRules[i].id] = i;
-            }
-
-            this._ruleOrder = newRuleOrder;
-            SettingsDataService.updateSetting<IDictionaryStringTo<number>>(SettingKey.UserRulesOrdering, newRuleOrder, this._workItemTypeName, this._project.id, true);
-        }
-    }
-
-    @autobind
-    private async _openSettingsPage() {
-        const url = getWorkItemTypeSettingsUrl(this._workItemTypeName, this._project.name);
-        window.open(url, "_blank");
-    }
-
-    @autobind
-    private async _refresh() {
-        this._cacheStamp = await SettingsDataService.readCacheStamp(this._workItemTypeName, this._project.id),
-        this._initializeRules(true);
-    }
-
-    private async _fireRulesTrigger(eventName: FormEvents, args: any, rulesToEvaluate?: Rule[]) {
-        const rules = rulesToEvaluate || this.state.rules;
-        if (rules) {
-            for (const rule of rules) {
-                const shouldRunOnEvent = await rule.shouldRunOnEvent(eventName, args);
-                if (shouldRunOnEvent) {
-                    const errors = await rule.run();
-                    this._setError(errors);
-
-                    // log event
-                    trackEvent("RuleTrigger", {
-                        ruleId: rule.id,
-                        triggerEvent: eventName,
-                        workItemType: rule.getFieldValue<string>(RuleFieldNames.WorkItemType),
-                        projectId: rule.getFieldValue<string>(RuleFieldNames.ProjectId),
-                        user: getCurrentUserName()
-                    });
-                }
-            }
-        }
     }
 
     private async _initializeRules(forceFromServer: boolean): Promise<Rule[]> {
@@ -392,8 +322,99 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
         return null;
     }
 
-    @autobind
-    private async _refreshFromServer(): Promise<IRule[]> {
+    private async _filterExistingRuleGroups(ruleGroupIds: string[]): Promise<{existingRuleGroupIds: string[], deletedRuleGroupIds: string[]}> {
+        const workItemTypeName = this._workItemTypeName;
+        const projectId = this._project.id;
+        const allRuleGroups = await RuleGroupsDataService.loadRuleGroups(workItemTypeName, projectId);
+        const deletedRuleGroupIds = subtract(ruleGroupIds, allRuleGroups.map(rg => rg.id), (s1, s2) => stringEquals(s1, s2, true));
+
+        // return all groups with required ids which are not disabled
+        return {
+            existingRuleGroupIds: allRuleGroups.filter(sg => !sg.disabled && contains(ruleGroupIds, sg.id, (s1, s2) => stringEquals(s1, s2, true))).map(sg => sg.id),
+            deletedRuleGroupIds: deletedRuleGroupIds
+        };
+    }
+
+    private _getLocalStorageKey(): string {
+        return `${this._project.id}/${this._workItemTypeName}`.toLowerCase();
+    }
+
+    private async _saveWorkItem() {
+        const formService = await getFormService();
+        formService.save();
+    }
+
+    private async _fireRulesTrigger(eventName: FormEvents, args: any, rulesToEvaluate?: Rule[]) {
+        const rules = rulesToEvaluate || this.state.rules;
+        if (rules) {
+            for (const rule of rules) {
+                const shouldRunOnEvent = await rule.shouldRunOnEvent(eventName, args);
+                if (shouldRunOnEvent) {
+                    const errors = await rule.run();
+                    this._setError(errors);
+
+                    // log event
+                    trackEvent("RuleTrigger", {
+                        ruleId: rule.id,
+                        triggerEvent: eventName,
+                        workItemType: rule.getFieldValue<string>(RuleFieldNames.WorkItemType),
+                        projectId: rule.getFieldValue<string>(RuleFieldNames.ProjectId),
+                        user: getCurrentUserName()
+                    });
+                }
+            }
+        }
+    }
+
+    private _showErrorsDialog = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
+        const {ruleExecutionError} = this.state;
+        alert(`${ruleExecutionError.actionName.toUpperCase()} : ${ruleExecutionError.error}`);
+    }
+
+    private _renderRuleButton = (rule: Rule): JSX.Element => {
+        return <WorkItemFormRuleButton rule={rule} onExecute={this._setError} />;
+    }
+
+    private _setError = (ruleExecutionError: IActionError) => {
+        this.setState({ruleExecutionError: ruleExecutionError});
+    }
+
+    private _reorderRules = (data: {oldIndex: number, newIndex: number}) => {
+        const {oldIndex, newIndex} = data;
+        if (oldIndex !== newIndex) {
+            let newRules = [...this.state.rules];
+            newRules = arrayMove(newRules, oldIndex, newIndex);
+            this.setState({rules: newRules});
+
+            const newRuleOrder: IDictionaryStringTo<number> = {};
+            for (let i = 0; i < newRules.length; i++) {
+                newRuleOrder[newRules[i].id] = i;
+            }
+
+            this._ruleOrder = newRuleOrder;
+            SettingsDataService.updateSetting<IDictionaryStringTo<number>>(SettingKey.UserRulesOrdering, newRuleOrder, this._workItemTypeName, this._project.id, true);
+        }
+    }
+
+    private _openSettingsPage = () => {
+        const url = getWorkItemTypeSettingsUrl(this._workItemTypeName, this._project.name);
+        window.open(url, "_blank");
+    }
+
+    private _refresh = async () => {
+        this._cacheStamp = await SettingsDataService.readCacheStamp(this._workItemTypeName, this._project.id),
+        this._initializeRules(true);
+    }
+
+    private _onKeyDown = (e: React.KeyboardEvent<any>) => {
+        if (e.ctrlKey && e.keyCode === 83) {
+            e.preventDefault();
+            this._saveWorkItem();
+        }
+    }
+
+    private _refreshFromServer = async (): Promise<IRule[]> => {
         const workItemTypeName = this._workItemTypeName;
         const projectId = this._project.id;
 
@@ -445,36 +466,6 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
         }
 
         return rules;
-    }
-
-    private async _filterExistingRuleGroups(ruleGroupIds: string[]): Promise<{existingRuleGroupIds: string[], deletedRuleGroupIds: string[]}> {
-        const workItemTypeName = this._workItemTypeName;
-        const projectId = this._project.id;
-        const allRuleGroups = await RuleGroupsDataService.loadRuleGroups(workItemTypeName, projectId);
-        const deletedRuleGroupIds = subtract(ruleGroupIds, allRuleGroups.map(rg => rg.id), (s1, s2) => stringEquals(s1, s2, true));
-
-        // return all groups with required ids which are not disabled
-        return {
-            existingRuleGroupIds: allRuleGroups.filter(sg => !sg.disabled && contains(ruleGroupIds, sg.id, (s1, s2) => stringEquals(s1, s2, true))).map(sg => sg.id),
-            deletedRuleGroupIds: deletedRuleGroupIds
-        };
-    }
-
-    private _getLocalStorageKey(): string {
-        return `${this._project.id}/${this._workItemTypeName}`.toLowerCase();
-    }
-
-    @autobind
-    private _onKeyDown(e: React.KeyboardEvent<any>) {
-        if (e.ctrlKey && e.keyCode === 83) {
-            e.preventDefault();
-            this._saveWorkItem();
-        }
-    }
-
-    private async _saveWorkItem() {
-        const formService = await getFormService();
-        formService.save();
     }
 }
 

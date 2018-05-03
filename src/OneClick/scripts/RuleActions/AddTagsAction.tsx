@@ -8,7 +8,6 @@ import {
 } from "Library/Utilities/String";
 import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
-import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
 import { CoreFieldRefNames } from "OneClick/Constants";
 import { BaseAction } from "OneClick/RuleActions/BaseAction";
@@ -84,8 +83,7 @@ export class AddTagsAction extends BaseAction {
         };
     }
 
-    @autobind
-    private _onTagsChange(tags: string[]) {
+    private _onTagsChange = (tags: string[]) => {
         this.setAttribute<string>("tags", tags.join(";"));
     }
 }

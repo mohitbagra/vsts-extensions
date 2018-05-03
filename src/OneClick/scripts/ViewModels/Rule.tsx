@@ -3,7 +3,6 @@ import * as React from "react";
 import { getCurrentUser } from "Library/Utilities/Identity";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
 import { IconButton } from "OfficeFabric/Button";
-import { autobind } from "OfficeFabric/Utilities";
 import { FormEvents, RuleFieldNames, SizeLimits } from "OneClick/Constants";
 import { getActionType, getTriggerType } from "OneClick/ImportRegisteredArtifacts";
 import { IAction, IActionError, IRule, ITrigger } from "OneClick/Interfaces";
@@ -225,20 +224,6 @@ export class Rule extends Observable<void> {
         return await trigger.shouldTrigger(triggerArgs);
     }
 
-    @autobind
-    private _onRemoveActionButtonClick(action: BaseAction): (event: React.MouseEvent<HTMLButtonElement>) => void {
-        return () => {
-            this._removeAction(action);
-        };
-    }
-
-    @autobind
-    private _onRemoveTriggerButtonClick(trigger: BaseTrigger): (event: React.MouseEvent<HTMLButtonElement>) => void {
-        return () => {
-            this._removeTrigger(trigger);
-        };
-    }
-
     private _removeAction(action: BaseAction) {
         this._unsubscribeFromAction(action);
         this._actions = this._actions.filter((a: BaseAction) => !stringEquals(a.id, action.id, true));
@@ -249,11 +234,6 @@ export class Rule extends Observable<void> {
         this._unsubscribeFromTrigger(trigger);
         this._triggers = this._triggers.filter((t: BaseTrigger) => !stringEquals(t.id, trigger.id, true));
         this._emitChanged();
-    }
-
-    @autobind
-    private _emitChanged() {
-        this.notify(null, null);
     }
 
     private _prepareActions(actionModels: IAction[]): BaseAction[] {
@@ -296,5 +276,21 @@ export class Rule extends Observable<void> {
 
     private _unsubscribeFromTrigger(trigger: BaseTrigger) {
         trigger.removeChangedListener(this._emitChanged);
+    }
+
+    private _onRemoveActionButtonClick = (action: BaseAction): (event: React.MouseEvent<HTMLButtonElement>) => void => {
+        return () => {
+            this._removeAction(action);
+        };
+    }
+
+    private _onRemoveTriggerButtonClick = (trigger: BaseTrigger): (event: React.MouseEvent<HTMLButtonElement>) => void => {
+        return () => {
+            this._removeTrigger(trigger);
+        };
+    }
+
+    private _emitChanged = () => {
+        this.notify(null, null);
     }
 }

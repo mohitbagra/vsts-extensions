@@ -15,7 +15,7 @@ import { Label } from "OfficeFabric/Label";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
 import { Overlay } from "OfficeFabric/Overlay";
 import { Panel, PanelType } from "OfficeFabric/Panel";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import { RuleFieldNames, SizeLimits } from "OneClick/Constants";
 import { RuleActions } from "OneClick/Flux/Actions/RuleActions";
 import { registeredActions, registeredTriggers } from "OneClick/ImportRegisteredArtifacts";
@@ -158,8 +158,7 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
         return this.state.rule.renderActions();
     }
 
-    @autobind
-    private _onRenderHeader(): JSX.Element {
+    private _onRenderHeader = (): JSX.Element => {
         return (
             <div className="rule-editor-panel-header">
                 <Label className="rule-editor-header-text">
@@ -224,22 +223,19 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
         );
     }
 
-    @autobind
-    private _showTriggers() {
+    private _showTriggers = () => {
         if (!this.state.showTriggers) {
             this.setState({showTriggers: true});
         }
     }
 
-    @autobind
-    private _showActions() {
+    private _showActions = () => {
         if (this.state.showTriggers) {
             this.setState({showTriggers: false});
         }
     }
 
-    @autobind
-    private _onRenderFooter(): JSX.Element {
+    private _onRenderFooter = (): JSX.Element => {
         return (
             <div style={{ textAlign: "right" }}>
                 <PrimaryButton
@@ -259,41 +255,34 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
         );
     }
 
-    @autobind
-    private _onNameChange(value: string) {
+    private _onNameChange = (value: string) => {
         this.state.rule.setFieldValue<string>(RuleFieldNames.Name, value);
     }
 
-    @autobind
-    private _onDescriptionChange(value: string) {
+    private _onDescriptionChange = (value: string) => {
         this.state.rule.setFieldValue<string>(RuleFieldNames.Description, value);
     }
 
-    @autobind
-    private _onToggleDisable(_ev: React.FormEvent<HTMLElement>, isChecked: boolean) {
+    private _onToggleDisable = (_ev: React.FormEvent<HTMLElement>, isChecked: boolean) => {
         this.state.rule.setFieldValue<boolean>(RuleFieldNames.Disabled, isChecked);
     }
 
-    @autobind
-    private _onToggleFormVisibility(_ev: React.FormEvent<HTMLElement>, isChecked: boolean) {
+    private _onToggleFormVisibility = (_ev: React.FormEvent<HTMLElement>, isChecked: boolean) => {
         this.state.rule.setFieldValue<boolean>(RuleFieldNames.HideOnForm, isChecked);
     }
 
-    @autobind
-    private _onColorChange(value: string) {
+    private _onColorChange = (value: string) => {
         this.state.rule.setFieldValue<string>(RuleFieldNames.Color, value);
     }
 
-    @autobind
-    private _onKeyDown(e: React.KeyboardEvent<any>) {
+    private _onKeyDown = (e: React.KeyboardEvent<any>) => {
         if (e.ctrlKey && e.keyCode === 83) {
             e.preventDefault();
             this._saveRule();
         }
     }
 
-    @autobind
-    private async _saveRule() {
+    private _saveRule = async () => {
         if (!this.state.rule.isDirty() || !this.state.rule.isValid() || this.state.saving) {
             return;
         }
@@ -315,8 +304,7 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
         }
     }
 
-    @autobind
-    private _onModelChanged() {
+    private _onModelChanged = () => {
         this.setState({rule: this.state.rule});
     }
 }

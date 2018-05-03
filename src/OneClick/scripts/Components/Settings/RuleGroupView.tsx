@@ -23,7 +23,7 @@ import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
 import {
     DirectionalHint, TooltipDelay, TooltipHost, TooltipOverflowMode
 } from "OfficeFabric/Tooltip";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import * as RuleEditor_Async from "OneClick/Components/Settings/RuleEditor";
 import { RuleGroupEditor } from "OneClick/Components/Settings/RuleGroupEditor";
 import { Constants, SettingKey } from "OneClick/Constants";
@@ -199,14 +199,6 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         } as IRuleGroupViewState;
     }
 
-    @autobind
-    private async _onHeaderLinkClick(e: React.MouseEvent<HTMLElement>) {
-        if (!e.ctrlKey) {
-            e.preventDefault();
-            this._goBack();
-        }
-    }
-
     private _getHubCommands(): IPivotBarAction[] {
         const menuItems: IPivotBarAction[] = [
             {
@@ -272,18 +264,6 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
             );
         }
         return null;
-    }
-
-    @autobind
-    private _navigateToTargetRuleGroup(e: React.MouseEvent<HTMLAnchorElement>) {
-        e.preventDefault();
-        this._dismissToastNotification();
-        navigate({ witName: this.props.workItemTypeName, ruleGroup: this.state.targetRuleGroupId });
-    }
-
-    @autobind
-    private _dismissToastNotification() {
-        this.setState({targetRuleGroupId: null, isMovedToTargetGroup: false});
     }
 
     private _renderRules(): React.ReactNode {
@@ -429,8 +409,48 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         ];
     }
 
-    @autobind
-    private _renderNameColumn(rule: IRule): React.ReactNode {
+    private _getMoveCopySubMenuItems(isMove: boolean, rule: IRule) {
+        return this.state.allRuleGroups
+            .filter(rg => isMove ? !stringEquals(rg.id, this.state.ruleGroup.id, true) : true)
+            .map(rg => ({
+                key: rg.id,
+                name: rg.name,
+                title: rg.description,
+                data: rule,
+                onClick: isMove ? this._moveToRuleGroup : this._copyToRuleGroup
+            }));
+    }
+
+    private _onRowClick(e: React.MouseEvent<HTMLElement>, rule: IRule) {
+        e.preventDefault();
+        this._showRulePanel(rule);
+    }
+
+    private async _deleteRule(rule: IRule) {
+        const confirm = await confirmAction(true, "Are you sure you want to delete this rule?");
+        if (confirm) {
+            RuleActions.deleteRule(this.props.ruleGroupId, rule);
+        }
+    }
+
+    private _onHeaderLinkClick = (e: React.MouseEvent<HTMLElement>) => {
+        if (!e.ctrlKey) {
+            e.preventDefault();
+            this._goBack();
+        }
+    }
+
+    private _navigateToTargetRuleGroup = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
+        this._dismissToastNotification();
+        navigate({ witName: this.props.workItemTypeName, ruleGroup: this.state.targetRuleGroupId });
+    }
+
+    private _dismissToastNotification = () => {
+        this.setState({targetRuleGroupId: null, isMovedToTargetGroup: false});
+    }
+
+    private _renderNameColumn = (rule: IRule): React.ReactNode => {
         return (
             <div className="name-column-cell">
                 <TooltipHost
@@ -452,8 +472,7 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         );
     }
 
-    @autobind
-    private _getRulesGridContextMenuItems(rule: IRule): IContextualMenuItem[] {
+    private _getRulesGridContextMenuItems = (rule: IRule): IContextualMenuItem[] => {
         return [
             {
                 key: "edit", name: "Edit", iconProps: {iconName: "Edit"},
@@ -484,20 +503,7 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         ];
     }
 
-    private _getMoveCopySubMenuItems(isMove: boolean, rule: IRule) {
-        return this.state.allRuleGroups
-            .filter(rg => isMove ? !stringEquals(rg.id, this.state.ruleGroup.id, true) : true)
-            .map(rg => ({
-                key: rg.id,
-                name: rg.name,
-                title: rg.description,
-                data: rule,
-                onClick: isMove ? this._moveToRuleGroup : this._copyToRuleGroup
-            }));
-    }
-
-    @autobind
-    private async _moveToRuleGroup(_ev: React.MouseEvent<HTMLElement>, item: IContextualMenuItem) {
+    private _moveToRuleGroup = async (_ev: React.MouseEvent<HTMLElement>, item: IContextualMenuItem) => {
         const ruleModel: IRule = {...item.data};
         delete ruleModel.id;
         delete ruleModel.__etag;
@@ -510,8 +516,7 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         RuleActions.deleteRule(this.props.ruleGroupId, item.data as IRule);
     }
 
-    @autobind
-    private async _copyToRuleGroup(_ev: React.MouseEvent<HTMLElement>, item: IContextualMenuItem) {
+    private _copyToRuleGroup = async (_ev: React.MouseEvent<HTMLElement>, item: IContextualMenuItem) => {
         const ruleModel: IRule = {...item.data};
         delete ruleModel.id;
         delete ruleModel.__etag;
@@ -526,25 +531,11 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         this.setState({targetRuleGroupId: targetRuleGroupId, isMovedToTargetGroup: false});
     }
 
-    private _onRowClick(e: React.MouseEvent<HTMLElement>, rule: IRule) {
-        e.preventDefault();
-        this._showRulePanel(rule);
-    }
-
-    @autobind
-    private _toggleSubscription() {
+    private _toggleSubscription = () => {
         this.props.toggleSubscription(!this.state.isSubscribed, this.state.ruleGroup);
     }
 
-    private async _deleteRule(rule: IRule) {
-        const confirm = await confirmAction(true, "Are you sure you want to delete this rule?");
-        if (confirm) {
-            RuleActions.deleteRule(this.props.ruleGroupId, rule);
-        }
-    }
-
-    @autobind
-    private async _deleteRuleGroup() {
+    private _deleteRuleGroup = async () => {
         if (!this.state.ruleGroup) {
             return;
         }
@@ -557,29 +548,24 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         }
     }
 
-    @autobind
-    private _showRulePanel(rule?: IRule) {
+    private _showRulePanel = (rule?: IRule) => {
         this.setState({isRulePanelOpen: true, isGroupPanelOpen: false, selectedRuleForEdit: rule});
     }
 
-    @autobind
-    private _showEditGroupPanel() {
+    private _showEditGroupPanel = () => {
         this.setState({isRulePanelOpen: false, isGroupPanelOpen: true, selectedRuleForEdit: null});
     }
 
-    @autobind
-    private _hidePanel() {
+    private _hidePanel = () => {
         this.setState({isRulePanelOpen: false, isGroupPanelOpen: false, selectedRuleForEdit: null});
     }
 
-    @autobind
-    private _refresh() {
+    private _refresh = () => {
         this.props.refresh();
         RuleActions.refreshRules(this.state.ruleGroup.id);
     }
 
-    @autobind
-    private _goBack() {
+    private _goBack = () => {
         navigate({ witName: this.props.workItemTypeName });
     }
 }

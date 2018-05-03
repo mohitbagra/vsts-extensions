@@ -8,7 +8,6 @@ import { getAsyncLoadedComponent } from "Library/Components/Utilities/AsyncLoade
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
 import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
-import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
 import { CoreFieldRefNames } from "OneClick/Constants";
 import { BaseAction } from "OneClick/RuleActions/BaseAction";
@@ -73,8 +72,7 @@ export class AddCommentAction extends BaseAction {
         };
     }
 
-    @autobind
-    private _onCommentChange(value: string) {
+    private _onCommentChange = (value: string) => {
         this.setAttribute<string>("comment", value);
     }
 }

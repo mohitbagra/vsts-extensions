@@ -7,7 +7,7 @@ import {
     BaseFluxComponent, IBaseFluxComponentProps, IBaseFluxComponentState
 } from "Library/Components/Utilities/BaseFluxComponent";
 import { getCurrentUserName } from "Library/Utilities/Identity";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import { RuleFieldNames } from "OneClick/Constants";
 import { IActionError } from "OneClick/Interfaces";
 import { trackEvent } from "OneClick/Telemetry";
@@ -51,8 +51,7 @@ export class WorkItemFormRuleButton extends BaseFluxComponent<IWorkItemFormRuleB
         );
     }
 
-    @autobind
-    private async _onRuleClick() {
+    private _onRuleClick = async () => {
         if (!this.state.disabled) {
             this.setState({disabled: true});
 

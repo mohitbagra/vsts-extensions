@@ -8,7 +8,6 @@ import { isInteger, isNumeric } from "Library/Utilities/Number";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
 import { getFormService, getWorkItemField } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
-import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
 import { ExcludedFields, FormEvents } from "OneClick/Constants";
 import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
@@ -192,20 +191,17 @@ export class FieldChangedTrigger extends BaseTrigger {
         return "";
     }
 
-    @autobind
-    private _onFieldChange(fieldName: string) {
+    private _onFieldChange = (fieldName: string) => {
         this.setAttribute<string>("fieldName", fieldName || "", false);
         this.setAttribute<string>("oldFieldValue", "", false);
         this._onNewFieldValueChange("");
     }
 
-    @autobind
-    private _onOldFieldValueChange(fieldValue: string) {
+    private _onOldFieldValueChange = (fieldValue: string) => {
         this.setAttribute<string>("oldFieldValue", fieldValue || "");
     }
 
-    @autobind
-    private _onNewFieldValueChange(fieldValue: string) {
+    private _onNewFieldValueChange = (fieldValue: string) => {
         this.setAttribute<string>("newFieldValue", fieldValue || "");
     }
 }

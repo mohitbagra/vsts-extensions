@@ -23,7 +23,7 @@ import { Toggle } from "OfficeFabric/Toggle";
 import {
     DirectionalHint, TooltipDelay, TooltipHost, TooltipOverflowMode
 } from "OfficeFabric/Tooltip";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import { RuleGroupEditor } from "OneClick/Components/Settings/RuleGroupEditor";
 import { SettingKey } from "OneClick/Constants";
 import { RuleGroupActions } from "OneClick/Flux/Actions/RuleGroupActions";
@@ -362,8 +362,50 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
         ];
     }
 
-    @autobind
-    private _renderNameColumn(ruleGroup: IRuleGroup): React.ReactNode {
+    private _toggleSubscription(subscribe: boolean, ruleGroup: IRuleGroup) {
+        this.props.toggleSubscription(subscribe, ruleGroup);
+    }
+
+    private async _deleteRuleGroup(ruleGroup: IRuleGroup) {
+        const confirm = await confirmAction(true, "Are you sure you want to delete this shared rule group?");
+        if (confirm) {
+            RuleGroupActions.deleteRuleGroup(this.props.workItemTypeName, ruleGroup);
+        }
+    }
+
+    private _onRowClick(e: React.MouseEvent<HTMLElement>, ruleGroup: IRuleGroup) {
+        if (!e.ctrlKey) {
+            e.preventDefault();
+            navigate({witName: this.props.workItemTypeName, ruleGroup: ruleGroup.id});
+        }
+    }
+
+    private _getSubscribedGroupsMap(groupIds: string[]): IDictionaryStringTo<boolean> {
+        if (!groupIds) {
+            return null;
+        }
+
+        const map: IDictionaryStringTo<boolean> = {};
+        for (const id of groupIds) {
+            map[id.toLowerCase()] = true;
+        }
+
+        return map;
+    }
+
+    private _filterGroups(filterText: string, personalRulesEnabled: boolean, globalRulesEnabled: boolean): IRuleGroup[] {
+        const ruleGroups = StoresHub.ruleGroupStore.getAll(personalRulesEnabled, globalRulesEnabled);
+        if (ruleGroups && !isNullOrEmpty(filterText)) {
+            return ruleGroups.filter(rg =>
+                caseInsensitiveContains(rg.name, filterText)
+                || caseInsensitiveContains(getDistinctNameFromIdentityRef(rg.createdBy), filterText)
+                || caseInsensitiveContains(rg.description, filterText));
+        }
+
+        return ruleGroups;
+    }
+
+    private _renderNameColumn = (ruleGroup: IRuleGroup): React.ReactNode => {
         const isSubscribed = this._isRuleGroupSubscribed(ruleGroup);
         const link = getRuleGroupUrl(this.props.workItemTypeName, ruleGroup.id);
         let iconTooltip: string;
@@ -430,8 +472,7 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
         );
     }
 
-    @autobind
-    private _getGridContextMenuItems(ruleGroup: IRuleGroup): IContextualMenuItem[] {
+    private _getGridContextMenuItems = (ruleGroup: IRuleGroup): IContextualMenuItem[] => {
         const menuItems: IContextualMenuItem[] = [
             {
                 key: "open", name: "Open", iconProps: {iconName: "ReplyMirrored"},
@@ -458,85 +499,44 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
         return menuItems;
     }
 
-    @autobind
-    private _refresh() {
+    private _refresh = () => {
         this.props.refresh();
     }
 
-    private _toggleSubscription(subscribe: boolean, ruleGroup: IRuleGroup) {
-        this.props.toggleSubscription(subscribe, ruleGroup);
-    }
-
-    private async _deleteRuleGroup(ruleGroup: IRuleGroup) {
-        const confirm = await confirmAction(true, "Are you sure you want to delete this shared rule group?");
-        if (confirm) {
-            RuleGroupActions.deleteRuleGroup(this.props.workItemTypeName, ruleGroup);
-        }
-    }
-
-    private _onRowClick(e: React.MouseEvent<HTMLElement>, ruleGroup: IRuleGroup) {
-        if (!e.ctrlKey) {
-            e.preventDefault();
-            navigate({witName: this.props.workItemTypeName, ruleGroup: ruleGroup.id});
-        }
-    }
-
-    private _getSubscribedGroupsMap(groupIds: string[]): IDictionaryStringTo<boolean> {
-        if (!groupIds) {
-            return null;
-        }
-
-        const map: IDictionaryStringTo<boolean> = {};
-        for (const id of groupIds) {
-            map[id.toLowerCase()] = true;
-        }
-
-        return map;
-    }
-
-    @autobind
-    private _isRuleGroupSubscribed(ruleGroup: IRuleGroup): boolean {
+    private _isRuleGroupSubscribed = (ruleGroup: IRuleGroup): boolean => {
         return isPersonalOrGlobalRuleGroup(ruleGroup)
             || (this.state.subscribedRuleGroupMap && this.state.subscribedRuleGroupMap[ruleGroup.id.toLowerCase()]);
     }
 
-    @autobind
-    private _showGroupPanel(ruleGroup?: IRuleGroup) {
+    private _showGroupPanel = (ruleGroup?: IRuleGroup) => {
         this.setState({isGroupPanelOpen: true, selectedRuleGroupForEdit: ruleGroup});
     }
 
-    @autobind
-    private _hideGroupPanel() {
+    private _hideGroupPanel = () => {
         this.setState({isGroupPanelOpen: false, selectedRuleGroupForEdit: null});
     }
 
-    @autobind
-    private _showSettingsPanel() {
+    private _showSettingsPanel = () => {
         this.setState({isSettingsPanelOpen: true});
     }
 
-    @autobind
-    private _hideSettingsPanel() {
+    private _hideSettingsPanel = () => {
         this.setState({isSettingsPanelOpen: false});
     }
 
-    @autobind
-    private _togglePersonalRules(enabled: boolean) {
+    private _togglePersonalRules = (enabled: boolean) => {
         SettingsActions.updateSetting<boolean>(this.props.workItemTypeName, SettingKey.PersonalRulesEnabled, enabled, false);
     }
 
-    @autobind
-    private _toggleGlobalRules(enabled: boolean) {
+    private _toggleGlobalRules = (enabled: boolean) => {
         SettingsActions.updateSetting<boolean>(this.props.workItemTypeName, SettingKey.GlobalRulesEnabled, enabled, false);
     }
 
-    @autobind
-    private _toggleWorkItemType(enabled: boolean) {
+    private _toggleWorkItemType = (enabled: boolean) => {
         SettingsActions.updateSetting<boolean>(this.props.workItemTypeName, SettingKey.WorkItemTypeEnabled, enabled, false);
     }
 
-    @autobind
-    private _onFilterChange(filterState: IFilterState) {
+    private _onFilterChange = (filterState: IFilterState) => {
         if (filterState && filterState.keyword) {
             const filterText = (filterState.keyword.value || "").trim();
             this.setState({
@@ -546,27 +546,13 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
         }
     }
 
-    private _filterGroups(filterText: string, personalRulesEnabled: boolean, globalRulesEnabled: boolean): IRuleGroup[] {
-        const ruleGroups = StoresHub.ruleGroupStore.getAll(personalRulesEnabled, globalRulesEnabled);
-        if (ruleGroups && !isNullOrEmpty(filterText)) {
-            return ruleGroups.filter(rg =>
-                caseInsensitiveContains(rg.name, filterText)
-                || caseInsensitiveContains(getDistinctNameFromIdentityRef(rg.createdBy), filterText)
-                || caseInsensitiveContains(rg.description, filterText));
-        }
-
-        return ruleGroups;
-    }
-
-    @autobind
-    private _focusFilterBar(ev: KeyboardEvent) {
+    private _focusFilterBar = (ev: KeyboardEvent) => {
         if (this._filterBar && ev.ctrlKey && ev.shiftKey && stringEquals(ev.key, "f", true)) {
             this._filterBar.focus();
         }
     }
 
-    @autobind
-    private _resolveFilterBar(filterBar: IFilterBar) {
+    private _resolveFilterBar = (filterBar: IFilterBar) => {
         this._filterBar = filterBar;
     }
 }

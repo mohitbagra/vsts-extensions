@@ -8,7 +8,6 @@ import { isInteger, isNumeric } from "Library/Utilities/Number";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
 import { getFormService, getWorkItemField } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
-import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
 import { ExcludedFields } from "OneClick/Constants";
 import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
@@ -163,14 +162,12 @@ export class SetFieldValueAction extends BaseAction {
         return "";
     }
 
-    @autobind
-    private _onFieldChange(fieldName: string) {
+    private _onFieldChange = (fieldName: string) => {
         this.setAttribute<string>("fieldName", fieldName || "", false);
         this._onFieldValueChange("");
     }
 
-    @autobind
-    private _onFieldValueChange(fieldValue: string) {
+    private _onFieldValueChange = (fieldValue: string) => {
         this.setAttribute<string>("fieldValue", fieldValue || "");
     }
 }

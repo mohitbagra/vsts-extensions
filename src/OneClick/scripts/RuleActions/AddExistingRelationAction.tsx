@@ -6,7 +6,6 @@ import { isInteger } from "Library/Utilities/Number";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
 import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
-import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
 import { StoresHub } from "OneClick/Flux/Stores/StoresHub";
 import { translateToFieldValue } from "OneClick/Helpers";
@@ -106,16 +105,6 @@ export class AddExistingRelationAction extends BaseAction {
         };
     }
 
-    @autobind
-    private _onWorkItemIdChange(value: string) {
-        this.setAttribute<string>("workItemId", value);
-    }
-
-    @autobind
-    private _onWorkItemRelationTypeChange(value: string) {
-        this.setAttribute<string>("relationType", value);
-    }
-
     private _getWorkItemIdError(id: string): string {
         if (BaseMacro.isMacro(id) && BaseMacro.getMacroType(id)) {
             return null;
@@ -129,5 +118,13 @@ export class AddExistingRelationAction extends BaseAction {
             return "Invalid integer value";
         }
         return "";
+    }
+
+    private _onWorkItemIdChange = (value: string) => {
+        this.setAttribute<string>("workItemId", value);
+    }
+
+    private _onWorkItemRelationTypeChange = (value: string) => {
+        this.setAttribute<string>("relationType", value);
     }
 }

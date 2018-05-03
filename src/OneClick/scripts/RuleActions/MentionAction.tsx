@@ -9,7 +9,6 @@ import { parseUniquefiedIdentityName } from "Library/Utilities/Identity";
 import { isNullOrEmpty, stringEquals } from "Library/Utilities/String";
 import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IIconProps } from "OfficeFabric/Icon";
-import { autobind } from "OfficeFabric/Utilities";
 import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
 import { CoreFieldRefNames } from "OneClick/Constants";
 import { translateToFieldValue } from "OneClick/Helpers";
@@ -123,13 +122,11 @@ export class MentionAction extends BaseAction {
         };
     }
 
-    @autobind
-    private _onPersonsChange(value: string) {
+    private _onPersonsChange = (value: string) => {
         this.setAttribute<string>("personNames", value);
     }
 
-    @autobind
-    private _onMessageChange(value: string) {
+    private _onMessageChange = (value: string) => {
         this.setAttribute<string>("message", value);
     }
 }
