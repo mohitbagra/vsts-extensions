@@ -29,7 +29,6 @@ import { Dropdown, IDropdownOption, IDropdownProps } from "OfficeFabric/Dropdown
 import { Link } from "OfficeFabric/Link";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
 import { Overlay } from "OfficeFabric/Overlay";
-import { autobind } from "OfficeFabric/Utilities";
 import { WebApiTeam } from "TFS/Core/Contracts";
 import {
     FieldType, WorkItemField, WorkItemTemplateReference, WorkItemType
@@ -280,8 +279,11 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
         return url;
     }
 
-    @autobind
-    private _dismissErrorMessage() {
+    private _onChange<T extends string | boolean | Date | number>(fieldName: BugBashFieldNames, fieldValue: T) {
+        this.props.bugBash.setFieldValue<T>(fieldName, fieldValue);
+    }
+
+    private _dismissErrorMessage = () => {
         setTimeout(
             () => {
                 ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashError);
@@ -290,8 +292,7 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
         );
     }
 
-    @autobind
-    private _onRenderCallout(props?: IDropdownProps, defaultRender?: (props?: IDropdownProps) => JSX.Element): JSX.Element {
+    private _onRenderCallout = (props?: IDropdownProps, defaultRender?: (props?: IDropdownProps) => JSX.Element): JSX.Element => {
         return (
             <div className="callout-container">
                 {defaultRender(props)}
@@ -299,61 +300,47 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
         );
     }
 
-    @autobind
-    private _onEditorKeyDown(e: React.KeyboardEvent<any>) {
+    private _onEditorKeyDown = (e: React.KeyboardEvent<any>) => {
         if (e.ctrlKey && e.keyCode === 83) {
             e.preventDefault();
             this.props.bugBash.save();
         }
     }
 
-    private _onChange<T extends string | boolean | Date | number>(fieldName: BugBashFieldNames, fieldValue: T) {
-        this.props.bugBash.setFieldValue<T>(fieldName, fieldValue);
-    }
-
-    @autobind
-    private _onTitleChange(value: string) {
+    private _onTitleChange = (value: string) => {
         this._onChange(BugBashFieldNames.Title, value);
     }
 
-    @autobind
-    private _onStartDateChange(value: Date) {
+    private _onStartDateChange = (value: Date) => {
         this._onChange(BugBashFieldNames.StartTime, value);
     }
 
-    @autobind
-    private _onEndDateChange(value: Date) {
+    private _onEndDateChange = (value: Date) => {
         this._onChange(BugBashFieldNames.EndTime, value);
     }
 
-    @autobind
-    private _onAutoAcceptChange(_ev: React.FormEvent<HTMLElement>, isChecked: boolean) {
+    private _onAutoAcceptChange = (_ev: React.FormEvent<HTMLElement>, isChecked: boolean) => {
         this._onChange(BugBashFieldNames.AutoAccept, isChecked);
     }
 
-    @autobind
-    private _onTemplateChange(option: IDropdownOption) {
+    private _onTemplateChange = (option: IDropdownOption) => {
         this._onChange(BugBashFieldNames.AcceptTemplateId, option.key as string);
     }
 
-    @autobind
-    private _onFieldChange(field: WorkItemField, value?: string) {
+    private _onFieldChange = (field: WorkItemField, value?: string) => {
         this._onChange(BugBashFieldNames.ItemDescriptionField, field ? field.referenceName : value);
     }
 
-    @autobind
-    private _onWorkItemTypeChange(witType: WorkItemType, value?: string) {
+    private _onWorkItemTypeChange = (witType: WorkItemType, value?: string) => {
         this._onChange(BugBashFieldNames.WorkItemType, witType ? witType.name : value);
     }
 
-    @autobind
-    private _onTemplateTeamChange(team: WebApiTeam, value?: string) {
+    private _onTemplateTeamChange = (team: WebApiTeam, value?: string) => {
         this.props.bugBash.setFieldValue<string>(BugBashFieldNames.AcceptTemplateId, "", false);
         this._onChange(BugBashFieldNames.AcceptTemplateTeam, team ? team.id : value);
     }
 
-    @autobind
-    private _onDefaultTeamChange(team: WebApiTeam, value?: string) {
+    private _onDefaultTeamChange = (team: WebApiTeam, value?: string) => {
         this._onChange(BugBashFieldNames.DefaultTeam, team ? team.id : value);
     }
 }

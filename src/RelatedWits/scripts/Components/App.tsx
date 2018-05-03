@@ -30,7 +30,6 @@ import { Panel, PanelType } from "OfficeFabric/Panel";
 import {
     DirectionalHint, TooltipDelay, TooltipHost, TooltipOverflowMode
 } from "OfficeFabric/Tooltip";
-import { autobind } from "OfficeFabric/Utilities";
 import { ISelection, Selection, SelectionMode } from "OfficeFabric/utilities/selection";
 import { RelatedWorkItemsActions } from "RelatedWits/Actions/RelatedWorkItemsActions";
 import * as SettingsPanel_Async from "RelatedWits/Components/SettingsPanel";
@@ -364,33 +363,6 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
         ];
     }
 
-    @autobind
-    private _closeSettingsPanel() {
-        this.setState({settingsPanelOpen: false});
-    }
-
-    @autobind
-    private _saveSettings(settings: ISettings) {
-        this.setState({settings: settings, settingsPanelOpen: false});
-        this._refreshList();
-    }
-
-    @autobind
-    private _getWorkitemId(workItem: WorkItem): string {
-        return workItem.id.toString();
-    }
-
-    @autobind
-    private async _onItemInvoked(workItem: WorkItem) {
-        this._openWorkItemDialog(null, workItem);
-    }
-
-    @autobind
-    private async _openWorkItemDialog(e: React.MouseEvent<HTMLElement>, workItem: WorkItem) {
-        const updatedWorkItem = await openWorkItemDialog(e, workItem);
-        RelatedWorkItemsActions.updateWorkItemInStore(updatedWorkItem);
-    }
-
     private _getPickListFilterBarItem(
         placeholder: string,
         filterItemKey: WorkItemFieldNames
@@ -420,135 +392,6 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                 ]}
             />
         );
-    }
-
-    @autobind
-    private _getPicklistItems(fieldName: WorkItemFieldNames): string[] {
-        return Object.keys(StoresHub.relatedWorkItemsStore.propertyMap[fieldName]);
-    }
-
-    @autobind
-    private _getListItem(key: string, fieldName: WorkItemFieldNames): IPickListItem {
-        if (fieldName === WorkItemFieldNames.AssignedTo) {
-            const identity = parseUniquefiedIdentityName(key);
-            return {
-                name: identity.displayName,
-                key: key,
-                iconProps: identity.imageUrl ? {
-                    iconType: VssIconType.image,
-                    imageProps: {
-                        src: identity.imageUrl
-                    }
-                } : null
-            };
-        }
-        else if (fieldName === WorkItemFieldNames.AreaPath) {
-            return {
-                name: key.substr(key.lastIndexOf("\\") + 1),
-                key: key
-            };
-        }
-        else {
-            return {
-                name: key,
-                key: key
-            };
-        }
-    }
-
-    @autobind
-    private _renderStatusColumnCell(item: WorkItem): JSX.Element {
-        if (this.state.relationTypes && this.state.relationsMap) {
-            const availableLinks: string[] = [];
-            this.state.relationTypes.forEach(r => {
-                if (this.state.relationsMap[`${item.url}_${r.referenceName}`]) {
-                    availableLinks.push(r.name);
-                }
-            });
-
-            if (availableLinks.length > 0) {
-                return (
-                    <InfoLabel
-                        className="linked-cell"
-                        label="Linked"
-                        info={`Linked to this workitem as ${availableLinks.join("; ")}`}
-                    />
-                );
-            }
-            else {
-                return (
-                    <InfoLabel
-                        label="Not linked"
-                        className="unlinked-cell"
-                        info="This workitem is not linked to the current work item. You can add a link to this workitem by right clicking on the row"
-                    />
-                );
-            }
-        }
-        return null;
-    }
-
-    @autobind
-    private _getGridContextMenuItems(item: WorkItem): IContextualMenuItem[] {
-        let selectedItems = this._selection.getSelection() as WorkItem[];
-        if (!selectedItems || selectedItems.length === 0) {
-            selectedItems = [item];
-        }
-
-        return [
-            {
-                key: "openinquery", name: "Open selected items in Queries", iconProps: {iconName: "ReplyMirrored"},
-                href: getQueryUrl(selectedItems, [
-                    WorkItemFieldNames.ID,
-                    WorkItemFieldNames.Title,
-                    WorkItemFieldNames.State,
-                    WorkItemFieldNames.AssignedTo,
-                    WorkItemFieldNames.AreaPath
-                ]),
-                target: "_blank"
-            },
-            {
-                key: "add-link", name: "Add Link", title: "Add as a link to the current workitem", iconProps: {iconName: "Link"},
-                items: this.state.relationTypes.filter(r => r.name != null && r.name.trim() !== "").map(relationType => {
-                    return {
-                        key: relationType.referenceName,
-                        name: relationType.name,
-                        onClick: async () => {
-                            const workItemFormService = await getFormService();
-                            const workItemRelations = selectedItems.filter(wi => !this.state.relationsMap[`${wi.url}_${relationType.referenceName}`]).map(w => {
-                                return {
-                                    rel: relationType.referenceName,
-                                    attributes: {
-                                        isLocked: false
-                                    },
-                                    url: w.url
-                                } as WorkItemRelation;
-                            });
-
-                            if (workItemRelations) {
-                                workItemFormService.addWorkItemRelations(workItemRelations);
-                            }
-                        }
-                    };
-                })
-            }
-        ];
-    }
-
-    @autobind
-    private async _refreshList(): Promise<void> {
-        if (!this.state.settings) {
-            await this._initializeSettings();
-        }
-
-        if (!this.state.relationTypes) {
-            this._initializeWorkItemRelationTypes();
-        }
-
-        this._initializeLinksData();
-
-        const query = await this._createQuery(this.state.settings.fields, this.state.settings.sortByField);
-        RelatedWorkItemsActions.refresh(query, this.state.settings.top);
     }
 
     private async _createQuery(fieldsToSeek: string[], sortByField: string): Promise<{project: string, wiql: string}> {
@@ -627,13 +470,157 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
         this.setState({relationsMap: relationsMap});
     }
 
-    @autobind
-    private _onFilterChange(filterState: IFilterState) {
+    private _closeSettingsPanel = () => {
+        this.setState({settingsPanelOpen: false});
+    }
+
+    private _saveSettings = (settings: ISettings) => {
+        this.setState({settings: settings, settingsPanelOpen: false});
+        this._refreshList();
+    }
+
+    private _getWorkitemId = (workItem: WorkItem): string => {
+        return workItem.id.toString();
+    }
+
+    private _onItemInvoked = (workItem: WorkItem) => {
+        this._openWorkItemDialog(null, workItem);
+    }
+
+    private _openWorkItemDialog = async (e: React.MouseEvent<HTMLElement>, workItem: WorkItem) => {
+        const updatedWorkItem = await openWorkItemDialog(e, workItem);
+        RelatedWorkItemsActions.updateWorkItemInStore(updatedWorkItem);
+    }
+
+    private _getPicklistItems = (fieldName: WorkItemFieldNames): string[] => {
+        return Object.keys(StoresHub.relatedWorkItemsStore.propertyMap[fieldName]);
+    }
+
+    private _getListItem = (key: string, fieldName: WorkItemFieldNames): IPickListItem => {
+        if (fieldName === WorkItemFieldNames.AssignedTo) {
+            const identity = parseUniquefiedIdentityName(key);
+            return {
+                name: identity.displayName,
+                key: key,
+                iconProps: identity.imageUrl ? {
+                    iconType: VssIconType.image,
+                    imageProps: {
+                        src: identity.imageUrl
+                    }
+                } : null
+            };
+        }
+        else if (fieldName === WorkItemFieldNames.AreaPath) {
+            return {
+                name: key.substr(key.lastIndexOf("\\") + 1),
+                key: key
+            };
+        }
+        else {
+            return {
+                name: key,
+                key: key
+            };
+        }
+    }
+
+    private _renderStatusColumnCell = (item: WorkItem): JSX.Element => {
+        if (this.state.relationTypes && this.state.relationsMap) {
+            const availableLinks: string[] = [];
+            this.state.relationTypes.forEach(r => {
+                if (this.state.relationsMap[`${item.url}_${r.referenceName}`]) {
+                    availableLinks.push(r.name);
+                }
+            });
+
+            if (availableLinks.length > 0) {
+                return (
+                    <InfoLabel
+                        className="linked-cell"
+                        label="Linked"
+                        info={`Linked to this workitem as ${availableLinks.join("; ")}`}
+                    />
+                );
+            }
+            else {
+                return (
+                    <InfoLabel
+                        label="Not linked"
+                        className="unlinked-cell"
+                        info="This workitem is not linked to the current work item. You can add a link to this workitem by right clicking on the row"
+                    />
+                );
+            }
+        }
+        return null;
+    }
+
+    private _getGridContextMenuItems = (item: WorkItem): IContextualMenuItem[] => {
+        let selectedItems = this._selection.getSelection() as WorkItem[];
+        if (!selectedItems || selectedItems.length === 0) {
+            selectedItems = [item];
+        }
+
+        return [
+            {
+                key: "openinquery", name: "Open selected items in Queries", iconProps: {iconName: "ReplyMirrored"},
+                href: getQueryUrl(selectedItems, [
+                    WorkItemFieldNames.ID,
+                    WorkItemFieldNames.Title,
+                    WorkItemFieldNames.State,
+                    WorkItemFieldNames.AssignedTo,
+                    WorkItemFieldNames.AreaPath
+                ]),
+                target: "_blank"
+            },
+            {
+                key: "add-link", name: "Add Link", title: "Add as a link to the current workitem", iconProps: {iconName: "Link"},
+                items: this.state.relationTypes.filter(r => r.name != null && r.name.trim() !== "").map(relationType => {
+                    return {
+                        key: relationType.referenceName,
+                        name: relationType.name,
+                        onClick: async () => {
+                            const workItemFormService = await getFormService();
+                            const workItemRelations = selectedItems.filter(wi => !this.state.relationsMap[`${wi.url}_${relationType.referenceName}`]).map(w => {
+                                return {
+                                    rel: relationType.referenceName,
+                                    attributes: {
+                                        isLocked: false
+                                    },
+                                    url: w.url
+                                } as WorkItemRelation;
+                            });
+
+                            if (workItemRelations) {
+                                workItemFormService.addWorkItemRelations(workItemRelations);
+                            }
+                        }
+                    };
+                })
+            }
+        ];
+    }
+
+    private _refreshList = async (): Promise<void> => {
+        if (!this.state.settings) {
+            await this._initializeSettings();
+        }
+
+        if (!this.state.relationTypes) {
+            this._initializeWorkItemRelationTypes();
+        }
+
+        this._initializeLinksData();
+
+        const query = await this._createQuery(this.state.settings.fields, this.state.settings.sortByField);
+        RelatedWorkItemsActions.refresh(query, this.state.settings.top);
+    }
+
+    private _onFilterChange = (filterState: IFilterState) => {
         RelatedWorkItemsActions.applyFilter(filterState);
     }
 
-    @autobind
-    private _onSortChange(_ev?: React.MouseEvent<HTMLElement>, column?: IColumn) {
+    private _onSortChange = (_ev?: React.MouseEvent<HTMLElement>, column?: IColumn) => {
         if (column.key !== "linked") {
             RelatedWorkItemsActions.applySort({
                 sortKey: column.key as WorkItemFieldNames,
@@ -642,15 +629,13 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
         }
     }
 
-    @autobind
-    private _focusFilterBar(ev: KeyboardEvent) {
+    private _focusFilterBar = (ev: KeyboardEvent) => {
         if (this._filterBar && ev.ctrlKey && ev.shiftKey && stringEquals(ev.key, "f", true)) {
             this._filterBar.focus();
         }
     }
 
-    @autobind
-    private _resolveFilterBar(filterBar: IFilterBar) {
+    private _resolveFilterBar = (filterBar: IFilterBar) => {
         this._filterBar = filterBar;
     }
 }

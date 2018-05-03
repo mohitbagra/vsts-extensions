@@ -16,7 +16,6 @@ import { ErrorMessageActions } from "Library/Flux/Actions/ErrorMessageActions";
 import { BaseStore } from "Library/Flux/Stores/BaseStore";
 import { Label } from "OfficeFabric/Label";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
-import { autobind } from "OfficeFabric/Utilities";
 
 export interface IBugBashDetailsProps extends IBaseFluxComponentProps {
     id: string;
@@ -105,18 +104,15 @@ export class BugBashDetails extends BaseFluxComponent<IBugBashDetailsProps, IBug
         } as IBugBashDetailsState;
     }
 
-    @autobind
-    private _dismissErrorMessage() {
+    private _dismissErrorMessage = () => {
         ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashDetailsError);
     }
 
-    @autobind
-    private _onChange(newValue: string) {
+    private _onChange = (newValue: string) => {
         this.state.longText.setDetails(newValue);
     }
 
-    @autobind
-    private async _pasteImage(data: string): Promise<string> {
+    private _pasteImage = async (data: string): Promise<string> => {
         try {
             return await copyImageToGitRepo(data, "Details");
         }
@@ -126,8 +122,7 @@ export class BugBashDetails extends BaseFluxComponent<IBugBashDetailsProps, IBug
         }
     }
 
-    @autobind
-    private _onEditorKeyDown(e: React.KeyboardEvent<any>) {
+    private _onEditorKeyDown = (e: React.KeyboardEvent<any>) => {
         if (e.ctrlKey && e.keyCode === 83 && this.props.isEditMode) {
             e.preventDefault();
             this.state.longText.save();

@@ -19,7 +19,6 @@ import { PrimaryButton } from "OfficeFabric/Button";
 import { ComboBox, IComboBoxOption, IComboBoxProps } from "OfficeFabric/ComboBox";
 import { Label } from "OfficeFabric/Label";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
-import { autobind } from "OfficeFabric/Utilities";
 import { WebApiTeam } from "TFS/Core/Contracts";
 import { GitRepository } from "TFS/VersionControl/Contracts";
 
@@ -180,25 +179,6 @@ export class SettingsPanel extends BaseFluxComponent<IBaseFluxComponentProps, IS
         return state;
     }
 
-    @autobind
-    private _onRepoChange(option?: IComboBoxOption) {
-        const newSettings = {...this.state.newBugBashSettings};
-        newSettings.gitMediaRepo = option.key as string;
-        this.setState({newBugBashSettings: newSettings} as ISettingsPanelState);
-    }
-
-    @autobind
-    private _onTeamChange(option?: IComboBoxOption) {
-        const newSettings = {...this.state.newUserSettings};
-        newSettings.associatedTeam = option.key as string;
-        this.setState({newUserSettings: newSettings} as ISettingsPanelState);
-    }
-
-    @autobind
-    private _dismissErrorMessage() {
-        ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashSettingsError);
-    }
-
     private _isSettingsDirty(): boolean {
         return this.state.newBugBashSettings.gitMediaRepo !== this.state.origBugBashSettings.gitMediaRepo;
     }
@@ -207,22 +187,35 @@ export class SettingsPanel extends BaseFluxComponent<IBaseFluxComponentProps, IS
         return this.state.newUserSettings.associatedTeam !== this.state.origUserSettings.associatedTeam;
     }
 
-    @autobind
-    private _onSaveClick() {
+    private _onRepoChange = (option?: IComboBoxOption) => {
+        const newSettings = {...this.state.newBugBashSettings};
+        newSettings.gitMediaRepo = option.key as string;
+        this.setState({newBugBashSettings: newSettings} as ISettingsPanelState);
+    }
+
+    private _onTeamChange = (option?: IComboBoxOption) => {
+        const newSettings = {...this.state.newUserSettings};
+        newSettings.associatedTeam = option.key as string;
+        this.setState({newUserSettings: newSettings} as ISettingsPanelState);
+    }
+
+    private _dismissErrorMessage = () => {
+        ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashSettingsError);
+    }
+
+    private _onSaveClick = () => {
         if (this._isSettingsDirty()) {
             SettingsActions.updateBugBashSettings(this.state.newBugBashSettings);
         }
     }
 
-    @autobind
-    private _onSaveUserSettingClick() {
+    private _onSaveUserSettingClick = () => {
         if (this._isUserSettingsDirty()) {
             SettingsActions.updateUserSettings(this.state.newUserSettings);
         }
     }
 
-    @autobind
-    private _onRenderCallout(props?: IComboBoxProps, defaultRender?: (props?: IComboBoxProps) => JSX.Element): JSX.Element {
+    private _onRenderCallout = (props?: IComboBoxProps, defaultRender?: (props?: IComboBoxProps) => JSX.Element): JSX.Element => {
         return (
             <div className="callout-container">
                 {defaultRender(props)}

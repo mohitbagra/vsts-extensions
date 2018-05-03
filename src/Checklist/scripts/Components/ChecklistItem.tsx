@@ -11,7 +11,7 @@ import { Checkbox } from "OfficeFabric/Checkbox";
 import {
     DirectionalHint, TooltipDelay, TooltipHost, TooltipOverflowMode
 } from "OfficeFabric/Tooltip";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 
 export interface IChecklistItemProps extends IBaseFluxComponentProps {
     checklistItem: IChecklistItem;
@@ -108,26 +108,22 @@ export class ChecklistItem extends BaseFluxComponent<IChecklistItemProps, IBaseF
         );
     }
 
-    @autobind
-    private _onChecklistItemChange(_ev: React.FormEvent<HTMLInputElement>, checked: boolean) {
+    private _onChecklistItemChange = (_ev: React.FormEvent<HTMLInputElement>, checked: boolean) => {
         if (this.props.onToggleCheck && !this.props.disableStateChange && !this.props.disabled) {
             this.props.onToggleCheck(this.props.checklistItem, checked);
         }
     }
 
-    @autobind
-    private _onLabelClick() {
+    private _onLabelClick = () => {
         const isCompleted = this.props.checklistItem.state === ChecklistItemState.Completed;
         this._onChecklistItemChange(null, !isCompleted);
     }
 
-    @autobind
-    private _onDeleteItemButtonClick() {
+    private _onDeleteItemButtonClick = () => {
         this.props.onDelete(this.props.checklistItem);
     }
 
-    @autobind
-    private _onEditItemButtonClick() {
+    private _onEditItemButtonClick = () => {
         this.props.onEdit(this.props.checklistItem);
     }
 }

@@ -18,7 +18,6 @@ import { IconButton } from "OfficeFabric/Button";
 import { Fabric } from "OfficeFabric/Fabric";
 import { INavLink, Nav } from "OfficeFabric/Nav";
 import { DirectionalHint, TooltipDelay, TooltipHost } from "OfficeFabric/Tooltip";
-import { autobind } from "OfficeFabric/Utilities";
 import { HostNavigationService } from "VSS/SDK/Services/Navigation";
 
 export interface IAppState extends IBaseFluxComponentState {
@@ -125,14 +124,6 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
         return newState;
     }
 
-    @autobind
-    private _onNavLinkClick(e: React.MouseEvent<HTMLElement>, link: INavLink) {
-        if (!e.ctrlKey) {
-            e.preventDefault();
-            navigate({ witName: link.key });
-        }
-    }
-
     private async _attachNavigate() {
         this._navigationService = await getHostNavigationService();
         this._navigationService.attachNavigate(null, this._onNavigate, true);
@@ -144,8 +135,22 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
         }
     }
 
-    @autobind
-    private async _onNavigate() {
+    private _getWITNavGroups(): INavLink[] {
+        return StoresHub.workItemTypeStore.getAll().map(wit => ({
+            name: wit.name,
+            key: wit.name,
+            url: getWorkItemTypeSettingsUrl(wit.name)
+        }));
+    }
+
+    private _onNavLinkClick = (e: React.MouseEvent<HTMLElement>, link: INavLink) => {
+        if (!e.ctrlKey) {
+            e.preventDefault();
+            navigate({ witName: link.key });
+        }
+    }
+
+    private _onNavigate = async () => {
         if (this._navigationService) {
             const workItemTypes = StoresHub.workItemTypeStore.getAll();
             const state = await this._navigationService.getCurrentState();
@@ -172,14 +177,6 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
                 selectedWit: witName
             });
         }
-    }
-
-    private _getWITNavGroups(): INavLink[] {
-        return StoresHub.workItemTypeStore.getAll().map(wit => ({
-            name: wit.name,
-            key: wit.name,
-            url: getWorkItemTypeSettingsUrl(wit.name)
-        }));
     }
 }
 

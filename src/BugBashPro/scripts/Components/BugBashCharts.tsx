@@ -23,7 +23,6 @@ import {
 } from "Library/Utilities/Identity";
 import { Checkbox } from "OfficeFabric/Checkbox";
 import { Label } from "OfficeFabric/Label";
-import { autobind } from "OfficeFabric/Utilities";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { ZeroData } from "VSSUI/ZeroData";
 
@@ -253,11 +252,6 @@ export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBa
         } as IBugBashChartsState;
     }
 
-    @autobind
-    private _toggleGroupByTeam() {
-        this.setState({groupedByTeam: !this.state.groupedByTeam} as IBugBashChartsState);
-    }
-
     private _getTeamName(teamId: string): string {
         if (isGuid(teamId)) {
             // is a team if
@@ -268,5 +262,9 @@ export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBa
             // is an area path
             return teamId.substr(teamId.lastIndexOf("\\") + 1);
         }
+    }
+
+    private _toggleGroupByTeam = () => {
+        this.setState({groupedByTeam: !this.state.groupedByTeam} as IBugBashChartsState);
     }
 }

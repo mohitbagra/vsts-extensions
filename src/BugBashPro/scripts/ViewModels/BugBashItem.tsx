@@ -20,7 +20,6 @@ import { openWorkItemDialog } from "Library/Utilities/WorkItemFormHelpers";
 import {
     DirectionalHint, TooltipDelay, TooltipHost, TooltipOverflowMode
 } from "OfficeFabric/Tooltip";
-import { autobind } from "OfficeFabric/Utilities";
 import { WorkItem } from "TFS/WorkItemTracking/Contracts";
 import { IFilterState } from "VSSUI/Utilities/Filter";
 import { VssIcon, VssIconType } from "VSSUI/VssIcon";
@@ -430,14 +429,6 @@ export class BugBashItem {
         }
     }
 
-    @autobind
-    private async _onTitleClick(e: React.MouseEvent<HTMLElement>) {
-        const updatedWorkItem = await openWorkItemDialog(e, this.workItem);
-        if (updatedWorkItem) {
-            WorkItemActions.refreshWorkItemInStore([updatedWorkItem]);
-        }
-    }
-
     private _renderStatusCell(): JSX.Element {
         let tooltip: string;
         let iconName: string;
@@ -479,5 +470,12 @@ export class BugBashItem {
                 </TooltipHost>
             </div>
         );
+    }
+
+    private _onTitleClick = async (e: React.MouseEvent<HTMLElement>) => {
+        const updatedWorkItem = await openWorkItemDialog(e, this.workItem);
+        if (updatedWorkItem) {
+            WorkItemActions.refreshWorkItemInStore([updatedWorkItem]);
+        }
     }
 }

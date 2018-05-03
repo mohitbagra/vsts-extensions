@@ -13,7 +13,7 @@ import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { ValidationState } from "OfficeFabric/components/pickers/BasePicker.types";
 import { ITag } from "OfficeFabric/components/pickers/TagPicker/TagPicker";
 import { Fabric } from "OfficeFabric/Fabric";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 import { CustomTagPicker } from "./CustomTagPicker";
 
 interface IMultiValueControlInputs {
@@ -70,8 +70,17 @@ export class MultiValueControl extends WorkItemFieldControl<string, IMultiValueC
         );
     }
 
-    @autobind
-    private async _onInputKeyDown(e: React.KeyboardEvent<any>) {
+    private _parseFieldValue(): string[] {
+        const value = this.state.value;
+        if (!isNullOrWhiteSpace(value)) {
+            return value.split(";").map(v => v.trim());
+        }
+        else {
+            return [];
+        }
+    }
+
+    private _onInputKeyDown = async (e: React.KeyboardEvent<any>) => {
         if (e.ctrlKey && e.keyCode === 83) {
             e.preventDefault();
             const formService = await getFormService();
@@ -79,54 +88,45 @@ export class MultiValueControl extends WorkItemFieldControl<string, IMultiValueC
         }
     }
 
-    @autobind
-    private _onMouseOver() {
+    private _onMouseOver = () => {
         this.setState({hovered: true});
     }
 
-    @autobind
-    private _onMouseOut() {
+    private _onMouseOut = () => {
         this.setState({hovered: false});
     }
 
-    @autobind
-    private _onFocus() {
+    private _onFocus = () => {
         this.setState({focussed: true});
     }
 
-    @autobind
-    private _onBlur() {
+    private _onBlur = () => {
         this.setState({focussed: false});
     }
 
-    @autobind
-    private _onValidateInput(value: string): ValidationState {
+    private _onValidateInput = (value: string): ValidationState => {
         return isNullOrWhiteSpace(value) ? ValidationState.invalid : ValidationState.valid;
     }
 
-    @autobind
-    private _createGenericItem(input: string): any {
+    private _createGenericItem = (input: string): any => {
         return {
             key: input,
             name: input
         };
     }
 
-    @autobind
-    private _getTag(tag: string): ITag {
+    private _getTag = (tag: string): ITag => {
         return {
             key: tag,
             name: tag
         };
     }
 
-    @autobind
-    private _getTagText(tag: ITag): string {
+    private _getTagText = (tag: ITag): string => {
         return tag.name;
     }
 
-    @autobind
-    private _onTagFilterChanged(filterText: string, tagList: ITag[]): ITag[] {
+    private _onTagFilterChanged = (filterText: string, tagList: ITag[]): ITag[] => {
         if (isNullOrWhiteSpace(filterText)) {
             return [];
         }
@@ -140,14 +140,12 @@ export class MultiValueControl extends WorkItemFieldControl<string, IMultiValueC
             });
     }
 
-    @autobind
-    private _onChange(items: ITag[]) {
+    private _onChange = (items: ITag[]) => {
         const selectedTags = items.map(i => i.name);
         this.onValueChanged((selectedTags || []).join(";"));
     }
 
-    @autobind
-    private _onToggleCallout(on: boolean) {
+    private _onToggleCallout = (on: boolean) => {
         if (this._isCalloutOpen !== on) {
             setTimeout(
                 () => {
@@ -155,16 +153,6 @@ export class MultiValueControl extends WorkItemFieldControl<string, IMultiValueC
                 },
                 100
             );
-        }
-    }
-
-    private _parseFieldValue(): string[] {
-        const value = this.state.value;
-        if (!isNullOrWhiteSpace(value)) {
-            return value.split(";").map(v => v.trim());
-        }
-        else {
-            return [];
         }
     }
 }

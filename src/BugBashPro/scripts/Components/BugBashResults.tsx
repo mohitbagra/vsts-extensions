@@ -31,7 +31,6 @@ import {
     CheckboxVisibility, ConstrainMode, DetailsListLayoutMode, IColumn
 } from "OfficeFabric/DetailsList";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
-import { autobind } from "OfficeFabric/Utilities";
 import { ISelection, Selection, SelectionMode } from "OfficeFabric/utilities/selection";
 import { VssDetailsList } from "VSSUI/VssDetailsList";
 import { ZeroData } from "VSSUI/ZeroData";
@@ -191,15 +190,6 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
         }
     }
 
-    @autobind
-    private _onSplitterChange(itemEditorSize: number) {
-        const evt = document.createEvent("UIEvents");
-        evt.initUIEvent("resize", true, false, window, 0);
-        window.dispatchEvent(evt);
-
-        writeLocalSetting("itemeditorinitialsize", `${itemEditorSize}`, WebSettingsScope.User);
-    }
-
     private _renderGrid(): JSX.Element {
         let items = [];
 
@@ -250,11 +240,6 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
                 />
             </div>
         );
-    }
-
-    @autobind
-    private _onRenderColumn(item: BugBashItem, _index: number, column: IColumn): JSX.Element {
-        return item.onRenderPropertyCell(column.key as BugBashItemFieldNames | WorkItemFieldNames);
     }
 
     private _getColumn(key: string, name: string, minWidth: number, maxWidth: number): IColumn {
@@ -318,13 +303,42 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
         return columns;
     }
 
-    @autobind
-    private _getBugBashItemId(item: BugBashItem): string {
+    private _onBugBashItemSelectionChanged(bugBashItems: BugBashItem[]) {
+        if (this._itemInvokedDelayedFunction) {
+            this._itemInvokedDelayedFunction.cancel();
+        }
+
+        if (this.state.selectedBugBashItem.isNew()) {
+            this.state.selectedBugBashItem.reset(false);
+        }
+
+        this._itemInvokedDelayedFunction = delay(this, 200, () => {
+            if (bugBashItems == null || bugBashItems.length !== 1) {
+                this.setState({selectedBugBashItem: StoresHub.bugBashItemStore.getNewBugBashItem()} as IBugBashResultsState);
+            }
+            else {
+                this.setState({selectedBugBashItem: bugBashItems[0]} as IBugBashResultsState);
+            }
+        });
+    }
+
+    private _onSplitterChange = (itemEditorSize: number) => {
+        const evt = document.createEvent("UIEvents");
+        evt.initUIEvent("resize", true, false, window, 0);
+        window.dispatchEvent(evt);
+
+        writeLocalSetting("itemeditorinitialsize", `${itemEditorSize}`, WebSettingsScope.User);
+    }
+
+    private _onRenderColumn = (item: BugBashItem, _index: number, column: IColumn): JSX.Element => {
+        return item.onRenderPropertyCell(column.key as BugBashItemFieldNames | WorkItemFieldNames);
+    }
+
+    private _getBugBashItemId = (item: BugBashItem): string => {
         return item.id;
     }
 
-    @autobind
-    private _getGridContextMenuItems(item: BugBashItem): IContextualMenuItem[] {
+    private _getGridContextMenuItems = (item: BugBashItem): IContextualMenuItem[] => {
         if (this.props.view === BugBashViewActions.AcceptedItemsOnly) {
             let selectedItems = this._selection.getSelection() as BugBashItem[];
             if (!selectedItems || selectedItems.length === 0) {
@@ -350,8 +364,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
         }
     }
 
-    @autobind
-    private async _onItemInvoked(bugBashItem: BugBashItem) {
+    private _onItemInvoked = async (bugBashItem: BugBashItem) => {
         if (bugBashItem.isAccepted) {
             const updatedWorkItem = await openWorkItemDialog(null, bugBashItem.workItem);
             if (updatedWorkItem) {
@@ -363,8 +376,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
         }
     }
 
-    @autobind
-    private _onSortChange(_ev?: React.MouseEvent<HTMLElement>, column?: IColumn) {
+    private _onSortChange = (_ev?: React.MouseEvent<HTMLElement>, column?: IColumn) => {
         if (column.key === BugBashItemFieldNames.Status) {
             return;
         }
@@ -375,27 +387,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
         });
     }
 
-    private _onBugBashItemSelectionChanged(bugBashItems: BugBashItem[]) {
-        if (this._itemInvokedDelayedFunction) {
-            this._itemInvokedDelayedFunction.cancel();
-        }
-
-        if (this.state.selectedBugBashItem.isNew()) {
-            this.state.selectedBugBashItem.reset(false);
-        }
-
-        this._itemInvokedDelayedFunction = delay(this, 200, () => {
-            if (bugBashItems == null || bugBashItems.length !== 1) {
-                this.setState({selectedBugBashItem: StoresHub.bugBashItemStore.getNewBugBashItem()} as IBugBashResultsState);
-            }
-            else {
-                this.setState({selectedBugBashItem: bugBashItems[0]} as IBugBashResultsState);
-            }
-        });
-    }
-
-    @autobind
-    private _setSelectedItem(bugBashItemId: string) {
+    private _setSelectedItem = (bugBashItemId: string) => {
         let selectedItem: BugBashItem = null;
 
         if (this._itemInvokedDelayedFunction) {

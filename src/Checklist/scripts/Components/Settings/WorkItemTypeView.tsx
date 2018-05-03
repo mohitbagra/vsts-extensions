@@ -17,7 +17,6 @@ import { findIndex } from "Library/Utilities/Array";
 import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
 import { Modal } from "OfficeFabric/Modal";
-import { autobind } from "OfficeFabric/Utilities";
 import { Hub } from "VSSUI/Components/Hub";
 import { HubHeader } from "VSSUI/Components/HubHeader";
 import { IPivotBarAction, PivotBarItem } from "VSSUI/Components/PivotBar";
@@ -165,20 +164,6 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
         );
     }
 
-    @autobind
-    private _renderChecklistItem(checklistItem: IChecklistItem): JSX.Element {
-        return (
-            <ChecklistItem
-                checklistItem={checklistItem}
-                disabled={this.state.disabled}
-                allowEditDefaultItems={true}
-                disableStateChange={true}
-                onEdit={this._editChecklistItem}
-                onDelete={this._deleteChecklistItem}
-            />
-        );
-    }
-
     private _renderZeroDataMessage(): JSX.Element {
         const {checklist} = this.state;
         if (checklist.checklistItems == null || checklist.checklistItems.length === 0) {
@@ -254,58 +239,7 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
         StoresHub.checklistStore.setCurrentWorkItemType(currentWorkItemType);
     }
 
-    @autobind
-    private _editChecklistItem(item: IChecklistItem) {
-        this.setState({editItem: {...item}});
-    }
-
-    @autobind
-    private _cancelItemEdit() {
-        this.setState({editItem: null});
-    }
-
-    @autobind
-    private async _reorderChecklistItem(data: {oldIndex: number, newIndex: number}) {
-        const {oldIndex, newIndex} = data;
-        if (oldIndex !== newIndex) {
-            const {checklist} = this.state;
-            const newChecklistItems = arrayMove([...checklist.checklistItems], oldIndex, newIndex);
-            this._updateChecklist(newChecklistItems);
-        }
-    }
-
-    @autobind
-    private _deleteChecklistItem(item: IChecklistItem) {
-        const {checklist} = this.state;
-        const newChecklistItems = checklist.checklistItems.filter((i: IChecklistItem) => !stringEquals(i.id, item.id, true));
-        if (newChecklistItems.length !== checklist.checklistItems.length) {
-            this._updateChecklist(newChecklistItems);
-        }
-    }
-
-    @autobind
-    private async _addChecklistItem(checklistItem: IChecklistItem) {
-        const {checklist} = this.state;
-        const newChecklistItem = {...checklistItem, id: `dcwiti_${Date.now()}`, isDefault: true};
-        const newChecklistItems = (checklist.checklistItems || []).concat(newChecklistItem);
-
-        this._updateChecklist(newChecklistItems);
-    }
-
-    @autobind
-    private _updateChecklistItem(item: IChecklistItem) {
-        const {checklist} = this.state;
-        const newChecklistItems = [...checklist.checklistItems];
-        const index = findIndex(newChecklistItems, (i: IChecklistItem) => stringEquals(i.id, item.id, true));
-        if (index !== -1) {
-            newChecklistItems[index] = {...newChecklistItems[index], text: item.text, required: item.required};
-            this._updateChecklist(newChecklistItems);
-        }
-
-        this._cancelItemEdit();
-    }
-
-    private async _updateChecklist(checklistItems: IChecklistItem[]) {
+    private _updateChecklist(checklistItems: IChecklistItem[]) {
         const checklist = {...this.state.checklist};
         checklist.checklistItems = checklistItems;
 
@@ -320,5 +254,63 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
 
         const checklists = StoresHub.checklistStore.getItem(this.props.workItemType);
         return checklists == null ? null : checklists.witDefault;
+    }
+
+    private _renderChecklistItem = (checklistItem: IChecklistItem): JSX.Element => {
+        return (
+            <ChecklistItem
+                checklistItem={checklistItem}
+                disabled={this.state.disabled}
+                allowEditDefaultItems={true}
+                disableStateChange={true}
+                onEdit={this._editChecklistItem}
+                onDelete={this._deleteChecklistItem}
+            />
+        );
+    }
+
+    private _editChecklistItem = (item: IChecklistItem) => {
+        this.setState({editItem: {...item}});
+    }
+
+    private _cancelItemEdit = () => {
+        this.setState({editItem: null});
+    }
+
+    private _reorderChecklistItem = (data: {oldIndex: number, newIndex: number}) => {
+        const {oldIndex, newIndex} = data;
+        if (oldIndex !== newIndex) {
+            const {checklist} = this.state;
+            const newChecklistItems = arrayMove([...checklist.checklistItems], oldIndex, newIndex);
+            this._updateChecklist(newChecklistItems);
+        }
+    }
+
+    private _deleteChecklistItem = (item: IChecklistItem) => {
+        const {checklist} = this.state;
+        const newChecklistItems = checklist.checklistItems.filter((i: IChecklistItem) => !stringEquals(i.id, item.id, true));
+        if (newChecklistItems.length !== checklist.checklistItems.length) {
+            this._updateChecklist(newChecklistItems);
+        }
+    }
+
+    private _addChecklistItem = (checklistItem: IChecklistItem) => {
+        const {checklist} = this.state;
+        const newChecklistItem = {...checklistItem, id: `dcwiti_${Date.now()}`, isDefault: true};
+        const newChecklistItems = (checklist.checklistItems || []).concat(newChecklistItem);
+
+        this._updateChecklist(newChecklistItems);
+    }
+
+    private _updateChecklistItem = (item: IChecklistItem) => {
+        const {checklist} = this.state;
+        const newChecklistItems = [...checklist.checklistItems];
+        const index = findIndex(newChecklistItems, (i: IChecklistItem) => stringEquals(i.id, item.id, true));
+        if (index !== -1) {
+            newChecklistItems[index] = {...newChecklistItems[index], text: item.text, required: item.required};
+            this._updateChecklist(newChecklistItems);
+        }
+
+        this._cancelItemEdit();
     }
 }

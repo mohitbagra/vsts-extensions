@@ -21,7 +21,6 @@ import { getHostNavigationService, navigate } from "Library/Utilities/Navigation
 import { Fabric } from "OfficeFabric/Fabric";
 import { Link } from "OfficeFabric/Link";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
-import { autobind } from "OfficeFabric/Utilities";
 import { HostNavigationService } from "VSS/SDK/Services/Navigation";
 
 export enum AppViewMode {
@@ -149,12 +148,6 @@ export class App extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
         }
     }
 
-    @autobind
-    private _onDismissChangeLogMessage() {
-        SettingsDataService.updateSetting("changeVersion", this.state.changeVersion, true);
-        this.setState({changeVersion: null});
-    }
-
     private _renderBadge(): JSX.Element {
         if (!this.state.userSettingsAvailable) {
             return (
@@ -193,8 +186,12 @@ export class App extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
         }
     }
 
-    @autobind
-    private async _onNavigate() {
+    private _onDismissChangeLogMessage = () => {
+        SettingsDataService.updateSetting("changeVersion", this.state.changeVersion, true);
+        this.setState({changeVersion: null});
+    }
+
+    private _onNavigate = async () => {
         if (this._navigationService) {
             const state = await this._navigationService.getCurrentState();
             const view: string = state && state.view;

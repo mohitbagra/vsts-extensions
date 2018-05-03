@@ -10,7 +10,7 @@ import {
 import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { Fabric } from "OfficeFabric/Fabric";
 import { TextField } from "OfficeFabric/TextField";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 
 interface IPatternControlInputs {
     FieldName: string;
@@ -59,40 +59,6 @@ export class PatternControl extends WorkItemFieldControl<string, IPatternControl
         return error;
     }
 
-    @autobind
-    private async _onInputKeyDown(e: React.KeyboardEvent<any>) {
-        if (e.ctrlKey && e.keyCode === 83) {
-            e.preventDefault();
-            const formService = await getFormService();
-            formService.save();
-        }
-    }
-
-    @autobind
-    private _onMouseOver() {
-        this.setState({hovered: true});
-    }
-
-    @autobind
-    private _onMouseOut() {
-        this.setState({hovered: false});
-    }
-
-    @autobind
-    private _onFocus() {
-        this.setState({focussed: true});
-    }
-
-    @autobind
-    private _onBlur() {
-        this.setState({focussed: false});
-    }
-
-    @autobind
-    private _onChange(value: string) {
-        this.onValueChanged(value);
-    }
-
     private async _setWorkItemFormError(error: string) {
         const service: any = await getFormService();
         if (error) {
@@ -101,6 +67,34 @@ export class PatternControl extends WorkItemFieldControl<string, IPatternControl
         else {
             service.clearError();
         }
+    }
+
+    private _onInputKeyDown = async (e: React.KeyboardEvent<any>) => {
+        if (e.ctrlKey && e.keyCode === 83) {
+            e.preventDefault();
+            const formService = await getFormService();
+            formService.save();
+        }
+    }
+
+    private _onMouseOver = () => {
+        this.setState({hovered: true});
+    }
+
+    private _onMouseOut = () => {
+        this.setState({hovered: false});
+    }
+
+    private _onFocus = () => {
+        this.setState({focussed: true});
+    }
+
+    private _onBlur = () => {
+        this.setState({focussed: false});
+    }
+
+    private _onChange = (value: string) => {
+        this.onValueChanged(value);
     }
 }
 

@@ -12,7 +12,6 @@ import { PrimaryButton } from "OfficeFabric/Button";
 import { ITag, TagPicker } from "OfficeFabric/components/pickers/TagPicker/TagPicker";
 import { Dropdown, IDropdownOption, IDropdownProps } from "OfficeFabric/Dropdown";
 import { TextField } from "OfficeFabric/TextField";
-import { autobind } from "OfficeFabric/Utilities";
 import { Constants, ISettings } from "RelatedWits/Models";
 import { WorkItemField } from "TFS/WorkItemTracking/Contracts";
 
@@ -135,18 +134,34 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
         return /^\d+$/.test(value);
     }
 
-    @autobind
-    private _onTopValueChange(newValue: string) {
+    private _isSettingsDirty(): boolean {
+        return this.props.settings.top.toString() !== this.state.top
+            || !stringEquals(this.props.settings.sortByField, this.state.sortField.referenceName, true)
+            || !arrayEquals(this.props.settings.fields, this.state.queryFields.map(f => f.referenceName), (f1, f2) => stringEquals(f1, f2, true));
+    }
+
+    private _isSettingsValid(): boolean {
+        return this._isInteger(this.state.top) && parseInt(this.state.top, 10) > 0 && parseInt(this.state.top, 10) <= 500;
+    }
+
+    private _fieldNameComparer(a: WorkItemField, b: WorkItemField): number {
+        const aUpper = a.name.toUpperCase();
+        const bUpper = b.name.toUpperCase();
+
+        if (aUpper < bUpper) { return -1; }
+        if (aUpper > bUpper) { return 1; }
+        return 0;
+    }
+
+    private _onTopValueChange = (newValue: string) => {
         this._updateTop(newValue);
     }
 
-    @autobind
-    private _getTagTextFromItem(item: ITag): string {
+    private _getTagTextFromItem = (item: ITag): string => {
         return item.name;
     }
 
-    @autobind
-    private _getTopError(value: string): string {
+    private _getTopError = (value: string): string => {
         if (value == null || value.trim() === "") {
             return "A value is required";
         }
@@ -159,18 +174,7 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
         return "";
     }
 
-    private _isSettingsDirty(): boolean {
-        return this.props.settings.top.toString() !== this.state.top
-            || !stringEquals(this.props.settings.sortByField, this.state.sortField.referenceName, true)
-            || !arrayEquals(this.props.settings.fields, this.state.queryFields.map(f => f.referenceName), (f1, f2) => stringEquals(f1, f2, true));
-    }
-
-    private _isSettingsValid(): boolean {
-        return this._isInteger(this.state.top) && parseInt(this.state.top, 10) > 0 && parseInt(this.state.top, 10) <= 500;
-    }
-
-    @autobind
-    private async _onSaveClick(): Promise<void> {
+    private _onSaveClick = async (): Promise<void> => {
         if (!this._isSettingsValid()) {
             return;
         }
@@ -191,16 +195,14 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
         this.props.onSave(userPreferenceModel);
     }
 
-    @autobind
-    private _getFieldTag(field: WorkItemField): ITag {
+    private _getFieldTag = (field: WorkItemField): ITag => {
         return {
             key: field.referenceName,
             name: field.name
         };
     }
 
-    @autobind
-    private _onRenderCallout(props?: IDropdownProps, defaultRender?: (props?: IDropdownProps) => JSX.Element): JSX.Element {
+    private _onRenderCallout = (props?: IDropdownProps, defaultRender?: (props?: IDropdownProps) => JSX.Element): JSX.Element => {
         return (
             <div className="callout-container">
                 {defaultRender(props)}
@@ -208,39 +210,26 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
         );
     }
 
-    @autobind
-    private _updateSortField(option: IDropdownOption) {
+    private _updateSortField = (option: IDropdownOption) => {
         const sortField = first(this.state.sortableFields, (field: WorkItemField) => stringEquals(field.referenceName, option.key as string, true));
         this.setState({sortField: sortField});
     }
 
-    @autobind
-    private _updateQueryFields(items: ITag[]) {
+    private _updateQueryFields = (items: ITag[]) => {
         const queryFields = items.map((item: ITag) => first(this.state.queryableFields, (field: WorkItemField) => stringEquals(field.referenceName, item.key, true)));
         this.setState({queryFields: queryFields});
     }
 
-    @autobind
-    private _updateTop(top: string) {
+    private _updateTop = (top: string) => {
         this.setState({top: top});
     }
 
-    @autobind
-    private _onFieldFilterChanged(filterText: string, tagList: ITag[]): ITag[] {
+    private _onFieldFilterChanged = (filterText: string, tagList: ITag[]): ITag[] => {
         return filterText
             ? this.state.queryableFields.filter(field => field.name.toLowerCase().indexOf(filterText.toLowerCase()) === 0
                 && findIndex(tagList, (tag: ITag) => stringEquals(tag.key, field.referenceName, true)) === -1).map(field => {
                     return { key: field.referenceName, name: field.name};
                 })
             : [];
-    }
-
-    private _fieldNameComparer(a: WorkItemField, b: WorkItemField): number {
-        const aUpper = a.name.toUpperCase();
-        const bUpper = b.name.toUpperCase();
-
-        if (aUpper < bUpper) { return -1; }
-        if (aUpper > bUpper) { return 1; }
-        return 0;
     }
 }

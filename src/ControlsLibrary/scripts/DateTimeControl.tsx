@@ -12,7 +12,7 @@ import {
 import { getFormService } from "Library/Utilities/WorkItemFormHelpers";
 import { IconButton } from "OfficeFabric/Button";
 import { Fabric } from "OfficeFabric/Fabric";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 
 interface IDateTimeControlInputs {
     FieldName: string;
@@ -88,8 +88,7 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
         );
     }
 
-    @autobind
-    private async _onInputKeyDown(e: React.KeyboardEvent<any>) {
+    private _onInputKeyDown = async (e: React.KeyboardEvent<any>) => {
         if (e.ctrlKey && e.keyCode === 83) {
             e.preventDefault();
             const formService = await getFormService();
@@ -97,38 +96,31 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
         }
     }
 
-    @autobind
-    private _onMouseOver() {
+    private _onMouseOver = () => {
         this.setState({hovered: true});
     }
 
-    @autobind
-    private _onMouseOut() {
+    private _onMouseOut = () => {
         this.setState({hovered: false});
     }
 
-    @autobind
-    private _onFocus() {
+    private _onFocus = () => {
         this.setState({focussed: true});
     }
 
-    @autobind
-    private _onBlur() {
+    private _onBlur = () => {
         this.setState({focussed: false});
     }
 
-    @autobind
-    private _toggleCalendar() {
+    private _toggleCalendar = () => {
         this.setState({expanded: !this.state.expanded});
     }
 
-    @autobind
-    private _clearValue() {
+    private _clearValue = () => {
         this.onValueChanged(null);
     }
 
-    @autobind
-    private _onSelectDate(newDate: Date) {
+    private _onSelectDate = (newDate: Date) => {
         this.onValueChanged(newDate);
     }
 }

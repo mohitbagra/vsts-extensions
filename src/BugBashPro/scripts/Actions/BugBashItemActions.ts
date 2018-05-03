@@ -29,7 +29,7 @@ export namespace BugBashItemActions {
         BugBashItemActionsHub.Clean.invoke(null);
     }
 
-    export async function initializeItems(bugBashId: string) {
+    export function initializeItems(bugBashId: string) {
         if (StoresHub.bugBashItemStore.isLoaded()) {
             BugBashItemActionsHub.InitializeBugBashItems.invoke(null);
         }

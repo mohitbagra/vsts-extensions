@@ -10,7 +10,7 @@ export namespace BugBashItemCommentActions {
         BugBashItemCommentActionsHub.Clean.invoke(null);
     }
 
-    export async function initializeComments(bugBashItemId: string) {
+    export function initializeComments(bugBashItemId: string) {
         if (StoresHub.bugBashItemCommentStore.isLoaded(bugBashItemId)) {
             BugBashItemCommentActionsHub.InitializeComments.invoke(null);
         }

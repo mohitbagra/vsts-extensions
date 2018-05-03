@@ -19,7 +19,6 @@ import { Fabric } from "OfficeFabric/Fabric";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
 import { Pivot, PivotItem } from "OfficeFabric/Pivot";
 import { DirectionalHint, TooltipDelay, TooltipHost } from "OfficeFabric/Tooltip";
-import { autobind } from "OfficeFabric/Utilities";
 import { TeamProject } from "TFS/Core/Contracts";
 import * as CoreClient from "TFS/Core/RestClient";
 import {
@@ -160,8 +159,13 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
         };
     }
 
-    @autobind
-    private async _onWorkItemLoad(workItemId: number, isNew: boolean) {
+    private _refreshChecklist(workItemId: number) {
+        if (workItemId != null && workItemId !== 0 && this._project) {
+            ChecklistActions.refreshChecklists(workItemId, this._workItemTypeName, this._project.id);
+        }
+    }
+
+    private _onWorkItemLoad = async (workItemId: number, isNew: boolean) => {
         if (!this._project) {
             const formService = await getFormService();
             const fieldValues = await formService.getFieldValues(["System.WorkItemType", "System.TeamProject"]);
@@ -173,15 +177,8 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
         this.setState({workItemId: isNew ? 0 : workItemId});
     }
 
-    @autobind
-    private _onRefreshClick() {
+    private _onRefreshClick = () => {
         this._refreshChecklist(this.state.workItemId);
-    }
-
-    private _refreshChecklist(workItemId: number) {
-        if (workItemId != null && workItemId !== 0 && this._project) {
-            ChecklistActions.refreshChecklists(workItemId, this._workItemTypeName, this._project.id);
-        }
     }
 }
 

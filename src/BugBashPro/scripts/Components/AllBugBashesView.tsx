@@ -33,7 +33,6 @@ import { Panel, PanelType } from "OfficeFabric/Panel";
 import {
     DirectionalHint, TooltipDelay, TooltipHost, TooltipOverflowMode
 } from "OfficeFabric/Tooltip";
-import { autobind } from "OfficeFabric/Utilities";
 import { SelectionMode } from "OfficeFabric/utilities/selection";
 import { FilterBar, IFilterBar, KeywordFilterBarItem } from "VSSUI/FilterBar";
 import { Hub } from "VSSUI/Hub";
@@ -204,16 +203,6 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
         };
     }
 
-    @autobind
-    private _dismissSettingsPanel() {
-        this.setState({settingsPanelOpen: false} as IAllBugBashesViewState);
-    }
-
-    @autobind
-    private _dismissErrorMessage() {
-        ErrorMessageActions.dismissErrorMessage(ErrorKeys.DirectoryPageError);
-    }
-
     private _getContents(key: string): JSX.Element {
         if (this.state.loading) {
             return <Loading />;
@@ -343,33 +332,6 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
         ];
     }
 
-    @autobind
-    private _getGridContextMenuItems(bugBash: BugBash): IContextualMenuItem[] {
-        return [
-            {
-                key: "open", name: "View results", iconProps: {iconName: "ShowResults"},
-                onClick: () => {
-                    navigate({ view: UrlActions.ACTION_RESULTS, id: bugBash.id});
-                }
-            },
-            {
-                key: "edit", name: "Edit", iconProps: {iconName: "Edit"},
-                onClick: () => {
-                    navigate({ view: UrlActions.ACTION_EDIT, id: bugBash.id});
-                }
-            },
-            {
-                key: "delete", name: "Delete", iconProps: {iconName: "Cancel", style: { color: "#da0a00", fontWeight: "bold" }},
-                onClick: async () => {
-                    const confirm = await confirmAction(true, "Are you sure you want to delete this bug bash instance?");
-                    if (confirm) {
-                        bugBash.delete();
-                    }
-                }
-            }
-        ];
-    }
-
     private _onRowClick(e: React.MouseEvent<HTMLElement>, bugBash: BugBash) {
         if (!e.ctrlKey) {
             e.preventDefault();
@@ -438,35 +400,64 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
         return upcomingBugBashes;
     }
 
-    @autobind
-    private _onPivotChanged(pivotKey: string) {
+    private _getGridContextMenuItems = (bugBash: BugBash): IContextualMenuItem[] => {
+        return [
+            {
+                key: "open", name: "View results", iconProps: {iconName: "ShowResults"},
+                onClick: () => {
+                    navigate({ view: UrlActions.ACTION_RESULTS, id: bugBash.id});
+                }
+            },
+            {
+                key: "edit", name: "Edit", iconProps: {iconName: "Edit"},
+                onClick: () => {
+                    navigate({ view: UrlActions.ACTION_EDIT, id: bugBash.id});
+                }
+            },
+            {
+                key: "delete", name: "Delete", iconProps: {iconName: "Cancel", style: { color: "#da0a00", fontWeight: "bold" }},
+                onClick: async () => {
+                    const confirm = await confirmAction(true, "Are you sure you want to delete this bug bash instance?");
+                    if (confirm) {
+                        bugBash.delete();
+                    }
+                }
+            }
+        ];
+    }
+
+    private _dismissSettingsPanel = () => {
+        this.setState({settingsPanelOpen: false} as IAllBugBashesViewState);
+    }
+
+    private _dismissErrorMessage = () => {
+        ErrorMessageActions.dismissErrorMessage(ErrorKeys.DirectoryPageError);
+    }
+
+    private _onPivotChanged = (pivotKey: string) => {
         if (pivotKey) {
             writeLocalSetting("directorypivotkey", pivotKey, WebSettingsScope.User);
         }
     }
 
-    @autobind
-    private _onFilterChange(filterState: IFilterState) {
+    private _onFilterChange = (filterState: IFilterState) => {
         BugBashActions.applyFilter(filterState);
     }
 
-    @autobind
-    private _onSortChange(_ev?: React.MouseEvent<HTMLElement>, column?: IColumn) {
+    private _onSortChange = (_ev?: React.MouseEvent<HTMLElement>, column?: IColumn) => {
         BugBashActions.applySort({
             sortKey: column.key as BugBashFieldNames,
             isSortedDescending: !column.isSortedDescending
         });
     }
 
-    @autobind
-    private _focusFilterBar(ev: KeyboardEvent) {
+    private _focusFilterBar = (ev: KeyboardEvent) => {
         if (this._filterBar && ev.ctrlKey && ev.shiftKey && stringEquals(ev.key, "f", true)) {
             this._filterBar.focus();
         }
     }
 
-    @autobind
-    private _resolveFilterBar(filterBar: IFilterBar) {
+    private _resolveFilterBar = (filterBar: IFilterBar) => {
         this._filterBar = filterBar;
     }
 }

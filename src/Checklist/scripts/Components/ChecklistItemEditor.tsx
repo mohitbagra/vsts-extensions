@@ -12,7 +12,7 @@ import { Checkbox } from "OfficeFabric/Checkbox";
 import { IContextualMenuItem } from "OfficeFabric/ContextualMenu";
 import { TextField } from "OfficeFabric/TextField";
 import { DirectionalHint, TooltipDelay, TooltipHost } from "OfficeFabric/Tooltip";
-import { autobind, css, KeyCodes } from "OfficeFabric/Utilities";
+import { css, KeyCodes } from "OfficeFabric/Utilities";
 
 export interface IChecklistItemEditorProps extends IBaseFluxComponentProps {
     checklistItem?: IChecklistItem;
@@ -147,15 +147,13 @@ export class ChecklistItemEditor extends BaseFluxComponent<IChecklistItemEditorP
         }));
     }
 
-    @autobind
-    private _onStateChange(_ev: React.MouseEvent<HTMLElement>, item: IContextualMenuItem) {
+    private _onStateChange = (_ev: React.MouseEvent<HTMLElement>, item: IContextualMenuItem) => {
         const checklistItem = {...this.state.checklistItem};
         checklistItem.state = item.key as ChecklistItemState;
         this.setState({checklistItem: checklistItem});
     }
 
-    @autobind
-    private _onInputKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
+    private _onInputKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.keyCode === KeyCodes.enter) {
             e.preventDefault();
             e.stopPropagation();
@@ -168,30 +166,26 @@ export class ChecklistItemEditor extends BaseFluxComponent<IChecklistItemEditorP
         }
     }
 
-    @autobind
-    private _onItemTextChange(value: string) {
+    private _onItemTextChange = (value: string) => {
         const checklistItem = {...this.state.checklistItem};
         checklistItem.text = value;
         this.setState({checklistItem: checklistItem});
     }
 
-    @autobind
-    private _onItemMandatoryChange(_ev: React.FormEvent<HTMLInputElement>, checked: boolean) {
+    private _onItemMandatoryChange = (_ev: React.FormEvent<HTMLInputElement>, checked: boolean) => {
         const checklistItem = {...this.state.checklistItem};
         checklistItem.required = checked;
         this.setState({checklistItem: checklistItem});
     }
 
-    @autobind
-    private async _submitItem() {
+    private _submitItem = () => {
         const {checklistItem} = this.state;
         if (!isNullOrWhiteSpace(checklistItem.text)) {
             this.props.onSubmit(this.state.checklistItem);
         }
     }
 
-    @autobind
-    private async _cancelEdit() {
+    private _cancelEdit = () => {
         this.setState(
             {
                 checklistItem: this.props.checklistItem ? {...this.props.checklistItem} : this._getDefaultItem()

@@ -9,7 +9,6 @@ import {
 } from "Library/Components/VSTS/WorkItemFieldControl";
 import { Fabric } from "OfficeFabric/Fabric";
 import { Rating, RatingSize } from "OfficeFabric/Rating";
-import { autobind } from "OfficeFabric/Utilities";
 
 interface IRatingControlInputs {
     FieldName: string;
@@ -41,8 +40,7 @@ export class RatingControl extends WorkItemFieldControl<number, IRatingControlPr
         );
     }
 
-    @autobind
-    private _onChange(newValue: number) {
+    private _onChange = (newValue: number) => {
         this.onValueChanged(newValue);
     }
 }

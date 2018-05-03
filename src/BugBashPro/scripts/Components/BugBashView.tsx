@@ -34,7 +34,6 @@ import {
 import { navigate } from "Library/Utilities/Navigation";
 import { stringEquals } from "Library/Utilities/String";
 import { SelectionMode } from "OfficeFabric/Selection";
-import { autobind } from "OfficeFabric/Utilities";
 import { FilterBar, IFilterBar, KeywordFilterBarItem } from "VSSUI/FilterBar";
 import { Hub } from "VSSUI/Hub";
 import { HubHeader, HubTextTile, HubTileRegion } from "VSSUI/HubHeader";
@@ -330,48 +329,6 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
         );
     }
 
-    @autobind
-    private _getPicklistItems(key: BugBashItemFieldNames | WorkItemFieldNames): string[] {
-        return Object.keys(StoresHub.bugBashItemStore.propertyMap[key]);
-    }
-
-    @autobind
-    private _getListItem(value: string, key: BugBashItemFieldNames | WorkItemFieldNames): IPickListItem {
-        const keyType = BugBashItemKeyTypes[key];
-
-        if (keyType === "identity" || keyType === "identityRef") {
-            const identity = parseUniquefiedIdentityName(value);
-            return {
-                name: identity.displayName,
-                key: value,
-                iconProps: identity.imageUrl ? {
-                    iconType: VssIconType.image,
-                    imageProps: {
-                        src: identity.imageUrl
-                    }
-                } : null
-            };
-        }
-        else if (key === WorkItemFieldNames.AreaPath) {
-            return {
-                name: value.substr(value.lastIndexOf("\\") + 1),
-                key: value
-            };
-        }
-        else if (key === BugBashItemFieldNames.TeamId) {
-            return {
-                name: (StoresHub.teamStore.getItem(value) && StoresHub.teamStore.getItem(value).name) || value,
-                key: value
-            };
-        }
-        else {
-            return {
-                name: value,
-                key: value
-            };
-        }
-    }
-
     private _renderHubFilterBar(): JSX.Element {
         if ((this.state.selectedPivot === BugBashViewPivotKeys.Results || this.state.selectedPivot === BugBashViewPivotKeys.Charts)
             && !this.props.bugBashItemId) {
@@ -569,21 +526,68 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
         StoresHub.workItemStore.clearStore();
     }
 
-    @autobind
-    private _onPivotChanged(pivotKey: string) {
+    private _isAnyProviderDirty(): boolean {
+        const bugBash = this.state.bugBash;
+        const items = StoresHub.bugBashItemStore.getAll() || [];
+        const isAnyBugBashItemDirty = items.some(item => item.isDirty());
+        return bugBash.isDirty()
+            || isAnyBugBashItemDirty
+            || StoresHub.bugBashItemStore.getNewBugBashItem().isDirty()
+            || (this.state.bugBashDetails && this.state.bugBashDetails.isDirty());
+    }
+
+    private _getPicklistItems = (key: BugBashItemFieldNames | WorkItemFieldNames): string[] => {
+        return Object.keys(StoresHub.bugBashItemStore.propertyMap[key]);
+    }
+
+    private _getListItem = (value: string, key: BugBashItemFieldNames | WorkItemFieldNames): IPickListItem => {
+        const keyType = BugBashItemKeyTypes[key];
+
+        if (keyType === "identity" || keyType === "identityRef") {
+            const identity = parseUniquefiedIdentityName(value);
+            return {
+                name: identity.displayName,
+                key: value,
+                iconProps: identity.imageUrl ? {
+                    iconType: VssIconType.image,
+                    imageProps: {
+                        src: identity.imageUrl
+                    }
+                } : null
+            };
+        }
+        else if (key === WorkItemFieldNames.AreaPath) {
+            return {
+                name: value.substr(value.lastIndexOf("\\") + 1),
+                key: value
+            };
+        }
+        else if (key === BugBashItemFieldNames.TeamId) {
+            return {
+                name: (StoresHub.teamStore.getItem(value) && StoresHub.teamStore.getItem(value).name) || value,
+                key: value
+            };
+        }
+        else {
+            return {
+                name: value,
+                key: value
+            };
+        }
+    }
+
+    private _onPivotChanged = (pivotKey: string) => {
         if (pivotKey) {
             navigate({ view: pivotKey as UrlActions, id: this.props.bugBashId}, false, false, null, true);
             this.setState({selectedPivot: pivotKey as BugBashViewPivotKeys});
         }
     }
 
-    @autobind
-    private _onFilterChange() {
+    private _onFilterChange = () => {
         BugBashItemActions.applyFilter(this._hubViewState.filter.getState());
     }
 
-    @autobind
-    private _onViewOptionsChanged(changedState: IViewOptionsValues) {
+    private _onViewOptionsChanged = (changedState: IViewOptionsValues) => {
         const paneMode = changedState[HubKeys.BugBashViewOptionsKey];
         if (paneMode && this.state.bugBash && !this.state.bugBash.isAutoAccept) {
             writeLocalSetting("bugbashviewactionkey", paneMode, WebSettingsScope.User);
@@ -591,8 +595,7 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
         }
     }
 
-    @autobind
-    private async _onBugBashesLinkClick(e: React.MouseEvent<HTMLElement>) {
+    private _onBugBashesLinkClick = async (e: React.MouseEvent<HTMLElement>) => {
         if (!e.ctrlKey) {
             e.preventDefault();
 
@@ -605,23 +608,11 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
         }
     }
 
-    private _isAnyProviderDirty(): boolean {
-        const bugBash = this.state.bugBash;
-        const items = StoresHub.bugBashItemStore.getAll() || [];
-        const isAnyBugBashItemDirty = items.some(item => item.isDirty());
-        return bugBash.isDirty()
-            || isAnyBugBashItemDirty
-            || StoresHub.bugBashItemStore.getNewBugBashItem().isDirty()
-            || (this.state.bugBashDetails && this.state.bugBashDetails.isDirty());
-    }
-
-    @autobind
-    private _goBackToBugBashResults() {
+    private _goBackToBugBashResults = () => {
         navigate({ view: UrlActions.ACTION_RESULTS, id: this.props.bugBashId });
     }
 
-    @autobind
-    private async _refreshBugBashItems() {
+    private _refreshBugBashItems = async () => {
         const items = StoresHub.bugBashItemStore.getAll() || [];
         const isAnyBugBashItemDirty = items.some(item => item.isDirty());
         const confirm = await confirmAction(
@@ -633,16 +624,14 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
         }
     }
 
-    @autobind
-    private async _revertBugBash() {
+    private _revertBugBash = async () => {
         const confirm = await confirmAction(true, "Are you sure you want to undo your changes to this instance?");
         if (confirm) {
             this.state.bugBash.reset();
         }
     }
 
-    @autobind
-    private async _refreshBugBash() {
+    private _refreshBugBash = async () => {
         const confirm = await confirmAction(this.state.bugBash.isDirty(),
                                             "Refreshing will undo your unsaved changes. Are you sure you want to do that?");
 
@@ -651,21 +640,18 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
         }
     }
 
-    @autobind
-    private _saveBugBash() {
+    private _saveBugBash = () => {
         this.state.bugBash.save();
     }
 
-    @autobind
-    private async _revertBugBashDetails() {
+    private _revertBugBashDetails = async () => {
         const confirm = await confirmAction(true, "Are you sure you want to undo your changes to this instance?");
         if (confirm) {
             this.state.bugBashDetails.reset();
         }
     }
 
-    @autobind
-    private async _refreshBugBashDetails() {
+    private _refreshBugBashDetails = async () => {
         const confirm = await confirmAction(this.state.bugBashDetails.isDirty(),
                                             "Refreshing will undo your unsaved changes. Are you sure you want to do that?");
 
@@ -674,20 +660,17 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
         }
     }
 
-    @autobind
-    private _saveBugBashDetails() {
+    private _saveBugBashDetails = () => {
         this.state.bugBashDetails.save();
     }
 
-    @autobind
-    private _focusFilterBar(ev: KeyboardEvent) {
+    private _focusFilterBar = (ev: KeyboardEvent) => {
         if (this._filterBar && ev.ctrlKey && ev.shiftKey && stringEquals(ev.key, "f", true)) {
             this._filterBar.focus();
         }
     }
 
-    @autobind
-    private _resolveFilterBar(filterBar: IFilterBar) {
+    private _resolveFilterBar = (filterBar: IFilterBar) => {
         this._filterBar = filterBar;
     }
 }

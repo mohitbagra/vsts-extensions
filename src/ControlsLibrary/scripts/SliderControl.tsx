@@ -9,7 +9,6 @@ import {
 } from "Library/Components/VSTS/WorkItemFieldControl";
 import { Fabric } from "OfficeFabric/Fabric";
 import { Slider } from "OfficeFabric/Slider";
-import { autobind } from "OfficeFabric/Utilities";
 
 interface ISliderControlInputs {
     FieldName: string;
@@ -44,8 +43,7 @@ export class SliderControl extends WorkItemFieldControl<number, ISliderControlPr
         );
     }
 
-    @autobind
-    private _onChange(newValue: number) {
+    private _onChange = (newValue: number) => {
         this.onValueChanged(parseFloat(newValue.toPrecision(10)));
     }
 }

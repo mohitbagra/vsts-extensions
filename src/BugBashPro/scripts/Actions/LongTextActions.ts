@@ -14,7 +14,7 @@ export namespace LongTextActions {
         LongTextActionsHub.Clean.invoke(null);
     }
 
-    export async function initializeLongText(id: string) {
+    export function initializeLongText(id: string) {
         if (StoresHub.longTextStore.isLoaded(id)) {
             LongTextActionsHub.AddOrUpdateLongText.invoke(null);
         }

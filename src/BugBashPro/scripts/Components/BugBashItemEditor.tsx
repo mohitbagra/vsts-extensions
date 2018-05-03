@@ -35,7 +35,6 @@ import { Overlay } from "OfficeFabric/Overlay";
 import {
     DirectionalHint, TooltipDelay, TooltipHost, TooltipOverflowMode
 } from "OfficeFabric/Tooltip";
-import { autobind } from "OfficeFabric/Utilities";
 import { WebApiTeam } from "TFS/Core/Contracts";
 
 export interface IBugBashItemEditorProps extends IBaseFluxComponentProps {
@@ -368,8 +367,11 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
         }
     }
 
-    @autobind
-    private async _pasteImage(data: string): Promise<string> {
+    private _onChange<T extends string | number | boolean | Date>(fieldName: BugBashItemFieldNames, fieldValue: T) {
+        this.props.bugBashItem.setFieldValue<T>(fieldName, fieldValue);
+    }
+
+    private _pasteImage = async (data: string): Promise<string> => {
         const gitPath = StoresHub.bugBashStore.getItem(this.props.bugBashId).getFieldValue<string>(BugBashFieldNames.Title, true).replace(" ", "_");
 
         try {
@@ -381,45 +383,34 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
         }
     }
 
-    @autobind
-    private _onEditorKeyDown(e: React.KeyboardEvent<any>) {
+    private _onEditorKeyDown = (e: React.KeyboardEvent<any>) => {
         if (e.ctrlKey && e.keyCode === 83) {
             e.preventDefault();
             this._saveSelectedItem();
         }
     }
 
-    private _onChange<T extends string | number | boolean | Date>(fieldName: BugBashItemFieldNames, fieldValue: T) {
-        this.props.bugBashItem.setFieldValue<T>(fieldName, fieldValue);
-    }
-
-    @autobind
-    private _onCommentChange(newComment: string) {
+    private _onCommentChange = (newComment: string) => {
         this.props.bugBashItem.setComment(newComment);
     }
 
-    @autobind
-    private _onTitleChange(value: string) {
+    private _onTitleChange = (value: string) => {
         this._onChange(BugBashItemFieldNames.Title, value);
     }
 
-    @autobind
-    private _onDescriptionChange(value: string) {
+    private _onDescriptionChange = (value: string) => {
         this._onChange(BugBashItemFieldNames.Description, value);
     }
 
-    @autobind
-    private _onRejectReasonChange(value: string) {
+    private _onRejectReasonChange = (value: string) => {
         this._onChange(BugBashItemFieldNames.RejectReason, value);
     }
 
-    @autobind
-    private _onTeamChange(team: WebApiTeam, value?: string) {
+    private _onTeamChange = (team: WebApiTeam, value?: string) => {
         this._onChange(BugBashItemFieldNames.TeamId, team ? team.id : value);
     }
 
-    @autobind
-    private _dismissErrorMessage() {
+    private _dismissErrorMessage = () => {
         setTimeout(
             () => {
                 ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashItemError);
@@ -428,20 +419,17 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
         );
     }
 
-    @autobind
-    private _acceptBugBashItem() {
+    private _acceptBugBashItem = () => {
         this.props.bugBashItem.accept();
     }
 
-    @autobind
-    private _rejectBugBashItem(_ev: React.FormEvent<HTMLElement>, checked: boolean) {
+    private _rejectBugBashItem = (_ev: React.FormEvent<HTMLElement>, checked: boolean) => {
         this.props.bugBashItem.setFieldValue(BugBashItemFieldNames.Rejected, checked ? true : false, false);
         this.props.bugBashItem.setFieldValue<IdentityRef>(BugBashItemFieldNames.RejectedBy, checked ? getCurrentUser() : null, false);
         this.props.bugBashItem.setFieldValue(BugBashItemFieldNames.RejectReason, "");
     }
 
-    @autobind
-    private async _refreshBugBashItem() {
+    private _refreshBugBashItem = async () => {
         if (!this.props.bugBashItem.isNew()) {
             const confirm = await confirmAction(this.props.bugBashItem.isDirty(), "Refreshing the item will undo your unsaved changes. Are you sure you want to do that?");
             if (confirm) {
@@ -450,29 +438,25 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
         }
     }
 
-    @autobind
-    private async _revertBugBashItem() {
+    private _revertBugBashItem = async () => {
         const confirm = await confirmAction(true, "Are you sure you want to undo your changes to this item?");
         if (confirm) {
             this.props.bugBashItem.reset();
         }
     }
 
-    @autobind
-    private async _deleteBugBashItem() {
+    private _deleteBugBashItem = async () => {
         const confirm = await confirmAction(true, "Are you sure you want to delete this item?");
         if (confirm) {
             this.props.bugBashItem.delete();
         }
     }
 
-    @autobind
-    private _saveSelectedItem() {
+    private _saveSelectedItem = () => {
         this.props.bugBashItem.save(this.props.bugBashId);
     }
 
-    @autobind
-    private _toggleFullScreen() {
+    private _toggleFullScreen = () => {
         if (this.props.isMaximized) {
             // go back to list
             navigate({ view: UrlActions.ACTION_RESULTS, id: this.props.bugBashId });

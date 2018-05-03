@@ -29,7 +29,7 @@ export namespace BugBashActions {
         BugBashActionsHub.Clean.invoke(null);
     }
 
-    export async function initializeAllBugBashes() {
+    export function initializeAllBugBashes() {
         if (StoresHub.bugBashStore.isLoaded()) {
             BugBashActionsHub.InitializeAllBugBashes.invoke(null);
         }
@@ -51,7 +51,7 @@ export namespace BugBashActions {
         }
     }
 
-    export async function initializeBugBash(bugBashId: string) {
+    export function initializeBugBash(bugBashId: string) {
         if (StoresHub.bugBashStore.isLoaded(bugBashId)) {
             BugBashActionsHub.InitializeBugBash.invoke(null);
         }

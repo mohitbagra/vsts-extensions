@@ -47,7 +47,7 @@ export namespace ChecklistActions {
         }
     }
 
-    export async function initializeChecklists(workItemId: number, workItemType: string, projectId: string) {
+    export function initializeChecklists(workItemId: number, workItemType: string, projectId: string) {
         if (StoresHub.checklistStore.isLoaded(`${workItemId}`)) {
             ErrorMessageActions.dismissErrorMessage("ChecklistError");
             ChecklistActionsHub.InitializeChecklist.invoke(null);
