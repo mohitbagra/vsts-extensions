@@ -13,6 +13,11 @@
         box-sizing: border-box;
         margin: 0 !important;    
         z-index: 99999;
+
+        .rich-editor {
+            min-height: initial !important;
+            max-height: initial !important;
+        }
     }
 
     .info-label.rich-editor-label {

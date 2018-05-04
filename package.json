@@ -10,12 +10,12 @@
         "package": "npm run build && node buildPackages.js"
     },
     "devDependencies": {
-        "@types/react": "^16.0.9",
-        "@types/react-dom": "^16.0.0",
+        "@types/react": "^16.3.13",
+        "@types/react-dom": "^16.0.5",
         "@types/jquery": "2.0.41",
         "@types/lodash": "4.14.106",
-        "react": "^15.3.2",
-        "react-dom": "^15.3.2",
+        "react": "^16.3.2",
+        "react-dom": "^16.3.2",
         "webpack": "3.10.0",
         "webpack-dev-server": "2.11.1",
         "rimraf": "2.6.2",
