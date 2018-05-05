@@ -29,6 +29,24 @@
     border-radius: 0;
 }
 
+@mixin scrollbars($size) {
+    ::-webkit-scrollbar {
+        width: $size;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        border: 6px solid transparent;
+        background: rgba(0,0,0,0.2);
+        border-radius: 10px;
+        background-clip: padding-box;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(0,0,0,0.4);
+        background-clip: padding-box;
+    }
+}
+
 .vss-PickList .vss-PickList--element .vss-ItemIndicator--textIndicator {
     padding-right: 5px;
 }

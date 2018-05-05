@@ -1,7 +1,5 @@
 # Bug Bash Pro
 
-[![Donate](images/donate.png)](https://www.paypal.me/mohitbagra/5)  
-
 # Manage team wide bug bashes
 A work hub extension that lets teams manage their bug bashes in a more efficient manner. When a new feature is being tested either org wide or team wide, a lots of bugs are created and its hard to track all the bugs created in one instance of testing and triage them. Users can use features like work item templates to use pre-defined set of field values while creating bugs and then track them using work item queries, but its a tedious process in 2 ways - 
 

@@ -19,6 +19,8 @@
     }    
 }
 
+@include scrollbars(18px);
+
 .bugbash-badge {
     position: fixed;
     top: 7px;
