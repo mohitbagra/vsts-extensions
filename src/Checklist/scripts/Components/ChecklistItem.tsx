@@ -40,6 +40,9 @@ export class ChecklistItem extends BaseFluxComponent<IChecklistItemProps, IBaseF
                         className={css("checklist-checkbox", { checked: isCompleted })}
                         checked={isCompleted}
                         disabled={disabled}
+                        styles={{
+                            checkbox: {borderRadius: "10px"}
+                        }}
                         onChange={this._onChecklistItemChange}
                     />
                 }

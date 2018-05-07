@@ -19,7 +19,7 @@
     }    
 }
 
-@include scrollbars();
+@include scrollbars(11px, 2px);
 
 .bugbash-badge {
     position: fixed;

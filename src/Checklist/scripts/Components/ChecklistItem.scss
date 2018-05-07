@@ -55,8 +55,11 @@
             @include UserSelectNone();
             
             &.checked {
-                text-decoration: line-through;
                 color: #999;
+                
+                div {
+                    text-decoration: line-through;
+                }
             }
         }
 

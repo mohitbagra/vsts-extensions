@@ -5,7 +5,6 @@
 
     .message-bar {
         margin: 0 10px;
-        width: auto;
     }
 
     .error-message {
@@ -17,14 +16,10 @@
         max-height: 300px; // show 10 items in view
         overflow: auto;
 
-        .checklist-items-label {
+        .checklist-items.showBottomBorder {
             border-bottom: 1px solid #ccc;
-            margin: 0 10px 5px 10px;
-            padding-left: 10px;
-            font-size: 13px;
-            font-weight: 400;
-            color: #333;
-            padding-bottom: 2px;
+            margin-bottom: 5px;
+            padding-bottom: 5px;
         }
     }    
 

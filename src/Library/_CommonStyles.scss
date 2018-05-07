@@ -29,14 +29,14 @@
     border-radius: 0;
 }
 
-@mixin scrollbars() {
+@mixin scrollbars($size, $padding) {
     ::-webkit-scrollbar {
-        width: 11px;
-        height: 11px;
+        width: $size;
+        height: $size;
     }
     
     ::-webkit-scrollbar-thumb {
-        border: 2px solid transparent;
+        border: $padding solid transparent;
         background: #6d6d6d;
         border-radius: 10px;
         background-clip: padding-box;

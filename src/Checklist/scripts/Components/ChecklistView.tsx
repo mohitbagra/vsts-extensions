@@ -10,7 +10,6 @@ import {
     ChecklistItemState, ChecklistType, IChecklistItem, IWorkItemChecklist, IWorkItemChecklists
 } from "Checklist/Interfaces";
 import { StoresHub } from "Checklist/Stores/StoresHub";
-import { InfoLabel } from "Library/Components/InfoLabel";
 import { Loading } from "Library/Components/Loading";
 import { AutoResizableComponent } from "Library/Components/Utilities/AutoResizableComponent";
 import {
@@ -22,6 +21,7 @@ import { delegate } from "Library/Utilities/Core";
 import { isNullOrWhiteSpace, stringEquals } from "Library/Utilities/String";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
 import { Modal } from "OfficeFabric/Modal";
+import { css } from "OfficeFabric/Utilities";
 import { VssIcon, VssIconType } from "VSSUI/VssIcon";
 
 const DragHandle = SortableHandle(() => <VssIcon className="drag-handle" iconName="GlobalNavButton" iconType={VssIconType.fabric} />);
@@ -139,47 +139,38 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
 
     private _renderChecklistItemsContainer(): JSX.Element {
         const {checklists} = this.state;
+        const {isPersonal} = this.props;
+        const showSeparator = checklists.shared.checklistItems && checklists.shared.checklistItems.length > 0;
+        const personalItems = checklists.personal.checklistItems || [];
+        const defaultItems = checklists.witDefault.checklistItems || [];
+        const sharedItems = checklists.shared.checklistItems || [];
 
-        if (this.props.isPersonal) {
+        if ((isPersonal && personalItems.length === 0) || (!isPersonal && defaultItems.length === 0 && sharedItems.length === 0)) {
             return (
-                <div className="checklist-items-container">
-                    {this._renderChecklistItems(checklists.personal.checklistItems, ChecklistType.Personal)}
-                </div>
+                <MessageBar messageBarType={MessageBarType.info} className="message-bar">
+                    No checklist items added.
+                </MessageBar>
             );
         }
-        else {
-            return (
-                <div className="checklist-items-container">
-                    <div>
-                        <InfoLabel
-                            className="checklist-items-label"
-                            label="Default items"
-                            info={`Default checklist for all "${this.props.workItemType}" workitems.`}
-                        />
-                        {this._renderChecklistItems(checklists.witDefault.checklistItems, ChecklistType.WitDefault)}
-                    </div>
-                    <div style={{marginTop: "10px"}}>
-                        <InfoLabel
-                            className="checklist-items-label"
-                            label="Custom items"
-                            info="Custom checklist just for this workitem."
-                        />
-                        {this._renderChecklistItems(checklists.shared.checklistItems, ChecklistType.Shared)}
-                    </div>
-                </div>
-            );
-        }
+
+        return (
+            <div className="checklist-items-container">
+                {isPersonal && this._renderChecklistItems(personalItems, ChecklistType.Personal)}
+                {!isPersonal && this._renderChecklistItems(defaultItems, ChecklistType.WitDefault, showSeparator)}
+                {!isPersonal && this._renderChecklistItems(sharedItems, ChecklistType.Shared)}
+            </div>
+        );
     }
 
-    private _renderChecklistItems(checklistItems: IChecklistItem[], checklistType: ChecklistType): JSX.Element {
+    private _renderChecklistItems(checklistItems: IChecklistItem[], checklistType: ChecklistType, showSeparator: boolean = false): JSX.Element {
         if (checklistItems == null || checklistItems.length === 0) {
-            return this._renderZeroDataMessage(checklistType);
+            return null;
         }
 
         const items = checklistItems.map(i => this._renderChecklistItem(i, checklistType));
         if (checklistType === ChecklistType.WitDefault) {
             return (
-                <div className="checklist-items">
+                <div className={css("checklist-items", {showBottomBorder: showSeparator})}>
                     {items.map(i => (
                         <div className="checklist-item-container" style={{paddingLeft: "19px"}} >
                             {i}
@@ -199,15 +190,6 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
                 />
             );
         }
-    }
-
-    private _renderZeroDataMessage(checklistType: ChecklistType): JSX.Element {
-        const message = checklistType === ChecklistType.WitDefault ? "No default checklist items configured for this work item type" : "No checklist items added";
-        return (
-            <MessageBar messageBarType={MessageBarType.info} className="message-bar">
-                {message}
-            </MessageBar>
-        );
     }
 
     private _renderEditView(): JSX.Element {
