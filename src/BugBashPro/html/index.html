@@ -43,7 +43,13 @@
         VSS.init({
             explicitNotifyLoaded: false,
             usePlatformScripts: true,
-            usePlatformStyles: false
+            usePlatformStyles: false,
+            moduleLoaderConfig: {
+                paths: {
+                    "react": "3rdParty/react",
+                    "react-dom": "3rdParty/react-dom"
+                }
+            }
         });
         
         // Load main entry point for extension
