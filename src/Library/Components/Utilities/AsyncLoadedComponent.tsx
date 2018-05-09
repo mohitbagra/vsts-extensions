@@ -7,8 +7,6 @@ interface IAsyncLoadedComponentProps<TProps> {
     moduleComponentSelector: ModuleComponentSelector<TProps>;
     props: TProps;
     componentWhileLoading?(): JSX.Element;
-    onLoadStart?(): void;
-    onLoadEnd?(): void;
 }
 
 interface IAsyncLoadedComponentState<TProps> {
@@ -37,13 +35,7 @@ class AsyncLoadedComponent<TProps> extends React.Component<IAsyncLoadedComponent
             return null;
         }
 
-        return React.createElement(this.state.componentType as React.StatelessComponent<TProps>, this.props.props);
-    }
-
-    public componentWillMount(): void {
-        if (this.props.onLoadStart) {
-            this.props.onLoadStart();
-        }
+        return React.createElement(this.state.componentType, this.props.props);
     }
 
     public componentDidMount(): void {
@@ -57,10 +49,6 @@ class AsyncLoadedComponent<TProps> extends React.Component<IAsyncLoadedComponent
 
             VSS.require(this.props.modules, (...modules) => {
                 if (this._isMounted) {
-                    if (this.props.onLoadEnd) {
-                        this.props.onLoadEnd();
-                    }
-
                     this.setState({
                         isLoading: false,
                         componentType: this.props.moduleComponentSelector(...modules)
@@ -85,9 +73,7 @@ class AsyncLoadedComponent<TProps> extends React.Component<IAsyncLoadedComponent
 export function getAsyncLoadedComponent<TProps = {}>
     (modules: string[],
      moduleComponentSelector: ModuleComponentSelector<TProps>,
-     componentWhileLoading?: () => JSX.Element,
-     onLoadStart?: () => void,
-     onLoadEnd?: () => void): (props: TProps) => JSX.Element {
+     componentWhileLoading?: () => JSX.Element): (props: TProps) => JSX.Element {
 
     return (props: TProps) => React.createElement(
         AsyncLoadedComponent,
@@ -95,8 +81,6 @@ export function getAsyncLoadedComponent<TProps = {}>
             modules,
             moduleComponentSelector,
             componentWhileLoading,
-            onLoadStart,
-            onLoadEnd,
             props,
         } as IAsyncLoadedComponentProps<TProps>);
 }
