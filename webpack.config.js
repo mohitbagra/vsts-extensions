@@ -34,10 +34,10 @@ let appPlugins = [
 ];
 
 Apps.forEach(appName => {
-    const appPath = path.resolve(__dirname, `src/${appName}`)
+    const appPath = path.resolve(__dirname, `src/Apps/${appName}`)
     if (existsSync(appPath)) {
         console.log(`App "${appName}" found.`);
-        const configPath = path.resolve(__dirname, `src/${appName}/configs/webpack.config.js`);
+        const configPath = path.resolve(__dirname, `src/Apps/${appName}/configs/webpack.config.js`);
         if (existsSync(configPath)) {
             const config = require(configPath);
             if (config.entry) {
@@ -77,13 +77,13 @@ module.exports = {
         alias: { 
             "OfficeFabric": path.resolve(__dirname, "node_modules/office-ui-fabric-react/lib"),
             "VSSUI": path.resolve(__dirname, "node_modules/vss-ui"),
-            "Library": path.resolve(__dirname, "src/Library"),
-            "BugBashPro": path.resolve(__dirname, "src/BugBashPro/scripts"),
-            "Checklist": path.resolve(__dirname, "src/Checklist/scripts"),
-            "ControlsLibrary": path.resolve(__dirname, "src/ControlsLibrary/scripts"),
-            "OneClick": path.resolve(__dirname, "src/OneClick/scripts"),
-            "PRWorkItems": path.resolve(__dirname, "src/PRWorkItems/scripts"),
-            "RelatedWits": path.resolve(__dirname, "src/RelatedWits/scripts")
+            "Common": path.resolve(__dirname, "src/Common"),
+            "BugBashPro": path.resolve(__dirname, "src/Apps/BugBashPro/scripts"),
+            "Checklist": path.resolve(__dirname, "src/Apps/Checklist/scripts"),
+            "ControlsLibrary": path.resolve(__dirname, "src/Apps/ControlsLibrary/scripts"),
+            "OneClick": path.resolve(__dirname, "src/Apps/OneClick/scripts"),
+            "PRWorkItems": path.resolve(__dirname, "src/Apps/PRWorkItems/scripts"),
+            "RelatedWits": path.resolve(__dirname, "src/Apps/RelatedWits/scripts")
         }        
     },
     module: {
@@ -102,7 +102,7 @@ module.exports = {
                         loader: "sass-resources-loader",
                         query: {
                             resources: [
-                                path.resolve(__dirname, './src/Library/_CommonStyles.scss')
+                                path.resolve(__dirname, './src/Common/_CommonStyles.scss')
                             ]
                         }
                     }

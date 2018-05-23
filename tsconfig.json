@@ -17,13 +17,13 @@
         "paths": {
             "OfficeFabric/*": ["node_modules/office-ui-fabric-react/lib/*"],
             "VSSUI/*": ["node_modules/vss-ui/*"],
-            "Library/*": ["src/Library/*"],
-            "BugBashPro/*": ["src/BugBashPro/scripts/*"],
-            "Checklist/*": ["src/Checklist/scripts/*"],
-            "ControlsLibrary/*": ["src/ControlsLibrary/scripts/*"],
-            "OneClick/*": ["src/OneClick/scripts/*"],
-            "PRWorkItems/*": ["src/PRWorkItems/scripts/*"],
-            "RelatedWits/*": ["src/RelatedWits/scripts/*"]
+            "Common/*": ["src/Common/*"],
+            "BugBashPro/*": ["src/Apps/BugBashPro/scripts/*"],
+            "Checklist/*": ["src/Apps/Checklist/scripts/*"],
+            "ControlsLibrary/*": ["src/Apps/ControlsLibrary/scripts/*"],
+            "OneClick/*": ["src/Apps/OneClick/scripts/*"],
+            "PRWorkItems/*": ["src/Apps/PRWorkItems/scripts/*"],
+            "RelatedWits/*": ["src/Apps/RelatedWits/scripts/*"]
         },
         "types": [
             "react",

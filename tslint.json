@@ -11,6 +11,11 @@
               "function-regex": "^[_]?[a-z][\\w\\d]+$"
             }
         ],
+        "binary-expression-operand-order": false,
+        "no-reserved-keywords": false,
+        "no-implicit-dependencies": false,
+        "no-submodule-imports": false,
+        "type-literal-delimiter": false,
         "adjacent-overload-signatures": true,
 		"interface-name": [true],
 		"jsx-alignment": true,

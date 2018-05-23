@@ -1,0 +1,61 @@
+export enum RichEditorToolbarButtonNames {
+    btnFullscreen = "ToggleFullscreen",
+    btnBold = "Bold",
+    btnItalic = "Italic",
+    btnUnderline = "Underline",
+    btnBullets = "BulletedList",
+    btnNumbering = "NumberedList",
+    btnIndent = "IncreaseIndent",
+    btnOutdent = "DecreaseIndent",
+    btnAlignLeft = "AlignLeft",
+    btnAlignCenter = "AlignCenter",
+    btnAlignRight = "AlignRight",
+    btnUnlink = "RemoveHyperlink",
+    btnSubscript = "Subscript",
+    btnSuperScript = "Superscript",
+    btnStrikethrough = "Strikethrough",
+    btnUndo = "Undo",
+    btnRedo = "Redo",
+    btnUnformat = "RemoveFormat",
+    btnUploadImage = "UploadImage"
+}
+
+export const ALL_BUTTONS = [
+    RichEditorToolbarButtonNames.btnBold,
+    RichEditorToolbarButtonNames.btnItalic,
+    RichEditorToolbarButtonNames.btnUnderline,
+    RichEditorToolbarButtonNames.btnUnformat,
+    RichEditorToolbarButtonNames.btnUnlink,
+    RichEditorToolbarButtonNames.btnUploadImage,
+    RichEditorToolbarButtonNames.btnBullets,
+    RichEditorToolbarButtonNames.btnNumbering,
+    RichEditorToolbarButtonNames.btnSuperScript,
+    RichEditorToolbarButtonNames.btnSubscript,
+    RichEditorToolbarButtonNames.btnStrikethrough,
+    RichEditorToolbarButtonNames.btnIndent,
+    RichEditorToolbarButtonNames.btnOutdent,
+    RichEditorToolbarButtonNames.btnAlignLeft,
+    RichEditorToolbarButtonNames.btnAlignCenter,
+    RichEditorToolbarButtonNames.btnAlignRight,
+    RichEditorToolbarButtonNames.btnUndo,
+    RichEditorToolbarButtonNames.btnRedo,
+    RichEditorToolbarButtonNames.btnFullscreen
+];
+
+export const DEFAULT_BUTTONS = [
+    RichEditorToolbarButtonNames.btnBold,
+    RichEditorToolbarButtonNames.btnItalic,
+    RichEditorToolbarButtonNames.btnUnderline,
+    RichEditorToolbarButtonNames.btnUnformat,
+    RichEditorToolbarButtonNames.btnUnlink,
+    RichEditorToolbarButtonNames.btnUploadImage,
+    RichEditorToolbarButtonNames.btnBullets,
+    RichEditorToolbarButtonNames.btnNumbering,
+    RichEditorToolbarButtonNames.btnStrikethrough,
+    RichEditorToolbarButtonNames.btnIndent,
+    RichEditorToolbarButtonNames.btnOutdent,
+    RichEditorToolbarButtonNames.btnAlignLeft,
+    RichEditorToolbarButtonNames.btnAlignCenter,
+    RichEditorToolbarButtonNames.btnAlignRight,
+    RichEditorToolbarButtonNames.btnFullscreen
+];
