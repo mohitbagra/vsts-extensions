@@ -104,13 +104,13 @@ export function stringEquals(a: string, b: string, ignoreCase: boolean = false):
 }
 
 export function startsWith(str: string, prefix: string, comparer?: (param1: string, param2: string) => number): boolean {
-    comparer = comparer || defaultComparer;
-    return comparer(prefix, str.substr(0, prefix.length)) === 0;
+    const innerComparer = comparer || defaultComparer;
+    return innerComparer(prefix, str.substr(0, prefix.length)) === 0;
 }
 
 export function endsWith(str: string, suffix: string, comparer?: (param1: string, param2: string) => number): boolean {
-    comparer = comparer || defaultComparer;
-    return comparer(suffix, str.substr(str.length - suffix.length, suffix.length)) === 0;
+    const innerComparer = comparer || defaultComparer;
+    return innerComparer(suffix, str.substr(str.length - suffix.length, suffix.length)) === 0;
 }
 
 export function caseInsensitiveContains(str: string, subStr: string): boolean {

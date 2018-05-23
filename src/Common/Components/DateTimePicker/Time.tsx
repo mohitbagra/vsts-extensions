@@ -145,14 +145,15 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
             isAM: isAM
         });
 
+        let h = hour;
         if (this.props.onSelectTime) {
             if (!isAM && hour !== 12) {
-                hour = hour + 12;
+                h = hour + 12;
             }
             else if (isAM && hour === 12) {
-                hour = 0;
+                h = 0;
             }
-            this.props.onSelectTime(hour, minute);
+            this.props.onSelectTime(h, minute);
         }
     }
 

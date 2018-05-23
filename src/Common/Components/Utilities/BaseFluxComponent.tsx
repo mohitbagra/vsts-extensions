@@ -10,6 +10,8 @@ export interface IBaseFluxComponentState {
 }
 
 export class BaseFluxComponent<TProps extends IBaseFluxComponentProps, TState extends IBaseFluxComponentState> extends BaseComponent<TProps, TState> {
+    private _isMounted: boolean = false;
+
     constructor(props: TProps, context?: any) {
         super(props, context);
         this.initializeState();
@@ -17,6 +19,7 @@ export class BaseFluxComponent<TProps extends IBaseFluxComponentProps, TState ex
 
     public componentDidMount() {
         super.componentDidMount();
+        this._isMounted = true;
         for (const store of this.getStores()) {
             store.addChangedListener(this._onStoreChanged);
         }
@@ -24,8 +27,15 @@ export class BaseFluxComponent<TProps extends IBaseFluxComponentProps, TState ex
 
     public componentWillUnmount() {
         super.componentWillUnmount();
+        this._isMounted = false;
         for (const store of this.getStores()) {
             store.removeChangedListener(this._onStoreChanged);
+        }
+    }
+
+    public setState<K extends keyof TState>(newState: Pick<TState, K>, callback?: () => void) {
+        if (this._isMounted) {
+            super.setState(newState, callback);
         }
     }
 

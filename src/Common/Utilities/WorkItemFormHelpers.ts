@@ -28,7 +28,7 @@ export async function getFormNavigationService(): Promise<IWorkItemFormNavigatio
 export async function openWorkItemDialog(e: React.MouseEvent<HTMLElement>, item: WorkItem): Promise<WorkItem> {
     const newTab = e ? e.ctrlKey : false;
     const workItemNavSvc = await WorkItemFormNavigationService.getService();
-    return await workItemNavSvc.openWorkItem(item.id, newTab);
+    return workItemNavSvc.openWorkItem(item.id, newTab);
 }
 
 export async function getWorkItemType(): Promise<string> {

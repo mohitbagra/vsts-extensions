@@ -167,7 +167,6 @@ export class Paste implements EditorPlugin {
 
             default:
                 onImageAdd(this._editor, clipboardData.image, this._getPastedImageUrl);
-                break;
         }
     }
 

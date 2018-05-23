@@ -48,7 +48,7 @@ export async function readDocument<T>(key: string, id: string, defaultValue?: T,
 */
 export async function createDocument<T>(key: string, data: T, isPrivate?: boolean): Promise<T> {
     const dataService: ExtensionDataService = await getDataService();
-    return await dataService.createDocument(key, data, isPrivate ? { scopeType: "User" } : undefined);
+    return dataService.createDocument(key, data, isPrivate ? { scopeType: "User" } : undefined);
 }
 
 /**
@@ -56,7 +56,7 @@ export async function createDocument<T>(key: string, data: T, isPrivate?: boolea
 */
 export async function updateDocument<T>(key: string, data: T, isPrivate?: boolean): Promise<T> {
     const dataService: ExtensionDataService = await getDataService();
-    return await dataService.updateDocument(key, data, isPrivate ? { scopeType: "User" } : undefined);
+    return dataService.updateDocument(key, data, isPrivate ? { scopeType: "User" } : undefined);
 }
 
 /**
@@ -64,7 +64,7 @@ export async function updateDocument<T>(key: string, data: T, isPrivate?: boolea
 */
 export async function addOrUpdateDocument<T>(key: string, data: T, isPrivate?: boolean): Promise<T> {
     const dataService: ExtensionDataService = await getDataService();
-    return await dataService.setDocument(key, data, isPrivate ? { scopeType: "User" } : undefined);
+    return dataService.setDocument(key, data, isPrivate ? { scopeType: "User" } : undefined);
 }
 
 /**
@@ -72,7 +72,7 @@ export async function addOrUpdateDocument<T>(key: string, data: T, isPrivate?: b
 */
 export async function deleteDocument(key: string, id: string, isPrivate?: boolean): Promise<void> {
     const dataService: ExtensionDataService = await getDataService();
-    return await dataService.deleteDocument(key, id, isPrivate ? { scopeType: "User" } : undefined);
+    return dataService.deleteDocument(key, id, isPrivate ? { scopeType: "User" } : undefined);
 }
 
 /**
@@ -94,7 +94,7 @@ export async function readSetting<T>(key: string, defaultValue?: T, isPrivate?: 
 */
 export async function writeSetting<T>(key: string, data: T, isPrivate?: boolean): Promise<T> {
     const dataService: ExtensionDataService = await getDataService();
-    return await dataService.setValue<T>(key, data, isPrivate ? { scopeType: "User" } : undefined);
+    return dataService.setValue<T>(key, data, isPrivate ? { scopeType: "User" } : undefined);
 }
 
 /**
@@ -102,7 +102,7 @@ export async function writeSetting<T>(key: string, data: T, isPrivate?: boolean)
 */
 export async function queryCollectionNames(collectionNames: string[]): Promise<ExtensionDataCollection[]> {
     const dataService: ExtensionDataService = await getDataService();
-    return await dataService.queryCollectionNames(collectionNames);
+    return dataService.queryCollectionNames(collectionNames);
 }
 
 /**
@@ -110,5 +110,5 @@ export async function queryCollectionNames(collectionNames: string[]): Promise<E
 */
 export async function queryCollections(collections: ExtensionDataCollection[]): Promise<ExtensionDataCollection[]> {
     const dataService: ExtensionDataService = await getDataService();
-    return await dataService.queryCollections(collections);
+    return dataService.queryCollections(collections);
 }

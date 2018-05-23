@@ -103,13 +103,16 @@ export class ClassificationPicker extends BaseFluxComponent<IClassificationPicke
         let newUINode: TreeNode;
         const nodeName = node.name;
 
+        // tslint:disable-next-line:no-parameter-reassignment
         level = level || 1;
         if (uiNode) {
             newUINode = TreeNode.create(nodeName);
             uiNode.add(newUINode);
+            // tslint:disable-next-line:no-parameter-reassignment
             uiNode = newUINode;
         }
         else {
+            // tslint:disable-next-line:no-parameter-reassignment
             uiNode = TreeNode.create(nodeName);
         }
         uiNode.expanded = level < 2;

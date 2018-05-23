@@ -13,18 +13,18 @@ export class NumericValueRange implements IValueRange<number> {
     }
 
     public getPreviousValue(value: number): number {
-        value -= this._increment;
-        if (value < this._min) {
-            value = this._max;
+        let v = value - this._increment;
+        if (v < this._min) {
+            v = this._max;
         }
 
         return value;
     }
 
     public getNextValue(value: number): number {
-        value += this._increment;
-        if (value > this._max) {
-            value = this._min;
+        let v = value + this._increment;
+        if (v > this._max) {
+            v = this._min;
         }
 
         return value;

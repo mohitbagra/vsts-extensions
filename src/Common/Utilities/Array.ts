@@ -35,13 +35,13 @@ export function union<T>(arrayA: T[], arrayB: T[], comparer?: (a: T, b: T) => nu
 }
 
 export function uniqueSort<T>(array: T[], comparer?: (a: T, b: T) => number): T[] {
-    comparer = comparer || defaultComparer;
+    const innerComparer = comparer || defaultComparer;
 
-    array.sort(comparer);
+    array.sort(innerComparer);
     let l = array.length;
 
     for (let i = 1; i < l; i++) {
-        if (comparer(array[i], array[i - 1]) === 0) {
+        if (innerComparer(array[i], array[i - 1]) === 0) {
             array.splice(i--, 1);
             l--;
         }
@@ -131,20 +131,18 @@ export function arrayEquals<T>(source: T[], target: T[], comparer?: (s: T, t: T)
         return false;
     }
 
-    if (!comparer) {
-        comparer = defaultComparison;
-    }
+    const innerComparer = comparer || defaultComparison;
 
     if (!sorted) {
         for (const s of source) {
-            if (!contains(target, s, comparer)) {
+            if (!contains(target, s, innerComparer)) {
                 return false;
             }
         }
     }
     else {
         for (let i = 0; i < source.length; i++) {
-            if (!comparer(source[i], target[i])) {
+            if (!innerComparer(source[i], target[i])) {
                 return false;
             }
         }
