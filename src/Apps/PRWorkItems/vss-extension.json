@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "pr-workitems",
-    "version": "1.0.6",
+    "version": "2.0.1",
     "name": "PR workitems",
     "description": "A pull request menu extension to create a new workitem and associate it with current pull request",
     "publisher": "mohitbagra",
@@ -46,9 +46,15 @@
             ],
             "properties": {
                 "group": "contributed",
-                "uri": "html/index.html",
-                "icon": "images/logo.png",
-                "text": "Link to a new workitem"
+                "uri": "html/index.html"
+            }
+        },
+        {
+            "id": "configure-dialog",
+            "type": "ms.vss-web.control",
+            "targets": [],
+            "properties": {
+                "uri": "html/dialog.html"
             }
         }
     ]
