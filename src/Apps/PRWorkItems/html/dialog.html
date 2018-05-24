@@ -16,9 +16,12 @@
         });
         
         // Load main entry point for extension
-        VSS.require(["scripts/Dialog"], function (App) {
+        VSS.require(["scripts/ConfigureDialog"], function (ConfigureDialog) {
+            var configureDialog = new ConfigureDialog.ConfigureDialog();
+            configureDialog.initialize();
             VSS.notifyLoadSucceeded();
         });
     </script>
+    <div id="dialog-container"></div>
 </body>
 </html>

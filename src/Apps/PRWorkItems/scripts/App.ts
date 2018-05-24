@@ -17,13 +17,12 @@ VSS.register(`${extensionContext.publisherId}.${extensionContext.extensionId}.co
                 getFormNavigationService(),
                 WitClient.getClient()
             ]);
+            const projectId = VSS.getWebContext().project.id;
             if (!configuredWorkItemTypes) {
-                const projectId = VSS.getWebContext().project.id;
                 const [configuredWorkItemTypesSetting, allWorkItemTypes] = await Promise.all([
                     ExtensionDataManager.readSetting(`wits_${projectId}`, ["Bug", "User Story"], false),
                     witClient.getWorkItemTypes(projectId)
                 ]);
-
                 configuredWorkItemTypes = allWorkItemTypes.filter(w => contains(configuredWorkItemTypesSetting, w.name, (w1, w2) => stringEquals(w1, w2, true)));
             }
 
@@ -65,6 +64,18 @@ VSS.register(`${extensionContext.publisherId}.${extensionContext.extensionId}.co
                     title: "Configure Work item types",
                     action: async () => {
                         // open dialog
+                        const dialogService: IHostDialogService = <IHostDialogService>await VSS.getService(VSS.ServiceIds.Dialog);
+                        const extInfo = VSS.getExtensionContext();
+                        const dialogContributionId = `${extInfo.publisherId}.${extInfo.extensionId}.configure-dialog`;
+                        const dialogOptions: IHostDialogOptions = {
+                            title: "Configure work item types",
+                            width: 500,
+                            height: 500,
+                            modal: true,
+                            buttons: {}
+                        };
+
+                        dialogService.openDialog(dialogContributionId, dialogOptions);
                     }
                 }
             );

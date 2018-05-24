@@ -3,7 +3,8 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const config = {
     entry: {
-        "PRWorkItems/scripts/App": "./src/Apps/PRWorkItems/scripts/App.ts"
+        "PRWorkItems/scripts/App": "./src/Apps/PRWorkItems/scripts/App.ts",
+        "PRWorkItems/scripts/ConfigureDialog": "./src/Apps/PRWorkItems/scripts/ConfigureDialog.tsx",
     },
     plugins: [        
         new CopyWebpackPlugin([
