@@ -66,6 +66,9 @@ class ConfigureDialogComponent extends React.Component<IConfigureDialogComponent
         }
         return (
             <Fabric>
+                <div style={{marginBottom: "10px", fontWeight: 600, fontSize: "15px"}}>
+                    Select work item types which can be linked to Pull requests.
+                </div>
                 {allWorkItemTypes.map(w => (
                         <Checkbox
                             styles={{

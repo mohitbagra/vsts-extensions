@@ -10,7 +10,9 @@ import { BaseStore, StoreFactory } from "Common/Flux/Stores/BaseStore";
 import { WorkItemStateItemStore } from "Common/Flux/Stores/WorkItemStateItemStore";
 import { first } from "Common/Utilities/Array";
 import { stringEquals } from "Common/Utilities/String";
-import { Label } from "OfficeFabric/Label";
+import {
+    DirectionalHint, TooltipDelay, TooltipHost, TooltipOverflowMode
+} from "OfficeFabric/Tooltip";
 import { css } from "OfficeFabric/Utilities";
 import { WorkItemStateColor } from "TFS/WorkItemTracking/Contracts";
 
@@ -74,7 +76,15 @@ export class WorkItemStateView extends BaseFluxComponent<IWorkItemStateViewProps
                         borderColor: stateColor
                     }}
                 />
-                <Label className="state-name">{this.props.state}</Label>
+                <TooltipHost
+                    content={this.props.state}
+                    hostClassName="state-name"
+                    delay={TooltipDelay.medium}
+                    overflowMode={TooltipOverflowMode.Self}
+                    directionalHint={DirectionalHint.bottomLeftEdge}
+                >
+                    {this.props.state}
+                </TooltipHost>
             </div>
         );
     }

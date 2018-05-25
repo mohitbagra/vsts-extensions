@@ -354,7 +354,6 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
                 name: "Last Updated By",
                 minWidth: 100,
                 maxWidth: 200,
-                isResizable: true,
                 onRender: (ruleGroup: IRuleGroup) => {
                     return <IdentityView identityRef={ruleGroup.lastUpdatedBy} />;
                 }

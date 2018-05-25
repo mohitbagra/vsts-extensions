@@ -3,6 +3,8 @@ body {
     padding: 0;
 }
 
+@include scrollbars(11px, 2px);
+
 #ext-container {
     overflow: auto;
     position: absolute;
@@ -21,10 +23,18 @@ body {
         .related-wits-hub {
             height: 100%;
 
+            .vss-PivotBar--bar-one-line {
+                padding-left: 12px;
+                padding-right: 20px;
+                margin: 0 !important;
+            }
+
             .vss-PivotBarItem {
                 width: 100%;
                 box-sizing: border-box;
-                
+                padding-left: 0px !important;
+                padding-right: 0px !important;
+
                 .grid-container {
                     overflow: auto;
                     height: 100%;
@@ -38,15 +48,11 @@ body {
                             height: 100%;
                         }
         
-                        .item-grid-cell {                    
-                            &.identity-view {
-                                .ms-Persona-details {
-                                    padding: 0 0 0 5px;
-                                }
-            
-                                .ms-Persona-primaryText {
-                                    font-size: 13px;
-                                }
+                        .identity-view {
+                            height: 34px;
+
+                            .ms-Persona-details {
+                                padding: 0 0 0 5px;
                             }
                         }
         

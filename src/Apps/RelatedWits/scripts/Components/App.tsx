@@ -343,7 +343,6 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                 name: "Area path",
                 minWidth: 250,
                 maxWidth: 400,
-                isResizable: true,
                 isSorted: (StoresHub.relatedWorkItemsStore.sortState && StoresHub.relatedWorkItemsStore.sortState.sortKey) === WorkItemFieldNames.AreaPath,
                 isSortedDescending: !!(StoresHub.relatedWorkItemsStore.sortState && StoresHub.relatedWorkItemsStore.sortState.isSortedDescending),
                 onRender: (workItem: WorkItem) => {

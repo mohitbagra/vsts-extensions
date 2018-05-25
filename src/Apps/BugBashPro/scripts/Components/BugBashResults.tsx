@@ -298,7 +298,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
                 this._getColumn(BugBashItemFieldNames.CreatedDate, "Created Date", 200, 300)
             ];
         }
-
+        columns[columns.length - 1].isResizable = false; // last column always non resizable
         return columns;
     }
 
