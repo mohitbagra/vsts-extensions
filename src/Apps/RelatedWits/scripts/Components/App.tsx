@@ -187,8 +187,8 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
         }
     }
 
-    protected initializeState(): void {
-        this.state = {
+    protected getInitialState(): IRelatedWitsState {
+        return {
             isWorkItemLoaded: false,
             workItems: null,
             settings: null

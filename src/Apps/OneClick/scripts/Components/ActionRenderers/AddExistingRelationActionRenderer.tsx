@@ -69,8 +69,8 @@ export class AddExistingRelationActionRenderer extends BaseFluxComponent<IAddExi
         };
     }
 
-    protected initializeState(): void {
-        this.state = {
+    protected getInitialState(): IBaseFluxComponentState {
+        return {
             loading: true
         };
     }

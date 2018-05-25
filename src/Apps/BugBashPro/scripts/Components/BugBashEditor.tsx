@@ -110,8 +110,8 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
         );
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): IBugBashEditorState {
+        return {
             loading: true,
             templates: []
         };

@@ -85,8 +85,8 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
         );
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): IAppState {
+        return {
             loading: true
         };
     }

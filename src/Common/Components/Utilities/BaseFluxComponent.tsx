@@ -14,7 +14,7 @@ export class BaseFluxComponent<TProps extends IBaseFluxComponentProps, TState ex
 
     constructor(props: TProps, context?: any) {
         super(props, context);
-        this.initializeState();
+        this.state = this.getInitialState(props);
     }
 
     public componentDidMount() {
@@ -47,8 +47,8 @@ export class BaseFluxComponent<TProps extends IBaseFluxComponentProps, TState ex
         return {} as TState;
     }
 
-    protected initializeState(): void {
-        this.state = {} as TState;
+    protected getInitialState(_props: TProps): TState {
+        return {} as TState;
     }
 
     private _onStoreChanged = () => {

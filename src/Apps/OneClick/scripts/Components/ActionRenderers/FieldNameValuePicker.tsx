@@ -84,8 +84,8 @@ export class FieldNameValuePicker extends BaseFluxComponent<IFieldNameValuePicke
         };
     }
 
-    protected initializeState(): void {
-        this.state = {
+    protected getInitialState(): IBaseFluxComponentState {
+        return {
             loading: true
         };
     }

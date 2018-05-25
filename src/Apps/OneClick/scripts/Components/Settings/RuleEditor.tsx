@@ -125,9 +125,9 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
         );
     }
 
-    protected initializeState() {
-        this.state = {
-            rule: this.props.ruleModel ? new Rule(this.props.ruleModel) : Rule.getNewRule(this.props.workItemTypeName),
+    protected getInitialState(props: IRuleEditorProps): IRuleEditorState {
+        return {
+            rule: props.ruleModel ? new Rule(props.ruleModel) : Rule.getNewRule(props.workItemTypeName),
             showTriggers: false
         };
     }

@@ -84,8 +84,8 @@ export class BugBashDetails extends BaseFluxComponent<IBugBashDetailsProps, IBug
         );
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): IBugBashDetailsState {
+        return {
             loading: true,
             longText: null,
             error: null

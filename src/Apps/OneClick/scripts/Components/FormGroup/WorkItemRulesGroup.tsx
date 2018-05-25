@@ -164,8 +164,8 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
         );
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): IWorkItemRulesGroupState {
+        return {
             loading: false,
             workItemTypeEnabled: true,
             ruleExecutionError: null

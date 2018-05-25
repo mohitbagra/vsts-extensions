@@ -123,8 +123,8 @@ export class App extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
         );
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): IAppState {
+        return {
             appViewMode: null,
             userSettingsAvailable: true
         };

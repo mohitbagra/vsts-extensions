@@ -149,11 +149,7 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
         }
     }
 
-    protected initializeState() {
-        this.state = this._getFreshState();
-    }
-
-    private _getFreshState(): IChecklistAppState {
+    protected getInitialState(): IChecklistAppState {
         return {
             workItemId: null
         };

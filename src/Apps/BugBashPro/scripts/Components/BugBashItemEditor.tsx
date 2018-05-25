@@ -232,10 +232,10 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
         };
     }
 
-    protected initializeState() {
-        this.state = {
-            comments: this.props.bugBashItem.isNew() ? [] : null,
-            commentsLoading: this.props.bugBashItem.isNew() ? false : true
+    protected getInitialState(props: IBugBashItemEditorProps): IBugBashItemEditorState {
+        return {
+            comments: props.bugBashItem.isNew() ? [] : null,
+            commentsLoading: props.bugBashItem.isNew() ? false : true
         };
     }
 

@@ -225,8 +225,8 @@ export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBa
         );
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): IBugBashChartsState {
+        return {
             allBugBashItems: null,
             pendingBugBashItems: null,
             rejectedBugBashItems: null,

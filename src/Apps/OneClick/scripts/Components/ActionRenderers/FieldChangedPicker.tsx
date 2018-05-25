@@ -98,8 +98,8 @@ export class FieldChangedPicker extends BaseFluxComponent<IFieldChangedPickerPro
         };
     }
 
-    protected initializeState(): void {
-        this.state = {
+    protected getInitialState(): IBaseFluxComponentState {
+        return {
             loading: true
         };
     }

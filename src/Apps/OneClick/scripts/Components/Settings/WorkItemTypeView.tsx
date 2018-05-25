@@ -97,8 +97,8 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
         return [StoresHub.settingsStore];
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): IWorkItemTypeViewState {
+        return {
             loading: true,
             workItemTypeEnabled: null
         };

@@ -30,8 +30,8 @@ export class RichEditorComponent extends BaseFluxComponent<IRichEditorProps, IBa
         return [StoresHub.bugBashSettingsStore];
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): IBaseFluxComponentState {
+        return {
             loading: !StoresHub.bugBashSettingsStore.isLoaded()
         };
     }

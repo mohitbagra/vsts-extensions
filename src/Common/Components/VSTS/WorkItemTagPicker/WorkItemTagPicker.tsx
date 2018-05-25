@@ -99,9 +99,9 @@ export class WorkItemTagPicker extends BaseFluxComponent<IWorkItemTagPickerProps
         return [this._workItemTagStore];
     }
 
-    protected initializeState() {
-        this.state = {
-            internalSelectedTags: this.props.selectedTags
+    protected getInitialState(props: IWorkItemTagPickerProps): IWorkItemTagPickerState {
+        return {
+            internalSelectedTags: props.selectedTags
         };
     }
 

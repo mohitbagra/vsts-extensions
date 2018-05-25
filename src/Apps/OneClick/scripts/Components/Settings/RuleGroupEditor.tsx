@@ -88,9 +88,9 @@ export class RuleGroupEditor extends BaseFluxComponent<IRuleGroupEditorProps, IR
         );
     }
 
-    protected initializeState() {
-        this.state = {
-            ruleGroup: this.props.ruleGroupModel ? new RuleGroup(this.props.ruleGroupModel) : RuleGroup.getNewRuleGroup(this.props.workItemTypeName)
+    protected getInitialState(props: IRuleGroupEditorProps): IRuleGroupEditorState {
+        return {
+            ruleGroup: props.ruleGroupModel ? new RuleGroup(props.ruleGroupModel) : RuleGroup.getNewRuleGroup(props.workItemTypeName)
         };
     }
 

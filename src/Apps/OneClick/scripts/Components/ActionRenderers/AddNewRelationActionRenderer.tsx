@@ -170,8 +170,8 @@ export class AddNewRelationActionRenderer extends BaseFluxComponent<IAddNewRelat
         };
     }
 
-    protected initializeState(): void {
-        this.state = {
+    protected getInitialState(): IAddNewRelationActionRendererState {
+        return {
             loading: true,
             templates: []
         };

@@ -94,9 +94,9 @@ export class TreeCombo extends BaseFluxComponent<ITreeComboProps, ITreeComboStat
         }
     }
 
-    protected initializeState(): void {
-        this.state = {
-            internalValue: this.props.value || ""
+    protected getInitialState(props: ITreeComboProps): ITreeComboState {
+        return {
+            internalValue: props.value || ""
         };
     }
 

@@ -161,8 +161,8 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         );
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): IRuleGroupViewState {
+        return {
             loading: true
         };
     }

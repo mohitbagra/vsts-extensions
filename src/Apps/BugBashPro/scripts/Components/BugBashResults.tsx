@@ -125,8 +125,8 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
         );
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): IBugBashResultsState {
+        return {
             bugBashItems: null,
             pendingBugBashItems: null,
             rejectedBugBashItems: null,

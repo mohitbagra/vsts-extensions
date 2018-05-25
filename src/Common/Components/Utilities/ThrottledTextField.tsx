@@ -75,9 +75,9 @@ export class ThrottledTextField extends BaseFluxComponent<IThrottledTextFieldPro
         }
     }
 
-    protected initializeState(): void {
-        this.state = {
-            internalValue: this.props.value
+    protected getInitialState(props: IThrottledTextFieldProps): IThrottledTextFieldState {
+        return {
+            internalValue: props.value
         };
     }
 

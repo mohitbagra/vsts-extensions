@@ -57,8 +57,8 @@ export class Badge extends BaseFluxComponent<IBadgeProps, IBadgeState> {
         );
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): IBadgeState {
+        return {
             isCalloutVisible: false
         };
     }

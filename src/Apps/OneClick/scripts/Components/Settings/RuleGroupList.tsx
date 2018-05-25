@@ -156,8 +156,8 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
         );
     }
 
-    protected initializeState() {
-        this.state = this._getNewState();
+    protected getInitialState(): IRuleGroupListState {
+        return this._getNewState();
     }
 
     protected getStores(): BaseStore<any, any, any>[] {

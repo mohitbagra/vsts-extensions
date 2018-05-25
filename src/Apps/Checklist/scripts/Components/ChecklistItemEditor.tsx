@@ -124,9 +124,9 @@ export class ChecklistItemEditor extends BaseFluxComponent<IChecklistItemEditorP
         );
     }
 
-    protected initializeState() {
-        this.state = {
-            checklistItem: this.props.checklistItem ? {...this.props.checklistItem} : this._getDefaultItem()
+    protected getInitialState(props: IChecklistItemEditorProps): IChecklistItemEditorState {
+        return {
+            checklistItem: props.checklistItem ? {...props.checklistItem} : this._getDefaultItem()
         };
     }
 

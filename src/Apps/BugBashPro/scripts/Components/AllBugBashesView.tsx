@@ -191,8 +191,8 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
         return [StoresHub.bugBashStore, StoresHub.errorMessageStore];
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): IAllBugBashesViewState {
+        return {
             allBugBashes: [],
             pastBugBashes: [],
             ongoingBugBashes: [],

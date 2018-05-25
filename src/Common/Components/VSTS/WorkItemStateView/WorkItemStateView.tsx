@@ -87,8 +87,8 @@ export class WorkItemStateView extends BaseFluxComponent<IWorkItemStateViewProps
         };
     }
 
-    protected initializeState(): void {
-        this.state = { workItemTypeState: null };
+    protected getInitialState(): IWorkItemStateViewState {
+        return { workItemTypeState: null };
     }
 
     protected getStores(): BaseStore<any, any, any>[] {

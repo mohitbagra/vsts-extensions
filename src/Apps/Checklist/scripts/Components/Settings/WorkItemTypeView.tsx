@@ -99,8 +99,8 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
         );
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): IWorkItemTypeViewState {
+        return {
             checklist: null,
             disabled: false,
             error: null,

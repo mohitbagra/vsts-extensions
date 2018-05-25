@@ -242,15 +242,15 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
         );
     }
 
-    protected initializeState() {
-        this.state = {
-            bugBash: this.props.bugBashId ? null : StoresHub.bugBashStore.getNewBugBash(),
+    protected getInitialState(props: IBugBashViewProps): IBugBashViewState {
+        return {
+            bugBash: props.bugBashId ? null : StoresHub.bugBashStore.getNewBugBash(),
             paneMode: readLocalSetting("bugbashviewactionkey", WebSettingsScope.User, BugBashViewActions.PendingItemsOnly) as BugBashViewActions,
             pendingItemsCount: -1,
             acceptedItemsCount: -1,
             rejectedItemsCount: -1,
             allItemsCount: -1,
-            selectedPivot: this.props.pivotKey,
+            selectedPivot: props.pivotKey,
             isDetailsInEditMode: false
         };
     }

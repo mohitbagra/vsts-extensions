@@ -121,9 +121,9 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         );
     }
 
-    protected initializeState(): void {
-        this.state = {
-            value: this.props.value || ""
+    protected getInitialState(props: IRichEditorProps): IRichEditorState {
+        return {
+            value: props.value || ""
         };
     }
 

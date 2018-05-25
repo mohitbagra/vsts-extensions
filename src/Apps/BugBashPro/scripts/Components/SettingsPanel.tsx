@@ -106,8 +106,8 @@ export class SettingsPanel extends BaseFluxComponent<IBaseFluxComponentProps, IS
         return [StoresHub.bugBashSettingsStore, StoresHub.gitRepoStore, StoresHub.teamStore, StoresHub.userSettingsStore, StoresHub.errorMessageStore];
     }
 
-    protected initializeState() {
-        this.state = {
+    protected getInitialState(): ISettingsPanelState {
+        return {
             loading: true,
         } as ISettingsPanelState;
     }

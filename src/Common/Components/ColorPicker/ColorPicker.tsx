@@ -62,9 +62,9 @@ export class ColorPicker extends BaseFluxComponent<IColorPickerProps, IColorPick
         );
     }
 
-    protected initializeState() {
-        this.state = {
-            selectedColor: this.props.selectedColor || "#FFFFFF",
+    protected getInitialState(props: IColorPickerProps): IColorPickerState {
+        return {
+            selectedColor: props.selectedColor || "#FFFFFF",
             isCalloutOpen: false
         };
     }

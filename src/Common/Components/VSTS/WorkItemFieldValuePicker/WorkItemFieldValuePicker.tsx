@@ -237,10 +237,10 @@ export class WorkItemFieldValuePicker extends BaseFluxComponent<IWorkItemFieldVa
         }
     }
 
-    protected initializeState(): void {
-        this.state = {
+    protected getInitialState(props: IWorkItemFieldValuePickerProps): IWorkItemFieldValuePickerState {
+        return {
             allowedValues: null,
-            internalValue: this.props.value
+            internalValue: props.value
         };
     }
 

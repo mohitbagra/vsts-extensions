@@ -70,9 +70,9 @@ export class ClassificationPicker extends BaseFluxComponent<IClassificationPicke
         };
     }
 
-    protected initializeState(): void {
-        this.state = {
-            value: this.props.value || ""
+    protected getInitialState(props: IClassificationPickerProps): IClassificationPickerState {
+        return {
+            value: props.value || ""
         };
     }
 

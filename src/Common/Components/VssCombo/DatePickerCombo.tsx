@@ -88,9 +88,9 @@ export class DatePickerCombo extends BaseFluxComponent<IDatePickerComboProps, ID
         }
     }
 
-    protected initializeState(): void {
-        this.state = {
-            internalValue: this.props.value || ""
+    protected getInitialState(props: IDatePickerComboProps): IDatePickerComboState {
+        return {
+            internalValue: props.value || ""
         };
     }
 

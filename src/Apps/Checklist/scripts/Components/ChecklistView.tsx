@@ -105,11 +105,11 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
         }
     }
 
-    protected initializeState() {
-        const {workItemId} = this.props;
+    protected getInitialState(props: IChecklistViewProps): IChecklistViewState {
+        const {workItemId} = props;
         const error = StoresHub.errorMessageStore.getItem("ChecklistError");
 
-        this.state = {
+        return {
             checklists: this._getChecklists(workItemId),
             disabled: StoresHub.checklistStore.isLoading(`${workItemId}`) || !isNullOrWhiteSpace(error),
             error: error,

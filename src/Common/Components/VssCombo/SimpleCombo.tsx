@@ -109,10 +109,10 @@ export class SimpleCombo<T> extends BaseFluxComponent<ISimpleComboProps<T>, ISim
         }
     }
 
-    protected initializeState(): void {
-        this.state = {
-            selectedOption: this.props.selectedOption,
-            selectedValue: this.props.selectedValue || ""
+    protected getInitialState(props: ISimpleComboProps<T>): ISimpleComboState<T> {
+        return {
+            selectedOption: props.selectedOption,
+            selectedValue: props.selectedValue || ""
         };
     }
 
