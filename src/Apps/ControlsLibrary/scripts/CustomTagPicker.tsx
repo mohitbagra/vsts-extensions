@@ -5,7 +5,7 @@ import { IBasePickerProps } from "OfficeFabric/components/pickers/BasePicker.typ
 import { IPickerItemProps } from "OfficeFabric/components/pickers/PickerItem.types";
 import { TagItem } from "OfficeFabric/components/pickers/TagPicker/TagItem";
 import { ITag } from "OfficeFabric/components/pickers/TagPicker/TagPicker";
-import { autobind, css } from "OfficeFabric/Utilities";
+import { css } from "OfficeFabric/Utilities";
 
 export interface ICustomTagPickerProps extends IBasePickerProps<ITag> {
     suggestionsListClassName?: string;
@@ -17,14 +17,6 @@ export class CustomTagPicker extends BasePicker<ITag, ICustomTagPickerProps> {
         onRenderItem: (props: IPickerItemProps<ITag>) => { return <TagItem {...props}>{props.item.name}</TagItem>; },
         onRenderSuggestionsItem: (props: ITag) => <div className={css("ms-TagItem-TextOverflow")}>{props.name}</div>
     };
-
-    @autobind
-    protected onInputBlur(ev: React.FocusEvent<HTMLInputElement>): void {
-        super.onInputBlur(ev);
-        if (this.props.inputProps && this.props.inputProps.onBlur) {
-            this.props.inputProps.onBlur(ev);
-        }
-    }
 
     protected renderSuggestions(): JSX.Element | null {
         this.props.onToggleCallout(this.state.suggestionsVisible);

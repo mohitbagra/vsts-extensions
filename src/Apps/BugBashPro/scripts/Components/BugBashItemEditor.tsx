@@ -304,13 +304,17 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                 key: "refresh", name: "",
                 iconProps: {iconName: "Refresh"},
                 disabled: this.props.bugBashItem.isNew(),
-                onClick: this._refreshBugBashItem
+                onClick: () => {
+                    this._refreshBugBashItem();
+                }
             },
             {
                 key: "undo", name: "",
                 title: "Undo changes", iconProps: {iconName: "Undo"},
                 disabled: !this.props.bugBashItem.isDirty(),
-                onClick: this._revertBugBashItem
+                onClick: () => {
+                    this._revertBugBashItem();
+                }
             }
         ];
 
@@ -319,7 +323,9 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                 key: "delete",
                 iconProps: {iconName: "Cancel", style: { color: "#da0a00", fontWeight: "bold" }},
                 title: "Delete item",
-                onClick: this._deleteBugBashItem
+                onClick: () => {
+                    this._deleteBugBashItem();
+                }
             });
         }
         return menuItems;
@@ -367,6 +373,29 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
 
     private _onChange<T extends string | number | boolean | Date>(fieldName: BugBashItemFieldNames, fieldValue: T) {
         this.props.bugBashItem.setFieldValue<T>(fieldName, fieldValue);
+    }
+
+    private async _deleteBugBashItem() {
+        const confirm = await confirmAction(true, "Are you sure you want to delete this item?");
+        if (confirm) {
+            this.props.bugBashItem.delete();
+        }
+    }
+
+    private async _refreshBugBashItem() {
+        if (!this.props.bugBashItem.isNew()) {
+            const confirm = await confirmAction(this.props.bugBashItem.isDirty(), "Refreshing the item will undo your unsaved changes. Are you sure you want to do that?");
+            if (confirm) {
+                this.props.bugBashItem.refresh();
+            }
+        }
+    }
+
+    private async _revertBugBashItem() {
+        const confirm = await confirmAction(true, "Are you sure you want to undo your changes to this item?");
+        if (confirm) {
+            this.props.bugBashItem.reset();
+        }
     }
 
     private _pasteImage = async (data: string): Promise<string> => {
@@ -425,29 +454,6 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
         this.props.bugBashItem.setFieldValue(BugBashItemFieldNames.Rejected, checked ? true : false, false);
         this.props.bugBashItem.setFieldValue<IdentityRef>(BugBashItemFieldNames.RejectedBy, checked ? getCurrentUser() : null, false);
         this.props.bugBashItem.setFieldValue(BugBashItemFieldNames.RejectReason, "");
-    }
-
-    private _refreshBugBashItem = async () => {
-        if (!this.props.bugBashItem.isNew()) {
-            const confirm = await confirmAction(this.props.bugBashItem.isDirty(), "Refreshing the item will undo your unsaved changes. Are you sure you want to do that?");
-            if (confirm) {
-                this.props.bugBashItem.refresh();
-            }
-        }
-    }
-
-    private _revertBugBashItem = async () => {
-        const confirm = await confirmAction(true, "Are you sure you want to undo your changes to this item?");
-        if (confirm) {
-            this.props.bugBashItem.reset();
-        }
-    }
-
-    private _deleteBugBashItem = async () => {
-        const confirm = await confirmAction(true, "Are you sure you want to delete this item?");
-        if (confirm) {
-            this.props.bugBashItem.delete();
-        }
     }
 
     private _saveSelectedItem = () => {

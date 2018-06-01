@@ -416,7 +416,9 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
                 name: rg.name,
                 title: rg.description,
                 data: rule,
-                onClick: isMove ? this._moveToRuleGroup : this._copyToRuleGroup
+                onClick: (_ev: React.MouseEvent<HTMLElement>, item: IContextualMenuItem) => {
+                    isMove ? this._moveToRuleGroup(item) : this._copyToRuleGroup(item);
+                }
             }));
     }
 
@@ -430,6 +432,34 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         if (confirm) {
             RuleActions.deleteRule(this.props.ruleGroupId, rule);
         }
+    }
+
+    private async _moveToRuleGroup(item: IContextualMenuItem) {
+        const ruleModel: IRule = {...item.data};
+        delete ruleModel.id;
+        delete ruleModel.__etag;
+        ruleModel.createdBy = getCurrentUser();
+        ruleModel.lastUpdatedBy = getCurrentUser();
+        await RuleActions.createRule(item.key, ruleModel);
+        this.setState({targetRuleGroupId: item.key, isMovedToTargetGroup: true});
+
+        // delete from current rule group
+        RuleActions.deleteRule(this.props.ruleGroupId, item.data as IRule);
+    }
+
+    private async _copyToRuleGroup(item: IContextualMenuItem) {
+        const ruleModel: IRule = {...item.data};
+        delete ruleModel.id;
+        delete ruleModel.__etag;
+        ruleModel.createdBy = getCurrentUser();
+        ruleModel.lastUpdatedBy = getCurrentUser();
+        const targetRuleGroupId = item.key;
+        if (targetRuleGroupId === this.props.ruleGroupId) {
+            ruleModel.name = `${ruleModel.name} - Copy`;
+        }
+
+        await RuleActions.createRule(targetRuleGroupId, ruleModel);
+        this.setState({targetRuleGroupId: targetRuleGroupId, isMovedToTargetGroup: false});
     }
 
     private _onHeaderLinkClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -500,34 +530,6 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
                 }
             }
         ];
-    }
-
-    private _moveToRuleGroup = async (_ev: React.MouseEvent<HTMLElement>, item: IContextualMenuItem) => {
-        const ruleModel: IRule = {...item.data};
-        delete ruleModel.id;
-        delete ruleModel.__etag;
-        ruleModel.createdBy = getCurrentUser();
-        ruleModel.lastUpdatedBy = getCurrentUser();
-        await RuleActions.createRule(item.key, ruleModel);
-        this.setState({targetRuleGroupId: item.key, isMovedToTargetGroup: true});
-
-        // delete from current rule group
-        RuleActions.deleteRule(this.props.ruleGroupId, item.data as IRule);
-    }
-
-    private _copyToRuleGroup = async (_ev: React.MouseEvent<HTMLElement>, item: IContextualMenuItem) => {
-        const ruleModel: IRule = {...item.data};
-        delete ruleModel.id;
-        delete ruleModel.__etag;
-        ruleModel.createdBy = getCurrentUser();
-        ruleModel.lastUpdatedBy = getCurrentUser();
-        const targetRuleGroupId = item.key;
-        if (targetRuleGroupId === this.props.ruleGroupId) {
-            ruleModel.name = `${ruleModel.name} - Copy`;
-        }
-
-        await RuleActions.createRule(targetRuleGroupId, ruleModel);
-        this.setState({targetRuleGroupId: targetRuleGroupId, isMovedToTargetGroup: false});
     }
 
     private _toggleSubscription = () => {

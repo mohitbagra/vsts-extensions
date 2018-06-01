@@ -578,26 +578,30 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                     return {
                         key: relationType.referenceName,
                         name: relationType.name,
-                        onClick: async () => {
-                            const workItemFormService = await getFormService();
-                            const workItemRelations = selectedItems.filter(wi => !this.state.relationsMap[`${wi.url}_${relationType.referenceName}`]).map(w => {
-                                return {
-                                    rel: relationType.referenceName,
-                                    attributes: {
-                                        isLocked: false
-                                    },
-                                    url: w.url
-                                } as WorkItemRelation;
-                            });
-
-                            if (workItemRelations) {
-                                workItemFormService.addWorkItemRelations(workItemRelations);
-                            }
+                        onClick: () => {
+                            this._addLink(selectedItems, relationType);
                         }
                     };
                 })
             }
         ];
+    }
+
+    private async _addLink(selectedItems: WorkItem[], relationType: WorkItemRelationType) {
+        const workItemFormService = await getFormService();
+        const workItemRelations = selectedItems.filter(wi => !this.state.relationsMap[`${wi.url}_${relationType.referenceName}`]).map(w => {
+            return {
+                rel: relationType.referenceName,
+                attributes: {
+                    isLocked: false
+                },
+                url: w.url
+            } as WorkItemRelation;
+        });
+
+        if (workItemRelations) {
+            workItemFormService.addWorkItemRelations(workItemRelations);
+        }
     }
 
     private _refreshList = async (): Promise<void> => {

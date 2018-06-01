@@ -400,6 +400,13 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
         return upcomingBugBashes;
     }
 
+    private async _deleteBugBash(bugBash: BugBash) {
+        const confirm = await confirmAction(true, "Are you sure you want to delete this bug bash instance?");
+        if (confirm) {
+            bugBash.delete();
+        }
+    }
+
     private _getGridContextMenuItems = (bugBash: BugBash): IContextualMenuItem[] => {
         return [
             {
@@ -416,11 +423,8 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
             },
             {
                 key: "delete", name: "Delete", iconProps: {iconName: "Cancel", style: { color: "#da0a00", fontWeight: "bold" }},
-                onClick: async () => {
-                    const confirm = await confirmAction(true, "Are you sure you want to delete this bug bash instance?");
-                    if (confirm) {
-                        bugBash.delete();
-                    }
+                onClick: () => {
+                    this._deleteBugBash(bugBash);
                 }
             }
         ];
