@@ -36,7 +36,7 @@
         "vss-web-extension-sdk": "5.134.0",
         "office-ui-fabric-react": "~5.79.0",
         "recharts": "0.22.4",
-        "roosterjs": "6.9.4",
+        "roosterjs": "6.10.8",
         "tslib": "~1.7.1",
         "react-sortable-hoc": "0.6.8",
         "lodash-amd": "4.17.10",

@@ -10,13 +10,14 @@ import sanitizeHtml, {
     SanitizeHtmlPropertyCallback
 } from "roosterjs-editor-dom/lib/utils/sanitizeHtml";
 import buildClipboardData from "roosterjs-editor-plugins/lib/Paste/buildClipboardData";
+import getInheritableStyles from "roosterjs-editor-plugins/lib/Paste/getInheritableStyles";
 import textToHtml from "roosterjs-editor-plugins/lib/Paste/textToHtml";
 import convertPastedContentFromWord from "roosterjs-editor-plugins/lib/Paste/wordConverter/convertPastedContentFromWord";
 import NodeType from "roosterjs-editor-types/lib/browser/NodeType";
 import BeforePasteEvent from "roosterjs-editor-types/lib/clipboard/BeforePasteEvent";
 import ClipboardData from "roosterjs-editor-types/lib/clipboard/ClipboardData";
 import PasteOption from "roosterjs-editor-types/lib/clipboard/PasteOption";
-import { ChangeSource } from "roosterjs-editor-types/lib/editor/ContentChangedEvent";
+import ChangeSource from "roosterjs-editor-types/lib/editor/ChangeSource";
 import DefaultFormat from "roosterjs-editor-types/lib/editor/DefaultFormat";
 import PluginEvent from "roosterjs-editor-types/lib/editor/PluginEvent";
 import PluginEventType from "roosterjs-editor-types/lib/editor/PluginEventType";
@@ -90,18 +91,18 @@ export class Paste implements EditorPlugin {
                 if (!clipboardData.html && clipboardData.text) {
                     clipboardData.html = textToHtml(clipboardData.text);
                 }
-                if (!clipboardData.isHtmlFromTempDiv) {
-                    clipboardData.html = sanitizeHtml(
-                        clipboardData.html,
-                        null,
-                        false,
-                        this._htmlPropertyCallbacks,
-                        true
-                    );
-                }
+
+                const currentStyles = getInheritableStyles(this._editor);
+                clipboardData.html = sanitizeHtml(
+                    clipboardData.html,
+                    null,
+                    false,
+                    this._htmlPropertyCallbacks,
+                    true,
+                    currentStyles
+                );
                 this.pasteOriginal(clipboardData);
-            },
-            false
+            }
         );
     }
 
