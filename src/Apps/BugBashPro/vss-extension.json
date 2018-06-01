@@ -52,7 +52,13 @@
             ],
             "properties": {
                 "name": "Bug Bash Pro",
-                "uri": "html/index.html"
+                "uri": "html/index.html",
+                "iconAsset": "mohitbagra.bugbashpro/images/logo.png",
+                "_sharedData": {
+                    "assets": [
+                        "mohitbagra.bugbashpro/images/logo.png"
+                    ]
+                }
             }
         }
     ]

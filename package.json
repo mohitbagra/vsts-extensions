@@ -32,7 +32,7 @@
     },
     "dependencies": {
         "es6-promise": "4.2.4",
-        "vss-ui": "4.134.0",
+        "vss-ui": "4.134.1",
         "vss-web-extension-sdk": "5.134.0",
         "office-ui-fabric-react": "~5.79.0",
         "recharts": "0.22.4",
