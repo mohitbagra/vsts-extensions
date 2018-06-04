@@ -3,6 +3,7 @@ import { StoreFactory } from "Common/Flux/Stores/BaseStore";
 import { WorkItemStore } from "Common/Flux/Stores/WorkItemStore";
 import { WorkItem, WorkItemErrorPolicy } from "TFS/WorkItemTracking/Contracts";
 import * as WitClient from "TFS/WorkItemTracking/RestClient";
+import * as VSS_Service from "VSS/Service";
 import { JsonPatchDocument, JsonPatchOperation, Operation } from "VSS/WebApi/Contracts";
 
 export namespace WorkItemActions {
@@ -67,7 +68,7 @@ export namespace WorkItemActions {
             workItemStore.setLoading(true);
 
             try {
-                const workItem = await WitClient.getClient().getWorkItem(id);
+                const workItem = await getClient().getWorkItem(id);
                 WorkItemActionsHub.AddOrUpdateWorkItems.invoke([workItem]);
                 workItemStore.setLoading(false);
             }
@@ -83,7 +84,7 @@ export namespace WorkItemActions {
             workItemStore.setLoading(true);
 
             try {
-                const workItem = await WitClient.getClient().getWorkItem(id);
+                const workItem = await getClient().getWorkItem(id);
                 WorkItemActionsHub.AddOrUpdateWorkItems.invoke([workItem]);
                 workItemStore.setLoading(false);
             }
@@ -108,7 +109,7 @@ export namespace WorkItemActions {
             }
 
             try {
-                const workItem = await WitClient.getClient().createWorkItem(patchDocument, projectId || VSS.getWebContext().project.id, workItemType);
+                const workItem = await getClient().createWorkItem(patchDocument, projectId || VSS.getWebContext().project.id, workItemType);
                 WorkItemActionsHub.AddOrUpdateWorkItems.invoke([workItem]);
                 workItemStore.setLoading(false);
                 return workItem;
@@ -134,7 +135,7 @@ export namespace WorkItemActions {
             }
 
             try {
-                const workItem = await WitClient.getClient().updateWorkItem(patchDocument, workItemId);
+                const workItem = await getClient().updateWorkItem(patchDocument, workItemId);
                 WorkItemActionsHub.AddOrUpdateWorkItems.invoke([workItem]);
                 workItemStore.setLoading(false);
                 return workItem;
@@ -151,7 +152,7 @@ export namespace WorkItemActions {
             workItemStore.setLoading(true);
 
             try {
-                await WitClient.getClient().deleteWorkItem(workItemId, projectId, destroy);
+                await getClient().deleteWorkItem(workItemId, projectId, destroy);
                 WorkItemActionsHub.DeleteWorkItems.invoke([workItemId]);
                 workItemStore.setLoading(false);
             }
@@ -170,6 +171,10 @@ export namespace WorkItemActions {
         WorkItemActionsHub.ClearWorkItems.invoke(null);
     }
 
+    function getClient(): WitClient.WorkItemTrackingHttpClient5 {
+        return VSS_Service.getClient<WitClient.WorkItemTrackingHttpClient5>(WitClient.WorkItemTrackingHttpClient5);
+    }
+
     async function getWorkItems(ids: number[]): Promise<WorkItem[]> {
         const cloneIds = [...ids];
         const idsToFetch: number[][] = [];
@@ -179,7 +184,7 @@ export namespace WorkItemActions {
             i++;
         }
 
-        const promises = idsToFetch.map(witIds => WitClient.getClient().getWorkItems(witIds, null, null, null, WorkItemErrorPolicy.Omit));
+        const promises = idsToFetch.map(witIds => getClient().getWorkItems(witIds, null, null, null, WorkItemErrorPolicy.Omit));
         const workItemArrays: WorkItem[][] = await Promise.all(promises);
         const finalResult: WorkItem[] = [];
         for (const workItemArray of workItemArrays) {
