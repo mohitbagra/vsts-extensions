@@ -2,9 +2,8 @@
 {
     "typescript.tsdk": "./node_modules/typescript/lib",
     "files.exclude": {
-        "dist/**/*": true 
+        "dist/**/*": true
     },
-    "vsicons.presets.angular": false,
     "importSorter.sortConfiguration.customOrderingRules.defaultNumberOfEmptyLinesAfterGroup": 2,
     "importSorter.importStringConfiguration.quoteMark": "double",
     "importSorter.importStringConfiguration.hasSemicolon": true,

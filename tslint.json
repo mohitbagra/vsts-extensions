@@ -4,11 +4,11 @@
         "function-name": [
             true,
             {
-              "method-regex": "^[a-z][\\w\\d]+$",
-              "private-method-regex": "^_[a-z][\\w\\d]+$",
-              "protected-method-regex": "^[_]?[a-z][\\w\\d]+$",
-              "static-method-regex": "^[a-z][\\w\\d]+$",
-              "function-regex": "^[_]?[a-z][\\w\\d]+$"
+                "method-regex": "^[a-z][\\w\\d]+$",
+                "private-method-regex": "^_[a-z][\\w\\d]+$",
+                "protected-method-regex": "^[_]?[a-z][\\w\\d]+$",
+                "static-method-regex": "^[a-z][\\w\\d]+$",
+                "function-regex": "^[_]?[a-z][\\w\\d]+$"
             }
         ],
         "binary-expression-operand-order": false,
@@ -17,8 +17,8 @@
         "no-submodule-imports": false,
         "type-literal-delimiter": false,
         "adjacent-overload-signatures": true,
-		"interface-name": [true],
-		"jsx-alignment": true,
+        "interface-name": [true],
+        "jsx-alignment": true,
         "jsx-curly-spacing": [true, "never"],
         "jsx-equals-spacing": [true, "never"],
         "jsx-no-multiline-js": false,
@@ -34,40 +34,35 @@
         "react-anchor-blank-noopener": false,
         "react-no-dangerous-html": false,
         "import-name": false,
-		"member-ordering": [
+        "member-ordering": [
             true,
             {
-              "order": [
-                "public-static-field",
-                "public-static-method",
-                "protected-static-field",
-                "protected-static-method",
-                "private-static-field",
-                "private-static-method",
-                "public-instance-field",
-                "protected-instance-field",
-                "private-instance-field",
-                "public-constructor",
-                "protected-constructor",
-                "private-constructor",
-                "public-instance-method",
-                "protected-instance-method",
-                "private-instance-method"                
-              ]
+                "order": [
+                    "public-static-field",
+                    "public-static-method",
+                    "protected-static-field",
+                    "protected-static-method",
+                    "private-static-field",
+                    "private-static-method",
+                    "public-instance-field",
+                    "protected-instance-field",
+                    "private-instance-field",
+                    "public-constructor",
+                    "protected-constructor",
+                    "private-constructor",
+                    "public-instance-method",
+                    "protected-instance-method",
+                    "private-instance-method"
+                ]
             }
         ],
-		"newline-before-return": false,
-		"no-increment-decrement": false,
-		"no-object-literal-type-assertion": false,
-		"no-parameter-properties": false,
-		"quotemark": [true, "double", "avoid-escape"],
+        "newline-before-return": false,
+        "no-increment-decrement": false,
+        "no-object-literal-type-assertion": false,
+        "no-parameter-properties": false,
+        "quotemark": [true, "double", "avoid-escape"],
         "react-this-binding-issue": [false],
-        "align": [
-            true,
-            "arguments",
-            "parameters",
-            "statements"
-        ],
+        "align": [true, "arguments", "parameters", "statements"],
         "class-name": true,
         "comment-format": [true, "check-space"],
         "eofline": true,
@@ -82,13 +77,7 @@
         "no-bitwise": false,
         "no-conditional-assignment": true,
         "no-consecutive-blank-lines": true,
-        "no-console": [true,
-            "debug",
-            "info",
-            "time",
-            "timeEnd",
-            "trace"
-        ],
+        "no-console": [true, "debug", "info", "time", "timeEnd", "trace"],
         "no-construct": true,
         "no-debugger": true,
         "no-duplicate-variable": true,
@@ -112,46 +101,23 @@
         "no-var-keyword": true,
         "no-var-requires": true,
         "max-func-body-length": false,
-        "one-line": [
-            true,
-            "check-open-brace",
-            "check-whitespace"
-        ],
-        "one-variable-per-declaration": [ true ],
-        "semicolon": [true, "always"],
-        "trailing-comma": [
-            false
-        ],
+        "one-line": [true, "check-open-brace", "check-whitespace"],
+        "one-variable-per-declaration": [true],
+        "semicolon": [true, "always", "ignore-bound-class-methods"],
+        "trailing-comma": [false],
         "triple-equals": [true, "allow-null-check"],
-        "typedef": [
-            true,
-            "parameter",
-            "property-declaration"
-        ],
+        "typedef": [true, "parameter", "property-declaration"],
         "typedef-whitespace": [
-            true, 
+            true,
             {
                 "call-signature": "nospace",
                 "parameter": "nospace",
                 "property-declaration": "nospace"
             }
         ],
-        "variable-name": [
-            true,
-            "ban-keywords"
-        ],
-        "whitespace": [true,
-            "check-branch",
-            "check-decl",
-            "check-operator",
-            "check-module",
-            "check-separator",
-            "check-type"
-        ],
+        "variable-name": [true, "ban-keywords"],
+        "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-module", "check-separator", "check-type"],
         "prefer-const": true,
-        "ban": [
-            true,
-            {"name": ["$", "each"], "message": "use for-of loop"}
-        ]
+        "ban": [true, { "name": ["$", "each"], "message": "use for-of loop" }]
     }
 }

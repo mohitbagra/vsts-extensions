@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <script src="../3rdParty/es6-promise.min.js"></script>
@@ -14,11 +15,13 @@
             usePlatformScripts: true,
             usePlatformStyles: false
         });
-        
+
         // Load main entry point for extension
-        VSS.require(["scripts/App"], function (App) {
-            VSS.notifyLoadSucceeded();
-        });
+        VSS.require(["scripts/App", "TFS/WorkItemTracking/Contracts",
+            "TFS/WorkItemTracking/Services", "TFS/WorkItemTracking/RestClient"], function (App) {
+                VSS.notifyLoadSucceeded();
+            });
     </script>
 </body>
+
 </html>
