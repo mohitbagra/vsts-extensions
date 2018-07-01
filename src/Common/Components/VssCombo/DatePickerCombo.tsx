@@ -116,7 +116,9 @@ export class DatePickerCombo extends BaseFluxComponent<IDatePickerComboProps, ID
         }
     }
 
-    private _containerRefCallback = (container: HTMLDivElement) => { this._container = container; };
+    private _containerRefCallback = (container: HTMLDivElement) => {
+        this._container = container;
+    };
 
     private _onChange = () => {
         this._disposeDelayedFunction();
@@ -129,16 +131,16 @@ export class DatePickerCombo extends BaseFluxComponent<IDatePickerComboProps, ID
                 },
                 () => {
                     this.props.onChange(value);
-                });
+                }
+            );
         };
 
         if (this.props.delay == null) {
             fireChange();
-        }
-        else {
+        } else {
             this._delayedFunction = delay(this, this.props.delay, () => {
                 fireChange();
             });
         }
-    }
+    };
 }

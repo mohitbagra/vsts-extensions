@@ -40,10 +40,7 @@ export interface IAppState extends IBaseFluxComponentState {
     changeVersion?: string;
 }
 
-const AsyncAllBugBashView = getAsyncLoadedComponent(
-    ["scripts/AllBugBashesView"],
-    (m: typeof AllBugBashesView_Async) => m.AllBugBashesView,
-    () => <Loading />);
+const AsyncAllBugBashView = getAsyncLoadedComponent(["scripts/AllBugBashesView"], (m: typeof AllBugBashesView_Async) => m.AllBugBashesView, () => <Loading />);
 
 export class App extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
     private _navigationService: HostNavigationService;
@@ -61,13 +58,14 @@ export class App extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
     }
 
     public shouldComponentUpdate(_nextProps: Readonly<IBaseFluxComponentProps>, nextState: Readonly<IAppState>) {
-        if (this.state.appViewMode !== nextState.appViewMode
-            || this.state.bugBashId !== nextState.bugBashId
-            || this.state.bugBashItemId !== nextState.bugBashItemId
-            || this.state.userSettingsAvailable !== nextState.userSettingsAvailable
-            || this.state.changeVersion !== nextState.changeVersion
-            || this.state.loading !== nextState.loading) {
-
+        if (
+            this.state.appViewMode !== nextState.appViewMode ||
+            this.state.bugBashId !== nextState.bugBashId ||
+            this.state.bugBashItemId !== nextState.bugBashItemId ||
+            this.state.userSettingsAvailable !== nextState.userSettingsAvailable ||
+            this.state.changeVersion !== nextState.changeVersion ||
+            this.state.loading !== nextState.loading
+        ) {
             return true;
         }
 
@@ -79,8 +77,7 @@ export class App extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
 
         if (this.state.appViewMode == null) {
             view = <Loading />;
-        }
-        else {
+        } else {
             switch (this.state.appViewMode) {
                 case AppViewMode.All:
                     view = <AsyncAllBugBashView />;
@@ -106,18 +103,15 @@ export class App extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
         return (
             <Fabric className="fabric-container">
                 {this._renderBadge()}
-                {this.state.changeVersion &&
-                    (
-                        <MessageBar
-                            className="changelog-message"
-                            onDismiss={this._onDismissChangeLogMessage}
-                            messageBarType={MessageBarType.info}
-                        >
-                            {`Extension upgraded to version ${this.state.changeVersion}.`}
-                            <Link target="_blank" href="https://marketplace.visualstudio.com/items?itemName=mohitbagra.bugbashpro#changelog"> View the changelog.</Link>
-                        </MessageBar>
-                    )
-                }
+                {this.state.changeVersion && (
+                    <MessageBar className="changelog-message" onDismiss={this._onDismissChangeLogMessage} messageBarType={MessageBarType.info}>
+                        {`Extension upgraded to version ${this.state.changeVersion}.`}
+                        <Link target="_blank" href="https://marketplace.visualstudio.com/items?itemName=mohitbagra.bugbashpro#changelog">
+                            {" "}
+                            View the changelog.
+                        </Link>
+                    </MessageBar>
+                )}
                 {view}
             </Fabric>
         );
@@ -143,7 +137,7 @@ export class App extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
     private async _initializeNewChangesMessage() {
         const lastChangeVersion = await SettingsDataService.loadSetting("changeVersion", "", true);
         if (lastChangeVersion !== ChangelogMajorVersion) {
-            this.setState({changeVersion: ChangelogMajorVersion});
+            this.setState({ changeVersion: ChangelogMajorVersion });
         }
     }
 
@@ -152,19 +146,11 @@ export class App extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
             return (
                 <Badge className="bugbash-badge" notificationCount={1}>
                     <div className="bugbash-badge-callout">
-                        <div className="badge-callout-header">
-                            Don't forget to set your associated team!!
-                        </div>
+                        <div className="badge-callout-header">Don't forget to set your associated team!!</div>
                         <div className="badge-callout-inner">
-                            <div>
-                                You can set a team associated with you in the current project by clicking on "Settings" link in the Bug Bash home page.
-                            </div>
-                            <div>
-                                If you have set a team associated with you, any bug bash item created by you will also count towards your team.
-                            </div>
-                            <div>
-                                This will be reflected in the "Created By" chart in a Bug Bash.
-                            </div>
+                            <div>You can set a team associated with you in the current project by clicking on "Settings" link in the Bug Bash home page.</div>
+                            <div>If you have set a team associated with you, any bug bash item created by you will also count towards your team.</div>
+                            <div>This will be reflected in the "Created By" chart in a Bug Bash.</div>
                         </div>
                     </div>
                 </Badge>
@@ -187,8 +173,8 @@ export class App extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
 
     private _onDismissChangeLogMessage = () => {
         SettingsDataService.updateSetting("changeVersion", this.state.changeVersion, true);
-        this.setState({changeVersion: null});
-    }
+        this.setState({ changeVersion: null });
+    };
 
     private _onNavigate = async () => {
         if (this._navigationService) {
@@ -199,8 +185,7 @@ export class App extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
                 // if no view is provided, redirect to directory view
                 navigate({ view: UrlActions.ACTION_ALL }, true);
                 return;
-            }
-            else if (state.action && !state.view) {
+            } else if (state.action && !state.view) {
                 // replace _a with view parameter
                 navigate({ view: state.action, id: state.id || null, itemId: state.itemId || null }, true);
                 return;
@@ -226,7 +211,7 @@ export class App extends BaseFluxComponent<IBaseFluxComponentProps, IAppState> {
                     navigate({ view: UrlActions.ACTION_ALL }, true);
             }
         }
-    }
+    };
 }
 
 export function init() {

@@ -17,8 +17,7 @@ export namespace LongTextActions {
     export function initializeLongText(id: string) {
         if (StoresHub.longTextStore.isLoaded(id)) {
             LongTextActionsHub.AddOrUpdateLongText.invoke(null);
-        }
-        else {
+        } else {
             refreshLongText(id, false);
         }
     }
@@ -46,8 +45,7 @@ export namespace LongTextActions {
                 LongTextActionsHub.AddOrUpdateLongText.invoke(savedLongText);
                 StoresHub.longTextStore.setLoading(false, longText.id);
                 ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashDetailsError);
-            }
-            catch (e) {
+            } catch (e) {
                 StoresHub.longTextStore.setLoading(false, longText.id);
                 ErrorMessageActions.showErrorMessage(e, ErrorKeys.BugBashDetailsError);
             }

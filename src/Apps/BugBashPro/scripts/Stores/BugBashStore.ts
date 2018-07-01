@@ -14,11 +14,11 @@ export class BugBashStore extends BaseStore<BugBash[], BugBash, string> {
     private _sortState: ISortState;
     private _newBugBash: BugBash;
 
-    get filterState(): IFilterState {
+    public get filterState(): IFilterState {
         return this._filterState;
     }
 
-    get sortState(): ISortState {
+    public get sortState(): ISortState {
         return this._sortState;
     }
 
@@ -177,8 +177,7 @@ export class BugBashStore extends BaseStore<BugBash[], BugBash, string> {
         const existingIndex = findIndex(this.items, (existingBugBash: BugBash) => stringEquals(bugBashModel.id, existingBugBash.id, true));
         if (existingIndex !== -1) {
             this.items[existingIndex] = bugBash;
-        }
-        else {
+        } else {
             this.items.push(bugBash);
         }
 

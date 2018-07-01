@@ -23,7 +23,7 @@
         padding: 4px 2px;
         border: 1px solid transparent;
         height: 20px;
-        
+
         .required-item {
             color: #da0a00;
             margin-left: 2px;
@@ -35,7 +35,7 @@
 
         .checklist-item-state {
             margin-left: 2px;
-            font-weight: 600;            
+            font-weight: 600;
             border-radius: 3px;
             padding: 2px 4px;
             height: 11px;
@@ -53,17 +53,17 @@
             word-wrap: normal;
             font-size: 14px;
             @include UserSelectNone();
-            
+
             &.checked {
                 color: #999;
-                
+
                 div {
                     text-decoration: line-through;
                 }
             }
         }
 
-        .checklist-item-button  {
+        .checklist-item-button {
             height: 20px;
             overflow: visible;
             display: none;

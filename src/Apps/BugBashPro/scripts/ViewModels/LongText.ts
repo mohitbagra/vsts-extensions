@@ -6,22 +6,22 @@ export class LongText {
     private _originalModel: ILongText;
     private _updates: ILongText;
 
-    get id(): string {
+    public get id(): string {
         return this._originalModel.id;
     }
 
-    get version(): number {
+    public get version(): number {
         return this._originalModel.__etag;
     }
 
-    get Text(): string {
-        const updatedModel: ILongText = {...this._originalModel, ...this._updates};
+    public get Text(): string {
+        const updatedModel: ILongText = { ...this._originalModel, ...this._updates };
         return updatedModel.text;
     }
 
     constructor(model: ILongText) {
         const longTextModel = model;
-        this._originalModel = {...longTextModel};
+        this._originalModel = { ...longTextModel };
         this._updates = {} as ILongText;
     }
 
@@ -35,7 +35,7 @@ export class LongText {
 
     public save() {
         if (this.isDirty()) {
-            const updatedModel: ILongText = {...this._originalModel, ...this._updates};
+            const updatedModel: ILongText = { ...this._originalModel, ...this._updates };
             LongTextActions.addOrUpdateLongText(updatedModel);
         }
     }
@@ -58,7 +58,7 @@ export class LongText {
     }
 
     public isDirty(): boolean {
-        const updatedModel: ILongText = {...this._originalModel, ...this._updates};
+        const updatedModel: ILongText = { ...this._originalModel, ...this._updates };
         return !stringEquals(updatedModel.text, this._originalModel.text);
     }
 }

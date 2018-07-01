@@ -42,15 +42,14 @@ export class WorkItemTagPicker extends BaseFluxComponent<IWorkItemTagPickerProps
             this.setState({
                 allTags: this._workItemTagStore.getAll()
             });
-        }
-        else {
+        } else {
             WorkItemTagActions.initializeTags();
         }
     }
 
     public componentWillReceiveProps(nextProps: IWorkItemTagPickerProps, context?: any) {
         super.componentWillReceiveProps(nextProps, context);
-        this.setState({internalSelectedTags: nextProps.selectedTags});
+        this.setState({ internalSelectedTags: nextProps.selectedTags });
     }
 
     public render(): JSX.Element {
@@ -58,7 +57,7 @@ export class WorkItemTagPicker extends BaseFluxComponent<IWorkItemTagPickerProps
             return <Spinner size={SpinnerSize.large} />;
         }
 
-        const {label, disabled, info, className} = this.props;
+        const { label, disabled, info, className } = this.props;
         const error = this.props.error || this._getDefaultError();
 
         return (
@@ -77,12 +76,10 @@ export class WorkItemTagPicker extends BaseFluxComponent<IWorkItemTagPickerProps
                             height: "26px"
                         }
                     }}
-                    pickerSuggestionsProps={
-                        {
-                            suggestionsHeaderText: "Suggested Tags",
-                            noResultsFoundText: "No suggested tags. Press enter to select current input."
-                        }
-                    }
+                    pickerSuggestionsProps={{
+                        suggestionsHeaderText: "Suggested Tags",
+                        noResultsFoundText: "No suggested tags. Press enter to select current input."
+                    }}
                 />
                 {error && <InputError className="work-item-tag-picker-error" error={error} />}
             </div>
@@ -115,14 +112,14 @@ export class WorkItemTagPicker extends BaseFluxComponent<IWorkItemTagPickerProps
 
     private _onValidateInput = (value: string): ValidationState => {
         return isNullOrWhiteSpace(value) ? ValidationState.invalid : ValidationState.valid;
-    }
+    };
 
     private _createGenericItem = (input: string): any => {
         return {
             key: input,
             name: input
         };
-    }
+    };
 
     private _onChange = (items: ITag[]) => {
         const selectedTags = items.map(i => i.name);
@@ -136,18 +133,18 @@ export class WorkItemTagPicker extends BaseFluxComponent<IWorkItemTagPickerProps
                 }
             }
         );
-    }
+    };
 
     private _getTag = (tag: string): ITag => {
         return {
             key: tag,
             name: tag
         };
-    }
+    };
 
     private _getTagText = (tag: ITag): string => {
         return tag.name;
-    }
+    };
 
     private _onTagFilterChanged = (filterText: string, tagList: ITag[]): ITag[] => {
         if (isNullOrWhiteSpace(filterText)) {
@@ -157,7 +154,7 @@ export class WorkItemTagPicker extends BaseFluxComponent<IWorkItemTagPickerProps
         return this.state.allTags
             .filter(tag => tag.name.toLowerCase().indexOf(filterText.toLowerCase()) === 0 && findIndex(tagList, (t: ITag) => stringEquals(t.key, tag.name, true)) === -1)
             .map(tag => {
-                return { key: tag.name, name: tag.name};
+                return { key: tag.name, name: tag.name };
             });
-    }
+    };
 }

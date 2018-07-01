@@ -46,8 +46,7 @@ export namespace RuleGroupActions {
                 store.setLoading(false, ruleGroup.id);
 
                 SettingsDataService.updateCacheStamp(workItemTypeName, VSS.getWebContext().project.id);
-            }
-            catch (e) {
+            } catch (e) {
                 store.setLoading(false, ruleGroup.id);
                 throw e;
             }

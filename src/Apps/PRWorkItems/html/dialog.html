@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <script src="../3rdParty/es6-promise.min.js"></script>
@@ -14,7 +15,7 @@
             usePlatformScripts: true,
             usePlatformStyles: false
         });
-        
+
         // Load main entry point for extension
         VSS.require(["scripts/ConfigureDialog"], function (ConfigureDialog) {
             var configureDialog = new ConfigureDialog.ConfigureDialog();
@@ -24,4 +25,5 @@
     </script>
     <div id="dialog-container"></div>
 </body>
+
 </html>

@@ -50,10 +50,7 @@ import { VssDetailsList } from "VSSUI/VssDetailsList";
 import { VssIconType } from "VSSUI/VssIcon";
 import { ZeroData } from "VSSUI/ZeroData";
 
-const AsyncSettingsPanel = getAsyncLoadedComponent(
-    ["scripts/SettingsPanel"],
-    (m: typeof SettingsPanel_Async) => m.SettingsPanel,
-    () => <Loading />);
+const AsyncSettingsPanel = getAsyncLoadedComponent(["scripts/SettingsPanel"], (m: typeof SettingsPanel_Async) => m.SettingsPanel, () => <Loading />);
 
 export interface IRelatedWitsState extends IBaseFluxComponentState {
     isWorkItemLoaded?: boolean;
@@ -88,22 +85,21 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
         VSS.register(VSS.getContribution().id, {
             onLoaded: (args: IWorkItemLoadedArgs) => {
                 if (args.isNew) {
-                    this.setState({isWorkItemLoaded: true, isNew: true, workItems: null, settingsPanelOpen: false});
-                }
-                else {
-                    this.setState({isWorkItemLoaded: true, isNew: false, settingsPanelOpen: false});
+                    this.setState({ isWorkItemLoaded: true, isNew: true, workItems: null, settingsPanelOpen: false });
+                } else {
+                    this.setState({ isWorkItemLoaded: true, isNew: false, settingsPanelOpen: false });
                     this._refreshList();
                 }
             },
             onUnloaded: (_args: IWorkItemChangedArgs) => {
-                this.setState({isWorkItemLoaded: false, workItems: null, settingsPanelOpen: false});
+                this.setState({ isWorkItemLoaded: false, workItems: null, settingsPanelOpen: false });
             },
             onSaved: (_args: IWorkItemChangedArgs) => {
-                this.setState({isNew: false, settingsPanelOpen: false});
+                this.setState({ isNew: false, settingsPanelOpen: false });
                 this._refreshList();
             },
             onRefreshed: (_args: IWorkItemChangedArgs) => {
-                this.setState({settingsPanelOpen: false});
+                this.setState({ settingsPanelOpen: false });
                 this._refreshList();
             }
         } as IWorkItemNotificationListener);
@@ -121,21 +117,11 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
     public render(): JSX.Element {
         if (!this.state.isWorkItemLoaded) {
             return null;
-        }
-        else {
+        } else {
             return (
                 <Fabric className="fabric-container">
-                    <Panel
-                        isOpen={this.state.settingsPanelOpen}
-                        type={PanelType.custom}
-                        customWidth="450px"
-                        isLightDismiss={true}
-                        onDismiss={this._closeSettingsPanel}
-                    >
-                        <AsyncSettingsPanel
-                            settings={this.state.settings}
-                            onSave={this._saveSettings}
-                        />
+                    <Panel isOpen={this.state.settingsPanelOpen} type={PanelType.custom} customWidth="450px" isLightDismiss={true} onDismiss={this._closeSettingsPanel}>
+                        <AsyncSettingsPanel settings={this.state.settings} onSave={this._saveSettings} />
                     </Panel>
                     <Hub
                         className="related-wits-hub"
@@ -156,7 +142,7 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                                 disabled: this.state.workItems == null || this.state.isNew,
                                 important: true,
                                 iconProps: { iconName: "Settings", iconType: VssIconType.fabric },
-                                onClick: () => this.setState({settingsPanelOpen: !(this.state.settingsPanelOpen)})
+                                onClick: () => this.setState({ settingsPanelOpen: !this.state.settingsPanelOpen })
                             }
                         ]}
                     >
@@ -175,9 +161,10 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                             viewActions={[
                                 {
                                     key: "status",
-                                    name: this.state.isNew ? "" : (!this.state.workItems ? "Loading..." : `${this.state.workItems.length} results`),
+                                    name: this.state.isNew ? "" : !this.state.workItems ? "Loading..." : `${this.state.workItems.length} results`,
                                     important: true
-                                }]}
+                                }
+                            ]}
                         >
                             {this._renderContent()}
                         </PivotBarItem>
@@ -208,20 +195,11 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
     private _renderContent(): React.ReactNode {
         if (this.state.isNew) {
             return <MessageBar messageBarType={MessageBarType.info}>Please save the workitem to get the list of related work items.</MessageBar>;
-        }
-        else if (!this.state.workItems) {
+        } else if (!this.state.workItems) {
             return <Loading />;
-        }
-        else if (this.state.workItems.length === 0) {
-            return (
-                <ZeroData
-                    imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`}
-                    imageAltText=""
-                    primaryText="No results found"
-                />
-            );
-        }
-        else {
+        } else if (this.state.workItems.length === 0) {
+            return <ZeroData imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`} imageAltText="" primaryText="No results found" />;
+        } else {
             return (
                 <div className="grid-container">
                     <VssDetailsList
@@ -270,12 +248,7 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                 onRender: (workItem: WorkItem) => {
                     const id = workItem.id.toString();
                     return (
-                        <TooltipHost
-                            content={id}
-                            delay={TooltipDelay.medium}
-                            overflowMode={TooltipOverflowMode.Parent}
-                            directionalHint={DirectionalHint.bottomLeftEdge}
-                        >
+                        <TooltipHost content={id} delay={TooltipDelay.medium} overflowMode={TooltipOverflowMode.Parent} directionalHint={DirectionalHint.bottomLeftEdge}>
                             {id}
                         </TooltipHost>
                     );
@@ -314,13 +287,7 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                 isSortedDescending: !!(StoresHub.relatedWorkItemsStore.sortState && StoresHub.relatedWorkItemsStore.sortState.isSortedDescending),
                 onRender: (workItem: WorkItem) => {
                     const state = workItem.fields[WorkItemFieldNames.State];
-                    return (
-                        <WorkItemStateView
-                            className="item-grid-cell"
-                            state={state}
-                            workItemType={workItem.fields[WorkItemFieldNames.WorkItemType]}
-                        />
-                    );
+                    return <WorkItemStateView className="item-grid-cell" state={state} workItemType={workItem.fields[WorkItemFieldNames.WorkItemType]} />;
                 }
             },
             {
@@ -334,7 +301,7 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                 isSortedDescending: !!(StoresHub.relatedWorkItemsStore.sortState && StoresHub.relatedWorkItemsStore.sortState.isSortedDescending),
                 onRender: (workItem: WorkItem) => {
                     const assignedTo = workItem.fields[WorkItemFieldNames.AssignedTo] || "";
-                    return <IdentityView identityDistinctName={assignedTo} />;
+                    return <IdentityView value={assignedTo} />;
                 }
             },
             {
@@ -348,12 +315,7 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                 onRender: (workItem: WorkItem) => {
                     const area = workItem.fields[WorkItemFieldNames.AreaPath];
                     return (
-                        <TooltipHost
-                            content={area}
-                            delay={TooltipDelay.medium}
-                            overflowMode={TooltipOverflowMode.Parent}
-                            directionalHint={DirectionalHint.bottomLeftEdge}
-                        >
+                        <TooltipHost content={area} delay={TooltipDelay.medium} overflowMode={TooltipOverflowMode.Parent} directionalHint={DirectionalHint.bottomLeftEdge}>
                             {area}
                         </TooltipHost>
                     );
@@ -362,10 +324,7 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
         ];
     }
 
-    private _getPickListFilterBarItem(
-        placeholder: string,
-        filterItemKey: WorkItemFieldNames
-    ): JSX.Element {
+    private _getPickListFilterBarItem(placeholder: string, filterItemKey: WorkItemFieldNames): JSX.Element {
         return (
             <PickListFilterBarItem
                 key={filterItemKey}
@@ -381,52 +340,57 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                 minItemsForSearchBox={4}
                 indicators={[
                     {
-                        getItemIndicator: ((value: string) => {
+                        getItemIndicator: (value: string) => {
                             if (!value) {
                                 return null;
                             }
                             return { title: `${StoresHub.relatedWorkItemsStore.propertyMap[filterItemKey][value]}` };
-                        })
+                        }
                     }
                 ]}
             />
         );
     }
 
-    private async _createQuery(fieldsToSeek: string[], sortByField: string): Promise<{project: string, wiql: string}> {
+    private async _createQuery(fieldsToSeek: string[], sortByField: string): Promise<{ project: string; wiql: string }> {
         const workItemFormService = await getFormService();
         const fieldValues = await workItemFormService.getFieldValues(fieldsToSeek, true);
         const witId = await workItemFormService.getId();
-        const project = await workItemFormService.getFieldValue("System.TeamProject") as string;
+        const project = (await workItemFormService.getFieldValue("System.TeamProject")) as string;
 
         // Generate fields to retrieve part
         const fieldsToRetrieveString = Constants.DEFAULT_FIELDS_TO_RETRIEVE.map(fieldRefName => `[${fieldRefName}]`).join(",");
 
         // Generate fields to seek part
-        const fieldsToSeekString = fieldsToSeek.map(fieldRefName => {
-            const fieldValue = fieldValues[fieldRefName] == null ? "" : fieldValues[fieldRefName];
-            if (stringEquals(fieldRefName, "System.Tags", true)) {
-                if (fieldValue) {
-                    const tagStr = fieldValue.toString().split(";").map(v => {
-                        return `[System.Tags] CONTAINS '${v}'`;
-                    }).join(" OR ");
+        const fieldsToSeekString = fieldsToSeek
+            .map(fieldRefName => {
+                const fieldValue = fieldValues[fieldRefName] == null ? "" : fieldValues[fieldRefName];
+                if (stringEquals(fieldRefName, "System.Tags", true)) {
+                    if (fieldValue) {
+                        const tagStr = fieldValue
+                            .toString()
+                            .split(";")
+                            .map(v => {
+                                return `[System.Tags] CONTAINS '${v}'`;
+                            })
+                            .join(" OR ");
 
-                    return `(${tagStr})`;
-                }
-            }
-            else if (Constants.ExcludedFields.indexOf(fieldRefName) === -1) {
-                if (fieldValue !== "" && fieldValue != null) {
-                    if (stringEquals(typeof(fieldValue), "string", true)) {
-                        return `[${fieldRefName}] = '${fieldValue}'`;
+                        return `(${tagStr})`;
                     }
-                    else {
-                        return `[${fieldRefName}] = ${fieldValue}`;
+                } else if (Constants.ExcludedFields.indexOf(fieldRefName) === -1) {
+                    if (fieldValue !== "" && fieldValue != null) {
+                        if (stringEquals(typeof fieldValue, "string", true)) {
+                            return `[${fieldRefName}] = '${fieldValue}'`;
+                        } else {
+                            return `[${fieldRefName}] = ${fieldValue}`;
+                        }
                     }
                 }
-            }
 
-            return null;
-        }).filter(e => e != null).join(" AND ");
+                return null;
+            })
+            .filter(e => e != null)
+            .join(" AND ");
 
         const fieldsToSeekPredicate = fieldsToSeekString ? `AND ${fieldsToSeekString}` : "";
         const wiql = `SELECT ${fieldsToRetrieveString} FROM WorkItems
@@ -441,20 +405,20 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
 
     private async _initializeSettings() {
         const workItemFormService = await getFormService();
-        const workItemType = await workItemFormService.getFieldValue("System.WorkItemType") as string;
-        const project = await workItemFormService.getFieldValue("System.TeamProject") as string;
+        const workItemType = (await workItemFormService.getFieldValue("System.WorkItemType")) as string;
+        const project = (await workItemFormService.getFieldValue("System.TeamProject")) as string;
         const settings = await ExtensionDataManager.readSetting<ISettings>(`${Constants.StorageKey}_${project}_${workItemType}`, Constants.DEFAULT_SETTINGS, true);
         if (settings.top == null || settings.top <= 0) {
             settings.top = Constants.DEFAULT_RESULT_SIZE;
         }
 
-        this.setState({settings: settings});
+        this.setState({ settings: settings });
     }
 
     private async _initializeWorkItemRelationTypes() {
         const workItemFormService = await getFormService();
         const relationTypes = await workItemFormService.getWorkItemRelationTypes();
-        this.setState({relationTypes: relationTypes});
+        this.setState({ relationTypes: relationTypes });
     }
 
     private async _initializeLinksData() {
@@ -466,34 +430,34 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
             relationsMap[`${relation.url}_${relation.rel}`] = true;
         });
 
-        this.setState({relationsMap: relationsMap});
+        this.setState({ relationsMap: relationsMap });
     }
 
     private _closeSettingsPanel = () => {
-        this.setState({settingsPanelOpen: false});
-    }
+        this.setState({ settingsPanelOpen: false });
+    };
 
     private _saveSettings = (settings: ISettings) => {
-        this.setState({settings: settings, settingsPanelOpen: false});
+        this.setState({ settings: settings, settingsPanelOpen: false });
         this._refreshList();
-    }
+    };
 
     private _getWorkitemId = (workItem: WorkItem): string => {
         return workItem.id.toString();
-    }
+    };
 
     private _onItemInvoked = (workItem: WorkItem) => {
         this._openWorkItemDialog(null, workItem);
-    }
+    };
 
     private _openWorkItemDialog = async (e: React.MouseEvent<HTMLElement>, workItem: WorkItem) => {
         const updatedWorkItem = await openWorkItemDialog(e, workItem);
         RelatedWorkItemsActions.updateWorkItemInStore(updatedWorkItem);
-    }
+    };
 
     private _getPicklistItems = (fieldName: WorkItemFieldNames): string[] => {
         return Object.keys(StoresHub.relatedWorkItemsStore.propertyMap[fieldName]);
-    }
+    };
 
     private _getListItem = (key: string, fieldName: WorkItemFieldNames): IPickListItem => {
         if (fieldName === WorkItemFieldNames.AssignedTo) {
@@ -501,27 +465,27 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
             return {
                 name: identity.displayName,
                 key: key,
-                iconProps: identity.imageUrl ? {
-                    iconType: VssIconType.image,
-                    imageProps: {
-                        src: identity.imageUrl
-                    }
-                } : null
+                iconProps: identity.imageUrl
+                    ? {
+                          iconType: VssIconType.image,
+                          imageProps: {
+                              src: identity.imageUrl
+                          }
+                      }
+                    : null
             };
-        }
-        else if (fieldName === WorkItemFieldNames.AreaPath) {
+        } else if (fieldName === WorkItemFieldNames.AreaPath) {
             return {
                 name: key.substr(key.lastIndexOf("\\") + 1),
                 key: key
             };
-        }
-        else {
+        } else {
             return {
                 name: key,
                 key: key
             };
         }
-    }
+    };
 
     private _renderStatusColumnCell = (item: WorkItem): JSX.Element => {
         if (this.state.relationTypes && this.state.relationsMap) {
@@ -533,15 +497,8 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
             });
 
             if (availableLinks.length > 0) {
-                return (
-                    <InfoLabel
-                        className="linked-cell"
-                        label="Linked"
-                        info={`Linked to this workitem as ${availableLinks.join("; ")}`}
-                    />
-                );
-            }
-            else {
+                return <InfoLabel className="linked-cell" label="Linked" info={`Linked to this workitem as ${availableLinks.join("; ")}`} />;
+            } else {
                 return (
                     <InfoLabel
                         label="Not linked"
@@ -552,7 +509,7 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
             }
         }
         return null;
-    }
+    };
 
     private _getGridContextMenuItems = (item: WorkItem): IContextualMenuItem[] => {
         let selectedItems = this._selection.getSelection() as WorkItem[];
@@ -562,7 +519,9 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
 
         return [
             {
-                key: "openinquery", name: "Open selected items in Queries", iconProps: {iconName: "ReplyMirrored"},
+                key: "openinquery",
+                name: "Open selected items in Queries",
+                iconProps: { iconName: "ReplyMirrored" },
                 href: getQueryUrl(selectedItems, [
                     WorkItemFieldNames.ID,
                     WorkItemFieldNames.Title,
@@ -573,7 +532,10 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                 target: "_blank"
             },
             {
-                key: "add-link", name: "Add Link", title: "Add as a link to the current workitem", iconProps: {iconName: "Link"},
+                key: "add-link",
+                name: "Add Link",
+                title: "Add as a link to the current workitem",
+                iconProps: { iconName: "Link" },
                 items: this.state.relationTypes.filter(r => r.name != null && r.name.trim() !== "").map(relationType => {
                     return {
                         key: relationType.referenceName,
@@ -585,7 +547,7 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                 })
             }
         ];
-    }
+    };
 
     private async _addLink(selectedItems: WorkItem[], relationType: WorkItemRelationType) {
         const workItemFormService = await getFormService();
@@ -617,11 +579,11 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
 
         const query = await this._createQuery(this.state.settings.fields, this.state.settings.sortByField);
         RelatedWorkItemsActions.refresh(query, this.state.settings.top);
-    }
+    };
 
     private _onFilterChange = (filterState: IFilterState) => {
         RelatedWorkItemsActions.applyFilter(filterState);
-    }
+    };
 
     private _onSortChange = (_ev?: React.MouseEvent<HTMLElement>, column?: IColumn) => {
         if (column.key !== "linked") {
@@ -630,17 +592,17 @@ export class RelatedWits extends BaseFluxComponent<IBaseFluxComponentProps, IRel
                 isSortedDescending: !column.isSortedDescending
             });
         }
-    }
+    };
 
     private _focusFilterBar = (ev: KeyboardEvent) => {
         if (this._filterBar && ev.ctrlKey && ev.shiftKey && stringEquals(ev.key, "f", true)) {
             this._filterBar.focus();
         }
-    }
+    };
 
     private _resolveFilterBar = (filterBar: IFilterBar) => {
         this._filterBar = filterBar;
-    }
+    };
 }
 
 export function init() {

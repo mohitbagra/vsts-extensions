@@ -70,17 +70,16 @@ class AsyncLoadedComponent<TProps> extends React.Component<IAsyncLoadedComponent
     }
 }
 
-export function getAsyncLoadedComponent<TProps = {}>
-    (modules: string[],
-     moduleComponentSelector: ModuleComponentSelector<TProps>,
-     componentWhileLoading?: () => JSX.Element): (props: TProps) => JSX.Element {
-
-    return (props: TProps) => React.createElement(
-        AsyncLoadedComponent,
-        {
+export function getAsyncLoadedComponent<TProps = {}>(
+    modules: string[],
+    moduleComponentSelector: ModuleComponentSelector<TProps>,
+    componentWhileLoading?: () => JSX.Element
+): (props: TProps) => JSX.Element {
+    return (props: TProps) =>
+        React.createElement(AsyncLoadedComponent, {
             modules,
             moduleComponentSelector,
             componentWhileLoading,
-            props,
+            props
         } as IAsyncLoadedComponentProps<TProps>);
 }

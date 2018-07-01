@@ -46,15 +46,14 @@ export namespace BugBashItemDataService {
 
             preProcessModel(bugBashItemModel);
             return bugBashItemModel;
-        }
-        else {
+        } else {
             throw "This instance of bug bash item does not exist.";
         }
     }
 
     export async function createBugBashItem(bugBashId: string, bugBashItemModel: IBugBashItem, newComment?: string): Promise<IBugBashItem> {
         try {
-            const cloneBugBashItemModel = {...bugBashItemModel};
+            const cloneBugBashItemModel = { ...bugBashItemModel };
             cloneBugBashItemModel.bugBashId = bugBashId;
             cloneBugBashItemModel.createdBy = getCurrentUser();
             cloneBugBashItemModel.createdDate = new Date(Date.now());
@@ -63,15 +62,13 @@ export namespace BugBashItemDataService {
 
             if (bugBash.isAutoAccept) {
                 createdBugBashItemModel = await acceptItem(cloneBugBashItemModel, newComment);
-            }
-            else {
+            } else {
                 createdBugBashItemModel = await ExtensionDataManager.createDocument<IBugBashItem>(getCollectionKey(bugBashId), cloneBugBashItemModel, false);
                 preProcessModel(createdBugBashItemModel);
             }
 
             return createdBugBashItemModel;
-        }
-        catch (e) {
+        } catch (e) {
             throw `Cannot create bug bash item. Reason: ${e.message || e}`;
         }
     }
@@ -81,8 +78,7 @@ export namespace BugBashItemDataService {
             const updatedBugBashItemModel = await ExtensionDataManager.updateDocument<IBugBashItem>(getCollectionKey(bugBashId), bugBashItemModel, false);
             preProcessModel(updatedBugBashItemModel);
             return updatedBugBashItemModel;
-        }
-        catch {
+        } catch {
             throw "This bug bash item has been modified by some one else. Please refresh the item to get the latest version and try updating it again.";
         }
     }
@@ -90,8 +86,7 @@ export namespace BugBashItemDataService {
     export async function deleteBugBashItem(bugBashId: string, bugBashItemId: string) {
         try {
             await ExtensionDataManager.deleteDocument(getCollectionKey(bugBashId), bugBashItemId, false);
-        }
-        catch {
+        } catch {
             // eat exception
         }
     }
@@ -110,32 +105,29 @@ export namespace BugBashItemDataService {
             try {
                 await WorkItemTemplateItemActions.initializeWorkItemTemplateItem(acceptTemplateTeam, acceptTemplateId);
                 acceptTemplate = StoresHub.workItemTemplateItemStore.getItem(acceptTemplateId);
-            }
-            catch (e) {
+            } catch (e) {
                 throw `Bug bash template '${acceptTemplateId}' does not exist in team '${acceptTemplateTeam}'`;
             }
         }
 
         try {
             await TeamFieldActions.initializeTeamFields(bugBashItemModel.teamId);
-        }
-        catch (e) {
+        } catch (e) {
             throw `Cannot read team field value for team: ${bugBashItemModel.teamId}.`;
         }
 
         if (bugBashItemModel.__etag) {
             // first do a empty save to check if its the latest version of the item
             updatedBugBashItemModel = await updateBugBashItem(bugBashItemModel.bugBashId, bugBashItemModel);
-        }
-        else {
-            updatedBugBashItemModel = {...bugBashItemModel}; // For auto accept scenario
+        } else {
+            updatedBugBashItemModel = { ...bugBashItemModel }; // For auto accept scenario
         }
 
         const itemDescriptionField = bugBash.getFieldValue<string>(BugBashFieldNames.ItemDescriptionField, true);
         const workItemType = bugBash.getFieldValue<string>(BugBashFieldNames.WorkItemType, true);
         const teamFieldValue = StoresHub.teamFieldStore.getItem(updatedBugBashItemModel.teamId);
 
-        const fieldValues = acceptTemplate ? {...acceptTemplate.fields} : {};
+        const fieldValues = acceptTemplate ? { ...acceptTemplate.fields } : {};
         fieldValues["System.Title"] = updatedBugBashItemModel.title;
         fieldValues[itemDescriptionField] = updatedBugBashItemModel.description;
         fieldValues[teamFieldValue.field.referenceName] = teamFieldValue.defaultValue;
@@ -150,8 +142,7 @@ export namespace BugBashItemDataService {
         try {
             // create work item
             savedWorkItem = await WorkItemActions.createWorkItem(workItemType, fieldValues);
-        }
-        catch (e) {
+        } catch (e) {
             BugBashItemActionsHub.UpdateBugBashItem.invoke(updatedBugBashItemModel);
             throw e;
         }
@@ -167,8 +158,7 @@ export namespace BugBashItemDataService {
 
         if (updatedBugBashItemModel.__etag) {
             updatedBugBashItemModel = await ExtensionDataManager.updateDocument(getCollectionKey(updatedBugBashItemModel.bugBashId), updatedBugBashItemModel, false);
-        }
-        else {
+        } else {
             updatedBugBashItemModel = await ExtensionDataManager.createDocument(getCollectionKey(updatedBugBashItemModel.bugBashId), updatedBugBashItemModel, false);
         }
         preProcessModel(updatedBugBashItemModel);
@@ -195,8 +185,7 @@ export namespace BugBashItemDataService {
 
         if (!stringEquals(VSS.getWebContext().user.uniqueName, entity.uniqueName, true)) {
             if (entity.id) {
-                commentToSave =
-                    `${commentToSave} on behalf of <a href='#' data-vss-mention='version:2.0,${entity.id}'>@${entity.displayName}</a>`;
+                commentToSave = `${commentToSave} on behalf of <a href='#' data-vss-mention='version:2.0,${entity.id}'>@${entity.displayName}</a>`;
             }
         }
 
@@ -229,8 +218,7 @@ export namespace BugBashItemDataService {
         if (typeof bugBashItem.createdDate === "string") {
             if (isNullOrWhiteSpace(bugBashItem.createdDate as string)) {
                 bugBashItem.createdDate = undefined;
-            }
-            else {
+            } else {
                 bugBashItem.createdDate = new Date(bugBashItem.createdDate);
             }
         }
@@ -239,16 +227,14 @@ export namespace BugBashItemDataService {
         if (typeof bugBashItem.rejectedBy === "string") {
             if (isNullOrWhiteSpace(bugBashItem.rejectedBy as string)) {
                 bugBashItem.rejectedBy = null;
-            }
-            else {
+            } else {
                 bugBashItem.rejectedBy = parseUniquefiedIdentityName(bugBashItem.rejectedBy);
             }
         }
         if (typeof bugBashItem.createdBy === "string") {
             if (isNullOrWhiteSpace(bugBashItem.createdBy as string)) {
                 bugBashItem.createdBy = null;
-            }
-            else {
+            } else {
                 bugBashItem.createdBy = parseUniquefiedIdentityName(bugBashItem.createdBy);
             }
         }

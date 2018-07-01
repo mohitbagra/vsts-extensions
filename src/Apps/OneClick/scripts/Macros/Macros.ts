@@ -6,7 +6,10 @@ import * as addDays from "date-fns/add_days";
 import * as format from "date-fns/format";
 
 export abstract class BaseMacro {
-    public static getMacroType(macroStr: string): new() => BaseMacro {
+    private static registeredMacros: IDictionaryStringTo<new () => BaseMacro> = {};
+    private static allowedSeparators = ["=", "-", "+"];
+
+    public static getMacroType(macroStr: string): new () => BaseMacro {
         if (!macroStr) {
             return null;
         }
@@ -15,7 +18,7 @@ export abstract class BaseMacro {
         let seperator = "";
         let seperatorIndex = 999999;
         for (const sep of BaseMacro.allowedSeparators) {
-            const index =  macroStr.indexOf(sep);
+            const index = macroStr.indexOf(sep);
             if (index !== -1 && index < seperatorIndex) {
                 seperatorIndex = index;
                 seperator = sep;
@@ -29,16 +32,13 @@ export abstract class BaseMacro {
         return BaseMacro.registeredMacros[macroName.toUpperCase()] || BaseMacro.registeredMacros[macroStr.toUpperCase()];
     }
 
-    public static registerMacro(macroName: string, macroType: new() => BaseMacro): void {
+    public static registerMacro(macroName: string, macroType: new () => BaseMacro): void {
         BaseMacro.registeredMacros[macroName.toUpperCase()] = macroType;
     }
 
     public static isMacro(str: string): boolean {
         return startsWith(str, "@");
     }
-
-    private static registeredMacros: IDictionaryStringTo<new() => BaseMacro> = {};
-    private static allowedSeparators = ["=", "-", "+"];
 
     public abstract async translate(macroStr: string, typed?: boolean): Promise<string | any>;
     public abstract getName(): string;
@@ -66,20 +66,19 @@ export class MacroToday extends BaseMacro {
         if (operatorAndOperand) {
             switch (operatorAndOperand[0]) {
                 case "-":
-                    returnValue = addDays(returnValue, -1 * operatorAndOperand[1]);
+                    returnValue = addDays(returnValue, operatorAndOperand[1] * -1);
                     break;
                 case "+":
                     returnValue = addDays(returnValue, operatorAndOperand[1]);
                     break;
                 default:
-                    // no op
+                // no op
             }
         }
 
         if (typed) {
             return returnValue;
-        }
-        else {
+        } else {
             return format(returnValue);
         }
     }
@@ -92,7 +91,7 @@ export class MacroToday extends BaseMacro {
         let operator = "";
         let operatorIndex = -1;
         for (const sep of this._allowedOperands) {
-            const index =  macroStr.indexOf(sep);
+            const index = macroStr.indexOf(sep);
             if (index !== -1 && (operatorIndex === -1 || index < operatorIndex)) {
                 operatorIndex = index;
                 operator = sep;
@@ -108,7 +107,7 @@ export class MacroToday extends BaseMacro {
 
         return null;
     }
- }
+}
 BaseMacro.registerMacro("@Today", MacroToday);
 
 export class MacroFieldValue extends BaseMacro {
@@ -116,16 +115,14 @@ export class MacroFieldValue extends BaseMacro {
         const fieldName = macroStr.split("=")[1];
         if (!fieldName) {
             return macroStr;
-        }
-        else {
+        } else {
             try {
                 const formService = await getFormService();
                 const field = await getWorkItemField(fieldName);
                 const fieldValue = await formService.getFieldValue(field.referenceName);
 
                 return typed ? fieldValue : toString(fieldValue);
-            }
-            catch (e) {
+            } catch (e) {
                 return macroStr;
             }
         }

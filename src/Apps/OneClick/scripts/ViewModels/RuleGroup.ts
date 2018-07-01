@@ -22,7 +22,7 @@ export class RuleGroup extends Observable<void> {
 
     constructor(model: IRuleGroup) {
         super();
-        this._originalModel = {...model};
+        this._originalModel = { ...model };
         this._updates = {} as IRuleGroup;
     }
 
@@ -39,24 +39,27 @@ export class RuleGroup extends Observable<void> {
     }
 
     public get updatedModel(): IRuleGroup {
-        return {...this._originalModel, ...this._updates};
+        return { ...this._originalModel, ...this._updates };
     }
 
     public get originalModel(): IRuleGroup {
-        return {...this._originalModel};
+        return { ...this._originalModel };
     }
 
     public isDirty(): boolean {
-        return !stringEquals(this.updatedModel.name, this._originalModel.name)
-            || !stringEquals(this.updatedModel.description, this._originalModel.description, true)
-            || this.updatedModel.disabled !== this._originalModel.disabled;
-
+        return (
+            !stringEquals(this.updatedModel.name, this._originalModel.name) ||
+            !stringEquals(this.updatedModel.description, this._originalModel.description, true) ||
+            this.updatedModel.disabled !== this._originalModel.disabled
+        );
     }
 
     public isValid(): boolean {
-        return this.updatedModel.name.trim().length > 0
-            && this.updatedModel.name.length <= SizeLimits.TitleMaxLength
-            && this.updatedModel.description.length <= SizeLimits.DescriptionMaxLength;
+        return (
+            this.updatedModel.name.trim().length > 0 &&
+            this.updatedModel.name.length <= SizeLimits.TitleMaxLength &&
+            this.updatedModel.description.length <= SizeLimits.DescriptionMaxLength
+        );
     }
 
     public setFieldValue<T extends string | boolean | number>(fieldName: RuleGroupFieldNames, fieldValue: T) {
@@ -65,7 +68,7 @@ export class RuleGroup extends Observable<void> {
     }
 
     public getFieldValue<T extends string | boolean | number>(fieldName: RuleGroupFieldNames, original?: boolean): T {
-        return original ? this._originalModel[fieldName] as T : this.updatedModel[fieldName] as T;
+        return original ? (this._originalModel[fieldName] as T) : (this.updatedModel[fieldName] as T);
     }
 
     public addChangedListener(listener: () => void) {

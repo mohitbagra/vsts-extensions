@@ -62,15 +62,13 @@ export class AddNewRelationActionRenderer extends BaseFluxComponent<IAddNewRelat
         if (!isNullOrWhiteSpace(nextProps.teamId)) {
             if (!stringEquals(nextProps.teamId, this.props.teamId, true)) {
                 if (StoresHub.workItemTemplateStore.isLoaded(nextProps.teamId)) {
-                    this.setState({templates: StoresHub.workItemTemplateStore.getItem(nextProps.teamId)});
-                }
-                else {
+                    this.setState({ templates: StoresHub.workItemTemplateStore.getItem(nextProps.teamId) });
+                } else {
                     this._loadTemplates(nextProps.teamId);
                 }
             }
-        }
-        else {
-            this.setState({templates: []});
+        } else {
+            this.setState({ templates: [] });
         }
     }
 
@@ -96,16 +94,14 @@ export class AddNewRelationActionRenderer extends BaseFluxComponent<IAddNewRelat
         return (
             <div className={css("add-new-relation-picker", this.props.className)}>
                 <div className="action-property-control checkbox-control">
-                    <Checkbox
-                        className="auto-accept"
-                        label=""
-                        checked={this.props.autoCreate}
-                        onChange={this._onAutoCreateChange}
-                    />
+                    <Checkbox className="auto-accept" label="" checked={this.props.autoCreate} onChange={this._onAutoCreateChange} />
 
                     <InfoLabel
                         label="Auto create work item?"
-                        info="If checked, this action will automatically create work item via rest API. If not, then it will popup a work item dialog and users will have to manually save the workitem from there."
+                        info={
+                            "If checked, this action will automatically create work item via rest API." +
+                            " If not, then it will popup a work item dialog and users will have to manually save the workitem from there."
+                        }
                     />
                 </div>
                 <WorkItemTypePicker
@@ -144,7 +140,11 @@ export class AddNewRelationActionRenderer extends BaseFluxComponent<IAddNewRelat
                         label="Work item template"
                         info="Select a work item template that would be applied during linked work item creation. Supported macros in template - @fieldValue, @me, @today."
                     />
-                    {selectedTeam && <Link href={this._getTemplatePageUrl(this.props.teamId, this.props.workItemType)} target="_blank">Add a template</Link>}
+                    {selectedTeam && (
+                        <Link href={this._getTemplatePageUrl(this.props.teamId, this.props.workItemType)} target="_blank">
+                            Add a template
+                        </Link>
+                    )}
                 </div>
                 <Dropdown
                     selectedKey={this.props.templateId.toLowerCase()}
@@ -190,37 +190,32 @@ export class AddNewRelationActionRenderer extends BaseFluxComponent<IAddNewRelat
     private async _loadTemplates(teamId: string) {
         try {
             await WorkItemTemplateActions.initializeWorkItemTemplates(teamId);
-        }
-        catch {
+        } catch {
             // eat
         }
     }
 
     private _onRenderCallout = (props?: IDropdownProps, defaultRender?: (props?: IDropdownProps) => JSX.Element): JSX.Element => {
-        return (
-            <div className="callout-container">
-                {defaultRender(props)}
-            </div>
-        );
-    }
+        return <div className="callout-container">{defaultRender(props)}</div>;
+    };
 
     private _onWorkItemTypeChange = (witType: WorkItemType, value?: string) => {
         this.props.onWorkItemTypeChange(witType ? witType.name : value);
-    }
+    };
 
     private _onWorkItemRelationTypeChange = (witRelationType: WorkItemRelationType, value?: string) => {
         this.props.onRelationTypeChange(witRelationType ? witRelationType.name : value);
-    }
+    };
 
     private _onTeamChange = (team: WebApiTeam, value?: string) => {
         this.props.onTeamChange(team ? team.id : value);
-    }
+    };
 
     private _onTemplateChange = (option: IDropdownOption) => {
         this.props.onTemplateChange(option.key as string);
-    }
+    };
 
     private _onAutoCreateChange = (_ev: React.FormEvent<HTMLElement>, isChecked: boolean) => {
         this.props.onAutoCreateChange(isChecked);
-    }
+    };
 }

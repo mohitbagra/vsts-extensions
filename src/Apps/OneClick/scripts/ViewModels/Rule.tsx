@@ -34,7 +34,7 @@ export class Rule extends Observable<void> {
 
     constructor(model: IRule) {
         super();
-        this._originalModel = {...model};
+        this._originalModel = { ...model };
         this._updates = {} as IRule;
 
         this._actions = this._prepareActions(this._originalModel.actions || []);
@@ -54,7 +54,7 @@ export class Rule extends Observable<void> {
     }
 
     public get updatedModel(): IRule {
-        const updatedModel = {...this._originalModel, ...this._updates};
+        const updatedModel = { ...this._originalModel, ...this._updates };
         updatedModel.actions = this._actions.map(action => ({
             name: action.name,
             attributes: action.updatedAttributes
@@ -68,7 +68,7 @@ export class Rule extends Observable<void> {
     }
 
     public get originalModel(): IRule {
-        return {...this._originalModel};
+        return { ...this._originalModel };
     }
 
     public get actions(): BaseAction[] {
@@ -84,24 +84,28 @@ export class Rule extends Observable<void> {
     }
 
     public isDirty(): boolean {
-        return !stringEquals(this.updatedModel.name, this._originalModel.name)
-            || !stringEquals(this.updatedModel.color, this._originalModel.color, true)
-            || !stringEquals(this.updatedModel.description, this._originalModel.description, true)
-            || this.updatedModel.disabled !== this._originalModel.disabled
-            || this.updatedModel.hideOnForm !== this._originalModel.hideOnForm
-            || this._originalModel.actions.length !== this._actions.length
-            || this._originalModel.triggers.length !== this._triggers.length
-            || this._actions.some((a: BaseAction) => a.isDirty())
-            || this._triggers.some((t: BaseTrigger) => t.isDirty());
+        return (
+            !stringEquals(this.updatedModel.name, this._originalModel.name) ||
+            !stringEquals(this.updatedModel.color, this._originalModel.color, true) ||
+            !stringEquals(this.updatedModel.description, this._originalModel.description, true) ||
+            this.updatedModel.disabled !== this._originalModel.disabled ||
+            this.updatedModel.hideOnForm !== this._originalModel.hideOnForm ||
+            this._originalModel.actions.length !== this._actions.length ||
+            this._originalModel.triggers.length !== this._triggers.length ||
+            this._actions.some((a: BaseAction) => a.isDirty()) ||
+            this._triggers.some((t: BaseTrigger) => t.isDirty())
+        );
     }
 
     public isValid(): boolean {
-        return this.updatedModel.name.trim().length > 0
-            && this.updatedModel.name.length <= SizeLimits.TitleMaxLength
-            && this.updatedModel.description.length <= SizeLimits.DescriptionMaxLength
-            && this._actions.length > 0
-            && this._actions.every((a: BaseAction) => a.isValid())
-            && this._triggers.every((t: BaseTrigger) => t.isValid());
+        return (
+            this.updatedModel.name.trim().length > 0 &&
+            this.updatedModel.name.length <= SizeLimits.TitleMaxLength &&
+            this.updatedModel.description.length <= SizeLimits.DescriptionMaxLength &&
+            this._actions.length > 0 &&
+            this._actions.every((a: BaseAction) => a.isValid()) &&
+            this._triggers.every((t: BaseTrigger) => t.isValid())
+        );
     }
 
     public setFieldValue<T extends string | boolean | number>(fieldName: RuleFieldNames, fieldValue: T) {
@@ -110,7 +114,7 @@ export class Rule extends Observable<void> {
     }
 
     public getFieldValue<T extends string | boolean | number>(fieldName: RuleFieldNames, original?: boolean): T {
-        return original ? this._originalModel[fieldName] as T : this.updatedModel[fieldName] as T;
+        return original ? (this._originalModel[fieldName] as T) : (this.updatedModel[fieldName] as T);
     }
 
     public addChangedListener(listener: () => void) {
@@ -152,15 +156,9 @@ export class Rule extends Observable<void> {
                 <div key={action.id} className="action-container">
                     <div className="action-header">
                         <div className="action-name">{action.getFriendlyName()}</div>
-                        <IconButton
-                            className="delete-action-command"
-                            iconProps={{iconName: "Trash"}}
-                            onClick={this._onRemoveActionButtonClick(action)}
-                        />
+                        <IconButton className="delete-action-command" iconProps={{ iconName: "Trash" }} onClick={this._onRemoveActionButtonClick(action)} />
                     </div>
-                    <div className="action-properties-list">
-                        {action.render(this._originalModel.workItemType)}
-                    </div>
+                    <div className="action-properties-list">{action.render(this._originalModel.workItemType)}</div>
                 </div>
             );
         });
@@ -172,15 +170,9 @@ export class Rule extends Observable<void> {
                 <div key={trigger.id} className="action-container">
                     <div className="action-header">
                         <div className="action-name">{trigger.getFriendlyName()}</div>
-                        <IconButton
-                            className="delete-action-command"
-                            iconProps={{iconName: "Trash"}}
-                            onClick={this._onRemoveTriggerButtonClick(trigger)}
-                        />
+                        <IconButton className="delete-action-command" iconProps={{ iconName: "Trash" }} onClick={this._onRemoveTriggerButtonClick(trigger)} />
                     </div>
-                    <div className="action-properties-list">
-                        {trigger.render(this._originalModel.workItemType)}
-                    </div>
+                    <div className="action-properties-list">{trigger.render(this._originalModel.workItemType)}</div>
                 </div>
             );
         });
@@ -196,8 +188,7 @@ export class Rule extends Observable<void> {
         for (const action of this.actions) {
             try {
                 await action.run();
-            }
-            catch (e) {
+            } catch (e) {
                 error = {
                     actionName: action.getFriendlyName(),
                     error: e.message || e
@@ -237,29 +228,33 @@ export class Rule extends Observable<void> {
     }
 
     private _prepareActions(actionModels: IAction[]): BaseAction[] {
-        return actionModels.map(model => {
-            const actionType = getActionType(model.name);
-            if (!actionType) {
-                return null;
-            }
+        return actionModels
+            .map(model => {
+                const actionType = getActionType(model.name);
+                if (!actionType) {
+                    return null;
+                }
 
-            const action = new actionType(model);
-            this._subscribeToAction(action);
-            return action;
-        }).filter(a => a != null);
+                const action = new actionType(model);
+                this._subscribeToAction(action);
+                return action;
+            })
+            .filter(a => a != null);
     }
 
     private _prepareTriggers(triggerModels: ITrigger[]): BaseTrigger[] {
-        return triggerModels.map(model => {
-            const triggerType = getTriggerType(model.name);
-            if (!triggerType) {
-                return null;
-            }
+        return triggerModels
+            .map(model => {
+                const triggerType = getTriggerType(model.name);
+                if (!triggerType) {
+                    return null;
+                }
 
-            const trigger = new triggerType(model);
-            this._subscribeToTrigger(trigger);
-            return trigger;
-        }).filter(t => t != null);
+                const trigger = new triggerType(model);
+                this._subscribeToTrigger(trigger);
+                return trigger;
+            })
+            .filter(t => t != null);
     }
 
     private _subscribeToAction(action: BaseAction) {
@@ -278,19 +273,19 @@ export class Rule extends Observable<void> {
         trigger.removeChangedListener(this._emitChanged);
     }
 
-    private _onRemoveActionButtonClick = (action: BaseAction): (event: React.MouseEvent<HTMLButtonElement>) => void => {
+    private _onRemoveActionButtonClick = (action: BaseAction): ((event: React.MouseEvent<HTMLButtonElement>) => void) => {
         return () => {
             this._removeAction(action);
         };
-    }
+    };
 
-    private _onRemoveTriggerButtonClick = (trigger: BaseTrigger): (event: React.MouseEvent<HTMLButtonElement>) => void => {
+    private _onRemoveTriggerButtonClick = (trigger: BaseTrigger): ((event: React.MouseEvent<HTMLButtonElement>) => void) => {
         return () => {
             this._removeTrigger(trigger);
         };
-    }
+    };
 
     private _emitChanged = () => {
         this.notify(null, null);
-    }
+    };
 }

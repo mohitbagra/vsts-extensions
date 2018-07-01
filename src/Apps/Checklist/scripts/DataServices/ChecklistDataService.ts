@@ -7,7 +7,7 @@ import { isNullOrWhiteSpace } from "Common/Utilities/String";
 export namespace ChecklistDataService {
     export async function loadChecklistForWorkItemType(workItemType: string, projectId?: string): Promise<IWorkItemChecklist> {
         const project = projectId || VSS.getWebContext().project.id;
-        const model = await ExtensionDataManager.readDocument<IWorkItemChecklist>(`dcwit_${project}`, workItemType, {id: workItemType, checklistItems: []}, false);
+        const model = await ExtensionDataManager.readDocument<IWorkItemChecklist>(`dcwit_${project}`, workItemType, { id: workItemType, checklistItems: [] }, false);
         preprocessChecklist(model);
         return model;
     }
@@ -20,7 +20,7 @@ export namespace ChecklistDataService {
 
     export async function loadDefaultChecklistForWorkItem(workItemId: number): Promise<IWorkItemChecklist> {
         const key = `${workItemId}`;
-        const model = await ExtensionDataManager.readDocument<IWorkItemChecklist>("DefaultCheckList", key, {id: key, checklistItems: []}, false);
+        const model = await ExtensionDataManager.readDocument<IWorkItemChecklist>("DefaultCheckList", key, { id: key, checklistItems: [] }, false);
         preprocessChecklist(model);
         return model;
     }
@@ -37,8 +37,8 @@ export namespace ChecklistDataService {
         const models: IWorkItemChecklist[] = await Promise.all([
             loadChecklistForWorkItemType(workItemType, projectId),
             loadDefaultChecklistForWorkItem(workItemId),
-            ExtensionDataManager.readDocument<IWorkItemChecklist>("CheckListItems", key, {id: key, checklistItems: []}, true),
-            ExtensionDataManager.readDocument<IWorkItemChecklist>("CheckListItems", key, {id: key, checklistItems: []}, false)
+            ExtensionDataManager.readDocument<IWorkItemChecklist>("CheckListItems", key, { id: key, checklistItems: [] }, true),
+            ExtensionDataManager.readDocument<IWorkItemChecklist>("CheckListItems", key, { id: key, checklistItems: [] }, false)
         ]);
         preprocessChecklist(models[2]);
         preprocessChecklist(models[3]);
@@ -62,8 +62,7 @@ export namespace ChecklistDataService {
                 if (isNullOrWhiteSpace(checklistItem.state)) {
                     if (checklistItem["checked"]) {
                         checklistItem.state = ChecklistItemState.Completed;
-                    }
-                    else {
+                    } else {
                         checklistItem.state = ChecklistItemState.New;
                     }
                 }
@@ -72,7 +71,7 @@ export namespace ChecklistDataService {
     }
 
     function mergeDefaultChecklists(workItemTypeChecklist: IWorkItemChecklist, workItemChecklist: IWorkItemChecklist): IWorkItemChecklist {
-        const mergedChecklist: IWorkItemChecklist = {...workItemChecklist, checklistItems: []};
+        const mergedChecklist: IWorkItemChecklist = { ...workItemChecklist, checklistItems: [] };
 
         const workItemChecklistItemsMap: IDictionaryStringTo<IChecklistItem> = {};
         for (const checklistItem of workItemChecklist.checklistItems) {
@@ -83,10 +82,9 @@ export namespace ChecklistDataService {
             const key = checklistItem.id.toLowerCase();
             if (workItemChecklistItemsMap[key] == null) {
                 mergedChecklist.checklistItems.push(checklistItem);
-            }
-            else {
+            } else {
                 const workItemChecklistItem = workItemChecklistItemsMap[key];
-                mergedChecklist.checklistItems.push({...workItemChecklistItem, text: checklistItem.text, required: checklistItem.required});
+                mergedChecklist.checklistItems.push({ ...workItemChecklistItem, text: checklistItem.text, required: checklistItem.required });
             }
         }
 

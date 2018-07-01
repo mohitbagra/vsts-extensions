@@ -30,8 +30,8 @@ export namespace BugBashActionsHub {
 }
 
 export namespace BugBashItemCommentActionsHub {
-    export const InitializeComments = new Action<{bugBashItemId: string, comments: IBugBashItemComment[]}>();
-    export const CreateComment = new Action<{bugBashItemId: string, comment: IBugBashItemComment}>();
+    export const InitializeComments = new Action<{ bugBashItemId: string; comments: IBugBashItemComment[] }>();
+    export const CreateComment = new Action<{ bugBashItemId: string; comment: IBugBashItemComment }>();
     export const Clean = new Action<void>();
 }
 

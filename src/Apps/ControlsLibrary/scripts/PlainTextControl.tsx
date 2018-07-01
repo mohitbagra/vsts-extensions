@@ -28,9 +28,8 @@ interface IPlainTextControlState {
 }
 
 function unescape(html: string): string {
-    return html
-        .replace(/&quot;/g, "\"")
-        .replace(/&#39;/g, "'");
+    // tslint:disable-next-line:quotemark
+    return html.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
 }
 
 async function processString(str: string): Promise<string> {
@@ -42,10 +41,16 @@ async function processString(str: string): Promise<string> {
     const matches = str.match(fieldValueRegex);
     if (matches && matches.length > 0) {
         let returnStr = str;
-        const fieldValues = await Promise.all(matches.map(m => {
-            const fieldName = m.replace("$\{@fieldValue=", "").replace("}", "").trim();
-            return getFieldValue(fieldName);
-        }));
+        const fieldValues = await Promise.all(
+            matches.map(m => {
+                const fieldName = m
+                    // tslint:disable-next-line:no-invalid-template-strings
+                    .replace("${@fieldValue=", "")
+                    .replace("}", "")
+                    .trim();
+                return getFieldValue(fieldName);
+            })
+        );
 
         matches.forEach((m, i) => {
             const fieldValue = fieldValues[i] || "";
@@ -53,8 +58,7 @@ async function processString(str: string): Promise<string> {
         });
 
         return returnStr;
-    }
-    else {
+    } else {
         return str;
     }
 }
@@ -66,18 +70,16 @@ async function getFieldValue(fieldName: string): Promise<any> {
     }
     try {
         const fields = await formService.getFields();
-        const field = first(fields, (f) => {
+        const field = first(fields, f => {
             return stringEquals(f.name, fieldName, true) || stringEquals(f.referenceName, fieldName, true);
         });
 
         if (field) {
             return await formService.getFieldValue(field.referenceName);
-        }
-        else {
+        } else {
             return null;
         }
-    }
-    catch {
+    } catch {
         return null;
     }
 }
@@ -87,7 +89,7 @@ export class PlainTextControl extends AutoResizableComponent<IPlainTextControlPr
 
     constructor(props: IPlainTextControlProps, context?: any) {
         super(props, context);
-        this.state = {translatedText: null};
+        this.state = { translatedText: null };
         this._markdown = new MarkdownIt({
             linkify: true
         });
@@ -106,7 +108,7 @@ export class PlainTextControl extends AutoResizableComponent<IPlainTextControlPr
             if (aIndex < 0) {
                 tokens[idx].attrPush(["target", "_blank"]); // add new attribute
             } else {
-                tokens[idx].attrs[aIndex][1] = "_blank";    // replace value of existing attr
+                tokens[idx].attrs[aIndex][1] = "_blank"; // replace value of existing attr
             }
 
             // pass token to default renderer.
@@ -116,8 +118,8 @@ export class PlainTextControl extends AutoResizableComponent<IPlainTextControlPr
 
     public render(): JSX.Element {
         return (
-            <Fabric className="plaintext-control" style={{maxHeight: this.props.maxHeight}}>
-                {this.state.translatedText && <div dangerouslySetInnerHTML={{__html: this.state.translatedText}} />}
+            <Fabric className="plaintext-control" style={{ maxHeight: this.props.maxHeight }}>
+                {this.state.translatedText && <div dangerouslySetInnerHTML={{ __html: this.state.translatedText }} />}
             </Fabric>
         );
     }
@@ -128,7 +130,7 @@ export class PlainTextControl extends AutoResizableComponent<IPlainTextControlPr
                 this._setText();
             },
             onUnloaded: (_args: IWorkItemChangedArgs) => {
-                this.setState({translatedText: null});
+                this.setState({ translatedText: null });
             }
         } as IWorkItemNotificationListener);
     }
@@ -139,17 +141,12 @@ export class PlainTextControl extends AutoResizableComponent<IPlainTextControlPr
 
     private async _setText() {
         const translatedText = await processString(this.props.text);
-        this.setState({translatedText: unescape(this._markdown.render(translatedText))});
+        this.setState({ translatedText: unescape(this._markdown.render(translatedText)) });
     }
 }
 
 export function init() {
     const inputs = VSS.getConfiguration().witInputs as IPlainTextControlInputs;
 
-    ReactDOM.render(
-        <PlainTextControl
-            text={inputs.Text}
-            maxHeight={inputs.MaxHeight || 350}
-        />,
-        document.getElementById("ext-container"));
+    ReactDOM.render(<PlainTextControl text={inputs.Text} maxHeight={inputs.MaxHeight || 350} />, document.getElementById("ext-container"));
 }

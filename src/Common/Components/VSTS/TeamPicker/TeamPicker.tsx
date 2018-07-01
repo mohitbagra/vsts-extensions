@@ -24,8 +24,7 @@ export class TeamPicker extends BaseFluxComponent<ISimpleComboProps<WebApiTeam>,
             this.setState({
                 allTeams: this._teamStore.getAll()
             });
-        }
-        else {
+        } else {
             TeamActions.initializeTeams();
         }
     }

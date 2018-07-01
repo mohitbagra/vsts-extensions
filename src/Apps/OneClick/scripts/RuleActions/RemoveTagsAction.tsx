@@ -10,15 +10,12 @@ import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
 import { CoreFieldRefNames } from "OneClick/Constants";
 import { BaseAction } from "OneClick/RuleActions/BaseAction";
 
-const AsyncWorkItemTagPicker = getAsyncLoadedComponent(
-    ["scripts/ActionRenderers"],
-    (m: typeof ActionRenderers_Async) => m.WorkItemTagPicker,
-    () => <Loading />);
+const AsyncWorkItemTagPicker = getAsyncLoadedComponent(["scripts/ActionRenderers"], (m: typeof ActionRenderers_Async) => m.WorkItemTagPicker, () => <Loading />);
 
 export class RemoveTagsAction extends BaseAction {
     public async run() {
         const formService = await getFormService();
-        const tags = await formService.getFieldValue(CoreFieldRefNames.Tags) as string;
+        const tags = (await formService.getFieldValue(CoreFieldRefNames.Tags)) as string;
         const tagsToRemove = (this.getAttribute<string>("tags", true) as string).split(";").map((t: string) => t.trim());
         if (tags) {
             const existingTags = tags.split(";").map((t: string) => t.trim());
@@ -48,7 +45,7 @@ export class RemoveTagsAction extends BaseAction {
         return {
             iconName: "Tag",
             styles: {
-                root: {color: "#da0a00 !important"}
+                root: { color: "#da0a00 !important" }
             }
         };
     }
@@ -79,5 +76,5 @@ export class RemoveTagsAction extends BaseAction {
 
     private _onTagsChange = (tags: string[]) => {
         this.setAttribute<string>("tags", tags.join(";"));
-    }
+    };
 }

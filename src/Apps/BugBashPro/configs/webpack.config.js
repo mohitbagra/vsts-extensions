@@ -13,23 +13,21 @@ const config = {
         "BugBashPro/scripts/FileUploadDialog": "./src/Common/Components/FileUploadDialog/FileUploadDialog.tsx"
     },
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin(
-            {
-                name: "bugbashpro_common_chunks",
-                chunks: [
-                    "BugBashPro/scripts/App",
-                    "BugBashPro/scripts/AllBugBashesView",
-                    "BugBashPro/scripts/BugBashEditor",                    
-                    "BugBashPro/scripts/BugBashResults",
-                    "BugBashPro/scripts/BugBashDetails",
-                    "BugBashPro/scripts/BugBashCharts",
-                    "BugBashPro/scripts/SettingsPanel",
-                    "BugBashPro/scripts/FileUploadDialog"
-                ],
-                filename: "./BugBashPro/scripts/bugbashpro_common_chunks.js",
-                minChunks: 3
-            }
-        ),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "bugbashpro_common_chunks",
+            chunks: [
+                "BugBashPro/scripts/App",
+                "BugBashPro/scripts/AllBugBashesView",
+                "BugBashPro/scripts/BugBashEditor",
+                "BugBashPro/scripts/BugBashResults",
+                "BugBashPro/scripts/BugBashDetails",
+                "BugBashPro/scripts/BugBashCharts",
+                "BugBashPro/scripts/SettingsPanel",
+                "BugBashPro/scripts/FileUploadDialog"
+            ],
+            filename: "./BugBashPro/scripts/bugbashpro_common_chunks.js",
+            minChunks: 3
+        }),
         new CopyWebpackPlugin([
             { from: "./node_modules/react/umd/react.production.min.js", to: "BugBashPro/3rdParty/react.js" },
             { from: "./node_modules/react-dom/umd/react-dom.production.min.js", to: "BugBashPro/3rdParty/react-dom.js" },
@@ -37,7 +35,7 @@ const config = {
             { from: "./node_modules/vss-web-extension-sdk/lib/VSS.SDK.min.js", to: "BugBashPro/3rdParty/VSS.SDK.min.js" },
             { from: "./node_modules/es6-promise/dist/es6-promise.min.js", to: "BugBashPro/3rdParty/es6-promise.min.js" },
             { from: "./node_modules/office-ui-fabric-react/dist/css/fabric.min.css", to: "BugBashPro/3rdParty/fabric.min.css" },
-            
+
             { from: "./src/Apps/BugBashPro/configs", to: "BugBashPro/configs" },
             { from: "./src/Apps/BugBashPro/images", to: "BugBashPro/images" },
             { from: "./src/Apps/BugBashPro/html", to: "BugBashPro/html" },
@@ -45,6 +43,6 @@ const config = {
             { from: "./src/Apps/BugBashPro/README.md", to: "BugBashPro/README.md" }
         ])
     ]
-}
+};
 
 module.exports = config;

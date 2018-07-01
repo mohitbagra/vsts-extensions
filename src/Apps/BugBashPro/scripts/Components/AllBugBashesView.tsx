@@ -53,10 +53,7 @@ interface IAllBugBashesViewState extends IBaseFluxComponentState {
     error?: string;
 }
 
-const AsyncSettingsPanel = getAsyncLoadedComponent(
-    ["scripts/SettingsPanel"],
-    (m: typeof SettingsPanel_Async) => m.SettingsPanel,
-    () => <Loading />);
+const AsyncSettingsPanel = getAsyncLoadedComponent(["scripts/SettingsPanel"], (m: typeof SettingsPanel_Async) => m.SettingsPanel, () => <Loading />);
 
 export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps, IAllBugBashesViewState> {
     private _hubViewState: IHubViewState;
@@ -91,34 +88,36 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
     public render(): JSX.Element {
         return (
             <div className="all-view">
-                { this.state.error &&
-                    <MessageBar
-                        className="bugbash-error"
-                        messageBarType={MessageBarType.error}
-                        onDismiss={this._dismissErrorMessage}
-                    >
+                {this.state.error && (
+                    <MessageBar className="bugbash-error" messageBarType={MessageBarType.error} onDismiss={this._dismissErrorMessage}>
                         {this.state.error}
                     </MessageBar>
-                }
+                )}
                 <Hub
                     className="bugbashes-hub"
                     hideFullScreenToggle={true}
                     hubViewState={this._hubViewState}
                     commands={[
                         {
-                            key: "new", name: "New Bug Bash", important: true,
+                            key: "new",
+                            name: "New Bug Bash",
+                            important: true,
                             iconProps: { iconName: "Add", iconType: VssIconType.fabric },
-                            onClick: () => navigate({ view: UrlActions.ACTION_EDIT})
+                            onClick: () => navigate({ view: UrlActions.ACTION_EDIT })
                         },
                         {
-                            key: "refresh", name: "Refresh", important: true,
+                            key: "refresh",
+                            name: "Refresh",
+                            important: true,
                             iconProps: { iconName: "Refresh", iconType: VssIconType.fabric },
                             onClick: () => BugBashActions.refreshAllBugBashes()
                         },
                         {
-                            key: "settings", name: "Settings", important: true,
+                            key: "settings",
+                            name: "Settings",
+                            important: true,
                             iconProps: { iconName: "Settings", iconType: VssIconType.fabric },
-                            onClick: () => this.setState({settingsPanelOpen: !(this.state.settingsPanelOpen)} as IAllBugBashesViewState)
+                            onClick: () => this.setState({ settingsPanelOpen: !this.state.settingsPanelOpen } as IAllBugBashesViewState)
                         }
                     ]}
                 >
@@ -126,19 +125,17 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
                     <HubTileRegion>
                         <HubTextTile
                             text={this.state.loading ? "Loading..." : `${this.state.allBugBashes.length} bug bashes`}
-                            secondaryText={this.state.loading
-                                ? ""
-                                : `${this.state.ongoingBugBashes.length} Ongoing, ${this.state.upcomingBugBashes.length} Upcoming, ${this.state.pastBugBashes.length} Ended`}
+                            secondaryText={
+                                this.state.loading
+                                    ? ""
+                                    : `${this.state.ongoingBugBashes.length} Ongoing, ${this.state.upcomingBugBashes.length} Upcoming, ${this.state.pastBugBashes.length} Ended`
+                            }
                         />
                     </HubTileRegion>
                     <FilterBar componentRef={this._resolveFilterBar}>
                         <KeywordFilterBarItem filterItemKey={BugBashFieldNames.Title} />
                     </FilterBar>
-                    <PivotBarItem
-                        name={"Ongoing"}
-                        itemKey={DirectoryPagePivotKeys.Ongoing}
-                        badgeCount={this.state.ongoingBugBashes ? this.state.ongoingBugBashes.length : null}
-                    >
+                    <PivotBarItem name={"Ongoing"} itemKey={DirectoryPagePivotKeys.Ongoing} badgeCount={this.state.ongoingBugBashes ? this.state.ongoingBugBashes.length : null}>
                         {this._getContents(DirectoryPagePivotKeys.Ongoing)}
                     </PivotBarItem>
                     <PivotBarItem
@@ -148,27 +145,16 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
                     >
                         {this._getContents(DirectoryPagePivotKeys.Upcoming)}
                     </PivotBarItem>
-                    <PivotBarItem
-                        name={"Past"}
-                        itemKey={DirectoryPagePivotKeys.Past}
-                        badgeCount={this.state.pastBugBashes ? this.state.pastBugBashes.length : null}
-                    >
+                    <PivotBarItem name={"Past"} itemKey={DirectoryPagePivotKeys.Past} badgeCount={this.state.pastBugBashes ? this.state.pastBugBashes.length : null}>
                         {this._getContents(DirectoryPagePivotKeys.Past)}
                     </PivotBarItem>
                 </Hub>
 
-                {
-                    this.state.settingsPanelOpen &&
-                    <Panel
-                        isOpen={true}
-                        type={PanelType.smallFixedFar}
-                        isLightDismiss={true}
-                        onDismiss={this._dismissSettingsPanel}
-                    >
-
+                {this.state.settingsPanelOpen && (
+                    <Panel isOpen={true} type={PanelType.smallFixedFar} isLightDismiss={true} onDismiss={this._dismissSettingsPanel}>
                         <AsyncSettingsPanel />
                     </Panel>
-                }
+                )}
             </div>
         );
     }
@@ -214,24 +200,16 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
         if (key === DirectoryPagePivotKeys.Past) {
             bugBashes = this.state.pastBugBashes;
             missingItemsMsg = "No past bug bashes";
-        }
-        else if (key === DirectoryPagePivotKeys.Ongoing) {
+        } else if (key === DirectoryPagePivotKeys.Ongoing) {
             bugBashes = this.state.ongoingBugBashes;
             missingItemsMsg = "No ongoing bug bashes";
-        }
-        else {
+        } else {
             bugBashes = this.state.upcomingBugBashes;
             missingItemsMsg = "No upcoming bug bashes";
         }
 
         if (bugBashes.length === 0) {
-            return (
-                <ZeroData
-                    imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`}
-                    imageAltText=""
-                    primaryText={missingItemsMsg}
-                />
-            );
+            return <ZeroData imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`} imageAltText="" primaryText={missingItemsMsg} />;
         }
 
         return (
@@ -266,16 +244,8 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
 
                     return (
                         <div className="overflow-ellipsis title-link">
-                            <TooltipHost
-                                content={title}
-                                delay={TooltipDelay.medium}
-                                overflowMode={TooltipOverflowMode.Parent}
-                                directionalHint={DirectionalHint.bottomLeftEdge}
-                            >
-                                <Link
-                                    href={getBugBashUrl(bugBash.id, UrlActions.ACTION_RESULTS)}
-                                    onClick={delegate(this, this._onRowClick, bugBash)}
-                                >
+                            <TooltipHost content={title} delay={TooltipDelay.medium} overflowMode={TooltipOverflowMode.Parent} directionalHint={DirectionalHint.bottomLeftEdge}>
+                                <Link href={getBugBashUrl(bugBash.id, UrlActions.ACTION_RESULTS)} onClick={delegate(this, this._onRowClick, bugBash)}>
                                     {title}
                                 </Link>
                             </TooltipHost>
@@ -295,12 +265,7 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
                     const startTime = bugBash.getFieldValue<Date>(BugBashFieldNames.StartTime, true);
                     const label = startTime ? format(startTime, "dddd, MMMM DD, YYYY") : "N/A";
                     return (
-                        <TooltipHost
-                            content={label}
-                            delay={TooltipDelay.medium}
-                            overflowMode={TooltipOverflowMode.Parent}
-                            directionalHint={DirectionalHint.bottomLeftEdge}
-                        >
+                        <TooltipHost content={label} delay={TooltipDelay.medium} overflowMode={TooltipOverflowMode.Parent} directionalHint={DirectionalHint.bottomLeftEdge}>
                             {label}
                         </TooltipHost>
                     );
@@ -318,12 +283,7 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
                     const endTime = bugBash.getFieldValue<Date>(BugBashFieldNames.EndTime, true);
                     const label = endTime ? format(endTime, "dddd, MMMM DD, YYYY") : "N/A";
                     return (
-                        <TooltipHost
-                            content={label}
-                            delay={TooltipDelay.medium}
-                            overflowMode={TooltipOverflowMode.Parent}
-                            directionalHint={DirectionalHint.bottomLeftEdge}
-                        >
+                        <TooltipHost content={label} delay={TooltipDelay.medium} overflowMode={TooltipOverflowMode.Parent} directionalHint={DirectionalHint.bottomLeftEdge}>
                             {label}
                         </TooltipHost>
                     );
@@ -335,7 +295,7 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
     private _onRowClick(e: React.MouseEvent<HTMLElement>, bugBash: BugBash) {
         if (!e.ctrlKey) {
             e.preventDefault();
-            navigate({ view: UrlActions.ACTION_RESULTS, id: bugBash.id});
+            navigate({ view: UrlActions.ACTION_RESULTS, id: bugBash.id });
         }
     }
 
@@ -349,7 +309,7 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
             pastBugBashes.sort((b1: BugBash, b2: BugBash) => {
                 const endTime1 = b1.getFieldValue<Date>(BugBashFieldNames.EndTime, true);
                 const endTime2 = b2.getFieldValue<Date>(BugBashFieldNames.EndTime, true);
-                return -1 * defaultDateComparer(endTime1, endTime2); // most latest past bug bash first
+                return defaultDateComparer(endTime1, endTime2) * -1; // most latest past bug bash first
             });
         }
         return pastBugBashes;
@@ -362,14 +322,11 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
 
             if (!startTime && !endTime) {
                 return true;
-            }
-            else if  (!startTime && endTime) {
+            } else if (!startTime && endTime) {
                 return defaultDateComparer(endTime, currentTime) >= 0;
-            }
-            else if (startTime && !endTime) {
+            } else if (startTime && !endTime) {
                 return defaultDateComparer(startTime, currentTime) <= 0;
-            }
-            else {
+            } else {
                 return defaultDateComparer(startTime, currentTime) <= 0 && defaultDateComparer(endTime, currentTime) >= 0;
             }
         });
@@ -378,7 +335,7 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
             ongoingBugBashes.sort((b1: BugBash, b2: BugBash) => {
                 const startTime1 = b1.getFieldValue<Date>(BugBashFieldNames.StartTime, true);
                 const startTime2 = b2.getFieldValue<Date>(BugBashFieldNames.StartTime, true);
-                return -1 * defaultDateComparer(startTime1, startTime2);
+                return defaultDateComparer(startTime1, startTime2) * -1;
             });
         }
         return ongoingBugBashes;
@@ -410,58 +367,64 @@ export class AllBugBashesView extends BaseFluxComponent<IBaseFluxComponentProps,
     private _getGridContextMenuItems = (bugBash: BugBash): IContextualMenuItem[] => {
         return [
             {
-                key: "open", name: "View results", iconProps: {iconName: "ShowResults"},
+                key: "open",
+                name: "View results",
+                iconProps: { iconName: "ShowResults" },
                 onClick: () => {
-                    navigate({ view: UrlActions.ACTION_RESULTS, id: bugBash.id});
+                    navigate({ view: UrlActions.ACTION_RESULTS, id: bugBash.id });
                 }
             },
             {
-                key: "edit", name: "Edit", iconProps: {iconName: "Edit"},
+                key: "edit",
+                name: "Edit",
+                iconProps: { iconName: "Edit" },
                 onClick: () => {
-                    navigate({ view: UrlActions.ACTION_EDIT, id: bugBash.id});
+                    navigate({ view: UrlActions.ACTION_EDIT, id: bugBash.id });
                 }
             },
             {
-                key: "delete", name: "Delete", iconProps: {iconName: "Cancel", style: { color: "#da0a00", fontWeight: "bold" }},
+                key: "delete",
+                name: "Delete",
+                iconProps: { iconName: "Cancel", style: { color: "#da0a00", fontWeight: "bold" } },
                 onClick: () => {
                     this._deleteBugBash(bugBash);
                 }
             }
         ];
-    }
+    };
 
     private _dismissSettingsPanel = () => {
-        this.setState({settingsPanelOpen: false} as IAllBugBashesViewState);
-    }
+        this.setState({ settingsPanelOpen: false } as IAllBugBashesViewState);
+    };
 
     private _dismissErrorMessage = () => {
         ErrorMessageActions.dismissErrorMessage(ErrorKeys.DirectoryPageError);
-    }
+    };
 
     private _onPivotChanged = (pivotKey: string) => {
         if (pivotKey) {
             writeLocalSetting("directorypivotkey", pivotKey, WebSettingsScope.User);
         }
-    }
+    };
 
     private _onFilterChange = (filterState: IFilterState) => {
         BugBashActions.applyFilter(filterState);
-    }
+    };
 
     private _onSortChange = (_ev?: React.MouseEvent<HTMLElement>, column?: IColumn) => {
         BugBashActions.applySort({
             sortKey: column.key as BugBashFieldNames,
             isSortedDescending: !column.isSortedDescending
         });
-    }
+    };
 
     private _focusFilterBar = (ev: KeyboardEvent) => {
         if (this._filterBar && ev.ctrlKey && ev.shiftKey && stringEquals(ev.key, "f", true)) {
             this._filterBar.focus();
         }
-    }
+    };
 
     private _resolveFilterBar = (filterBar: IFilterBar) => {
         this._filterBar = filterBar;
-    }
+    };
 }

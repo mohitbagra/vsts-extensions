@@ -1,10 +1,11 @@
-$ValueSpinner-element-width:40px;
+$ValueSpinner-element-width: 40px;
 $ValueSpinner-button-color: #666666; // $ms-color-neutralSecondary in office fabric
 
 .value-spinner {
     white-space: nowrap;
 
-    .spinner-up, .spinner-down {
+    .spinner-up,
+    .spinner-down {
         @include unstyled();
         line-height: 40px;
         width: $ValueSpinner-element-width;

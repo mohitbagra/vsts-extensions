@@ -31,7 +31,7 @@ export class ColorPicker extends BaseFluxComponent<IColorPickerProps, IColorPick
         super.componentWillReceiveProps(nextProps, context);
 
         if (!stringEquals(nextProps.selectedColor, this.state.selectedColor, true)) {
-            this.setState({selectedColor: nextProps.selectedColor || "#FFFFFF"});
+            this.setState({ selectedColor: nextProps.selectedColor || "#FFFFFF" });
         }
     }
 
@@ -40,24 +40,16 @@ export class ColorPicker extends BaseFluxComponent<IColorPickerProps, IColorPick
             <div className={css("color-picker", this.props.className)}>
                 {this.props.label && <InfoLabel className="color-picker-label" label={this.props.label} info={this.props.info} />}
 
-                <div className="selected-color-container"  ref={(target) => this._targetElement = target}>
-                    <div className="selected-color" style={{backgroundColor: this.state.selectedColor}} onClick={this._toggleCallout} />
-                    <DefaultButton className="open-callout-button" iconProps={{iconName: "ChevronDown"}} onClick={this._toggleCallout} />
+                <div className="selected-color-container" ref={target => (this._targetElement = target)}>
+                    <div className="selected-color" style={{ backgroundColor: this.state.selectedColor }} onClick={this._toggleCallout} />
+                    <DefaultButton className="open-callout-button" iconProps={{ iconName: "ChevronDown" }} onClick={this._toggleCallout} />
                 </div>
 
-                { this.state.isCalloutOpen &&
-                    <Callout
-                        className="colors-callout"
-                        isBeakVisible={false}
-                        onDismiss={this._onCalloutDismiss}
-                        setInitialFocus={true}
-                        target={this._targetElement}
-                    >
-                        <ul className="colors-list">
-                            {AccessibilityColor.FullPaletteColors.map(this._renderColorItem)}
-                        </ul>
+                {this.state.isCalloutOpen && (
+                    <Callout className="colors-callout" isBeakVisible={false} onDismiss={this._onCalloutDismiss} setInitialFocus={true} target={this._targetElement}>
+                        <ul className="colors-list">{AccessibilityColor.FullPaletteColors.map(this._renderColorItem)}</ul>
                     </Callout>
-                }
+                )}
             </div>
         );
     }
@@ -70,7 +62,7 @@ export class ColorPicker extends BaseFluxComponent<IColorPickerProps, IColorPick
     }
 
     private _selectColor(color: string) {
-        this.setState({selectedColor: color, isCalloutOpen: false});
+        this.setState({ selectedColor: color, isCalloutOpen: false });
         this.props.onChange(color);
     }
 
@@ -80,23 +72,17 @@ export class ColorPicker extends BaseFluxComponent<IColorPickerProps, IColorPick
         const onSelectColor: () => void = () => this._selectColor(color.asHex());
 
         return (
-            <li
-                key={index}
-                className={isSelected ? "color-list-item selected" : "color-list-item"}
-                onClick={onSelectColor}
-                style={{backgroundColor: color.asRgb()}}
-            >
-
+            <li key={index} className={isSelected ? "color-list-item selected" : "color-list-item"} onClick={onSelectColor} style={{ backgroundColor: color.asRgb() }}>
                 {isSelected && <div className="inner" />}
             </li>
         );
-    }
+    };
 
     private _toggleCallout = () => {
-        this.setState({isCalloutOpen: !this.state.isCalloutOpen});
-    }
+        this.setState({ isCalloutOpen: !this.state.isCalloutOpen });
+    };
 
     private _onCalloutDismiss = () => {
-        this.setState({isCalloutOpen: false});
-    }
+        this.setState({ isCalloutOpen: false });
+    };
 }

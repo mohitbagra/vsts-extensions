@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <script src="../3rdParty/es6-promise.min.js"></script>
@@ -20,16 +21,17 @@
                 }
             }
         });
-        
+
         // Load main entry point for extension
-        VSS.require(["scripts/PlainTextControl"], function (PlainTextControl) {            
+        VSS.require(["scripts/PlainTextControl"], function (PlainTextControl) {
             PlainTextControl.init();
-            VSS.notifyLoadSucceeded();            
+            VSS.notifyLoadSucceeded();
         });
     </script>
 
     <div id="ext-container">
-        
+
     </div>
 </body>
+
 </html>

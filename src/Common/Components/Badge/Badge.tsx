@@ -26,20 +26,13 @@ export class Badge extends BaseFluxComponent<IBadgeProps, IBadgeState> {
     public render(): JSX.Element {
         return (
             <div className={css("badge", this.props.className)}>
-                <div
-                    className="badge-container"
-                    onMouseEnter={this._onMouseOver}
-                    onMouseLeave={this._onMouseOut}
-                    onClick={this._onClickCallout}
-                >
-
-                    <div ref={(element) => this._calloutTargetElement = element}>
+                <div className="badge-container" onMouseEnter={this._onMouseOver} onMouseLeave={this._onMouseOut} onClick={this._onClickCallout}>
+                    <div ref={element => (this._calloutTargetElement = element)}>
                         <VssIcon iconType={VssIconType.fabric} iconName="Ringer" className="badge-icon" />
                     </div>
                     <Label className="badge-notification-count">{this.props.notificationCount}</Label>
                 </div>
-                {
-                    this.state.isCalloutVisible &&
+                {this.state.isCalloutVisible && (
                     <Callout
                         gapSpace={0}
                         target={this._calloutTargetElement}
@@ -48,11 +41,9 @@ export class Badge extends BaseFluxComponent<IBadgeProps, IBadgeState> {
                         isBeakVisible={true}
                         directionalHint={this.props.directionalHint || DirectionalHint.bottomRightEdge}
                     >
-                        <div className="badge-callout-container">
-                            {this.props.children}
-                        </div>
+                        <div className="badge-callout-container">{this.props.children}</div>
                     </Callout>
-                }
+                )}
             </div>
         );
     }
@@ -69,13 +60,13 @@ export class Badge extends BaseFluxComponent<IBadgeProps, IBadgeState> {
                 isCalloutVisible: true
             });
         }
-    }
+    };
 
     private _onMouseOut = () => {
         if (this.props.showCalloutOnHover) {
             this._dismissCallout();
         }
-    }
+    };
 
     private _onClickCallout = () => {
         if (!this.props.showCalloutOnHover) {
@@ -83,11 +74,11 @@ export class Badge extends BaseFluxComponent<IBadgeProps, IBadgeState> {
                 isCalloutVisible: !this.state.isCalloutVisible
             });
         }
-    }
+    };
 
     private _dismissCallout = () => {
         this.setState({
             isCalloutVisible: false
         });
-    }
+    };
 }

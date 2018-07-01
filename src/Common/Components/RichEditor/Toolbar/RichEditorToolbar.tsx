@@ -21,7 +21,7 @@ export interface IRichEditorToolbarProps {
 
 export class RichEditorToolbar extends React.Component<IRichEditorToolbarProps, {}> {
     public render(): JSX.Element {
-        const {buttons} = this.props;
+        const { buttons } = this.props;
 
         return (
             <FocusZone className="richeditor-toolbar-focuszone" direction={FocusZoneDirection.horizontal}>
@@ -41,13 +41,7 @@ export class RichEditorToolbar extends React.Component<IRichEditorToolbarProps, 
         };
 
         return (
-            <TooltipHost
-                key={index}
-                content={buttonObj.title}
-                delay={TooltipDelay.medium}
-                directionalHint={DirectionalHint.bottomCenter}
-                hostClassName={button}
-            >
+            <TooltipHost key={index} content={buttonObj.title} delay={TooltipDelay.medium} directionalHint={DirectionalHint.bottomCenter} hostClassName={button}>
                 <IconButton
                     className={css("toolbar-button")}
                     iconProps={{
@@ -57,5 +51,5 @@ export class RichEditorToolbar extends React.Component<IRichEditorToolbarProps, 
                 />
             </TooltipHost>
         );
-    }
+    };
 }

@@ -2,7 +2,7 @@ import { ErrorMessageActionsHub } from "Common/Flux/Actions/ActionsHub";
 
 export namespace ErrorMessageActions {
     export function showErrorMessage(errorMessage: string, errorKey: string) {
-        ErrorMessageActionsHub.PushErrorMessage.invoke({errorMessage: errorMessage, errorKey: errorKey});
+        ErrorMessageActionsHub.PushErrorMessage.invoke({ errorMessage: errorMessage, errorKey: errorKey });
     }
 
     export function dismissErrorMessage(errorKey: string) {

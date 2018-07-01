@@ -19,11 +19,12 @@ import { TeamActions } from "Common/Flux/Actions/TeamActions";
 import { BaseStore } from "Common/Flux/Stores/BaseStore";
 import { isGuid } from "Common/Utilities/Guid";
 import {
-    getDistinctNameFromIdentityRef, IdentityRef, parseUniquefiedIdentityName
+    getDistinctNameFromIdentityRef, parseUniquefiedIdentityName
 } from "Common/Utilities/Identity";
 import { Checkbox } from "OfficeFabric/Checkbox";
 import { Label } from "OfficeFabric/Label";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { IdentityRef } from "VSS/WebApi/Contracts";
 import { ZeroData } from "VSSUI/ZeroData";
 
 interface IBugBashChartsState extends IBaseFluxComponentState {
@@ -39,38 +40,47 @@ interface IBugBashChartsProps extends IBaseFluxComponentProps {
     view?: string;
 }
 
-const CustomAxisTick: React.StatelessComponent<any> =
-    (props: any): JSX.Element => {
-        const {x, y, payload} = props;
-        const value = (payload.value.length > 9) ? `${payload.value.substr(0, 9)}...` : payload.value;
+const CustomAxisTick: React.StatelessComponent<any> = (props: any): JSX.Element => {
+    const { x, y, payload } = props;
+    const value = payload.value.length > 9 ? `${payload.value.substr(0, 9)}...` : payload.value;
+    return (
+        <g transform={`translate(${x - 4},${y + 2})`}>
+            <text fill="#767676" style={{ fontSize: "12px" }} width={100} textAnchor="end">
+                {value}
+            </text>
+        </g>
+    );
+};
+
+const CustomTooltip: React.StatelessComponent<any> = (props: any): JSX.Element => {
+    const data: INameValuePair = props && props.payload && props.payload[0] && props.payload[0].payload;
+    if (!data) {
+        return null;
+    }
+
+    if (!data.members || data.members.length === 0) {
         return (
-            <g transform={`translate(${x - 4},${y + 2})`}>
-                <text fill="#767676" style={{fontSize: "12px"}} width={100} textAnchor="end">{value}</text>
-            </g>
+            <div className="chart-tooltip">
+                <span className="tooltip-key">{data["name"]}</span> : <span className="tooltip-value">{data["value"]}</span>
+            </div>
         );
-    };
-
-const CustomTooltip: React.StatelessComponent<any> =
-    (props: any): JSX.Element => {
-        const data: INameValuePair = props && props.payload && props.payload[0] && props.payload[0].payload;
-        if (!data) {
-            return null;
-        }
-
-        if (!data.members || data.members.length === 0) {
-            return <div className="chart-tooltip"><span className="tooltip-key">{data["name"]}</span> : <span className="tooltip-value">{data["value"]}</span></div>;
-        }
-        else {
-            return (
-                <div className="chart-tooltip">
-                    <div className="team-name"><span className="tooltip-key">{data["name"]}</span> : <span className="tooltip-value">{data["value"]}</span></div>
-                    { data.members.map((member: INameValuePair) => {
-                        return <div key={member.name}><span className="tooltip-key">{member.name}</span> : <span className="tooltip-value">{member.value}</span></div>;
-                    })}
+    } else {
+        return (
+            <div className="chart-tooltip">
+                <div className="team-name">
+                    <span className="tooltip-key">{data["name"]}</span> : <span className="tooltip-value">{data["value"]}</span>
                 </div>
-            );
-        }
-    };
+                {data.members.map((member: INameValuePair) => {
+                    return (
+                        <div key={member.name}>
+                            <span className="tooltip-key">{member.name}</span> : <span className="tooltip-value">{member.value}</span>
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    }
+};
 
 export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBashChartsState> {
     public componentDidMount() {
@@ -88,26 +98,18 @@ export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBa
         let bugBashItems: BugBashItem[] = this.state.allBugBashItems;
         if (this.props.view === BugBashViewActions.AcceptedItemsOnly) {
             bugBashItems = this.state.acceptedBugBashItems;
-        }
-        else if (this.props.view === BugBashViewActions.RejectedItemsOnly) {
+        } else if (this.props.view === BugBashViewActions.RejectedItemsOnly) {
             bugBashItems = this.state.rejectedBugBashItems;
-        }
-        else if (this.props.view === BugBashViewActions.PendingItemsOnly) {
+        } else if (this.props.view === BugBashViewActions.PendingItemsOnly) {
             bugBashItems = this.state.pendingBugBashItems;
         }
 
         if (bugBashItems.length === 0) {
-            return (
-                <ZeroData
-                    imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`}
-                    imageAltText=""
-                    primaryText="No results"
-                />
-            );
+            return <ZeroData imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`} imageAltText="" primaryText="No results" />;
         }
 
         const assignedToTeamCounts: IDictionaryStringTo<number> = {};
-        const createdByCounts: IDictionaryStringTo<{count: number, members: IDictionaryStringTo<number>}> = {};
+        const createdByCounts: IDictionaryStringTo<{ count: number; members: IDictionaryStringTo<number> }> = {};
         const assignedToTeamData: INameValuePair[] = [];
         const createdByData: INameValuePair[] = [];
 
@@ -121,8 +123,7 @@ export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBa
             let teamId: string;
             if (bugBashItem.isAccepted) {
                 teamId = bugBashItem.workItem.fields[WorkItemFieldNames.AreaPath];
-            }
-            else {
+            } else {
                 teamId = bugBashItem.getFieldValue<string>(BugBashItemFieldNames.TeamId, true);
             }
             assignedToTeamCounts[teamId] = (assignedToTeamCounts[teamId] || 0) + 1;
@@ -136,8 +137,7 @@ export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBa
                 }
                 createdByCounts[associatedTeam.name].count = createdByCounts[associatedTeam.name].count + 1;
                 createdByCounts[associatedTeam.name].members[createdBy] = (createdByCounts[associatedTeam.name].members[createdBy] || 0) + 1;
-            }
-            else {
+            } else {
                 if (createdByCounts[createdBy] == null) {
                     createdByCounts[createdBy] = {
                         count: 0,
@@ -149,17 +149,17 @@ export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBa
         }
 
         for (const teamId of Object.keys(assignedToTeamCounts)) {
-            assignedToTeamData.push({ name: this._getTeamName(teamId), value: assignedToTeamCounts[teamId]});
+            assignedToTeamData.push({ name: this._getTeamName(teamId), value: assignedToTeamCounts[teamId] });
         }
 
         for (const createdBy of Object.keys(createdByCounts)) {
             const membersMap = createdByCounts[createdBy].members;
             const membersArr: INameValuePair[] = $.map(membersMap, (count: number, key: string) => {
-                return {name: parseUniquefiedIdentityName(key).displayName, value: count};
+                return { name: parseUniquefiedIdentityName(key).displayName, value: count };
             });
             membersArr.sort((a, b) => b.value - a.value);
 
-            createdByData.push({ name: parseUniquefiedIdentityName(createdBy).displayName, value: createdByCounts[createdBy].count, members: membersArr});
+            createdByData.push({ name: parseUniquefiedIdentityName(createdBy).displayName, value: createdByCounts[createdBy].count, members: membersArr });
         }
 
         assignedToTeamData.sort((a, b) => b.value - a.value);
@@ -167,55 +167,38 @@ export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBa
 
         return (
             <div className="bugbash-charts">
-                { this.props.view !== BugBashViewActions.AllItems &&
+                {this.props.view !== BugBashViewActions.AllItems && (
                     <div className="chart-view-container">
                         <div className="header-container">
-                            <Label className="header">{`Assigned to ${this.props.view === BugBashViewActions.AcceptedItemsOnly ? "area path" : "team"} (${bugBashItems.length})`}</Label>
+                            <Label className="header">{`Assigned to ${this.props.view === BugBashViewActions.AcceptedItemsOnly ? "area path" : "team"} (${
+                                bugBashItems.length
+                            })`}</Label>
                         </div>
                         <div className="chart-view">
                             <ResponsiveContainer width="95%">
-                                <BarChart
-                                    layout={"vertical"}
-                                    width={600}
-                                    height={600}
-                                    data={assignedToTeamData}
-                                    barSize={5}
-                                    margin={{top: 5, right: 30, left: 20, bottom: 5}}
-                                >
+                                <BarChart layout={"vertical"} width={600} height={600} data={assignedToTeamData} barSize={5} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                                     <XAxis type="number" allowDecimals={false} />
                                     <YAxis type="category" dataKey="name" tick={<CustomAxisTick />} allowDecimals={false} />
-                                    <CartesianGrid strokeDasharray="3 3"/>
+                                    <CartesianGrid strokeDasharray="3 3" />
                                     <Tooltip isAnimationActive={false} />
                                     <Bar isAnimationActive={false} dataKey="value" fill="#8884d8" />
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
                     </div>
-                }
+                )}
                 <div className="chart-view-container">
                     <div className="header-container">
                         <Label className="header">{`Created By (${bugBashItems.length})`}</Label>
-                        <Checkbox
-                            label="Group by team"
-                            checked={this.state.groupedByTeam}
-                            className="group-by-checkbox"
-                            onChange={this._toggleGroupByTeam}
-                        />
+                        <Checkbox label="Group by team" checked={this.state.groupedByTeam} className="group-by-checkbox" onChange={this._toggleGroupByTeam} />
                     </div>
                     <div className="chart-view">
                         <ResponsiveContainer width="95%">
-                            <BarChart
-                                layout={"vertical"}
-                                width={600}
-                                height={600}
-                                data={createdByData}
-                                barSize={5}
-                                margin={{top: 5, right: 30, left: 20, bottom: 5}}
-                            >
+                            <BarChart layout={"vertical"} width={600} height={600} data={createdByData} barSize={5} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                                 <XAxis type="number" allowDecimals={false} />
                                 <YAxis type="category" dataKey="name" tick={<CustomAxisTick />} allowDecimals={false} />
-                                <CartesianGrid strokeDasharray="3 3"/>
-                                <Tooltip isAnimationActive={false} content={<CustomTooltip/>}/>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <Tooltip isAnimationActive={false} content={<CustomTooltip />} />
                                 <Bar isAnimationActive={false} dataKey="value" fill="#8884d8" />
                             </BarChart>
                         </ResponsiveContainer>
@@ -257,14 +240,13 @@ export class BugBashCharts extends BaseFluxComponent<IBugBashChartsProps, IBugBa
             // is a team if
             const team = StoresHub.teamStore.getItem(teamId);
             return team ? team.name : teamId;
-        }
-        else {
+        } else {
             // is an area path
             return teamId.substr(teamId.lastIndexOf("\\") + 1);
         }
     }
 
     private _toggleGroupByTeam = () => {
-        this.setState({groupedByTeam: !this.state.groupedByTeam} as IBugBashChartsState);
-    }
+        this.setState({ groupedByTeam: !this.state.groupedByTeam } as IBugBashChartsState);
+    };
 }

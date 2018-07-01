@@ -21,7 +21,10 @@ export async function copyImageToGitRepo(imageData: any, gitFolderSuffix: string
         const metaPart = imageData.substring(5, dataStartIndex - 1);
         const dataPart = imageData.substring(dataStartIndex);
 
-        const extension = metaPart.split(";")[0].split("/").pop();
+        const extension = metaPart
+            .split(";")[0]
+            .split("/")
+            .pop();
         const fileName = `pastedImage_${Date.now().toString()}.${extension}`;
         const gitPath = `BugBash_${gitFolderSuffix}/pastedImages/${fileName}`;
         const projectId = VSS.getWebContext().project.id;
@@ -32,13 +35,13 @@ export async function copyImageToGitRepo(imageData: any, gitFolderSuffix: string
             const pushModel = buildGitPush(gitPath, gitItem.commitId, VersionControlChangeType.Add, dataPart, ItemContentType.Base64Encoded);
             await gitClient.createPush(pushModel, settings.gitMediaRepo, projectId);
 
-            return `${getProjectUri()}/_api/_versioncontrol/itemContent?repositoryId=${settings.gitMediaRepo}&path=${encodeURIComponent(gitPath)}&version=GBmaster&contentOnly=true`;
-        }
-        catch (e) {
+            return `${getProjectUri()}/_api/_versioncontrol/itemContent?repositoryId=${settings.gitMediaRepo}&path=${encodeURIComponent(
+                gitPath
+            )}&version=GBmaster&contentOnly=true`;
+        } catch (e) {
             throw `Image copy failed: ${e.message}`;
         }
-    }
-    else {
+    } else {
         throw "Image copy failed. No Git repo is setup yet to store image files. Please setup a git repo in Bug Bash settings to store media and attachments.";
     }
 }
@@ -49,24 +52,32 @@ export function getProjectUri(): string {
 }
 
 function buildGitPush(path: string, oldObjectId: string, changeType: VersionControlChangeType, content: string, contentType: ItemContentType): GitPush {
-    const commits = [{
-    comment: "Adding new image from bug bash pro extension",
-    changes: [
+    const commits = [
         {
-        changeType,
-        item: {path},
-        newContent: content !== undefined ? {
-            content,
-            contentType,
-        } : undefined,
-        }],
-    }];
+            comment: "Adding new image from bug bash pro extension",
+            changes: [
+                {
+                    changeType,
+                    item: { path },
+                    newContent:
+                        content !== undefined
+                            ? {
+                                  content,
+                                  contentType
+                              }
+                            : undefined
+                }
+            ]
+        }
+    ];
 
     return {
-        refUpdates: [{
-            name: "refs/heads/master",
-            oldObjectId: oldObjectId,
-        }],
-        commits,
+        refUpdates: [
+            {
+                name: "refs/heads/master",
+                oldObjectId: oldObjectId
+            }
+        ],
+        commits
     } as GitPush;
 }

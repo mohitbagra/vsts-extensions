@@ -1,6 +1,6 @@
 .bugbash-results {
     height: 100%;
-    
+
     .split-layout {
         height: 100%;
 
@@ -16,20 +16,20 @@
                 .ms-DetailsRow-check {
                     height: 100%;
                 }
-                
-                .item-grid-cell {                    
+
+                .item-grid-cell {
                     &.identity-view {
                         height: 34px;
-                        
+
                         .ms-Persona-details {
                             padding: 0 0 0 5px;
                         }
                     }
-    
+
                     &.is-dirty {
                         font-weight: bold;
                         color: #000;
-    
+
                         &.identity-view {
                             .ms-Persona-primaryText {
                                 font-weight: bold;
@@ -37,10 +37,10 @@
                             }
                         }
                     }
-    
+
                     &.is-invalid {
                         color: #a80000;
-    
+
                         &.identity-view {
                             .ms-Persona-primaryText {
                                 color: #a80000;
@@ -65,7 +65,7 @@
                 border-left: 2px solid #ccc;
                 border-right: 2px solid #ccc;
             }
-        }          
+        }
 
         .item-editor {
             height: 100%;

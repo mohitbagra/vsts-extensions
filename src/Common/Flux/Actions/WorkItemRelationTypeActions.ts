@@ -11,8 +11,7 @@ export namespace WorkItemRelationTypeActions {
     export async function initializeWorkItemRelationTypes() {
         if (workItemRelationTypeStore.isLoaded()) {
             WorkItemRelationTypeActionsHub.InitializeWorkItemRelationTypes.invoke(null);
-        }
-        else if (!workItemRelationTypeStore.isLoading()) {
+        } else if (!workItemRelationTypeStore.isLoading()) {
             workItemRelationTypeStore.setLoading(true);
             try {
                 const workItemRelationTypes = await WitClient.getClient().getRelationTypes();
@@ -20,8 +19,7 @@ export namespace WorkItemRelationTypeActions {
 
                 WorkItemRelationTypeActionsHub.InitializeWorkItemRelationTypes.invoke(workItemRelationTypes);
                 workItemRelationTypeStore.setLoading(false);
-            }
-            catch (e) {
+            } catch (e) {
                 workItemRelationTypeStore.setLoading(false);
                 throw e.message;
             }

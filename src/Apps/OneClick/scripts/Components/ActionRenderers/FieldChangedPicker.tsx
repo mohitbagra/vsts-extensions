@@ -42,9 +42,11 @@ export class FieldChangedPicker extends BaseFluxComponent<IFieldChangedPickerPro
         const witFields = workItemType.fields.map(f => f.referenceName);
         let selectedField: WorkItemField = StoresHub.workItemFieldStore.getItem(this.props.fieldRefName);
 
-        if (selectedField == null
-            || !contains(witFields, this.props.fieldRefName, (s1, s2) => stringEquals(s1, s2, true))
-            || contains(ExcludedFields, selectedField.referenceName, (s1, s2) => stringEquals(s1, s2, true))) {
+        if (
+            selectedField == null ||
+            !contains(witFields, this.props.fieldRefName, (s1, s2) => stringEquals(s1, s2, true)) ||
+            contains(ExcludedFields, selectedField.referenceName, (s1, s2) => stringEquals(s1, s2, true))
+        ) {
             selectedField = null;
         }
 
@@ -106,13 +108,13 @@ export class FieldChangedPicker extends BaseFluxComponent<IFieldChangedPickerPro
 
     private _onFieldChange = (field: WorkItemField, value?: string) => {
         this.props.onFieldChange(field ? field.referenceName : value);
-    }
+    };
 
     private _onOldFieldValueChange = (value: any) => {
         this.props.onOldFieldValueChange(value);
-    }
+    };
 
     private _onNewFieldValueChange = (value: any) => {
         this.props.onNewFieldValueChange(value);
-    }
+    };
 }

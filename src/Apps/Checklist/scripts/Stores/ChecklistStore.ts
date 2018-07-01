@@ -63,7 +63,7 @@ export class ChecklistStore extends BaseStore<IDictionaryStringTo<IWorkItemCheck
         if (checklist) {
             const key = checklist.id.toLowerCase();
             if (this.items[key] == null) {
-                this.items[key] = {personal: null, shared: null, witDefault: null};
+                this.items[key] = { personal: null, shared: null, witDefault: null };
             }
 
             switch (checklistType) {

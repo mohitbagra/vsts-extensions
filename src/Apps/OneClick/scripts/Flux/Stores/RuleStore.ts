@@ -37,7 +37,7 @@ export class RuleStore extends BaseStore<IDictionaryStringTo<IRule[]>, IRule[], 
     }
 
     protected initializeActionListeners() {
-        RuleActionsHub.InitializeRules.addListener((data: {ruleGroupId: string, rules: IRule[]}) => {
+        RuleActionsHub.InitializeRules.addListener((data: { ruleGroupId: string; rules: IRule[] }) => {
             if (data) {
                 this.items[data.ruleGroupId.toLowerCase()] = data.rules;
             }
@@ -45,7 +45,7 @@ export class RuleStore extends BaseStore<IDictionaryStringTo<IRule[]>, IRule[], 
             this.emitChanged();
         });
 
-        RuleActionsHub.RefreshRules.addListener((data: {ruleGroupId: string, rules: IRule[]}) => {
+        RuleActionsHub.RefreshRules.addListener((data: { ruleGroupId: string; rules: IRule[] }) => {
             if (data) {
                 this.items[data.ruleGroupId.toLowerCase()] = data.rules;
             }
@@ -53,7 +53,7 @@ export class RuleStore extends BaseStore<IDictionaryStringTo<IRule[]>, IRule[], 
             this.emitChanged();
         });
 
-        RuleActionsHub.CreateRule.addListener((data: {ruleGroupId: string, rule: IRule}) => {
+        RuleActionsHub.CreateRule.addListener((data: { ruleGroupId: string; rule: IRule }) => {
             if (data) {
                 this._addOrUpdateItem(data.ruleGroupId, data.rule);
             }
@@ -61,7 +61,7 @@ export class RuleStore extends BaseStore<IDictionaryStringTo<IRule[]>, IRule[], 
             this.emitChanged();
         });
 
-        RuleActionsHub.UpdateRule.addListener((data: {ruleGroupId: string, rule: IRule}) => {
+        RuleActionsHub.UpdateRule.addListener((data: { ruleGroupId: string; rule: IRule }) => {
             if (data) {
                 this._addOrUpdateItem(data.ruleGroupId, data.rule);
             }
@@ -69,7 +69,7 @@ export class RuleStore extends BaseStore<IDictionaryStringTo<IRule[]>, IRule[], 
             this.emitChanged();
         });
 
-        RuleActionsHub.DeleteRule.addListener((data: {ruleGroupId: string, rule: IRule}) => {
+        RuleActionsHub.DeleteRule.addListener((data: { ruleGroupId: string; rule: IRule }) => {
             if (data) {
                 this._removeItem(data.ruleGroupId, data.rule);
             }
@@ -93,8 +93,7 @@ export class RuleStore extends BaseStore<IDictionaryStringTo<IRule[]>, IRule[], 
         const existingIndex = findIndex(this.items[ruleGroupId.toLowerCase()], (existingItem: IRule) => stringEquals(item.id, existingItem.id, true));
         if (existingIndex !== -1) {
             this.items[ruleGroupId.toLowerCase()][existingIndex] = item;
-        }
-        else {
+        } else {
             this.items[ruleGroupId.toLowerCase()].push(item);
         }
     }

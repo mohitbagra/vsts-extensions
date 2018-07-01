@@ -39,9 +39,11 @@ export class FieldNameValuePicker extends BaseFluxComponent<IFieldNameValuePicke
         const witFields = workItemType.fields.map(f => f.referenceName);
         let selectedField: WorkItemField = StoresHub.workItemFieldStore.getItem(this.props.fieldRefName);
 
-        if (selectedField == null
-            || !contains(witFields, this.props.fieldRefName, (s1, s2) => stringEquals(s1, s2, true))
-            || contains(ExcludedFields, selectedField.referenceName, (s1, s2) => stringEquals(s1, s2, true))) {
+        if (
+            selectedField == null ||
+            !contains(witFields, this.props.fieldRefName, (s1, s2) => stringEquals(s1, s2, true)) ||
+            contains(ExcludedFields, selectedField.referenceName, (s1, s2) => stringEquals(s1, s2, true))
+        ) {
             selectedField = null;
         }
 
@@ -92,9 +94,9 @@ export class FieldNameValuePicker extends BaseFluxComponent<IFieldNameValuePicke
 
     private _onFieldChange = (field: WorkItemField, value?: string) => {
         this.props.onFieldChange(field ? field.referenceName : value);
-    }
+    };
 
     private _onFieldValueChange = (value: any) => {
         this.props.onFieldValueChange(value);
-    }
+    };
 }

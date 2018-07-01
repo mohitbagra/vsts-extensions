@@ -10,10 +10,7 @@ import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
 import { CoreFieldRefNames } from "OneClick/Constants";
 import { BaseAction } from "OneClick/RuleActions/BaseAction";
 
-const AsyncRichEditor = getAsyncLoadedComponent(
-    ["scripts/ActionRenderers"],
-    (m: typeof ActionRenderers_Async) => m.RichEditor,
-    () => <Loading />);
+const AsyncRichEditor = getAsyncLoadedComponent(["scripts/ActionRenderers"], (m: typeof ActionRenderers_Async) => m.RichEditor, () => <Loading />);
 
 export class AddCommentAction extends BaseAction {
     public async run() {
@@ -41,7 +38,7 @@ export class AddCommentAction extends BaseAction {
         return {
             iconName: "CommentAdd",
             styles: {
-                root: {color: "#EA4300 !important"}
+                root: { color: "#EA4300 !important" }
             }
         };
     }
@@ -72,5 +69,5 @@ export class AddCommentAction extends BaseAction {
 
     private _onCommentChange = (value: string) => {
         this.setAttribute<string>("comment", value);
-    }
+    };
 }

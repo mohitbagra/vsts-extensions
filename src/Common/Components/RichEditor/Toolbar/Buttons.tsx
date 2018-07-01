@@ -26,10 +26,7 @@ import Indentation from "roosterjs-editor-types/lib/format/Indentation";
 import { FileInputResult } from "VSSUI/FileInput";
 import { closest } from "VSSUI/Utilities/Internal";
 
-const AsyncFileUploadDialog = getAsyncLoadedComponent(
-    ["scripts/FileUploadDialog"],
-    (m: typeof FileUploadDialog_Async) => m.FileUploadDialog,
-    () => null);
+const AsyncFileUploadDialog = getAsyncLoadedComponent(["scripts/FileUploadDialog"], (m: typeof FileUploadDialog_Async) => m.FileUploadDialog, () => null);
 
 export const fullscreen: IRichEditorToolbarButton = {
     iconName: IconNames.FullScreen,
@@ -38,8 +35,7 @@ export const fullscreen: IRichEditorToolbarButton = {
         const container = closest((editor as any).core.contentDiv, ".rich-editor-container");
         if (container.classList.contains("fullscreen")) {
             container.classList.remove("fullscreen");
-        }
-        else {
+        } else {
             container.classList.add("fullscreen");
         }
     }
@@ -54,7 +50,7 @@ export const italic: IRichEditorToolbarButton = {
     title: "Italic (Ctrl + I)",
     onClick: toggleItalic
 };
-export const underline:  IRichEditorToolbarButton = {
+export const underline: IRichEditorToolbarButton = {
     iconName: IconNames.Underline,
     title: "Underline (Ctrl + U)",
     onClick: toggleUnderline
@@ -141,15 +137,7 @@ export const uploadImage: IRichEditorToolbarButton = {
             onImageAdd(editor, files[0].file, options.getImageUrl);
         };
 
-        render(
-            <AsyncFileUploadDialog
-                title="Upload image"
-                onDialogClose={closeDialog}
-                allowedFileExtensions={["png", "jpg", "gif"]}
-                onOkClick={addImages}
-            />,
-            dialogContainer
-        );
+        render(<AsyncFileUploadDialog title="Upload image" onDialogClose={closeDialog} allowedFileExtensions={["png", "jpg", "gif"]} onOkClick={addImages} />, dialogContainer);
     }
 };
 
@@ -173,8 +161,7 @@ export function onImageAdd(editor: Editor, imageFile: File, getImageUrl: (data: 
                     editor.triggerContentChangedEvent();
                     editor.addUndoSnapshot();
                 }
-            }
-            catch {
+            } catch {
                 // no op
             }
         }

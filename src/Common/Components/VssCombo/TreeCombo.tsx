@@ -122,25 +122,26 @@ export class TreeCombo extends BaseFluxComponent<ITreeComboProps, ITreeComboStat
         }
     }
 
-    private _containerRefCallback = (container: HTMLDivElement) => { this._container = container; };
+    private _containerRefCallback = (container: HTMLDivElement) => {
+        this._container = container;
+    };
 
     private _onChange = () => {
         this._disposeDelayedFunction();
 
         const fireChange = () => {
             const value = this._control.getText();
-            this.setState({internalValue: value}, () => {
+            this.setState({ internalValue: value }, () => {
                 this.props.onChange(value);
             });
         };
 
         if (this.props.delay == null) {
             fireChange();
-        }
-        else {
+        } else {
             this._delayedFunction = delay(this, this.props.delay, () => {
                 fireChange();
             });
         }
-    }
+    };
 }

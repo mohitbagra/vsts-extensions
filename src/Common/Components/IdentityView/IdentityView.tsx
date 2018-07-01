@@ -1,39 +1,37 @@
 import * as React from "react";
 
 import { IBaseFluxComponentProps } from "Common/Components/Utilities/BaseFluxComponent";
-import {
-    IdentityRef, parseUniquefiedIdentityName, parseWorkItemIdentityName
-} from "Common/Utilities/Identity";
+import { isIdentityRef, parseUniquefiedIdentityName } from "Common/Utilities/Identity";
 import { Persona, PersonaSize } from "OfficeFabric/Persona";
 import { css } from "OfficeFabric/Utilities";
+import { IdentityRef } from "VSS/WebApi/Contracts";
 
 export interface IIdentityViewProps extends IBaseFluxComponentProps {
-    identityRef?: IdentityRef;
-    identityDistinctName?: string;
-    useWorkItemIdentityParser?: boolean;
+    value: IdentityRef | string;
     size?: PersonaSize;
 }
 
-export const IdentityView: React.StatelessComponent<IIdentityViewProps> =
-    (props: IIdentityViewProps): JSX.Element => {
-        const { identityDistinctName, useWorkItemIdentityParser } = props;
-        let identityRef = props.identityRef;
+export const IdentityView: React.StatelessComponent<IIdentityViewProps> = (props: IIdentityViewProps): JSX.Element => {
+    const { value } = props;
+    let identityRef: IdentityRef;
 
-        if (!identityRef) {
-            identityRef = useWorkItemIdentityParser ? parseWorkItemIdentityName(identityDistinctName) : parseUniquefiedIdentityName(identityDistinctName);
-        }
+    if (!isIdentityRef(value)) {
+        identityRef = parseUniquefiedIdentityName(value);
+    } else {
+        identityRef = value;
+    }
 
-        if (!identityRef || !identityRef.displayName) {
-            return null;
-        }
+    if (!identityRef || !identityRef.displayName) {
+        return null;
+    }
 
-        return (
-            <Persona
-                className={css("identity-view", props.className)}
-                size={props.size || PersonaSize.extraExtraSmall}
-                imageUrl={identityRef.imageUrl}
-                primaryText={identityRef.displayName}
-                secondaryText={identityRef.uniqueName}
-            />
-        );
-    };
+    return (
+        <Persona
+            className={css("identity-view", props.className)}
+            size={props.size || PersonaSize.extraExtraSmall}
+            imageUrl={identityRef.imageUrl}
+            primaryText={identityRef.displayName}
+            secondaryText={identityRef.uniqueName}
+        />
+    );
+};

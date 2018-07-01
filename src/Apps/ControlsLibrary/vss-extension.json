@@ -8,20 +8,13 @@
     "icons": {
         "default": "images/logo.png"
     },
-    "scopes": [
-    	"vso.work",
-        "vso.work_write"
-	 ],
+    "scopes": ["vso.work", "vso.work_write"],
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services.Cloud"
         }
     ],
-    "tags": [
-        "Work Item", 
-        "Work Item form", 
-        "Work item form custom control"
-    ],
+    "tags": ["Work Item", "Work Item form", "Work item form custom control"],
     "content": {
         "details": {
             "path": "README.md"
@@ -34,25 +27,21 @@
     "branding": {
         "color": "#106ebe",
         "theme": "dark"
-    },    
-    "categories": [
-        "Plan and track"
-    ],
-    "contributions": [        
+    },
+    "categories": ["Plan and track"],
+    "contributions": [
         {
             "id": "plaintext-form-control",
             "type": "ms.vss-work-web.work-item-form-control",
             "description": "A plain text control for work item form.",
-            "targets": [
-                "ms.vss-work-web.work-item-form"
-            ],
+            "targets": ["ms.vss-work-web.work-item-form"],
             "properties": {
                 "name": "Plain text control",
                 "uri": "html/plaintextcontrol.html",
                 "height": 50,
                 "inputs": [
                     {
-                        "id":"Text",
+                        "id": "Text",
                         "name": "Enter text",
                         "description": "Enter text",
                         "inputMode": "TextArea",
@@ -62,7 +51,7 @@
                         }
                     },
                     {
-                        "id":"MaxHeight",
+                        "id": "MaxHeight",
                         "name": "Max height",
                         "description": "Maximum height for the control",
                         "validation": {
@@ -77,16 +66,14 @@
             "id": "rating-form-control",
             "type": "ms.vss-work-web.work-item-form-control",
             "description": "A work item form control which shows the integer field value as a star rating control.",
-            "targets": [
-                "ms.vss-work-web.work-item-form"
-            ],
+            "targets": ["ms.vss-work-web.work-item-form"],
             "properties": {
                 "name": "Rating control",
                 "uri": "html/ratingcontrol.html",
                 "height": 50,
                 "inputs": [
                     {
-                        "id":"FieldName",
+                        "id": "FieldName",
                         "name": "Select field",
                         "description": "Select the integer field for this control",
                         "type": "WorkItemField",
@@ -99,7 +86,7 @@
                         }
                     },
                     {
-                        "id":"MinValue",
+                        "id": "MinValue",
                         "name": "Min value (should be greater than 0)",
                         "description": "Enter minimum integer value for the rating",
                         "validation": {
@@ -108,7 +95,7 @@
                         }
                     },
                     {
-                        "id":"MaxValue",
+                        "id": "MaxValue",
                         "name": "Max value",
                         "description": "Enter maximum integer value for the rating",
                         "validation": {
@@ -123,16 +110,14 @@
             "id": "slider-form-control",
             "type": "ms.vss-work-web.work-item-form-control",
             "description": "A work item form control which shows the numeric field value as a slider.",
-            "targets": [
-                "ms.vss-work-web.work-item-form"
-            ],
+            "targets": ["ms.vss-work-web.work-item-form"],
             "properties": {
                 "name": "Slider control",
                 "uri": "html/slidercontrol.html",
                 "height": 50,
                 "inputs": [
                     {
-                        "id":"FieldName",
+                        "id": "FieldName",
                         "name": "Select field",
                         "description": "Select the numeric field for this control",
                         "type": "WorkItemField",
@@ -145,7 +130,7 @@
                         }
                     },
                     {
-                        "id":"MinValue",
+                        "id": "MinValue",
                         "name": "Min value",
                         "description": "Enter minimum numeric value for the slider",
                         "validation": {
@@ -154,7 +139,7 @@
                         }
                     },
                     {
-                        "id":"MaxValue",
+                        "id": "MaxValue",
                         "name": "Max value",
                         "description": "Enter maximum numeric value for the slider",
                         "validation": {
@@ -163,7 +148,7 @@
                         }
                     },
                     {
-                        "id":"StepSize",
+                        "id": "StepSize",
                         "name": "Step size",
                         "description": "Enter numeric step size for the slider",
                         "validation": {
@@ -178,16 +163,14 @@
             "id": "pattern-form-control",
             "type": "ms.vss-work-web.work-item-form-control",
             "description": "A work item form control which allows a field value to match certain pattern.",
-            "targets": [
-                "ms.vss-work-web.work-item-form"
-            ],
+            "targets": ["ms.vss-work-web.work-item-form"],
             "properties": {
                 "name": "Pattern control",
                 "uri": "html/patterncontrol.html",
                 "height": 50,
                 "inputs": [
                     {
-                        "id":"FieldName",
+                        "id": "FieldName",
                         "name": "Select field",
                         "description": "Select the string type field for this control",
                         "type": "WorkItemField",
@@ -200,7 +183,7 @@
                         }
                     },
                     {
-                        "id":"Pattern",
+                        "id": "Pattern",
                         "name": "Regex pattern",
                         "description": "Choose pattern for the field's value. A pattern should be a valid javascript regex string",
                         "inputMode": "TextArea",
@@ -210,7 +193,7 @@
                         }
                     },
                     {
-                        "id":"ErrorMessage",
+                        "id": "ErrorMessage",
                         "name": "Error message",
                         "description": "Enter an error message that would be shown to users if the user entered value doesnt match the pattern.",
                         "inputMode": "TextArea",
@@ -226,16 +209,14 @@
             "id": "multivalue-form-control",
             "type": "ms.vss-work-web.work-item-form-control",
             "description": "A work item form control which allows selection of multiple values.",
-            "targets": [
-                "ms.vss-work-web.work-item-form"
-            ],
+            "targets": ["ms.vss-work-web.work-item-form"],
             "properties": {
                 "name": "MultiValue control",
                 "uri": "html/multivaluecontrol.html",
                 "height": 50,
                 "inputs": [
                     {
-                        "id":"FieldName",
+                        "id": "FieldName",
                         "name": "Select field",
                         "description": "Select the string type field for this control",
                         "type": "WorkItemField",
@@ -248,7 +229,7 @@
                         }
                     },
                     {
-                        "id":"Values",
+                        "id": "Values",
                         "name": "Suggested Values",
                         "description": "Enter suggested values for the control (semicolon separated)",
                         "inputMode": "TextArea",
@@ -264,16 +245,14 @@
             "id": "datetime-form-control",
             "type": "ms.vss-work-web.work-item-form-control",
             "description": "A custom date time control for work item form which lets users choose time as well.",
-            "targets": [
-                "ms.vss-work-web.work-item-form"
-            ],
+            "targets": ["ms.vss-work-web.work-item-form"],
             "properties": {
                 "name": "Date Time control",
                 "uri": "html/datetimecontrol.html",
                 "height": 50,
                 "inputs": [
                     {
-                        "id":"FieldName",
+                        "id": "FieldName",
                         "name": "Select field",
                         "description": "Select the DateTime field for this control",
                         "type": "WorkItemField",

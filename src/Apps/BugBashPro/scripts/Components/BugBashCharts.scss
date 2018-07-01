@@ -2,7 +2,7 @@
     display: flex;
     height: calc(100% - 10px);
     padding: 0 10px 10px 0;
-    
+
     .chart-view-container {
         flex: 1;
         background-color: #f9f9f9;
@@ -12,14 +12,14 @@
         flex-direction: column;
 
         .header-container {
-            display: flex; 
+            display: flex;
             margin-bottom: 10px;
-            
+
             .header {
                 flex: 1;
-                font-weight: bold;                
-            }           
-        }        
+                font-weight: bold;
+            }
+        }
 
         .chart-view {
             flex: 1;

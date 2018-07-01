@@ -13,22 +13,20 @@ export namespace RuleGroupsDataService {
             const createdRuleGroup = await ExtensionDataManager.createDocument<IRuleGroup>(getCollectionKey(workItemTypeName, projectId), ruleGroup, false);
             preProcessModel(createdRuleGroup);
             return createdRuleGroup;
-        }
-        catch (e) {
+        } catch (e) {
             throw `Cannot create rule group. Reason: ${e.message}`;
         }
     }
 
     export async function updateRuleGroup(workItemTypeName: string, ruleGroup: IRuleGroup, projectId: string): Promise<IRuleGroup> {
-        const ruleGroupToSave = {...ruleGroup};
+        const ruleGroupToSave = { ...ruleGroup };
         ruleGroupToSave.lastUpdatedBy = getCurrentUser();
 
         try {
             const updatedRuleGroup = await ExtensionDataManager.updateDocument<IRuleGroup>(getCollectionKey(workItemTypeName, projectId), ruleGroupToSave, false);
             preProcessModel(updatedRuleGroup);
             return updatedRuleGroup;
-        }
-        catch {
+        } catch {
             throw "The version of this rule group doesn't match with the version on server. Please refresh the rule group to get the latest version first.";
         }
     }
@@ -36,8 +34,7 @@ export namespace RuleGroupsDataService {
     export async function deleteRuleGroup(workItemTypeName: string, ruleGroupId: string, projectId: string) {
         try {
             await ExtensionDataManager.deleteDocument(getCollectionKey(workItemTypeName, projectId), ruleGroupId, false);
-        }
-        catch {
+        } catch {
             // eat exception
         }
     }
@@ -50,8 +47,7 @@ export namespace RuleGroupsDataService {
         if (typeof ruleGroup.createdBy === "string") {
             if (isNullOrWhiteSpace(ruleGroup.createdBy as string)) {
                 ruleGroup.createdBy = null;
-            }
-            else {
+            } else {
                 ruleGroup.createdBy = parseUniquefiedIdentityName(ruleGroup.createdBy);
             }
         }
@@ -59,8 +55,7 @@ export namespace RuleGroupsDataService {
         if (typeof ruleGroup.lastUpdatedBy === "string") {
             if (isNullOrWhiteSpace(ruleGroup.lastUpdatedBy as string)) {
                 ruleGroup.lastUpdatedBy = null;
-            }
-            else {
+            } else {
                 ruleGroup.lastUpdatedBy = parseUniquefiedIdentityName(ruleGroup.lastUpdatedBy);
             }
         }

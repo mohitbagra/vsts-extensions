@@ -12,8 +12,7 @@ export namespace WorkItemActions {
     export async function initializeWorkItems(ids: number[]) {
         if (!ids || ids.length === 0) {
             WorkItemActionsHub.AddOrUpdateWorkItems.invoke(null);
-        }
-        else if (!workItemStore.isLoading()) {
+        } else if (!workItemStore.isLoading()) {
             const idsToFetch: number[] = [];
             for (const id of ids) {
                 if (!workItemStore.isLoaded(id)) {
@@ -33,8 +32,7 @@ export namespace WorkItemActions {
 
                 WorkItemActionsHub.AddOrUpdateWorkItems.invoke(workItems);
                 workItemStore.setLoading(false);
-            }
-            catch (e) {
+            } catch (e) {
                 workItemStore.setLoading(false);
                 throw e.message;
             }
@@ -44,16 +42,14 @@ export namespace WorkItemActions {
     export async function refreshWorkItems(ids: number[]) {
         if (!ids || ids.length === 0) {
             WorkItemActionsHub.AddOrUpdateWorkItems.invoke(null);
-        }
-        else if (!workItemStore.isLoading()) {
+        } else if (!workItemStore.isLoading()) {
             workItemStore.setLoading(true);
 
             try {
                 const workItems = await getWorkItems(ids);
                 WorkItemActionsHub.AddOrUpdateWorkItems.invoke(workItems);
                 workItemStore.setLoading(false);
-            }
-            catch (e) {
+            } catch (e) {
                 workItemStore.setLoading(false);
                 throw e.message;
             }
@@ -63,16 +59,14 @@ export namespace WorkItemActions {
     export async function initializeWorkItem(id: number) {
         if (!workItemStore.isLoaded(id)) {
             WorkItemActionsHub.AddOrUpdateWorkItems.invoke(null);
-        }
-        else if (!workItemStore.isLoading()) {
+        } else if (!workItemStore.isLoading()) {
             workItemStore.setLoading(true);
 
             try {
                 const workItem = await getClient().getWorkItem(id);
                 WorkItemActionsHub.AddOrUpdateWorkItems.invoke([workItem]);
                 workItemStore.setLoading(false);
-            }
-            catch (e) {
+            } catch (e) {
                 workItemStore.setLoading(false);
                 throw e.message;
             }
@@ -87,8 +81,7 @@ export namespace WorkItemActions {
                 const workItem = await getClient().getWorkItem(id);
                 WorkItemActionsHub.AddOrUpdateWorkItems.invoke([workItem]);
                 workItemStore.setLoading(false);
-            }
-            catch (e) {
+            } catch (e) {
                 workItemStore.setLoading(false);
                 throw e.message;
             }
@@ -113,8 +106,7 @@ export namespace WorkItemActions {
                 WorkItemActionsHub.AddOrUpdateWorkItems.invoke([workItem]);
                 workItemStore.setLoading(false);
                 return workItem;
-            }
-            catch (e) {
+            } catch (e) {
                 workItemStore.setLoading(false);
                 throw e.message;
             }
@@ -139,8 +131,7 @@ export namespace WorkItemActions {
                 WorkItemActionsHub.AddOrUpdateWorkItems.invoke([workItem]);
                 workItemStore.setLoading(false);
                 return workItem;
-            }
-            catch (e) {
+            } catch (e) {
                 workItemStore.setLoading(false);
                 throw e.message;
             }
@@ -155,8 +146,7 @@ export namespace WorkItemActions {
                 await getClient().deleteWorkItem(workItemId, projectId, destroy);
                 WorkItemActionsHub.DeleteWorkItems.invoke([workItemId]);
                 workItemStore.setLoading(false);
-            }
-            catch (e) {
+            } catch (e) {
                 workItemStore.setLoading(false);
                 throw e.message;
             }
@@ -213,8 +203,7 @@ export namespace WorkItemActions {
                     _links: null,
                     url: null
                 });
-            }
-            else {
+            } else {
                 filteredWorkItems.push(workItemsMap[witId]);
             }
         }

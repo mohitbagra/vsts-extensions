@@ -41,10 +41,7 @@ import { VssDetailsList } from "VSSUI/VssDetailsList";
 import { VssIcon, VssIconType } from "VSSUI/VssIcon";
 import { ZeroData } from "VSSUI/ZeroData";
 
-const AsyncRuleEditor = getAsyncLoadedComponent(
-    ["scripts/RuleEditor"],
-    (m: typeof RuleEditor_Async) => m.RuleEditor,
-    () => <Loading />);
+const AsyncRuleEditor = getAsyncLoadedComponent(["scripts/RuleEditor"], (m: typeof RuleEditor_Async) => m.RuleEditor, () => <Loading />);
 
 export interface IRuleGroupViewProps extends IBaseFluxComponentProps {
     workItemTypeName: string;
@@ -90,7 +87,7 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         if (!stringEquals(this.props.ruleGroupId, nextProps.ruleGroupId, true)) {
             StoresHub.ruleStore.clear();
             RuleActions.initializeRules(nextProps.ruleGroupId);
-            this.setState({loading: true});
+            this.setState({ loading: true });
         }
     }
 
@@ -100,62 +97,58 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
 
         return (
             <div className="rule-group-view-container">
-                <Hub
-                    className="rule-group-view-hub"
-                    hideFullScreenToggle={true}
-                    hubViewState={this._hubViewState}
-                    commands={this._getHubCommands()}
-                >
+                <Hub className="rule-group-view-hub" hideFullScreenToggle={true} hubViewState={this._hubViewState} commands={this._getHubCommands()}>
                     <HubHeader
                         title={this.state.ruleGroup ? this.state.ruleGroup.name : ""}
                         maxBreadcrumbItemWidth="600px"
-                        iconProps={isPersonalOrGlobalRuleGroup(this.state.ruleGroup) ? {
-                            iconType: VssIconType.fabric,
-                            title: this.state.ruleGroup.description,
-                            className: "info-button",
-                            iconName: "Info"
-                        } :
-                        {
-                            iconType: VssIconType.fabric,
-                            onClick: this._toggleSubscription,
-                            title: this.state.isSubscribed ? "Unsubscribe" : "Subscribe",
-                            className: "subscribe-button",
-                            iconName: this.state.isSubscribed ? "FavoriteStarFill" : "FavoriteStar"
-                        }}
-                        breadcrumbItems={[{
-                            text: this.props.workItemTypeName,
-                            key: "witname",
-                            onClick: this._onHeaderLinkClick,
-                            leftIconProps: witIconUrl && {
-                                iconType: VssIconType.image,
-                                imageProps: {
-                                    src: witIconUrl,
-                                    width: 16,
-                                    height: 16
-                                }
-                            },
-                            href: getWorkItemTypeSettingsUrl(this.props.workItemTypeName)
-                        }]}
+                        iconProps={
+                            isPersonalOrGlobalRuleGroup(this.state.ruleGroup)
+                                ? {
+                                      iconType: VssIconType.fabric,
+                                      title: this.state.ruleGroup.description,
+                                      className: "info-button",
+                                      iconName: "Info"
+                                  }
+                                : {
+                                      iconType: VssIconType.fabric,
+                                      onClick: this._toggleSubscription,
+                                      title: this.state.isSubscribed ? "Unsubscribe" : "Subscribe",
+                                      className: "subscribe-button",
+                                      iconName: this.state.isSubscribed ? "FavoriteStarFill" : "FavoriteStar"
+                                  }
+                        }
+                        breadcrumbItems={[
+                            {
+                                text: this.props.workItemTypeName,
+                                key: "witname",
+                                onClick: this._onHeaderLinkClick,
+                                leftIconProps: witIconUrl && {
+                                    iconType: VssIconType.image,
+                                    imageProps: {
+                                        src: witIconUrl,
+                                        width: 16,
+                                        height: 16
+                                    }
+                                },
+                                href: getWorkItemTypeSettingsUrl(this.props.workItemTypeName)
+                            }
+                        ]}
                     />
                     <PivotBarItem name="Rule Group" itemKey="RuleGroup" viewActions={this._getHubViewActions()}>
                         {this._renderRules()}
                     </PivotBarItem>
                 </Hub>
-                {this.state.isGroupPanelOpen &&
-                    <RuleGroupEditor
-                        ruleGroupModel={this.state.ruleGroup}
-                        onDismiss={this._hidePanel}
-                        workItemTypeName={this.props.workItemTypeName}
-                    />
-                }
-                {this.state.isRulePanelOpen &&
+                {this.state.isGroupPanelOpen && (
+                    <RuleGroupEditor ruleGroupModel={this.state.ruleGroup} onDismiss={this._hidePanel} workItemTypeName={this.props.workItemTypeName} />
+                )}
+                {this.state.isRulePanelOpen && (
                     <AsyncRuleEditor
                         ruleGroupId={this.props.ruleGroupId}
                         ruleModel={this.state.selectedRuleForEdit}
                         workItemTypeName={this.props.workItemTypeName}
                         onDismiss={this._hidePanel}
                     />
-                }
+                )}
                 {this._renderToastNotification()}
             </div>
         );
@@ -176,11 +169,12 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         const personalRulesEnabled = StoresHub.settingsStore.getItem<boolean>(SettingKey.PersonalRulesEnabled);
         const globalRulesEnabled = StoresHub.settingsStore.getItem<boolean>(SettingKey.GlobalRulesEnabled);
 
-        const loading = userSubscriptions == null
-            || personalRulesEnabled == null
-            || globalRulesEnabled == null
-            || StoresHub.ruleGroupStore.isLoading(this.props.workItemTypeName)
-            || StoresHub.ruleStore.isLoading(this.props.ruleGroupId);
+        const loading =
+            userSubscriptions == null ||
+            personalRulesEnabled == null ||
+            globalRulesEnabled == null ||
+            StoresHub.ruleGroupStore.isLoading(this.props.workItemTypeName) ||
+            StoresHub.ruleStore.isLoading(this.props.ruleGroupId);
 
         let isSubscribed = false;
         if (userSubscriptions) {
@@ -202,28 +196,42 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
     private _getHubCommands(): IPivotBarAction[] {
         const menuItems: IPivotBarAction[] = [
             {
-                key: "new", name: "New Rule", important: true,
+                key: "new",
+                name: "New Rule",
+                important: true,
                 disabled: this.state.loading || !this.state.ruleGroup,
-                iconProps: { iconName: "Add", iconType: VssIconType.fabric }, onClick: () => this._showRulePanel(null)
+                iconProps: { iconName: "Add", iconType: VssIconType.fabric },
+                onClick: () => this._showRulePanel(null)
             },
             {
-                key: "refresh", name: "Refresh", important: true,
+                key: "refresh",
+                name: "Refresh",
+                important: true,
                 disabled: this.state.loading || !this.state.ruleGroup,
-                iconProps: { iconName: "Refresh", iconType: VssIconType.fabric }, onClick: this._refresh
+                iconProps: { iconName: "Refresh", iconType: VssIconType.fabric },
+                onClick: this._refresh
             }
         ];
 
         if (this.state.ruleGroup && !isPersonalOrGlobalRuleGroup(this.state.ruleGroup)) {
-            menuItems.push({
-                key: "edit", name: "Edit", important: true,
-                disabled: this.state.loading || !this.state.ruleGroup,
-                iconProps: { iconName: "Edit", iconType: VssIconType.fabric }, onClick: this._showEditGroupPanel
-            },             {
-                key: "delete", name: "Delete", important: true,
-                disabled: this.state.loading || !this.state.ruleGroup,
-                iconProps: { iconName: "Delete", iconType: VssIconType.fabric, style: {color: "#da0a00"} },
-                onClick: this._deleteRuleGroup
-            });
+            menuItems.push(
+                {
+                    key: "edit",
+                    name: "Edit",
+                    important: true,
+                    disabled: this.state.loading || !this.state.ruleGroup,
+                    iconProps: { iconName: "Edit", iconType: VssIconType.fabric },
+                    onClick: this._showEditGroupPanel
+                },
+                {
+                    key: "delete",
+                    name: "Delete",
+                    important: true,
+                    disabled: this.state.loading || !this.state.ruleGroup,
+                    iconProps: { iconName: "Delete", iconType: VssIconType.fabric, style: { color: "#da0a00" } },
+                    onClick: this._deleteRuleGroup
+                }
+            );
         }
 
         return menuItems;
@@ -247,16 +255,9 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         if (this.state.targetRuleGroupId) {
             return (
                 <div className="toast-notification">
-                    <MessageBar
-                        messageBarType={MessageBarType.success}
-                        className="toast-message"
-                        onDismiss={this._dismissToastNotification}
-                    >
+                    <MessageBar messageBarType={MessageBarType.success} className="toast-message" onDismiss={this._dismissToastNotification}>
                         {`${this.state.isMovedToTargetGroup ? "Moved" : "Copied"} `}
-                        <Link
-                            href={getRuleGroupUrl(this.props.workItemTypeName, this.state.targetRuleGroupId)}
-                            onClick={this._navigateToTargetRuleGroup}
-                        >
+                        <Link href={getRuleGroupUrl(this.props.workItemTypeName, this.state.targetRuleGroupId)} onClick={this._navigateToTargetRuleGroup}>
                             here
                         </Link>
                     </MessageBar>
@@ -270,28 +271,22 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         let contents: React.ReactNode;
         if (this.state.loading) {
             contents = <Loading />;
-        }
-        else if (!this.state.ruleGroup) {
+        } else if (!this.state.ruleGroup) {
             let message = "This rule group does not exist.";
             if (this.props.ruleGroupId === Constants.PersonalRuleGroupId) {
                 message = `Personal rules have been disabled for "${this.props.workItemTypeName}" work item type. Please contact your administrator for more details.`;
-            }
-            else if (this.props.ruleGroupId === Constants.GlobalRuleGroupId) {
+            } else if (this.props.ruleGroupId === Constants.GlobalRuleGroupId) {
                 message = `Global rules have been disabled for "${this.props.workItemTypeName}" work item type. Please contact your administrator for more details.`;
             }
 
-            contents = <MessageBar className="rule-group-view-error" messageBarType={MessageBarType.error}>{message}</MessageBar>;
-        }
-        else if (this.state.rules.length === 0) {
             contents = (
-                <ZeroData
-                    imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`}
-                    imageAltText=""
-                    primaryText="No rules found"
-                />
+                <MessageBar className="rule-group-view-error" messageBarType={MessageBarType.error}>
+                    {message}
+                </MessageBar>
             );
-        }
-        else {
+        } else if (this.state.rules.length === 0) {
+            contents = <ZeroData imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`} imageAltText="" primaryText="No rules found" />;
+        } else {
             contents = (
                 <VssDetailsList
                     className="rule-list"
@@ -307,11 +302,7 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
             );
         }
 
-        return (
-            <div className="rule-group-view-contents">
-                {contents}
-            </div>
-        );
+        return <div className="rule-group-view-contents">{contents}</div>;
     }
 
     private _getRulesGridColumns(): IColumn[] {
@@ -338,19 +329,11 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
                                 />
                             </TooltipHost>
 
-                            {rule.triggers.length > 0 &&
-                                <TooltipHost
-                                    content="This rule has triggers"
-                                    delay={TooltipDelay.medium}
-                                    directionalHint={DirectionalHint.bottomCenter}
-                                >
-                                    <VssIcon
-                                        className="rule-trigger-icon"
-                                        iconType={VssIconType.fabric}
-                                        iconName="LightningBolt"
-                                    />
+                            {rule.triggers.length > 0 && (
+                                <TooltipHost content="This rule has triggers" delay={TooltipDelay.medium} directionalHint={DirectionalHint.bottomCenter}>
+                                    <VssIcon className="rule-trigger-icon" iconType={VssIconType.fabric} iconName="LightningBolt" />
                                 </TooltipHost>
-                            }
+                            )}
                         </div>
                     );
                 }
@@ -392,7 +375,7 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
                 maxWidth: 200,
                 isResizable: true,
                 onRender: (rule: IRule) => {
-                    return <IdentityView identityRef={rule.createdBy} />;
+                    return <IdentityView value={rule.createdBy} />;
                 }
             },
             {
@@ -402,24 +385,22 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
                 minWidth: 100,
                 maxWidth: 200,
                 onRender: (rule: IRule) => {
-                    return <IdentityView identityRef={rule.lastUpdatedBy} />;
+                    return <IdentityView value={rule.lastUpdatedBy} />;
                 }
             }
         ];
     }
 
     private _getMoveCopySubMenuItems(isMove: boolean, rule: IRule) {
-        return this.state.allRuleGroups
-            .filter(rg => isMove ? !stringEquals(rg.id, this.state.ruleGroup.id, true) : true)
-            .map(rg => ({
-                key: rg.id,
-                name: rg.name,
-                title: rg.description,
-                data: rule,
-                onClick: (_ev: React.MouseEvent<HTMLElement>, item: IContextualMenuItem) => {
-                    isMove ? this._moveToRuleGroup(item) : this._copyToRuleGroup(item);
-                }
-            }));
+        return this.state.allRuleGroups.filter(rg => (isMove ? !stringEquals(rg.id, this.state.ruleGroup.id, true) : true)).map(rg => ({
+            key: rg.id,
+            name: rg.name,
+            title: rg.description,
+            data: rule,
+            onClick: (_ev: React.MouseEvent<HTMLElement>, item: IContextualMenuItem) => {
+                isMove ? this._moveToRuleGroup(item) : this._copyToRuleGroup(item);
+            }
+        }));
     }
 
     private _onRowClick(e: React.MouseEvent<HTMLElement>, rule: IRule) {
@@ -435,20 +416,20 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
     }
 
     private async _moveToRuleGroup(item: IContextualMenuItem) {
-        const ruleModel: IRule = {...item.data};
+        const ruleModel: IRule = { ...item.data };
         delete ruleModel.id;
         delete ruleModel.__etag;
         ruleModel.createdBy = getCurrentUser();
         ruleModel.lastUpdatedBy = getCurrentUser();
         await RuleActions.createRule(item.key, ruleModel);
-        this.setState({targetRuleGroupId: item.key, isMovedToTargetGroup: true});
+        this.setState({ targetRuleGroupId: item.key, isMovedToTargetGroup: true });
 
         // delete from current rule group
         RuleActions.deleteRule(this.props.ruleGroupId, item.data as IRule);
     }
 
     private async _copyToRuleGroup(item: IContextualMenuItem) {
-        const ruleModel: IRule = {...item.data};
+        const ruleModel: IRule = { ...item.data };
         delete ruleModel.id;
         delete ruleModel.__etag;
         ruleModel.createdBy = getCurrentUser();
@@ -459,7 +440,7 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
         }
 
         await RuleActions.createRule(targetRuleGroupId, ruleModel);
-        this.setState({targetRuleGroupId: targetRuleGroupId, isMovedToTargetGroup: false});
+        this.setState({ targetRuleGroupId: targetRuleGroupId, isMovedToTargetGroup: false });
     }
 
     private _onHeaderLinkClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -467,74 +448,72 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
             e.preventDefault();
             this._goBack();
         }
-    }
+    };
 
     private _navigateToTargetRuleGroup = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         this._dismissToastNotification();
         navigate({ witName: this.props.workItemTypeName, ruleGroup: this.state.targetRuleGroupId });
-    }
+    };
 
     private _dismissToastNotification = () => {
-        this.setState({targetRuleGroupId: null, isMovedToTargetGroup: false});
-    }
+        this.setState({ targetRuleGroupId: null, isMovedToTargetGroup: false });
+    };
 
     private _renderNameColumn = (rule: IRule): React.ReactNode => {
         return (
             <div className="name-column-cell">
-                <TooltipHost
-                    content={rule.name}
-                    delay={TooltipDelay.medium}
-                    overflowMode={TooltipOverflowMode.Parent}
-                    directionalHint={DirectionalHint.bottomCenter}
-                >
-                    <Link
-                        className="name-link"
-                        style={{borderLeftColor: `${rule.color}`}}
-                        href={"#"}
-                        onClick={delegate(this, this._onRowClick, rule)}
-                    >
+                <TooltipHost content={rule.name} delay={TooltipDelay.medium} overflowMode={TooltipOverflowMode.Parent} directionalHint={DirectionalHint.bottomCenter}>
+                    <Link className="name-link" style={{ borderLeftColor: `${rule.color}` }} href={"#"} onClick={delegate(this, this._onRowClick, rule)}>
                         {rule.name}
                     </Link>
                 </TooltipHost>
             </div>
         );
-    }
+    };
 
     private _getRulesGridContextMenuItems = (rule: IRule): IContextualMenuItem[] => {
         return [
             {
-                key: "edit", name: "Edit", iconProps: {iconName: "Edit"},
+                key: "edit",
+                name: "Edit",
+                iconProps: { iconName: "Edit" },
                 onClick: () => {
                     this._showRulePanel(rule);
                 }
             },
             {
-                key: "delete", name: "Delete", iconProps: {iconName: "Delete", style: { color: "#da0a00" }},
+                key: "delete",
+                name: "Delete",
+                iconProps: { iconName: "Delete", style: { color: "#da0a00" } },
                 onClick: () => {
                     this._deleteRule(rule);
                 }
             },
             {
-                key: "move", name: "Move to", iconProps: {iconName: "Assign"},
+                key: "move",
+                name: "Move to",
+                iconProps: { iconName: "Assign" },
                 title: "Move the selected rule to a different rule group",
                 subMenuProps: {
                     items: this._getMoveCopySubMenuItems(true, rule)
                 }
             },
             {
-                key: "copy", name: "Copy to", iconProps: {iconName: "Copy"},
+                key: "copy",
+                name: "Copy to",
+                iconProps: { iconName: "Copy" },
                 title: "Copy the selected rule in a different rule group",
                 subMenuProps: {
                     items: this._getMoveCopySubMenuItems(false, rule)
                 }
             }
         ];
-    }
+    };
 
     private _toggleSubscription = () => {
         this.props.toggleSubscription(!this.state.isSubscribed, this.state.ruleGroup);
-    }
+    };
 
     private _deleteRuleGroup = async () => {
         if (!this.state.ruleGroup) {
@@ -547,26 +526,26 @@ export class RuleGroupView extends BaseFluxComponent<IRuleGroupViewProps, IRuleG
             RuleGroupActions.deleteRuleGroup(this.props.workItemTypeName, this.state.ruleGroup);
             this._goBack();
         }
-    }
+    };
 
     private _showRulePanel = (rule?: IRule) => {
-        this.setState({isRulePanelOpen: true, isGroupPanelOpen: false, selectedRuleForEdit: rule});
-    }
+        this.setState({ isRulePanelOpen: true, isGroupPanelOpen: false, selectedRuleForEdit: rule });
+    };
 
     private _showEditGroupPanel = () => {
-        this.setState({isRulePanelOpen: false, isGroupPanelOpen: true, selectedRuleForEdit: null});
-    }
+        this.setState({ isRulePanelOpen: false, isGroupPanelOpen: true, selectedRuleForEdit: null });
+    };
 
     private _hidePanel = () => {
-        this.setState({isRulePanelOpen: false, isGroupPanelOpen: false, selectedRuleForEdit: null});
-    }
+        this.setState({ isRulePanelOpen: false, isGroupPanelOpen: false, selectedRuleForEdit: null });
+    };
 
     private _refresh = () => {
         this.props.refresh();
         RuleActions.refreshRules(this.state.ruleGroup.id);
-    }
+    };
 
     private _goBack = () => {
         navigate({ witName: this.props.workItemTypeName });
-    }
+    };
 }

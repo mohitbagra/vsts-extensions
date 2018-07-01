@@ -15,7 +15,10 @@ export interface IWorkItemFieldControlState<T> extends IBaseFluxComponentState {
     value?: T;
 }
 
-export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldControlProps, TS extends IWorkItemFieldControlState<TDataType>> extends AutoResizableComponent<TP, TS> {
+export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldControlProps, TS extends IWorkItemFieldControlState<TDataType>> extends AutoResizableComponent<
+    TP,
+    TS
+> {
     public static getInputs<T>() {
         return VSS.getConfiguration().witInputs as T;
     }
@@ -38,7 +41,7 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
                 if (args.changedFields[fieldName] != null) {
                     this._invalidate();
                 }
-            },
+            }
         } as WitExtensionContracts.IWorkItemNotificationListener);
     }
 
@@ -61,8 +64,7 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
             try {
                 await formService.setFieldValue(this.props.fieldName, newValue);
                 this._flushing = false;
-            }
-            catch (e) {
+            } catch (e) {
                 this._flushing = false;
                 this._onError(`Error in storing the field value: ${e.message}`);
             }
@@ -70,8 +72,7 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
 
         if (immediate) {
             setValue();
-        }
-        else {
+        } else {
             this._delayedFunction = delay(this, 200, () => {
                 setValue();
             });
@@ -97,9 +98,8 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
     private async _getCurrentFieldValue(): Promise<TDataType> {
         try {
             const formService = await getFormService();
-            return await formService.getFieldValue(this.props.fieldName) as TDataType;
-        }
-        catch (e) {
+            return (await formService.getFieldValue(this.props.fieldName)) as TDataType;
+        } catch (e) {
             this._onError(`Error in loading the field value: ${e.message}`);
             return null;
         }
@@ -107,11 +107,11 @@ export abstract class WorkItemFieldControl<TDataType, TP extends IWorkItemFieldC
 
     private _setValue(value: TDataType) {
         this._disposeDelayedFunction();
-        this.setState({value: value, error: this.getErrorMessage(value)});
+        this.setState({ value: value, error: this.getErrorMessage(value) });
     }
 
     private _onError(error: string) {
-        this.setState({error: error});
+        this.setState({ error: error });
     }
 
     private _disposeDelayedFunction() {

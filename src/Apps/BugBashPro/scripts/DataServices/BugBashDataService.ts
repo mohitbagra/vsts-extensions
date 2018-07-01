@@ -30,8 +30,7 @@ export namespace BugBashDataService {
             preProcessModel(updatedBugBashModel);
 
             return updatedBugBashModel;
-        }
-        catch (e) {
+        } catch (e) {
             throw `Cannot create bug bash. Reason: ${e.message}`;
         }
     }
@@ -42,8 +41,7 @@ export namespace BugBashDataService {
             preProcessModel(updatedBugBashModel);
 
             return updatedBugBashModel;
-        }
-        catch {
+        } catch {
             throw "This bug bash instance has been modified by some one else. Please refresh the instance to get the latest version and try updating it again.";
         }
     }
@@ -51,8 +49,7 @@ export namespace BugBashDataService {
     export async function deleteBugBash(bugBashId: string) {
         try {
             await ExtensionDataManager.deleteDocument(getCollectionKey(), bugBashId, false);
-        }
-        catch {
+        } catch {
             // eat exception
         }
     }
@@ -65,16 +62,14 @@ export namespace BugBashDataService {
         if (typeof bugBashModel.startTime === "string") {
             if (isNullOrWhiteSpace(bugBashModel.startTime as string)) {
                 bugBashModel.startTime = undefined;
-            }
-            else {
+            } else {
                 bugBashModel.startTime = new Date(bugBashModel.startTime);
             }
         }
         if (typeof bugBashModel.endTime === "string") {
             if (isNullOrWhiteSpace(bugBashModel.endTime as string)) {
                 bugBashModel.endTime = undefined;
-            }
-            else {
+            } else {
                 bugBashModel.endTime = new Date(bugBashModel.endTime);
             }
         }

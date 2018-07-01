@@ -21,9 +21,7 @@ export function htmlEncode(str: string): string {
     div.appendChild(document.createTextNode(str));
 
     // The trick we are using here doesnt encode quotes. So we have to replace them using regexp search
-    return div.innerHTML
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
+    return div.innerHTML.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
 
 export function isNullOrWhiteSpace(str: string): boolean {
@@ -44,11 +42,9 @@ export function defaultComparer(a: string, b: string): number {
 
     if (a1 === b1) {
         return 0;
-    }
-    else if (a1 > b1) {
+    } else if (a1 > b1) {
         return 1;
-    }
-    else {
+    } else {
         return -1;
     }
 }
@@ -63,11 +59,9 @@ export function ignoreCaseComparer(a: string, b: string): number {
 
     if (a1 === b1) {
         return 0;
-    }
-    else if (a1 > b1) {
+    } else if (a1 > b1) {
         return 1;
-    }
-    else {
+    } else {
         return -1;
     }
 }
@@ -97,8 +91,7 @@ export function localeIgnoreCaseComparer(a: string, b: string): number {
 export function stringEquals(a: string, b: string, ignoreCase: boolean = false): boolean {
     if (ignoreCase) {
         return localeIgnoreCaseComparer(a, b) === 0;
-    }
-    else {
+    } else {
         return localeComparer(a, b) === 0;
     }
 }
@@ -114,33 +107,32 @@ export function endsWith(str: string, suffix: string, comparer?: (param1: string
 }
 
 export function caseInsensitiveContains(str: string, subStr: string): boolean {
-    return (str.toLowerCase().indexOf(subStr.toLowerCase()) !== -1);
+    return str.toLowerCase().indexOf(subStr.toLowerCase()) !== -1;
 }
 
 export function toString(val: any): string {
-    if (typeof(val) === "boolean") {
+    if (typeof val === "boolean") {
         return val ? "True" : "False";
-    }
-    else if (typeof(val) === "number") {
+    } else if (typeof val === "number") {
         return `${val}`;
-    }
-    else if (val instanceof Date) {
+    } else if (val instanceof Date) {
         format(val);
-    }
-    else {
+    } else {
         return val;
     }
 }
 
 export function hashCode(str: string): number {
-    if (isNullOrWhiteSpace(str)) { return 0; }
+    if (isNullOrWhiteSpace(str)) {
+        return 0;
+    }
 
     let hash = 0;
     const trimmedString = str.trim();
 
     for (let i = 0; i < trimmedString.length; i++) {
         const ch = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + ch;
+        hash = (hash << 5) - hash + ch;
         hash = hash & hash; // Convert to 32bit integer
     }
 

@@ -33,12 +33,12 @@ export async function openWorkItemDialog(e: React.MouseEvent<HTMLElement>, item:
 
 export async function getWorkItemType(): Promise<string> {
     const formService = await getFormService();
-    return await formService.getFieldValue("System.WorkItemType", true) as string;
+    return (await formService.getFieldValue("System.WorkItemType", true)) as string;
 }
 
 export async function getWorkItemProject(): Promise<string> {
     const formService = await getFormService();
-    return await formService.getFieldValue("System.TeamProject", true) as string;
+    return (await formService.getFieldValue("System.TeamProject", true)) as string;
 }
 
 export async function getWorkItemField(fieldName: string): Promise<WorkItemField> {
@@ -50,8 +50,7 @@ export async function getWorkItemField(fieldName: string): Promise<WorkItemField
 
     if (field) {
         return field;
-    }
-    else {
+    } else {
         throw `Field '${fieldName}' does not exist in this work item type`;
     }
 }

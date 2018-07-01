@@ -49,19 +49,14 @@ export class SettingsPanel extends BaseFluxComponent<IBaseFluxComponentProps, IS
     public render(): JSX.Element {
         if (this.state.loading) {
             return <Loading />;
-        }
-        else {
+        } else {
             return (
                 <div className="settings-panel">
-                    { this.state.error &&
-                        <MessageBar
-                            className="message-panel"
-                            messageBarType={MessageBarType.error}
-                            onDismiss={this._dismissErrorMessage}
-                        >
+                    {this.state.error && (
+                        <MessageBar className="message-panel" messageBarType={MessageBarType.error} onDismiss={this._dismissErrorMessage}>
                             {"Settings could not be saved due to an unknown error. Please refresh the page and try again."}
                         </MessageBar>
-                    }
+                    )}
                     <div className="settings-controls-container">
                         <Label className="settings-label">Project Settings</Label>
                         <div className="settings-control">
@@ -108,23 +103,20 @@ export class SettingsPanel extends BaseFluxComponent<IBaseFluxComponentProps, IS
 
     protected getInitialState(): ISettingsPanelState {
         return {
-            loading: true,
+            loading: true
         } as ISettingsPanelState;
     }
 
     protected getStoresState(): ISettingsPanelState {
-        const isLoading = StoresHub.bugBashSettingsStore.isLoading()
-            || StoresHub.gitRepoStore.isLoading()
-            || StoresHub.teamStore.isLoading()
-            || StoresHub.userSettingsStore.isLoading();
+        const isLoading =
+            StoresHub.bugBashSettingsStore.isLoading() || StoresHub.gitRepoStore.isLoading() || StoresHub.teamStore.isLoading() || StoresHub.userSettingsStore.isLoading();
 
         const bugBashSettings = StoresHub.bugBashSettingsStore.getAll();
         let userSetting = StoresHub.userSettingsStore.getItem(VSS.getWebContext().user.email);
 
         if (isLoading) {
             userSetting = null;
-        }
-        else {
+        } else {
             if (userSetting == null) {
                 userSetting = {
                     id: VSS.getWebContext().user.email,
@@ -134,10 +126,10 @@ export class SettingsPanel extends BaseFluxComponent<IBaseFluxComponentProps, IS
         }
 
         let state = {
-            newBugBashSettings: bugBashSettings ? {...bugBashSettings} : null,
-            origBugBashSettings: bugBashSettings ? {...bugBashSettings} : null,
-            newUserSettings: userSetting ? {...userSetting} : null,
-            origUserSettings: userSetting ? {...userSetting} : null,
+            newBugBashSettings: bugBashSettings ? { ...bugBashSettings } : null,
+            origBugBashSettings: bugBashSettings ? { ...bugBashSettings } : null,
+            newUserSettings: userSetting ? { ...userSetting } : null,
+            origUserSettings: userSetting ? { ...userSetting } : null,
             loading: isLoading,
             error: StoresHub.errorMessageStore.getItem(ErrorKeys.BugBashSettingsError)
         } as ISettingsPanelState;
@@ -145,35 +137,41 @@ export class SettingsPanel extends BaseFluxComponent<IBaseFluxComponentProps, IS
         if (StoresHub.teamStore.isLoaded() && !this.state.teams) {
             const emptyItem = [
                 {
-                    key: "", text: "<No team>"
+                    key: "",
+                    text: "<No team>"
                 }
             ];
 
-            const teams: IComboBoxOption[] = emptyItem.concat(StoresHub.teamStore.getAll().map((t: WebApiTeam) => {
-                return {
-                    key: t.id,
-                    text: t.name
-                };
-            }));
+            const teams: IComboBoxOption[] = emptyItem.concat(
+                StoresHub.teamStore.getAll().map((t: WebApiTeam) => {
+                    return {
+                        key: t.id,
+                        text: t.name
+                    };
+                })
+            );
 
-            state = {...state, teams: teams} as ISettingsPanelState;
+            state = { ...state, teams: teams } as ISettingsPanelState;
         }
 
         if (StoresHub.gitRepoStore.isLoaded() && !this.state.gitRepos) {
             const emptyItem = [
                 {
-                    key: "", text: "<No repo>"
+                    key: "",
+                    text: "<No repo>"
                 }
             ];
 
-            const repos: IComboBoxOption[] = emptyItem.concat(StoresHub.gitRepoStore.getAll().map((r: GitRepository) => {
-                return {
-                    key: r.id,
-                    text: r.name
-                };
-            }));
+            const repos: IComboBoxOption[] = emptyItem.concat(
+                StoresHub.gitRepoStore.getAll().map((r: GitRepository) => {
+                    return {
+                        key: r.id,
+                        text: r.name
+                    };
+                })
+            );
 
-            state = {...state, gitRepos: repos} as ISettingsPanelState;
+            state = { ...state, gitRepos: repos } as ISettingsPanelState;
         }
 
         return state;
@@ -188,38 +186,34 @@ export class SettingsPanel extends BaseFluxComponent<IBaseFluxComponentProps, IS
     }
 
     private _onRepoChange = (option?: IComboBoxOption) => {
-        const newSettings = {...this.state.newBugBashSettings};
+        const newSettings = { ...this.state.newBugBashSettings };
         newSettings.gitMediaRepo = option.key as string;
-        this.setState({newBugBashSettings: newSettings} as ISettingsPanelState);
-    }
+        this.setState({ newBugBashSettings: newSettings } as ISettingsPanelState);
+    };
 
     private _onTeamChange = (option?: IComboBoxOption) => {
-        const newSettings = {...this.state.newUserSettings};
+        const newSettings = { ...this.state.newUserSettings };
         newSettings.associatedTeam = option.key as string;
-        this.setState({newUserSettings: newSettings} as ISettingsPanelState);
-    }
+        this.setState({ newUserSettings: newSettings } as ISettingsPanelState);
+    };
 
     private _dismissErrorMessage = () => {
         ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashSettingsError);
-    }
+    };
 
     private _onSaveClick = () => {
         if (this._isSettingsDirty()) {
             SettingsActions.updateBugBashSettings(this.state.newBugBashSettings);
         }
-    }
+    };
 
     private _onSaveUserSettingClick = () => {
         if (this._isUserSettingsDirty()) {
             SettingsActions.updateUserSettings(this.state.newUserSettings);
         }
-    }
+    };
 
     private _onRenderCallout = (props?: IComboBoxProps, defaultRender?: (props?: IComboBoxProps) => JSX.Element): JSX.Element => {
-        return (
-            <div className="callout-container">
-                {defaultRender(props)}
-            </div>
-        );
-    }
+        return <div className="callout-container">{defaultRender(props)}</div>;
+    };
 }

@@ -82,7 +82,7 @@ function initRuleGroupTelemetry() {
 * Rules actions telemetry
 */
 function initRuleTelemetry() {
-    RuleActionsHub.CreateRule.addListener((data: {ruleGroupId: string, rule: IRule}) => {
+    RuleActionsHub.CreateRule.addListener((data: { ruleGroupId: string; rule: IRule }) => {
         if (data) {
             const rule = data.rule;
             const ruleGroupId = data.ruleGroupId;
@@ -103,7 +103,7 @@ function initRuleTelemetry() {
         }
     });
 
-    RuleActionsHub.UpdateRule.addListener((data: {ruleGroupId: string, rule: IRule}) => {
+    RuleActionsHub.UpdateRule.addListener((data: { ruleGroupId: string; rule: IRule }) => {
         if (data) {
             const rule = data.rule;
             const ruleGroupId = data.ruleGroupId;
@@ -125,7 +125,7 @@ function initRuleTelemetry() {
         }
     });
 
-    RuleActionsHub.DeleteRule.addListener((data: {ruleGroupId: string, rule: IRule}) => {
+    RuleActionsHub.DeleteRule.addListener((data: { ruleGroupId: string; rule: IRule }) => {
         if (data) {
             const rule = data.rule;
             const ruleGroupId = data.ruleGroupId;

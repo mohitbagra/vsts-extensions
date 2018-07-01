@@ -11,8 +11,7 @@ export namespace WorkItemTypeActions {
     export async function initializeWorkItemTypes() {
         if (workItemTypeStore.isLoaded()) {
             WorkItemTypeActionsHub.InitializeWorkItemTypes.invoke(null);
-        }
-        else if (!workItemTypeStore.isLoading()) {
+        } else if (!workItemTypeStore.isLoading()) {
             workItemTypeStore.setLoading(true);
             try {
                 const workItemTypes = await WitClient.getClient().getWorkItemTypes(VSS.getWebContext().project.id);
@@ -20,8 +19,7 @@ export namespace WorkItemTypeActions {
 
                 WorkItemTypeActionsHub.InitializeWorkItemTypes.invoke(workItemTypes);
                 workItemTypeStore.setLoading(false);
-            }
-            catch (e) {
+            } catch (e) {
                 workItemTypeStore.setLoading(false);
                 throw e.message;
             }

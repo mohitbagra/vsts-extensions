@@ -5,12 +5,7 @@ import * as React from "react";
 import { IconButton } from "OfficeFabric/Button";
 
 export class NumericValueRange implements IValueRange<number> {
-    constructor(
-        private _min: number,
-        private _max: number,
-        private _valueFormatter: (n: number) => string = (n: number) => n.toString(),
-        private _increment: number = 1) {
-    }
+    constructor(private _min: number, private _max: number, private _valueFormatter: (n: number) => string = (n: number) => n.toString(), private _increment: number = 1) {}
 
     public getPreviousValue(value: number): number {
         let v = value - this._increment;
@@ -36,8 +31,7 @@ export class NumericValueRange implements IValueRange<number> {
 }
 
 export class CategoryRange implements IValueRange<string> {
-    constructor(private _values: string[]) {
-    }
+    constructor(private _values: string[]) {}
 
     public getPreviousValue(value: string): string {
         let index = this._values.indexOf(value);
@@ -92,7 +86,7 @@ export class ValueSpinner<T> extends React.Component<IValueSpinnerProp<T>, IValu
     }
 
     public componentWillReceiveProps(props: IValueSpinnerProp<T>) {
-        if (this.props && (this.props.value !== props.value)) {
+        if (this.props && this.props.value !== props.value) {
             this.setState({
                 value: props.value
             });
@@ -131,9 +125,9 @@ export class ValueSpinner<T> extends React.Component<IValueSpinnerProp<T>, IValu
 
     private _setPreviousValue = () => {
         this._onValueChange(this.props.valueRange.getPreviousValue(this.state.value));
-    }
+    };
 
     private _setNextValue = () => {
         this._onValueChange(this.props.valueRange.getNextValue(this.state.value));
-    }
+    };
 }

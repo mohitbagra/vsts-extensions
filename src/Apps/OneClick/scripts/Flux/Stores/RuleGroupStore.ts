@@ -40,8 +40,7 @@ export class RuleGroupStore extends BaseStore<IRuleGroup[], IRuleGroup, string> 
             }
 
             return extraRuleGroups.concat(this.items);
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -117,8 +116,7 @@ export class RuleGroupStore extends BaseStore<IRuleGroup[], IRuleGroup, string> 
         const existingIndex = findIndex(this.items, (existingItem: IRuleGroup) => stringEquals(ruleGroup.id, existingItem.id, true));
         if (existingIndex === -1) {
             this.items.push(ruleGroup);
-        }
-        else {
+        } else {
             this.items[existingIndex] = ruleGroup;
         }
 

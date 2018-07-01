@@ -65,7 +65,7 @@ export class AddExistingRelationActionRenderer extends BaseFluxComponent<IAddExi
 
     protected getStoresState(): IBaseFluxComponentState {
         return {
-            loading: StoresHub.workItemRelationTypeStore.isLoading(),
+            loading: StoresHub.workItemRelationTypeStore.isLoading()
         };
     }
 
@@ -77,9 +77,9 @@ export class AddExistingRelationActionRenderer extends BaseFluxComponent<IAddExi
 
     private _onWorkItemIdChange = (value: string) => {
         this.props.onWorkItemIdChange(value);
-    }
+    };
 
     private _onWorkItemRelationTypeChange = (witRelationType: WorkItemRelationType, value?: string) => {
         this.props.onRelationTypeChange(witRelationType ? witRelationType.name : value);
-    }
+    };
 }

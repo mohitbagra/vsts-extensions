@@ -14,10 +14,7 @@ import { translateToFieldValue } from "OneClick/Helpers";
 import { BaseAction } from "OneClick/RuleActions/BaseAction";
 import { WorkItem } from "TFS/WorkItemTracking/Contracts";
 
-const AsyncAddNewRelationRenderer = getAsyncLoadedComponent(
-    ["scripts/ActionRenderers"],
-    (m: typeof ActionRenderers_Async) => m.AddNewRelationActionRenderer,
-    () => <Loading />);
+const AsyncAddNewRelationRenderer = getAsyncLoadedComponent(["scripts/ActionRenderers"], (m: typeof ActionRenderers_Async) => m.AddNewRelationActionRenderer, () => <Loading />);
 
 export class AddNewRelationAction extends BaseAction {
     public async run() {
@@ -30,14 +27,14 @@ export class AddNewRelationAction extends BaseAction {
         let savedWorkItem: WorkItem;
 
         const workItemFormService = await getFormService();
-        const project = await workItemFormService.getFieldValue(CoreFieldRefNames.TeamProject) as string;
+        const project = (await workItemFormService.getFieldValue(CoreFieldRefNames.TeamProject)) as string;
 
         // read template
         await WorkItemTemplateItemActions.initializeWorkItemTemplateItem(teamId, templateId, project);
         const template = StoresHub.workItemTemplateItemStore.getItem(templateId);
 
         // read fields from template
-        const templateMap = {...template.fields};
+        const templateMap = { ...template.fields };
         if (templateMap["System.Tags-Add"]) {
             templateMap["System.Tags"] = templateMap["System.Tags-Add"];
         }
@@ -56,12 +53,10 @@ export class AddNewRelationAction extends BaseAction {
             try {
                 // create work item
                 savedWorkItem = await WorkItemActions.createWorkItem(workItemType, translatedFieldValuesMap, project);
-            }
-            catch (e) {
+            } catch (e) {
                 throw `Could not create work item. Error: ${e}. Please check the template used in this action.`;
             }
-        }
-        else {
+        } else {
             const workItemNavSvc = await getFormNavigationService();
             savedWorkItem = await workItemNavSvc.openNewWorkItem(workItemType, translatedFieldValuesMap);
         }
@@ -98,33 +93,37 @@ export class AddNewRelationAction extends BaseAction {
         const teamId = this.getAttribute<string>("teamId");
         const templateId = this.getAttribute<string>("templateId");
 
-        return StoresHub.workItemTypeStore.isLoaded()
-            && StoresHub.teamStore.isLoaded()
-            && StoresHub.workItemRelationTypeStore.isLoaded()
-            && !isNullOrEmpty(workItemType)
-            && StoresHub.workItemTypeStore.itemExists(workItemType)
-            && !isNullOrEmpty(relationType)
-            && StoresHub.workItemRelationTypeStore.itemExists(relationType)
-            && !isNullOrEmpty(teamId)
-            && StoresHub.teamStore.itemExists(teamId)
-            && !isNullOrEmpty(templateId)
-            && StoresHub.workItemTemplateStore.getTemplate(templateId) != null;
+        return (
+            StoresHub.workItemTypeStore.isLoaded() &&
+            StoresHub.teamStore.isLoaded() &&
+            StoresHub.workItemRelationTypeStore.isLoaded() &&
+            !isNullOrEmpty(workItemType) &&
+            StoresHub.workItemTypeStore.itemExists(workItemType) &&
+            !isNullOrEmpty(relationType) &&
+            StoresHub.workItemRelationTypeStore.itemExists(relationType) &&
+            !isNullOrEmpty(teamId) &&
+            StoresHub.teamStore.itemExists(teamId) &&
+            !isNullOrEmpty(templateId) &&
+            StoresHub.workItemTemplateStore.getTemplate(templateId) != null
+        );
     }
 
     public isDirty(): boolean {
-        return super.isDirty()
-            || !stringEquals(this.getAttribute<string>("workItemType", true), this.getAttribute<string>("workItemType"), true)
-            || !stringEquals(this.getAttribute<string>("relationType", true), this.getAttribute<string>("relationType"), true)
-            || !stringEquals(this.getAttribute<string>("teamId", true), this.getAttribute<string>("teamId"), true)
-            || !stringEquals(this.getAttribute<string>("templateId", true), this.getAttribute<string>("templateId"), true)
-            || this.getAttribute<boolean>("autoCreate", true) !== this.getAttribute<boolean>("autoCreate");
+        return (
+            super.isDirty() ||
+            !stringEquals(this.getAttribute<string>("workItemType", true), this.getAttribute<string>("workItemType"), true) ||
+            !stringEquals(this.getAttribute<string>("relationType", true), this.getAttribute<string>("relationType"), true) ||
+            !stringEquals(this.getAttribute<string>("teamId", true), this.getAttribute<string>("teamId"), true) ||
+            !stringEquals(this.getAttribute<string>("templateId", true), this.getAttribute<string>("templateId"), true) ||
+            this.getAttribute<boolean>("autoCreate", true) !== this.getAttribute<boolean>("autoCreate")
+        );
     }
 
     public getIcon(): IIconProps {
         return {
             iconName: "WorkItem",
             styles: {
-                root: {color: "#004578 !important"}
+                root: { color: "#004578 !important" }
             }
         };
     }
@@ -166,29 +165,29 @@ export class AddNewRelationAction extends BaseAction {
 
     protected preProcessAttributes(attributes: IDictionaryStringTo<any>): IDictionaryStringTo<any> {
         if (attributes["autoCreate"] == null) {
-            return {...attributes, autoCreate: true};
+            return { ...attributes, autoCreate: true };
         }
-        return {...attributes};
+        return { ...attributes };
     }
 
     private _onAutoCreateChange = (value: boolean) => {
         this.setAttribute<boolean>("autoCreate", value);
-    }
+    };
 
     private _onWorkItemTypeChange = (value: string) => {
         this.setAttribute<string>("workItemType", value);
-    }
+    };
 
     private _onWorkItemRelationTypeChange = (value: string) => {
         this.setAttribute<string>("relationType", value);
-    }
+    };
 
     private _onTeamChange = (value: string) => {
         this.setAttribute<string>("teamId", value, false);
         this.setAttribute<string>("templateId", "");
-    }
+    };
 
     private _onTemplateChange = (value: string) => {
         this.setAttribute<string>("templateId", value);
-    }
+    };
 }

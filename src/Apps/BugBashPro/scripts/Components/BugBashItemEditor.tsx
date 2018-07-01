@@ -22,7 +22,7 @@ import { ErrorMessageActions } from "Common/Flux/Actions/ErrorMessageActions";
 import { BaseStore } from "Common/Flux/Stores/BaseStore";
 import { confirmAction } from "Common/Utilities/Core";
 import { defaultDateComparer, friendly } from "Common/Utilities/Date";
-import { getCurrentUser, IdentityRef } from "Common/Utilities/Identity";
+import { getCurrentUser } from "Common/Utilities/Identity";
 import { navigate } from "Common/Utilities/Navigation";
 import { Checkbox } from "OfficeFabric/Checkbox";
 import { CommandBar } from "OfficeFabric/CommandBar";
@@ -34,6 +34,7 @@ import {
     DirectionalHint, TooltipDelay, TooltipHost, TooltipOverflowMode
 } from "OfficeFabric/Tooltip";
 import { WebApiTeam } from "TFS/Core/Contracts";
+import { IdentityRef } from "VSS/WebApi/Contracts";
 
 export interface IBugBashItemEditorProps extends IBaseFluxComponentProps {
     bugBashItem: BugBashItem;
@@ -52,7 +53,7 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
         super.componentDidMount();
 
         if (!this.props.bugBashItem.isNew() && !this.props.bugBashItem.isAccepted) {
-             BugBashItemCommentActions.initializeComments(this.props.bugBashItem.id);
+            BugBashItemCommentActions.initializeComments(this.props.bugBashItem.id);
         }
     }
 
@@ -65,14 +66,12 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                     comments: [],
                     commentsLoading: false
                 });
-            }
-            else if (StoresHub.bugBashItemCommentStore.isLoaded(nextProps.bugBashItem.id)) {
+            } else if (StoresHub.bugBashItemCommentStore.isLoaded(nextProps.bugBashItem.id)) {
                 this.setState({
                     comments: StoresHub.bugBashItemCommentStore.getItem(nextProps.bugBashItem.id),
                     commentsLoading: false
                 });
-            }
-            else {
+            } else {
                 this.setState({
                     comments: null,
                     commentsLoading: true
@@ -97,7 +96,11 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
             return (
                 <div className="item-editor accepted-item">
                     <MessageBar messageBarType={MessageBarType.success} className="message-panel">
-                        This item has been accepted. Please open <a href={witUrl} target="_blank">#{item.workItemId}</a> to edit the workitem.
+                        This item has been accepted. Please open{" "}
+                        <a href={witUrl} target="_blank">
+                            #{item.workItemId}
+                        </a>{" "}
+                        to edit the workitem.
                     </MessageBar>
                 </div>
             );
@@ -116,27 +119,22 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
         const rejected = item.getFieldValue<boolean>(BugBashItemFieldNames.Rejected);
         const rejectReason = item.getFieldValue<string>(BugBashItemFieldNames.RejectReason);
         const rejectedBy = item.getFieldValue<IdentityRef>(BugBashItemFieldNames.RejectedBy);
-        const rejectedByName = (rejected && rejectedBy) ? rejectedBy.displayName : null;
+        const rejectedByName = rejected && rejectedBy ? rejectedBy.displayName : null;
 
         return (
             <div className="item-editor" onKeyDown={this._onEditorKeyDown} tabIndex={0}>
-                {this.state.loading && <Overlay className="loading-overlay"><Loading /></Overlay>}
-                {this.state.error
-                    && (
-                        <MessageBar
-                            messageBarType={MessageBarType.error}
-                            onDismiss={this._dismissErrorMessage}
-                            className="message-panel"
-                        >
-                            {this.state.error}
-                        </MessageBar>
-                    )}
+                {this.state.loading && (
+                    <Overlay className="loading-overlay">
+                        <Loading />
+                    </Overlay>
+                )}
+                {this.state.error && (
+                    <MessageBar messageBarType={MessageBarType.error} onDismiss={this._dismissErrorMessage} className="message-panel">
+                        {this.state.error}
+                    </MessageBar>
+                )}
 
-                <CommandBar
-                    className="item-editor-commandbar"
-                    items={this._getItemEditorCommands()}
-                    farItems={this._getItemEditorFarCommands()}
-                />
+                <CommandBar className="item-editor-commandbar" items={this._getItemEditorCommands()} farItems={this._getItemEditorFarCommands()} />
 
                 <div className="item-editor-controls">
                     <ThrottledTextField
@@ -149,7 +147,7 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                         onChanged={this._onTitleChange}
                     />
 
-                    { createdByInfo &&
+                    {createdByInfo && (
                         <div className="created-info overflow-ellipsis">
                             <TooltipHost
                                 content={createdByInfo}
@@ -160,20 +158,13 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                                 {createdByInfo}
                             </TooltipHost>
                         </div>
-                    }
+                    )}
 
                     <div className="item-team-container">
-                        <TeamPicker
-                            selectedOption={team}
-                            selectedValue={teamId}
-                            label="Assigned to team"
-                            delay={200}
-                            required={true}
-                            onChange={this._onTeamChange}
-                        />
+                        <TeamPicker selectedOption={team} selectedValue={teamId} label="Assigned to team" delay={200} required={true} onChange={this._onTeamChange} />
                     </div>
 
-                    { rejected &&
+                    {rejected && (
                         <ThrottledTextField
                             label="Reject reason"
                             info={`Rejected by ${rejectedByName}`}
@@ -185,7 +176,7 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                             required={true}
                             onChanged={this._onRejectReasonChange}
                         />
-                    }
+                    )}
 
                     <RichEditorComponent
                         className="item-description-container"
@@ -211,9 +202,7 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                         onChange={this._onCommentChange}
                     />
 
-                    <div className="item-comments-container">
-                        {this._renderComments()}
-                    </div>
+                    <div className="item-comments-container">{this._renderComments()}</div>
                 </div>
             </div>
         );
@@ -251,8 +240,11 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
 
             const menuItems: IContextualMenuItem[] = [
                 {
-                    key: "Accept", name: "Accept", title: "Create workitems from selected items",
-                    iconProps: {iconName: "Accept"}, className: !isMenuDisabled ? "acceptItemButton" : "",
+                    key: "Accept",
+                    name: "Accept",
+                    title: "Create workitems from selected items",
+                    iconProps: { iconName: "Accept" },
+                    className: !isMenuDisabled ? "acceptItemButton" : "",
                     disabled: isMenuDisabled,
                     onClick: this._acceptBugBashItem
                 },
@@ -274,43 +266,50 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
 
             if (!this.props.bugBashItem.isNew()) {
                 menuItems.push({
-                    key: "fullscreen", name: "",
+                    key: "fullscreen",
+                    name: "",
                     title: this.props.isMaximized ? "Go back to list" : "Go fullscreen",
-                    iconProps: {iconName: this.props.isMaximized ? "BackToWindow" : "FullScreen"},
+                    iconProps: { iconName: this.props.isMaximized ? "BackToWindow" : "FullScreen" },
                     onClick: this._toggleFullScreen
                 });
             }
             return menuItems;
-        }
-        else {
-            return [{
-                key: "Accept", name: "Auto accept on", className: "auto-accept-menuitem",
-                title: "Auto accept is turned on for this bug bash. A work item would be created as soon as a bug bash item is created",
-                iconProps: {iconName: "SkypeCircleCheck"}
-            }];
+        } else {
+            return [
+                {
+                    key: "Accept",
+                    name: "Auto accept on",
+                    className: "auto-accept-menuitem",
+                    title: "Auto accept is turned on for this bug bash. A work item would be created as soon as a bug bash item is created",
+                    iconProps: { iconName: "SkypeCircleCheck" }
+                }
+            ];
         }
     }
 
     private _getItemEditorCommands(): IContextualMenuItem[] {
         const menuItems: IContextualMenuItem[] = [
             {
-                key: "save", name: "",
-                iconProps: {iconName: "Save"},
-                disabled: !this.props.bugBashItem.isDirty()
-                        || !this.props.bugBashItem.isValid(),
+                key: "save",
+                name: "",
+                iconProps: { iconName: "Save" },
+                disabled: !this.props.bugBashItem.isDirty() || !this.props.bugBashItem.isValid(),
                 onClick: this._saveSelectedItem
             },
             {
-                key: "refresh", name: "",
-                iconProps: {iconName: "Refresh"},
+                key: "refresh",
+                name: "",
+                iconProps: { iconName: "Refresh" },
                 disabled: this.props.bugBashItem.isNew(),
                 onClick: () => {
                     this._refreshBugBashItem();
                 }
             },
             {
-                key: "undo", name: "",
-                title: "Undo changes", iconProps: {iconName: "Undo"},
+                key: "undo",
+                name: "",
+                title: "Undo changes",
+                iconProps: { iconName: "Undo" },
                 disabled: !this.props.bugBashItem.isDirty(),
                 onClick: () => {
                     this._revertBugBashItem();
@@ -321,7 +320,7 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
         if (!this.props.bugBashItem.isNew()) {
             menuItems.push({
                 key: "delete",
-                iconProps: {iconName: "Cancel", style: { color: "#da0a00", fontWeight: "bold" }},
+                iconProps: { iconName: "Cancel", style: { color: "#da0a00", fontWeight: "bold" } },
                 title: "Delete item",
                 onClick: () => {
                     this._deleteBugBashItem();
@@ -335,11 +334,10 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
         if (!this.props.bugBashItem.isNew()) {
             if (this.state.commentsLoading || !this.state.comments) {
                 return <Loading />;
-            }
-            else {
+            } else {
                 let comments = this.state.comments.slice();
                 comments = comments.sort((c1: IBugBashItemComment, c2: IBugBashItemComment) => {
-                    return -1 * defaultDateComparer(c1.createdDate, c2.createdDate);
+                    return defaultDateComparer(c1.createdDate, c2.createdDate) * -1;
                 });
 
                 return comments.map((comment: IBugBashItemComment, index: number) => {
@@ -347,26 +345,25 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
                         <ActivityItem
                             key={index}
                             className="item-comment"
-                            activityDescription={
-                                [
-                                    <span key={1} className="created-by">{comment.createdBy.displayName}</span>,
-                                    <span key={2} className="created-date">commented {friendly(comment.createdDate)}</span>,
-                                ]
-                            }
-                            activityPersonas={
-                                [
-                                    {
-                                        imageUrl: comment.createdBy.imageUrl
-                                    }
-                                ]
-                            }
+                            activityDescription={[
+                                <span key={1} className="created-by">
+                                    {comment.createdBy.displayName}
+                                </span>,
+                                <span key={2} className="created-date">
+                                    commented {friendly(comment.createdDate)}
+                                </span>
+                            ]}
+                            activityPersonas={[
+                                {
+                                    imageUrl: comment.createdBy.imageUrl
+                                }
+                            ]}
                             comments={<div className="message" dangerouslySetInnerHTML={{ __html: comment.content }} />}
                         />
                     );
                 });
             }
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -399,75 +396,73 @@ export class BugBashItemEditor extends BaseFluxComponent<IBugBashItemEditorProps
     }
 
     private _pasteImage = async (data: string): Promise<string> => {
-        const gitPath = StoresHub.bugBashStore.getItem(this.props.bugBashId).getFieldValue<string>(BugBashFieldNames.Title, true).replace(" ", "_");
+        const gitPath = StoresHub.bugBashStore
+            .getItem(this.props.bugBashId)
+            .getFieldValue<string>(BugBashFieldNames.Title, true)
+            .replace(" ", "_");
 
         try {
             return await copyImageToGitRepo(data, gitPath);
-        }
-        catch (e) {
+        } catch (e) {
             ErrorMessageActions.showErrorMessage(e, ErrorKeys.BugBashItemError);
             return null;
         }
-    }
+    };
 
     private _onEditorKeyDown = (e: React.KeyboardEvent<any>) => {
         if (e.ctrlKey && e.keyCode === 83) {
             e.preventDefault();
             this._saveSelectedItem();
         }
-    }
+    };
 
     private _onCommentChange = (newComment: string) => {
         this.props.bugBashItem.setComment(newComment);
-    }
+    };
 
     private _onTitleChange = (value: string) => {
         this._onChange(BugBashItemFieldNames.Title, value);
-    }
+    };
 
     private _onDescriptionChange = (value: string) => {
         this._onChange(BugBashItemFieldNames.Description, value);
-    }
+    };
 
     private _onRejectReasonChange = (value: string) => {
         this._onChange(BugBashItemFieldNames.RejectReason, value);
-    }
+    };
 
     private _onTeamChange = (team: WebApiTeam, value?: string) => {
         this._onChange(BugBashItemFieldNames.TeamId, team ? team.id : value);
-    }
+    };
 
     private _dismissErrorMessage = () => {
-        setTimeout(
-            () => {
-                ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashItemError);
-            },
-            0
-        );
-    }
+        setTimeout(() => {
+            ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashItemError);
+        }, 0);
+    };
 
     private _acceptBugBashItem = () => {
         this.props.bugBashItem.accept();
-    }
+    };
 
     private _rejectBugBashItem = (_ev: React.FormEvent<HTMLElement>, checked: boolean) => {
         this.props.bugBashItem.setFieldValue(BugBashItemFieldNames.Rejected, checked ? true : false, false);
         this.props.bugBashItem.setFieldValue<IdentityRef>(BugBashItemFieldNames.RejectedBy, checked ? getCurrentUser() : null, false);
         this.props.bugBashItem.setFieldValue(BugBashItemFieldNames.RejectReason, "");
-    }
+    };
 
     private _saveSelectedItem = () => {
         this.props.bugBashItem.save(this.props.bugBashId);
-    }
+    };
 
     private _toggleFullScreen = () => {
         if (this.props.isMaximized) {
             // go back to list
             navigate({ view: UrlActions.ACTION_RESULTS, id: this.props.bugBashId });
-        }
-        else {
+        } else {
             // open full screen item editor
-            navigate({view: UrlActions.ACTION_RESULTS, id: this.props.bugBashId, itemId: this.props.bugBashItem.id});
+            navigate({ view: UrlActions.ACTION_RESULTS, id: this.props.bugBashId, itemId: this.props.bugBashItem.id });
         }
-    }
+    };
 }

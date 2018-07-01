@@ -8,9 +8,7 @@
     "icons": {
         "default": "images/logo.png"
     },
-    "scopes": [ 
-    	"vso.work"
-	 ],
+    "scopes": ["vso.work"],
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services.Cloud"
@@ -20,12 +18,7 @@
             "version": "[15.1,)"
         }
     ],
-    "tags": [
-        "Work Item",
-        "Related",
-        "Form",
-        "Page"
-    ],
+    "tags": ["Work Item", "Related", "Form", "Page"],
     "content": {
         "details": {
             "path": "README.md"
@@ -34,22 +27,18 @@
     "repository": {
         "type": "git",
         "uri": "https://github.com/mohitbagra/vsts-extensions"
-    },  
+    },
     "branding": {
         "color": "#106ebe",
         "theme": "dark"
     },
-    "categories": [
-        "Plan and track"
-    ],
+    "categories": ["Plan and track"],
     "contributions": [
         {
             "id": "related-workitems-form-page",
             "type": "ms.vss-work-web.work-item-form-page",
             "description": "Related work items page",
-            "targets": [
-                "ms.vss-work-web.work-item-form"
-            ],
+            "targets": ["ms.vss-work-web.work-item-form"],
             "properties": {
                 "name": "Related Work items",
                 "uri": "html/index.html"

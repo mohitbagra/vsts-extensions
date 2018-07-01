@@ -1,5 +1,5 @@
-$TimeControl-element-width:40px;
-$Fabric-focus-border-color:#0078d4;
+$TimeControl-element-width: 40px;
+$Fabric-focus-border-color: #0078d4;
 $DateTimePickerHeaderHeight: 48px;
 
 .date-time-picker {
@@ -50,7 +50,7 @@ $DateTimePickerHeaderHeight: 48px;
         }
     }
 
-    .date-time-picker-calendar, 
+    .date-time-picker-calendar,
     .date-time-picker-time {
         display: inline-block;
         vertical-align: middle;
@@ -59,11 +59,11 @@ $DateTimePickerHeaderHeight: 48px;
     .date-time-picker-calendar {
         padding-top: 1px;
         margin-left: 20px;
-        margin-right: 20px; 
+        margin-right: 20px;
 
-         .ms-DatePicker {
+        .ms-DatePicker {
             margin-bottom: 0px; /* overriding Fabric calendar margin-bottom 17px to 0. This can be removed once office fabric issue gets resolved. */
-         }
+        }
     }
 }
 
@@ -72,7 +72,9 @@ $DateTimePickerHeaderHeight: 48px;
         float: left;
     }
 
-    .time-hour, .time-minute, .time-ampm {
+    .time-hour,
+    .time-minute,
+    .time-ampm {
         padding-right: 10px;
         width: $TimeControl-element-width;
     }

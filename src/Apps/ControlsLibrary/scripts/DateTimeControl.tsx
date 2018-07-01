@@ -36,16 +36,12 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
     public render(): JSX.Element {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const {value, expanded, hovered, focussed} = this.state;
+        const { value, expanded, hovered, focussed } = this.state;
         const isActive = hovered || focussed || expanded;
 
         return (
             <Fabric className="date-time-control">
-                <div
-                    className={css("date-time-picker-input-container", {borderless: !isActive})}
-                    onMouseOver={this._onMouseOver}
-                    onMouseOut={this._onMouseOut}
-                >
+                <div className={css("date-time-picker-input-container", { borderless: !isActive })} onMouseOver={this._onMouseOver} onMouseOut={this._onMouseOut}>
                     <input
                         type="text"
                         spellCheck={false}
@@ -57,15 +53,15 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
                         onFocus={this._onFocus}
                         onBlur={this._onBlur}
                     />
-                    { value &&
+                    {value && (
                         <IconButton
                             iconProps={{
-                                iconName: "Cancel",
+                                iconName: "Cancel"
                             }}
                             className="date-time-picker-icon clear-icon"
                             onClick={this._clearValue}
                         />
-                    }
+                    )}
                     <IconButton
                         iconProps={{
                             iconName: "Calendar"
@@ -74,16 +70,12 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
                         onClick={this._toggleCalendar}
                     />
                 </div>
-                { expanded &&
+                {expanded && (
                     <div className="arrow-box">
-                        <DateTimePicker
-                            onSelectDate={this._onSelectDate}
-                            today={today}
-                            value={value || today}
-                        />
+                        <DateTimePicker onSelectDate={this._onSelectDate} today={today} value={value || today} />
                     </div>
-                }
-                {expanded && <div style={{clear: "both"}} />}
+                )}
+                {expanded && <div style={{ clear: "both" }} />}
             </Fabric>
         );
     }
@@ -94,44 +86,40 @@ export class DateTimeControl extends WorkItemFieldControl<Date, IWorkItemFieldCo
             const formService = await getFormService();
             formService.save();
         }
-    }
+    };
 
     private _onMouseOver = () => {
-        this.setState({hovered: true});
-    }
+        this.setState({ hovered: true });
+    };
 
     private _onMouseOut = () => {
-        this.setState({hovered: false});
-    }
+        this.setState({ hovered: false });
+    };
 
     private _onFocus = () => {
-        this.setState({focussed: true});
-    }
+        this.setState({ focussed: true });
+    };
 
     private _onBlur = () => {
-        this.setState({focussed: false});
-    }
+        this.setState({ focussed: false });
+    };
 
     private _toggleCalendar = () => {
-        this.setState({expanded: !this.state.expanded});
-    }
+        this.setState({ expanded: !this.state.expanded });
+    };
 
     private _clearValue = () => {
         this.onValueChanged(null);
-    }
+    };
 
     private _onSelectDate = (newDate: Date) => {
         this.onValueChanged(newDate);
-    }
+    };
 }
 
 export function init() {
     initializeIcons();
     const inputs = WorkItemFieldControl.getInputs<IDateTimeControlInputs>();
 
-    ReactDOM.render(
-        <DateTimeControl
-            fieldName={inputs.FieldName}
-        />,
-        document.getElementById("ext-container"));
+    ReactDOM.render(<DateTimeControl fieldName={inputs.FieldName} />, document.getElementById("ext-container"));
 }

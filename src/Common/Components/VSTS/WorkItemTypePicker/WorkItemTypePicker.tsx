@@ -24,8 +24,7 @@ export class WorkItemTypePicker extends BaseFluxComponent<ISimpleComboProps<Work
             this.setState({
                 allWits: this._workItemTypeStore.getAll()
             });
-        }
-        else {
+        } else {
             WorkItemTypeActions.initializeWorkItemTypes();
         }
     }
@@ -55,5 +54,4 @@ export class WorkItemTypePicker extends BaseFluxComponent<ISimpleComboProps<Work
     protected getStores(): BaseStore<any, any, any>[] {
         return [this._workItemTypeStore];
     }
-
 }

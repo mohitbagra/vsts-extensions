@@ -54,8 +54,16 @@ export class RuleGroupEditor extends BaseFluxComponent<IRuleGroupEditorProps, IR
                 onDismiss={this.props.onDismiss}
             >
                 <div className="rule-group-editor" onKeyDown={this._onKeyDown}>
-                    {this.state.error && <MessageBar className="rule-group-editor-error" messageBarType={MessageBarType.error}>{this.state.error}</MessageBar>}
-                    {this.state.saving && <Overlay className="loading-overlay"><Loading /></Overlay>}
+                    {this.state.error && (
+                        <MessageBar className="rule-group-editor-error" messageBarType={MessageBarType.error}>
+                            {this.state.error}
+                        </MessageBar>
+                    )}
+                    {this.state.saving && (
+                        <Overlay className="loading-overlay">
+                            <Loading />
+                        </Overlay>
+                    )}
                     <ThrottledTextField
                         className="form-control"
                         label="Name"
@@ -71,7 +79,7 @@ export class RuleGroupEditor extends BaseFluxComponent<IRuleGroupEditorProps, IR
                         className="form-control"
                         maxLength={SizeLimits.DescriptionMaxLength}
                         label="Description"
-                        style={{height: "200px"}}
+                        style={{ height: "200px" }}
                         multiline={true}
                         resizable={false}
                         onChanged={this._onDescriptionChange}
@@ -105,33 +113,29 @@ export class RuleGroupEditor extends BaseFluxComponent<IRuleGroupEditorProps, IR
                 >
                     OK
                 </PrimaryButton>
-                <DefaultButton
-                    onClick={this.props.onDismiss}
-                >
-                    Cancel
-                </DefaultButton>
+                <DefaultButton onClick={this.props.onDismiss}>Cancel</DefaultButton>
             </div>
         );
-    }
+    };
 
     private _onNameChange = (value: string) => {
         this.state.ruleGroup.setFieldValue<string>(RuleGroupFieldNames.Name, value);
-    }
+    };
 
     private _onDescriptionChange = (value: string) => {
         this.state.ruleGroup.setFieldValue<string>(RuleGroupFieldNames.Description, value);
-    }
+    };
 
     private _onToggleDisable = (_ev: React.FormEvent<HTMLElement>, isChecked: boolean) => {
         this.state.ruleGroup.setFieldValue<boolean>(RuleGroupFieldNames.Disabled, isChecked);
-    }
+    };
 
     private _onKeyDown = (e: React.KeyboardEvent<any>) => {
         if (e.ctrlKey && e.keyCode === 83) {
             e.preventDefault();
             this._saveRuleGroup();
         }
-    }
+    };
 
     private _saveRuleGroup = async () => {
         if (!this.state.ruleGroup.isDirty() || !this.state.ruleGroup.isValid() || this.state.saving) {
@@ -139,23 +143,21 @@ export class RuleGroupEditor extends BaseFluxComponent<IRuleGroupEditorProps, IR
         }
 
         try {
-            this.setState({saving: true});
+            this.setState({ saving: true });
             if (this.state.ruleGroup.isNew) {
                 await RuleGroupActions.createRuleGroup(this.props.workItemTypeName, this.state.ruleGroup.updatedModel);
-            }
-            else {
+            } else {
                 await RuleGroupActions.updateRuleGroup(this.props.workItemTypeName, this.state.ruleGroup.updatedModel);
             }
 
-            this.setState({saving: false});
+            this.setState({ saving: false });
             this.props.onDismiss();
+        } catch (e) {
+            this.setState({ saving: false, error: e });
         }
-        catch (e) {
-            this.setState({saving: false, error: e});
-        }
-    }
+    };
 
     private _onModelChanged = () => {
-        this.setState({ruleGroup: this.state.ruleGroup});
-    }
+        this.setState({ ruleGroup: this.state.ruleGroup });
+    };
 }

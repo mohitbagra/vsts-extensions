@@ -26,16 +26,21 @@ export namespace RelatedWorkItemsActions {
         ActionsHub.UpdateWorkItemInStore.invoke(workItem);
     }
 
-    export async function refresh(query: {project: string, wiql: string}, top: number) {
+    export async function refresh(query: { project: string; wiql: string }, top: number) {
         if (!StoresHub.relatedWorkItemsStore.isLoading()) {
             StoresHub.relatedWorkItemsStore.setLoading(true);
 
             let workItems: WorkItem[];
-            const queryResult = await WitClient.getClient().queryByWiql({query: query.wiql}, query.project, null, false, top);
+            const queryResult = await WitClient.getClient().queryByWiql({ query: query.wiql }, query.project, null, false, top);
             if (queryResult.workItems && queryResult.workItems.length > 0) {
-                workItems = await WitClient.getClient().getWorkItems(queryResult.workItems.map(w => w.id), Constants.DEFAULT_FIELDS_TO_RETRIEVE, null, null, WorkItemErrorPolicy.Omit);
-            }
-            else {
+                workItems = await WitClient.getClient().getWorkItems(
+                    queryResult.workItems.map(w => w.id),
+                    Constants.DEFAULT_FIELDS_TO_RETRIEVE,
+                    null,
+                    null,
+                    WorkItemErrorPolicy.Omit
+                );
+            } else {
                 workItems = [];
             }
 

@@ -12,15 +12,13 @@ export namespace ClassificationNodeActions {
     export async function initializeAreaPaths() {
         if (classificationNodeStore.isLoaded(ClassificationNodeKey.Area)) {
             ClassificationNodeActionsHub.InitializeAreaPaths.invoke(null);
-        }
-        else if (!classificationNodeStore.isLoading(ClassificationNodeKey.Area)) {
+        } else if (!classificationNodeStore.isLoading(ClassificationNodeKey.Area)) {
             classificationNodeStore.setLoading(true, ClassificationNodeKey.Area);
             try {
                 const rootNode: WorkItemClassificationNode = await WitClient.getClient().getClassificationNode(VSS.getWebContext().project.id, TreeStructureGroup.Areas, null, 5);
                 ClassificationNodeActionsHub.InitializeAreaPaths.invoke(rootNode);
                 classificationNodeStore.setLoading(false, ClassificationNodeKey.Area);
-            }
-            catch (e) {
+            } catch (e) {
                 classificationNodeStore.setLoading(false, ClassificationNodeKey.Area);
                 throw e.message;
             }
@@ -30,16 +28,18 @@ export namespace ClassificationNodeActions {
     export async function initializeIterationPaths() {
         if (classificationNodeStore.isLoaded(ClassificationNodeKey.Iteration)) {
             ClassificationNodeActionsHub.InitializeIterationPaths.invoke(null);
-        }
-        else if (!classificationNodeStore.isLoading(ClassificationNodeKey.Iteration)) {
+        } else if (!classificationNodeStore.isLoading(ClassificationNodeKey.Iteration)) {
             classificationNodeStore.setLoading(true, ClassificationNodeKey.Iteration);
             try {
-                const rootNode: WorkItemClassificationNode = await WitClient.getClient()
-                                                                    .getClassificationNode(VSS.getWebContext().project.id, TreeStructureGroup.Iterations, null, 5);
+                const rootNode: WorkItemClassificationNode = await WitClient.getClient().getClassificationNode(
+                    VSS.getWebContext().project.id,
+                    TreeStructureGroup.Iterations,
+                    null,
+                    5
+                );
                 ClassificationNodeActionsHub.InitializeIterationPaths.invoke(rootNode);
                 classificationNodeStore.setLoading(false, ClassificationNodeKey.Iteration);
-            }
-            catch (e) {
+            } catch (e) {
                 classificationNodeStore.setLoading(false, ClassificationNodeKey.Iteration);
                 throw e.message;
             }

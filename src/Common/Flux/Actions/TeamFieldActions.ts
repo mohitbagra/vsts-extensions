@@ -10,8 +10,7 @@ export namespace TeamFieldActions {
     export async function initializeTeamFields(teamId: string) {
         if (teamFieldStore.isLoaded(teamId)) {
             TeamFieldActionsHub.InitializeTeamFieldItem.invoke(null);
-        }
-        else if (!teamFieldStore.isLoading(teamId)) {
+        } else if (!teamFieldStore.isLoading(teamId)) {
             teamFieldStore.setLoading(true, teamId);
             try {
                 const teamContext: TeamContext = {
@@ -22,10 +21,9 @@ export namespace TeamFieldActions {
                 };
 
                 const teamFieldValues = await WorkClient.getClient().getTeamFieldValues(teamContext);
-                TeamFieldActionsHub.InitializeTeamFieldItem.invoke({teamId: teamId, teamFieldValues: teamFieldValues});
+                TeamFieldActionsHub.InitializeTeamFieldItem.invoke({ teamId: teamId, teamFieldValues: teamFieldValues });
                 teamFieldStore.setLoading(false, teamId);
-            }
-            catch (e) {
+            } catch (e) {
                 teamFieldStore.setLoading(false, teamId);
                 throw e.message;
             }

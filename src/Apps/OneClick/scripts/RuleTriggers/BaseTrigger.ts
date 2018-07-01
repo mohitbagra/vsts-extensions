@@ -7,7 +7,7 @@ import { ITrigger } from "OneClick/Interfaces";
 import { Observable } from "VSSUI/Utilities/Observable";
 
 export abstract class BaseTrigger extends Observable<void> {
-    public static getNewTrigger<TTrigger extends BaseTrigger>(triggerType: new(model: ITrigger) => TTrigger, triggerName: string): BaseTrigger {
+    public static getNewTrigger<TTrigger extends BaseTrigger>(triggerType: new (model: ITrigger) => TTrigger, triggerName: string): BaseTrigger {
         return new triggerType({
             name: triggerName,
             attributes: null
@@ -22,8 +22,8 @@ export abstract class BaseTrigger extends Observable<void> {
     constructor(model: ITrigger) {
         super();
         this._name = model.name;
-        this._originalAttributes = model.attributes ? {...model.attributes} : null;  // for new models, origina would be null
-        this._updates = model.attributes ? {} : this.defaultAttributes();  // if its a new trigger, initialize updates with defaults
+        this._originalAttributes = model.attributes ? { ...model.attributes } : null; // for new models, origina would be null
+        this._updates = model.attributes ? {} : this.defaultAttributes(); // if its a new trigger, initialize updates with defaults
         this._id = newGuid();
     }
 
@@ -40,7 +40,7 @@ export abstract class BaseTrigger extends Observable<void> {
     }
 
     public get updatedAttributes(): IDictionaryStringTo<any> {
-        return {...(this._originalAttributes || {}), ...(this._updates || {})};
+        return { ...(this._originalAttributes || {}), ...(this._updates || {}) };
     }
 
     public dispose() {
@@ -69,9 +69,8 @@ export abstract class BaseTrigger extends Observable<void> {
 
     public getAttribute<T>(attributeName: string, original?: boolean): T {
         if (original) {
-            return this._originalAttributes && this._originalAttributes[attributeName] as T;
-        }
-        else {
+            return this._originalAttributes && (this._originalAttributes[attributeName] as T);
+        } else {
             return this.updatedAttributes[attributeName] as T;
         }
     }

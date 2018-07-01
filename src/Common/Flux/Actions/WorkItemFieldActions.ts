@@ -11,16 +11,14 @@ export namespace WorkItemFieldActions {
     export async function initializeWorkItemFields() {
         if (workItemFieldStore.isLoaded()) {
             WorkItemFieldActionsHub.InitializeWorkItemFields.invoke(null);
-        }
-        else if (!workItemFieldStore.isLoading()) {
+        } else if (!workItemFieldStore.isLoading()) {
             workItemFieldStore.setLoading(true);
             try {
                 const workItemFields = await WitClient.getClient().getFields(VSS.getWebContext().project.id);
                 workItemFields.sort((a: WorkItemField, b: WorkItemField) => localeIgnoreCaseComparer(a.name, b.name));
                 WorkItemFieldActionsHub.InitializeWorkItemFields.invoke(workItemFields);
                 workItemFieldStore.setLoading(false);
-            }
-            catch (e) {
+            } catch (e) {
                 workItemFieldStore.setLoading(false);
                 throw e.message;
             }

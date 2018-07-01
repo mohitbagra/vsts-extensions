@@ -11,16 +11,14 @@ export namespace GitRepoActions {
     export async function initializeGitRepos() {
         if (gitRepoStore.isLoaded()) {
             GitRepoActionsHub.InitializeGitRepos.invoke(null);
-        }
-        else if (!gitRepoStore.isLoading()) {
+        } else if (!gitRepoStore.isLoading()) {
             gitRepoStore.setLoading(true);
             try {
-                const gitRepos =  await GitClient.getClient().getRepositories(VSS.getWebContext().project.id);
+                const gitRepos = await GitClient.getClient().getRepositories(VSS.getWebContext().project.id);
                 gitRepos.sort((a: GitRepository, b: GitRepository) => localeIgnoreCaseComparer(a.name, b.name));
                 GitRepoActionsHub.InitializeGitRepos.invoke(gitRepos);
                 gitRepoStore.setLoading(false);
-            }
-            catch (e) {
+            } catch (e) {
                 gitRepoStore.setLoading(false);
                 throw e.message;
             }

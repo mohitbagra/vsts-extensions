@@ -32,8 +32,7 @@ export namespace BugBashActions {
     export function initializeAllBugBashes() {
         if (StoresHub.bugBashStore.isLoaded()) {
             BugBashActionsHub.InitializeAllBugBashes.invoke(null);
-        }
-        else {
+        } else {
             refreshAllBugBashes(false);
         }
     }
@@ -54,8 +53,7 @@ export namespace BugBashActions {
     export function initializeBugBash(bugBashId: string) {
         if (StoresHub.bugBashStore.isLoaded(bugBashId)) {
             BugBashActionsHub.InitializeBugBash.invoke(null);
-        }
-        else {
+        } else {
             refreshBugBash(bugBashId, false);
         }
     }
@@ -71,13 +69,11 @@ export namespace BugBashActions {
                 StoresHub.bugBashStore.setLoading(false, bugBashId);
 
                 ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashError);
-            }
-            else if (bugBashModel && !stringEquals(VSS.getWebContext().project.id, bugBashModel.projectId, true)) {
+            } else if (bugBashModel && !stringEquals(VSS.getWebContext().project.id, bugBashModel.projectId, true)) {
                 StoresHub.bugBashStore.setLoading(false, bugBashId);
                 ErrorMessageActions.showErrorMessage(`Bug Bash "${bugBashId}" is out of scope of current project.`, ErrorKeys.DirectoryPageError);
                 error = true;
-            }
-            else {
+            } else {
                 if (removeUnknownBugBash) {
                     BugBashActionsHub.DeleteBugBash.invoke(bugBashId);
                 }
@@ -103,8 +99,7 @@ export namespace BugBashActions {
                 StoresHub.bugBashStore.setLoading(false, bugBashModel.id);
 
                 ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashError);
-            }
-            catch (e) {
+            } catch (e) {
                 StoresHub.bugBashStore.setLoading(false, bugBashModel.id);
                 ErrorMessageActions.showErrorMessage(e, ErrorKeys.DirectoryPageError);
             }
@@ -124,8 +119,7 @@ export namespace BugBashActions {
                 ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashError);
 
                 navigate({ view: UrlActions.ACTION_EDIT, id: createdBugBashModel.id }, true);
-            }
-            catch (e) {
+            } catch (e) {
                 StoresHub.bugBashStore.setLoading(false);
                 ErrorMessageActions.showErrorMessage(e, ErrorKeys.BugBashError);
             }

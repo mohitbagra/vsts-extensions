@@ -89,7 +89,7 @@ export enum FormEvents {
     onSaved = "onSaved",
     onRefreshed = "onRefreshed",
     onReset = "onReset",
-    onUnloaded = "onUnloaded",
+    onUnloaded = "onUnloaded"
 }
 
 export enum RuleGroupFieldNames {

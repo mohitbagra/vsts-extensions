@@ -24,7 +24,6 @@ interface ISliderControlProps extends IWorkItemFieldControlProps {
 }
 
 export class SliderControl extends WorkItemFieldControl<number, ISliderControlProps, IWorkItemFieldControlState<number>> {
-
     public render(): JSX.Element {
         return (
             <Fabric className="fabric-container">
@@ -38,14 +37,16 @@ export class SliderControl extends WorkItemFieldControl<number, ISliderControlPr
                     onChange={this._onChange}
                 />
 
-                <span className="slider-value" title={`${this.state.value || 0}`}>{this.state.value || 0}</span>
+                <span className="slider-value" title={`${this.state.value || 0}`}>
+                    {this.state.value || 0}
+                </span>
             </Fabric>
         );
     }
 
     private _onChange = (newValue: number) => {
         this.onValueChanged(parseFloat(newValue.toPrecision(10)));
-    }
+    };
 }
 
 export function init() {
@@ -53,11 +54,7 @@ export function init() {
     const inputs = WorkItemFieldControl.getInputs<ISliderControlInputs>();
 
     ReactDOM.render(
-        <SliderControl
-            fieldName={inputs.FieldName}
-            minValue={parseFloat(inputs.MinValue)}
-            maxValue={parseFloat(inputs.MaxValue)}
-            stepSize={parseFloat(inputs.StepSize)}
-        />,
-        document.getElementById("ext-container"));
+        <SliderControl fieldName={inputs.FieldName} minValue={parseFloat(inputs.MinValue)} maxValue={parseFloat(inputs.MaxValue)} stepSize={parseFloat(inputs.StepSize)} />,
+        document.getElementById("ext-container")
+    );
 }

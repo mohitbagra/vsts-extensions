@@ -32,7 +32,7 @@ export class SettingsStore extends BaseStore<IDictionaryStringTo<any>, any, stri
     }
 
     protected initializeActionListeners() {
-        SettingsActionsHub.InitializeSetting.addListener((data: {key: SettingKey, value: any}) => {
+        SettingsActionsHub.InitializeSetting.addListener((data: { key: SettingKey; value: any }) => {
             if (data) {
                 this.items[data.key.toLowerCase()] = data.value;
             }
@@ -40,7 +40,7 @@ export class SettingsStore extends BaseStore<IDictionaryStringTo<any>, any, stri
             this.emitChanged();
         });
 
-        SettingsActionsHub.UpdateSetting.addListener((data: {key: SettingKey, value: any}) => {
+        SettingsActionsHub.UpdateSetting.addListener((data: { key: SettingKey; value: any }) => {
             if (data) {
                 this.items[data.key.toLowerCase()] = data.value;
             }

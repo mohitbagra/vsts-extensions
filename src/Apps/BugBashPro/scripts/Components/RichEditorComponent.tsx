@@ -20,8 +20,7 @@ export class RichEditorComponent extends BaseFluxComponent<IRichEditorProps, IBa
     public render(): JSX.Element {
         if (this.state.loading) {
             return <Loading />;
-        }
-        else {
+        } else {
             return <RichEditor {...this.props} />;
         }
     }

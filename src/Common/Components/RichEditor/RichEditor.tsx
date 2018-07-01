@@ -99,8 +99,7 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         if (nextProps.disabled !== this.props.disabled) {
             if (nextProps.disabled) {
                 this._contentDiv.setAttribute("contenteditable", "false");
-            }
-            else {
+            } else {
                 this._contentDiv.setAttribute("contenteditable", "true");
             }
         }
@@ -112,7 +111,7 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
         return (
             <div className={css("rich-editor-container", this.props.className)}>
                 {this.props.label && <InfoLabel className="rich-editor-label" label={this.props.label} info={this.props.info} />}
-                <div className="progress-bar" style={{visibility: this.state.loading ? "visible" : "hidden"}} />
+                <div className="progress-bar" style={{ visibility: this.state.loading ? "visible" : "hidden" }} />
                 {this._renderToolbar()}
                 <div className="rich-editor" ref={this._onContentDivRef} />
                 <div className="rich-editor-dialog-container" />
@@ -162,51 +161,49 @@ export class RichEditor extends BaseFluxComponent<IRichEditorProps, IRichEditorS
 
     private _getEditor = (): Editor => {
         return this._editor;
-    }
+    };
 
     private _onContentDivRef = (ref: HTMLDivElement) => {
         this._contentDiv = ref;
-    }
+    };
 
     private _onChange = () => {
         this._disposeDelayedFunction();
 
         if (this.props.delay == null) {
             this._fireChange();
-        }
-        else {
+        } else {
             this._delayedFunction = delay(this, this.props.delay, () => {
                 this._fireChange();
             });
         }
-    }
+    };
 
     private _fireChange = () => {
         this._disposeDelayedFunction();
 
         const value = this._editor.getContent();
         if (value !== this.state.value) {
-            this.setState({value: value}, () => {
+            this.setState({ value: value }, () => {
                 this.props.onChange(value);
             });
         }
-    }
+    };
 
     private _getImageUrl = async (data: string): Promise<string> => {
         if (!this.props.editorOptions || !this.props.editorOptions.getPastedImageUrl) {
             return null;
         }
 
-        this.setState({loading: true});
+        this.setState({ loading: true });
 
         try {
             const imageUrl = await this.props.editorOptions.getPastedImageUrl(data);
-            this.setState({loading: false});
+            this.setState({ loading: false });
             return imageUrl;
-        }
-        catch (e) {
-            this.setState({loading: false});
+        } catch (e) {
+            this.setState({ loading: false });
             return null;
         }
-    }
+    };
 }

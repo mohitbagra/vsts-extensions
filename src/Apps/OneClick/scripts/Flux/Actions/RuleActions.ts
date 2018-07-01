@@ -8,12 +8,11 @@ export namespace RuleActions {
     export async function initializeRules(ruleGroupId: string) {
         if (StoresHub.ruleStore.isLoaded(ruleGroupId)) {
             RuleActionsHub.InitializeRules.invoke(null);
-        }
-        else if (!StoresHub.ruleStore.isLoading(ruleGroupId)) {
+        } else if (!StoresHub.ruleStore.isLoading(ruleGroupId)) {
             StoresHub.ruleStore.setLoading(true, ruleGroupId);
             const rules = await RulesDataService.loadRulesForGroup(ruleGroupId, VSS.getWebContext().project.id);
 
-            RuleActionsHub.InitializeRules.invoke({ruleGroupId: ruleGroupId, rules: rules});
+            RuleActionsHub.InitializeRules.invoke({ ruleGroupId: ruleGroupId, rules: rules });
             StoresHub.ruleStore.setLoading(false, ruleGroupId);
         }
     }
@@ -23,7 +22,7 @@ export namespace RuleActions {
             StoresHub.ruleStore.setLoading(true, ruleGroupId);
             const rules = await RulesDataService.loadRulesForGroup(ruleGroupId, VSS.getWebContext().project.id);
 
-            RuleActionsHub.RefreshRules.invoke({ruleGroupId: ruleGroupId, rules: rules});
+            RuleActionsHub.RefreshRules.invoke({ ruleGroupId: ruleGroupId, rules: rules });
             StoresHub.ruleStore.setLoading(false, ruleGroupId);
         }
     }
@@ -31,7 +30,7 @@ export namespace RuleActions {
     export async function createRule(ruleGroupId: string, rule: IRule) {
         if (!StoresHub.ruleStore.isLoading(ruleGroupId)) {
             const createdRule = await RulesDataService.createRule(ruleGroupId, rule);
-            RuleActionsHub.CreateRule.invoke({ruleGroupId: ruleGroupId, rule: createdRule});
+            RuleActionsHub.CreateRule.invoke({ ruleGroupId: ruleGroupId, rule: createdRule });
 
             SettingsDataService.updateCacheStamp(rule.workItemType, rule.projectId);
         }
@@ -43,12 +42,11 @@ export namespace RuleActions {
             try {
                 const updatedRule = await RulesDataService.updateRule(ruleGroupId, rule);
 
-                RuleActionsHub.UpdateRule.invoke({ruleGroupId: ruleGroupId, rule: updatedRule});
+                RuleActionsHub.UpdateRule.invoke({ ruleGroupId: ruleGroupId, rule: updatedRule });
                 StoresHub.ruleStore.setLoading(false, rule.id);
 
                 SettingsDataService.updateCacheStamp(rule.workItemType, rule.projectId);
-            }
-            catch (e) {
+            } catch (e) {
                 StoresHub.ruleStore.setLoading(false, rule.id);
                 throw e;
             }
@@ -58,7 +56,7 @@ export namespace RuleActions {
     export async function deleteRule(ruleGroupId: string, rule: IRule) {
         if (!StoresHub.ruleStore.isLoading(rule.id)) {
             await RulesDataService.deleteRule(ruleGroupId, rule.id);
-            RuleActionsHub.DeleteRule.invoke({ruleGroupId: ruleGroupId, rule: rule});
+            RuleActionsHub.DeleteRule.invoke({ ruleGroupId: ruleGroupId, rule: rule });
 
             SettingsDataService.updateCacheStamp(rule.workItemType, rule.projectId);
         }

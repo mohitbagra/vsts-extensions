@@ -13,8 +13,7 @@ export namespace BugBashItemCommentActions {
     export function initializeComments(bugBashItemId: string) {
         if (StoresHub.bugBashItemCommentStore.isLoaded(bugBashItemId)) {
             BugBashItemCommentActionsHub.InitializeComments.invoke(null);
-        }
-        else {
+        } else {
             refreshComments(bugBashItemId);
         }
     }
@@ -25,7 +24,7 @@ export namespace BugBashItemCommentActions {
 
             const comments = await BugBashItemCommentDataService.loadComments(bugBashItemId);
 
-            BugBashItemCommentActionsHub.InitializeComments.invoke({bugBashItemId: bugBashItemId, comments: comments});
+            BugBashItemCommentActionsHub.InitializeComments.invoke({ bugBashItemId: bugBashItemId, comments: comments });
             StoresHub.bugBashItemCommentStore.setLoading(false, bugBashItemId);
         }
     }
@@ -41,10 +40,9 @@ export namespace BugBashItemCommentActions {
             try {
                 const savedComment = await BugBashItemCommentDataService.createComment(bugBashItemId, commentString);
 
-                BugBashItemCommentActionsHub.CreateComment.invoke({bugBashItemId: bugBashItemId, comment: savedComment});
+                BugBashItemCommentActionsHub.CreateComment.invoke({ bugBashItemId: bugBashItemId, comment: savedComment });
                 StoresHub.bugBashItemCommentStore.setLoading(false, bugBashItemId);
-            }
-            catch (e) {
+            } catch (e) {
                 StoresHub.bugBashItemCommentStore.setLoading(false, bugBashItemId);
                 throw e;
             }

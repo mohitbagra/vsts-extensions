@@ -31,7 +31,7 @@
 
             .date-time-picker-input {
                 flex: 1;
-                margin:0;
+                margin: 0;
                 padding: 2px;
                 box-sizing: border-box;
                 height: 24px;
@@ -52,7 +52,8 @@
             margin-top: 12px;
             background: #fff;
 
-            &:after, &:before {
+            &:after,
+            &:before {
                 bottom: calc(100% - 1px);
                 left: calc(100% - 20px);
                 border: solid transparent;
@@ -62,7 +63,7 @@
                 position: absolute;
                 pointer-events: none;
             }
-            
+
             &:after {
                 border-color: rgba(255, 255, 255, 0);
                 border-bottom-color: #fff;
@@ -76,7 +77,7 @@
                 border-width: 11px;
                 margin-left: -11px;
             }
-            
+
             .date-time-picker {
                 border: 1px solid #eaeaea;
             }

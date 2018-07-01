@@ -11,16 +11,15 @@ async function getDataService(): Promise<ExtensionDataService> {
 }
 
 /**
-* Read user/account scoped documents
-*/
+ * Read user/account scoped documents
+ */
 export async function readDocuments<T>(key: string, isPrivate?: boolean): Promise<T[]> {
     const dataService: ExtensionDataService = await getDataService();
     let data: T[];
 
     try {
         data = await dataService.getDocuments(key, isPrivate ? { scopeType: "User" } : undefined);
-    }
-    catch (e) {
+    } catch (e) {
         data = [];
     }
 
@@ -28,15 +27,14 @@ export async function readDocuments<T>(key: string, isPrivate?: boolean): Promis
 }
 
 /**
-* Read a specific user/account scoped document
-*/
+ * Read a specific user/account scoped document
+ */
 export async function readDocument<T>(key: string, id: string, defaultValue?: T, isPrivate?: boolean): Promise<T> {
     const dataService: ExtensionDataService = await getDataService();
     let data: T;
     try {
         data = await dataService.getDocument(key, id, isPrivate ? { scopeType: "User" } : undefined);
-    }
-    catch (e) {
+    } catch (e) {
         data = defaultValue;
     }
 
@@ -44,70 +42,69 @@ export async function readDocument<T>(key: string, id: string, defaultValue?: T,
 }
 
 /**
-* Create user/account scoped document
-*/
+ * Create user/account scoped document
+ */
 export async function createDocument<T>(key: string, data: T, isPrivate?: boolean): Promise<T> {
     const dataService: ExtensionDataService = await getDataService();
     return dataService.createDocument(key, data, isPrivate ? { scopeType: "User" } : undefined);
 }
 
 /**
-* Update user/account scoped document
-*/
+ * Update user/account scoped document
+ */
 export async function updateDocument<T>(key: string, data: T, isPrivate?: boolean): Promise<T> {
     const dataService: ExtensionDataService = await getDataService();
     return dataService.updateDocument(key, data, isPrivate ? { scopeType: "User" } : undefined);
 }
 
 /**
-* Add or Update user/account scoped document
-*/
+ * Add or Update user/account scoped document
+ */
 export async function addOrUpdateDocument<T>(key: string, data: T, isPrivate?: boolean): Promise<T> {
     const dataService: ExtensionDataService = await getDataService();
     return dataService.setDocument(key, data, isPrivate ? { scopeType: "User" } : undefined);
 }
 
 /**
-* Delete user/account scoped document
-*/
+ * Delete user/account scoped document
+ */
 export async function deleteDocument(key: string, id: string, isPrivate?: boolean): Promise<void> {
     const dataService: ExtensionDataService = await getDataService();
     return dataService.deleteDocument(key, id, isPrivate ? { scopeType: "User" } : undefined);
 }
 
 /**
-* Read user extension settings
-*/
+ * Read user extension settings
+ */
 export async function readSetting<T>(key: string, defaultValue?: T, isPrivate?: boolean): Promise<T> {
     const dataService: ExtensionDataService = await getDataService();
     try {
         const data = await dataService.getValue<T>(key, isPrivate ? { scopeType: "User" } : undefined);
         return data == null ? defaultValue : data;
-    }
-    catch (e) {
+    } catch (e) {
         return defaultValue;
     }
 }
 
 /**
-* Write user extension settings
-*/
+ * Write user extension settings
+ */
 export async function writeSetting<T>(key: string, data: T, isPrivate?: boolean): Promise<T> {
     const dataService: ExtensionDataService = await getDataService();
     return dataService.setValue<T>(key, data, isPrivate ? { scopeType: "User" } : undefined);
 }
 
 /**
-* Query collection names
-*/
+ * Query collection names
+ */
 export async function queryCollectionNames(collectionNames: string[]): Promise<ExtensionDataCollection[]> {
     const dataService: ExtensionDataService = await getDataService();
     return dataService.queryCollectionNames(collectionNames);
 }
 
 /**
-* Query collection
-*/
+ * Query collection
+ */
 export async function queryCollections(collections: ExtensionDataCollection[]): Promise<ExtensionDataCollection[]> {
     const dataService: ExtensionDataService = await getDataService();
     return dataService.queryCollections(collections);

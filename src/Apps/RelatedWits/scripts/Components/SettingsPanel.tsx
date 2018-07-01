@@ -48,21 +48,26 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
         const workItemFormService = await getFormService();
         const fields = await workItemFormService.getFields();
 
-        const sortableFields = fields.filter(field =>
-            Constants.SortableFieldTypes.indexOf(field.type) !== -1
-            && !contains(Constants.ExcludedFields, field.referenceName, (f1, f2) => stringEquals(f1, f2, true))).sort(this._fieldNameComparer);
+        const sortableFields = fields
+            .filter(
+                field => Constants.SortableFieldTypes.indexOf(field.type) !== -1 && !contains(Constants.ExcludedFields, field.referenceName, (f1, f2) => stringEquals(f1, f2, true))
+            )
+            .sort(this._fieldNameComparer);
 
-        const queryableFields = fields.filter(field =>
-            (Constants.QueryableFieldTypes.indexOf(field.type) !== -1 || stringEquals(field.referenceName, "System.Tags", true))
-            && !contains(Constants.ExcludedFields, field.referenceName, (f1, f2) => stringEquals(f1, f2, true)));
+        const queryableFields = fields.filter(
+            field =>
+                (Constants.QueryableFieldTypes.indexOf(field.type) !== -1 || stringEquals(field.referenceName, "System.Tags", true)) &&
+                !contains(Constants.ExcludedFields, field.referenceName, (f1, f2) => stringEquals(f1, f2, true))
+        );
 
-        const sortField = first(sortableFields, field => stringEquals(field.referenceName, this.props.settings.sortByField, true)) ||
-                          first(sortableFields, field => stringEquals(field.referenceName, Constants.DEFAULT_SORT_BY_FIELD, true));
+        const sortField =
+            first(sortableFields, field => stringEquals(field.referenceName, this.props.settings.sortByField, true)) ||
+            first(sortableFields, field => stringEquals(field.referenceName, Constants.DEFAULT_SORT_BY_FIELD, true));
 
         let queryFields = this.props.settings.fields.map(fName => first(queryableFields, field => stringEquals(field.referenceName, fName, true)));
         queryFields = queryFields.filter(f => f != null);
 
-        this.setState({loading: false, sortableFields: sortableFields, queryableFields: queryableFields, sortField: sortField, queryFields: queryFields});
+        this.setState({ loading: false, sortableFields: sortableFields, queryableFields: queryableFields, sortField: sortField, queryFields: queryFields });
     }
 
     public render(): JSX.Element {
@@ -88,21 +93,12 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
                 <div className="settings-controls">
                     <div className="settings-control-container">
                         <InfoLabel label="Max count" info="Maximum number of work items to retrieve" />
-                        <TextField
-                            value={`${this.state.top}`}
-                            onChanged={this._onTopValueChange}
-                            onGetErrorMessage={this._getTopError}
-                        />
+                        <TextField value={`${this.state.top}`} onChanged={this._onTopValueChange} onGetErrorMessage={this._getTopError} />
                     </div>
 
                     <div className="settings-control-container">
                         <InfoLabel label="Sort by" info="Select a field which will be used to sort the results" />
-                        <Dropdown
-                            className="sort-field-dropdown"
-                            onRenderList={this._onRenderCallout}
-                            options={sortableFieldOptions}
-                            onChanged={this._updateSortField}
-                        />
+                        <Dropdown className="sort-field-dropdown" onRenderList={this._onRenderCallout} options={sortableFieldOptions} onChanged={this._updateSortField} />
                     </div>
 
                     <div className="settings-control-container">
@@ -113,12 +109,10 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
                             onResolveSuggestions={this._onFieldFilterChanged}
                             getTextFromItem={this._getTagTextFromItem}
                             onChange={this._updateQueryFields}
-                            pickerSuggestionsProps={
-                                {
-                                    suggestionsHeaderText: "Suggested Fields",
-                                    noResultsFoundText: "No fields Found"
-                                }
-                            }
+                            pickerSuggestionsProps={{
+                                suggestionsHeaderText: "Suggested Fields",
+                                noResultsFoundText: "No fields Found"
+                            }}
                         />
                     </div>
                 </div>
@@ -135,9 +129,11 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
     }
 
     private _isSettingsDirty(): boolean {
-        return this.props.settings.top.toString() !== this.state.top
-            || !stringEquals(this.props.settings.sortByField, this.state.sortField.referenceName, true)
-            || !arrayEquals(this.props.settings.fields, this.state.queryFields.map(f => f.referenceName), (f1, f2) => stringEquals(f1, f2, true));
+        return (
+            this.props.settings.top.toString() !== this.state.top ||
+            !stringEquals(this.props.settings.sortByField, this.state.sortField.referenceName, true) ||
+            !arrayEquals(this.props.settings.fields, this.state.queryFields.map(f => f.referenceName), (f1, f2) => stringEquals(f1, f2, true))
+        );
     }
 
     private _isSettingsValid(): boolean {
@@ -148,18 +144,22 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
         const aUpper = a.name.toUpperCase();
         const bUpper = b.name.toUpperCase();
 
-        if (aUpper < bUpper) { return -1; }
-        if (aUpper > bUpper) { return 1; }
+        if (aUpper < bUpper) {
+            return -1;
+        }
+        if (aUpper > bUpper) {
+            return 1;
+        }
         return 0;
     }
 
     private _onTopValueChange = (newValue: string) => {
         this._updateTop(newValue);
-    }
+    };
 
     private _getTagTextFromItem = (item: ITag): string => {
         return item.name;
-    }
+    };
 
     private _getTopError = (value: string): string => {
         if (value == null || value.trim() === "") {
@@ -172,7 +172,7 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
             return "For better performance, please enter a value less than 500";
         }
         return "";
-    }
+    };
 
     private _onSaveClick = async (): Promise<void> => {
         if (!this._isSettingsValid()) {
@@ -185,51 +185,52 @@ export class SettingsPanel extends React.Component<ISettingsPanelProps, ISetting
             top: parseInt(this.state.top, 10)
         };
 
-        this.setState({saving: true});
+        this.setState({ saving: true });
         const workItemFormService = await getFormService();
-        const workItemType = await workItemFormService.getFieldValue("System.WorkItemType") as string;
-        const project = await workItemFormService.getFieldValue("System.TeamProject") as string;
+        const workItemType = (await workItemFormService.getFieldValue("System.WorkItemType")) as string;
+        const project = (await workItemFormService.getFieldValue("System.TeamProject")) as string;
         await ExtensionDataManager.writeSetting<ISettings>(`${Constants.StorageKey}_${project}_${workItemType}`, userPreferenceModel, true);
 
-        this.setState({saving: false});
+        this.setState({ saving: false });
         this.props.onSave(userPreferenceModel);
-    }
+    };
 
     private _getFieldTag = (field: WorkItemField): ITag => {
         return {
             key: field.referenceName,
             name: field.name
         };
-    }
+    };
 
     private _onRenderCallout = (props?: IDropdownProps, defaultRender?: (props?: IDropdownProps) => JSX.Element): JSX.Element => {
-        return (
-            <div className="callout-container">
-                {defaultRender(props)}
-            </div>
-        );
-    }
+        return <div className="callout-container">{defaultRender(props)}</div>;
+    };
 
     private _updateSortField = (option: IDropdownOption) => {
         const sortField = first(this.state.sortableFields, (field: WorkItemField) => stringEquals(field.referenceName, option.key as string, true));
-        this.setState({sortField: sortField});
-    }
+        this.setState({ sortField: sortField });
+    };
 
     private _updateQueryFields = (items: ITag[]) => {
         const queryFields = items.map((item: ITag) => first(this.state.queryableFields, (field: WorkItemField) => stringEquals(field.referenceName, item.key, true)));
-        this.setState({queryFields: queryFields});
-    }
+        this.setState({ queryFields: queryFields });
+    };
 
     private _updateTop = (top: string) => {
-        this.setState({top: top});
-    }
+        this.setState({ top: top });
+    };
 
     private _onFieldFilterChanged = (filterText: string, tagList: ITag[]): ITag[] => {
         return filterText
-            ? this.state.queryableFields.filter(field => field.name.toLowerCase().indexOf(filterText.toLowerCase()) === 0
-                && findIndex(tagList, (tag: ITag) => stringEquals(tag.key, field.referenceName, true)) === -1).map(field => {
-                    return { key: field.referenceName, name: field.name};
-                })
+            ? this.state.queryableFields
+                  .filter(
+                      field =>
+                          field.name.toLowerCase().indexOf(filterText.toLowerCase()) === 0 &&
+                          findIndex(tagList, (tag: ITag) => stringEquals(tag.key, field.referenceName, true)) === -1
+                  )
+                  .map(field => {
+                      return { key: field.referenceName, name: field.name };
+                  })
             : [];
-    }
+    };
 }

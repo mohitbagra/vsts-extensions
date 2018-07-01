@@ -34,14 +34,14 @@
         width: $size;
         height: $size;
     }
-    
+
     ::-webkit-scrollbar-thumb {
         border: $padding solid transparent;
         background: #6d6d6d;
         border-radius: 10px;
         background-clip: padding-box;
     }
-    
+
     ::-webkit-scrollbar-thumb:hover {
         background: #555;
         background-clip: padding-box;
@@ -70,14 +70,16 @@
 
 .ms-font-xxl {
     font-size: 28px;
-    font-weight: 100;   
+    font-weight: 100;
 }
 
 .callout-container {
     max-height: 320px;
 }
 
-button[disabled], button[disabled]:hover, button[disabled]:focus {
+button[disabled],
+button[disabled]:hover,
+button[disabled]:focus {
     border: none !important;
 }
 
@@ -90,7 +92,7 @@ button[disabled], button[disabled]:hover, button[disabled]:focus {
 
 .loading-overlay {
     z-index: 10002;
-    background-color: rgba(255,255,255, 0.6) !important;
+    background-color: rgba(255, 255, 255, 0.6) !important;
 }
 
 .visually-hidden {

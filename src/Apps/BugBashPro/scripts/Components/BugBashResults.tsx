@@ -96,8 +96,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
                     selectedBugBashItem: StoresHub.bugBashItemStore.getNewBugBashItem(),
                     gridKeyCounter: this.state.gridKeyCounter + 1
                 } as IBugBashResultsState);
-            }
-            else {
+            } else {
                 this.setState({
                     loading: true,
                     bugBashItems: null,
@@ -118,11 +117,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
         if (this.state.loading) {
             return <Loading />;
         }
-        return (
-            <div className="bugbash-results">
-                {this._renderContents()}
-            </div>
-        );
+        return <div className="bugbash-results">{this._renderContents()}</div>;
     }
 
     protected getInitialState(): IBugBashResultsState {
@@ -177,13 +172,11 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
                         <BugBashItemEditor bugBashId={this.props.bugBash.id} bugBashItem={this.state.selectedBugBashItem} />
                     </SplitterLayout>
                 );
-            }
-            else {
+            } else {
                 const bugBashItem = StoresHub.bugBashItemStore.getItem(this.props.bugBashItemId);
                 if (bugBashItem) {
                     return <BugBashItemEditor bugBashId={this.props.bugBash.id} bugBashItem={bugBashItem} isMaximized={true} />;
-                }
-                else {
+                } else {
                     return <MessageBar messageBarType={MessageBarType.error}>This bug bash item does not exist</MessageBar>;
                 }
             }
@@ -208,13 +201,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
         }
 
         if (items.length === 0) {
-            return (
-                <ZeroData
-                    imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`}
-                    imageAltText=""
-                    primaryText="No results found"
-                />
-            );
+            return <ZeroData imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`} imageAltText="" primaryText="No results found" />;
         }
 
         return (
@@ -266,8 +253,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
                 this._getColumn(BugBashItemFieldNames.CreatedBy, "Item Created By", 100, 200),
                 this._getColumn(BugBashItemFieldNames.CreatedDate, "Item Created Date", 100, 200)
             ];
-        }
-        else if (view === BugBashViewActions.PendingItemsOnly || view === BugBashViewActions.RejectedItemsOnly) {
+        } else if (view === BugBashViewActions.PendingItemsOnly || view === BugBashViewActions.RejectedItemsOnly) {
             const isRejectedGrid = view === BugBashViewActions.RejectedItemsOnly;
             columns = [
                 this._getColumn(BugBashItemFieldNames.Title, "Title", 200, isRejectedGrid ? 600 : 800),
@@ -282,8 +268,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
                     this._getColumn(BugBashItemFieldNames.RejectReason, "Reject Reason", 200, 800)
                 );
             }
-        }
-        else {
+        } else {
             columns = [
                 {
                     key: BugBashItemFieldNames.Status,
@@ -313,10 +298,9 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
 
         this._itemInvokedDelayedFunction = delay(this, 200, () => {
             if (bugBashItems == null || bugBashItems.length !== 1) {
-                this.setState({selectedBugBashItem: StoresHub.bugBashItemStore.getNewBugBashItem()} as IBugBashResultsState);
-            }
-            else {
-                this.setState({selectedBugBashItem: bugBashItems[0]} as IBugBashResultsState);
+                this.setState({ selectedBugBashItem: StoresHub.bugBashItemStore.getNewBugBashItem() } as IBugBashResultsState);
+            } else {
+                this.setState({ selectedBugBashItem: bugBashItems[0] } as IBugBashResultsState);
             }
         });
     }
@@ -327,15 +311,15 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
         window.dispatchEvent(evt);
 
         writeLocalSetting("itemeditorinitialsize", `${itemEditorSize}`, WebSettingsScope.User);
-    }
+    };
 
     private _onRenderColumn = (item: BugBashItem, _index: number, column: IColumn): JSX.Element => {
         return item.onRenderPropertyCell(column.key as BugBashItemFieldNames | WorkItemFieldNames);
-    }
+    };
 
     private _getBugBashItemId = (item: BugBashItem): string => {
         return item.id;
-    }
+    };
 
     private _getGridContextMenuItems = (item: BugBashItem): IContextualMenuItem[] => {
         if (this.props.view === BugBashViewActions.AcceptedItemsOnly) {
@@ -346,7 +330,9 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
 
             return [
                 {
-                    key: "openinquery", name: "Open selected items in Queries", iconProps: {iconName: "ReplyMirrored"},
+                    key: "openinquery",
+                    name: "Open selected items in Queries",
+                    iconProps: { iconName: "ReplyMirrored" },
                     href: getQueryUrl(selectedItems.map(i => i.workItem), [
                         WorkItemFieldNames.ID,
                         WorkItemFieldNames.Title,
@@ -357,11 +343,10 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
                     target: "_blank"
                 }
             ];
-        }
-        else {
+        } else {
             return null;
         }
-    }
+    };
 
     private _onItemInvoked = async (bugBashItem: BugBashItem) => {
         if (bugBashItem.isAccepted) {
@@ -369,11 +354,10 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
             if (updatedWorkItem) {
                 WorkItemActions.refreshWorkItemInStore([updatedWorkItem]);
             }
+        } else {
+            navigate({ view: UrlActions.ACTION_RESULTS, id: this.props.bugBash.id, itemId: bugBashItem.id });
         }
-        else {
-            navigate({view: UrlActions.ACTION_RESULTS, id: this.props.bugBash.id, itemId: bugBashItem.id});
-        }
-    }
+    };
 
     private _onSortChange = (_ev?: React.MouseEvent<HTMLElement>, column?: IColumn) => {
         if (column.key === BugBashItemFieldNames.Status) {
@@ -384,7 +368,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
             sortKey: column.key as BugBashFieldNames | WorkItemFieldNames,
             isSortedDescending: !column.isSortedDescending
         });
-    }
+    };
 
     private _setSelectedItem = (bugBashItemId: string) => {
         let selectedItem: BugBashItem = null;
@@ -400,20 +384,18 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
         if (selectedItem) {
             if ((this._selection as any)._keyToIndexMap[selectedItem.id] >= 0) {
                 this._selection.setKeySelected(selectedItem.id, true, true);
-            }
-            else {
+            } else {
                 this.setState({
                     selectedBugBashItem: selectedItem,
                     gridKeyCounter: this.state.gridKeyCounter + 1
                 } as IBugBashResultsState);
             }
-        }
-        else {
+        } else {
             this._selection.setAllSelected(false);
             this.setState({
                 selectedBugBashItem: StoresHub.bugBashItemStore.getNewBugBashItem(),
                 gridKeyCounter: this.state.gridKeyCounter + 1
             } as IBugBashResultsState);
         }
-    }
+    };
 }

@@ -8,7 +8,8 @@
             padding-left: 0;
         }
 
-        .subscribe-button, .info-button {
+        .subscribe-button,
+        .info-button {
             cursor: pointer;
             font-size: 16px;
             padding-left: 5px;
@@ -18,17 +19,17 @@
         .subscribe-button {
             color: #ffbe00;
         }
-        
+
         .info-button {
             color: #0078d7;
         }
-        
+
         .vss-PivotBarItem {
             width: 100%;
             box-sizing: border-box;
             padding-left: 0px !important;
             padding-right: 0px !important;
-            
+
             .rule-group-view-contents {
                 overflow: auto;
                 height: 100%;
@@ -38,7 +39,7 @@
                 .rule-group-view-error {
                     margin-top: 10px;
                 }
-        
+
                 .rule-list {
                     overflow-x: initial;
                     overflow-y: initial;
@@ -47,7 +48,7 @@
                         color: #107c10;
                         cursor: help;
                         padding-left: 5px;
-                        
+
                         &.disabled {
                             color: #666666;
                         }
@@ -57,11 +58,11 @@
                         cursor: help;
                         padding-left: 5px;
                     }
-        
+
                     .name-column-cell {
                         @include TextOverflowEllipsis();
                         flex: 1;
-        
+
                         .name-link {
                             padding-left: 5px;
                             border: none;
@@ -82,7 +83,7 @@
         justify-content: center;
         align-items: center;
         z-index: 9999;
-        
+
         .toast-message {
             width: auto;
         }

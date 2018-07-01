@@ -17,17 +17,20 @@ export namespace RulesDataService {
     }
 
     export async function loadRulesForGroups(ruleGroupIds: string[], projectId: string): Promise<IRule[]> {
-        const collections: ExtensionDataCollection[] = ruleGroupIds.map(ruleGroupId => ({
-            collectionName: getCollectionKey(ruleGroupId),
-            scopeType: isPrivateRuleGroup(ruleGroupId) ? "User" : "Default",
-            scopeValue: isPrivateRuleGroup(ruleGroupId) ? "Me" : "Current"
-        }) as ExtensionDataCollection);
+        const collections: ExtensionDataCollection[] = ruleGroupIds.map(
+            ruleGroupId =>
+                ({
+                    collectionName: getCollectionKey(ruleGroupId),
+                    scopeType: isPrivateRuleGroup(ruleGroupId) ? "User" : "Default",
+                    scopeValue: isPrivateRuleGroup(ruleGroupId) ? "Me" : "Current"
+                } as ExtensionDataCollection)
+        );
 
         const loadedCollections = await ExtensionDataManager.queryCollections(collections);
         let rules: IRule[] = [];
         for (const coll of loadedCollections) {
             if (coll && coll.documents && coll.documents.length > 0) {
-                rules.push(...coll.documents as IRule[]);
+                rules.push(...(coll.documents as IRule[]));
             }
         }
 
@@ -45,22 +48,20 @@ export namespace RulesDataService {
             const createdRule = await ExtensionDataManager.createDocument<IRule>(getCollectionKey(ruleGroupId), rule, isPrivateRuleGroup(ruleGroupId));
             preProcessRule(createdRule);
             return createdRule;
-        }
-        catch (e) {
+        } catch (e) {
             throw `Cannot create rule. Reason: ${e.message}`;
         }
     }
 
     export async function updateRule(ruleGroupId: string, rule: IRule): Promise<IRule> {
-        const ruleToSave = {...rule};
+        const ruleToSave = { ...rule };
         ruleToSave.lastUpdatedBy = getCurrentUser();
 
         try {
             const updatedRule = await ExtensionDataManager.updateDocument<IRule>(getCollectionKey(ruleGroupId), rule, isPrivateRuleGroup(ruleGroupId));
             preProcessRule(updatedRule);
             return updatedRule;
-        }
-        catch {
+        } catch {
             throw "The version of this rule doesn't match with the version on server. Please refresh the rule to get the latest version first.";
         }
     }
@@ -68,8 +69,7 @@ export namespace RulesDataService {
     export async function deleteRule(ruleGroupId: string, ruleId: string) {
         try {
             await ExtensionDataManager.deleteDocument(getCollectionKey(ruleGroupId), ruleId, isPrivateRuleGroup(ruleGroupId));
-        }
-        catch {
+        } catch {
             // eat exception
         }
     }
@@ -107,8 +107,7 @@ export namespace RulesDataService {
         if (typeof rule.createdBy === "string") {
             if (isNullOrWhiteSpace(rule.createdBy as string)) {
                 rule.createdBy = null;
-            }
-            else {
+            } else {
                 rule.createdBy = parseUniquefiedIdentityName(rule.createdBy);
             }
         }
@@ -116,8 +115,7 @@ export namespace RulesDataService {
         if (typeof rule.lastUpdatedBy === "string") {
             if (isNullOrWhiteSpace(rule.lastUpdatedBy as string)) {
                 rule.lastUpdatedBy = null;
-            }
-            else {
+            } else {
                 rule.lastUpdatedBy = parseUniquefiedIdentityName(rule.lastUpdatedBy);
             }
         }

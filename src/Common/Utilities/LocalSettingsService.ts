@@ -3,7 +3,7 @@ export enum WebSettingsScope {
     Project = 4,
     ProjectAndUser = 5,
     Collection = 6,
-    Root = 7,
+    Root = 7
 }
 
 export function writeLocalSetting(key: string, value: string, scope: WebSettingsScope) {
@@ -11,8 +11,7 @@ export function writeLocalSetting(key: string, value: string, scope: WebSettings
     if (scopedKey) {
         try {
             window.localStorage.setItem(scopedKey, value);
-        }
-        catch {
+        } catch {
             // eat up
         }
     }
@@ -35,8 +34,7 @@ export function removeLocalSetting(key: string, scope: WebSettingsScope) {
     if (scopedKey) {
         try {
             window.localStorage.removeItem(scopedKey);
-        }
-        catch {
+        } catch {
             // eat up
         }
     }
@@ -49,20 +47,17 @@ function _getScopedKey(key: string, scope: WebSettingsScope): string {
     const collection = context.collection.id;
 
     switch (scope) {
-        case WebSettingsScope.User:
-            {
-                return user + key;
-            }
+        case WebSettingsScope.User: {
+            return user + key;
+        }
 
-        case WebSettingsScope.Project:
-            {
-                return `${collection}/${project}${key}`;
-            }
+        case WebSettingsScope.Project: {
+            return `${collection}/${project}${key}`;
+        }
 
-        case WebSettingsScope.ProjectAndUser:
-            {
-                return `${project}/${user}${key}`;
-            }
+        case WebSettingsScope.ProjectAndUser: {
+            return `${project}/${user}${key}`;
+        }
 
         default:
             return null;

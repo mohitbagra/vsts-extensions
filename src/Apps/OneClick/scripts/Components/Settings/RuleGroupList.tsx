@@ -87,11 +87,7 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
     public render(): JSX.Element {
         return (
             <div className="rule-group-list-container">
-                <Hub
-                    className="rule-group-list-hub"
-                    hubViewState={this._hubViewState}
-                    commands={this._getHubCommands()}
-                >
+                <Hub className="rule-group-list-hub" hubViewState={this._hubViewState} commands={this._getHubCommands()}>
                     <HubHeader title={`Rule groups for "${this.props.workItemTypeName}"`} />
 
                     <FilterBar componentRef={this._resolveFilterBar}>
@@ -105,13 +101,9 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
                         {this._renderGroups()}
                     </PivotBarItem>
                 </Hub>
-                { this.state.isGroupPanelOpen &&
-                    <RuleGroupEditor
-                        ruleGroupModel={this.state.selectedRuleGroupForEdit}
-                        onDismiss={this._hideGroupPanel}
-                        workItemTypeName={this.props.workItemTypeName}
-                    />
-                }
+                {this.state.isGroupPanelOpen && (
+                    <RuleGroupEditor ruleGroupModel={this.state.selectedRuleGroupForEdit} onDismiss={this._hideGroupPanel} workItemTypeName={this.props.workItemTypeName} />
+                )}
                 <Panel
                     isOpen={this.state.isSettingsPanelOpen}
                     headerText={`"${this.props.workItemTypeName}" Settings`}
@@ -127,7 +119,7 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
                         `}
                     </MessageBar>
                     <Toggle
-                        styles={{root: {margin: "20px 0"}}}
+                        styles={{ root: { margin: "20px 0" } }}
                         checked={this.state.personalRulesEnabled}
                         label="Enable personal rules"
                         onText="Enabled"
@@ -135,7 +127,7 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
                         onChanged={this._togglePersonalRules}
                     />
                     <Toggle
-                        styles={{root: {margin: "20px 0"}}}
+                        styles={{ root: { margin: "20px 0" } }}
                         defaultChecked={false}
                         checked={this.state.globalRulesEnabled}
                         label="Enable global rules"
@@ -174,11 +166,12 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
         const globalRulesEnabled = StoresHub.settingsStore.getItem<boolean>(SettingKey.GlobalRulesEnabled);
         const workItemTypeEnabled = StoresHub.settingsStore.getItem<boolean>(SettingKey.WorkItemTypeEnabled);
 
-        const loading = userSubscriptions == null
-            || personalRulesEnabled == null
-            || globalRulesEnabled == null
-            || workItemTypeEnabled == null
-            || StoresHub.ruleGroupStore.isLoading(this.props.workItemTypeName);
+        const loading =
+            userSubscriptions == null ||
+            personalRulesEnabled == null ||
+            globalRulesEnabled == null ||
+            workItemTypeEnabled == null ||
+            StoresHub.ruleGroupStore.isLoading(this.props.workItemTypeName);
 
         return {
             loading: loading,
@@ -186,7 +179,7 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
             globalRulesEnabled: globalRulesEnabled,
             workItemTypeEnabled: workItemTypeEnabled,
             ruleGroups: loading ? [] : this._filterGroups(this.state && this.state.filterText, personalRulesEnabled, globalRulesEnabled),
-            subscribedRuleGroupMap: userSubscriptions ? this._getSubscribedGroupsMap(userSubscriptions) : null,
+            subscribedRuleGroupMap: userSubscriptions ? this._getSubscribedGroupsMap(userSubscriptions) : null
         } as IRuleGroupListState;
     }
 
@@ -242,8 +235,7 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
 
         if (this.state.loading) {
             contents = <Loading />;
-        }
-        else {
+        } else {
             const ruleGroups = !favsOnly ? this.state.ruleGroups : this.state.ruleGroups.filter(this._isRuleGroupSubscribed);
 
             if (ruleGroups.length === 0) {
@@ -251,15 +243,8 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
                 if (!isNullOrEmpty(this.state.filterText)) {
                     message = `No rule groups found matching the filter "${this.state.filterText}"`;
                 }
-                contents = (
-                    <ZeroData
-                        imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`}
-                        imageAltText=""
-                        primaryText={message}
-                    />
-                );
-            }
-            else {
+                contents = <ZeroData imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`} imageAltText="" primaryText={message} />;
+            } else {
                 contents = (
                     <VssDetailsList
                         className="rule-group-list"
@@ -276,11 +261,7 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
             }
         }
 
-        return (
-            <div className="rule-group-list-contents">
-                {contents}
-            </div>
-        );
+        return <div className="rule-group-list-contents">{contents}</div>;
     }
 
     private _getGridColumns(): IColumn[] {
@@ -345,7 +326,7 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
                 maxWidth: 200,
                 isResizable: true,
                 onRender: (ruleGroup: IRuleGroup) => {
-                    return <IdentityView identityRef={ruleGroup.createdBy} />;
+                    return <IdentityView value={ruleGroup.createdBy} />;
                 }
             },
             {
@@ -355,7 +336,7 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
                 minWidth: 100,
                 maxWidth: 200,
                 onRender: (ruleGroup: IRuleGroup) => {
-                    return <IdentityView identityRef={ruleGroup.lastUpdatedBy} />;
+                    return <IdentityView value={ruleGroup.lastUpdatedBy} />;
                 }
             }
         ];
@@ -375,7 +356,7 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
     private _onRowClick(e: React.MouseEvent<HTMLElement>, ruleGroup: IRuleGroup) {
         if (!e.ctrlKey) {
             e.preventDefault();
-            navigate({witName: this.props.workItemTypeName, ruleGroup: ruleGroup.id});
+            navigate({ witName: this.props.workItemTypeName, ruleGroup: ruleGroup.id });
         }
     }
 
@@ -395,10 +376,12 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
     private _filterGroups(filterText: string, personalRulesEnabled: boolean, globalRulesEnabled: boolean): IRuleGroup[] {
         const ruleGroups = StoresHub.ruleGroupStore.getAll(personalRulesEnabled, globalRulesEnabled);
         if (ruleGroups && !isNullOrEmpty(filterText)) {
-            return ruleGroups.filter(rg =>
-                caseInsensitiveContains(rg.name, filterText)
-                || caseInsensitiveContains(getDistinctNameFromIdentityRef(rg.createdBy), filterText)
-                || caseInsensitiveContains(rg.description, filterText));
+            return ruleGroups.filter(
+                rg =>
+                    caseInsensitiveContains(rg.name, filterText) ||
+                    caseInsensitiveContains(getDistinctNameFromIdentityRef(rg.createdBy), filterText) ||
+                    caseInsensitiveContains(rg.description, filterText)
+            );
         }
 
         return ruleGroups;
@@ -410,45 +393,23 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
         let iconTooltip: string;
         if (isPersonalOrGlobalRuleGroup(ruleGroup)) {
             iconTooltip = "You can not unsubcribe from personal or global groups.";
-        }
-        else {
+        } else {
             iconTooltip = isSubscribed ? "Unsubscribe from this rule group" : "Subscribe to this rule group";
         }
 
         return (
             <div className="name-column-cell">
                 <div className="name-part">
-                    <Link
-                        className="name-link"
-                        href={link}
-                        onClick={delegate(this, this._onRowClick, ruleGroup)}
-                    >
-                        <TooltipHost
-                            content={ruleGroup.name}
-                            delay={TooltipDelay.medium}
-                            overflowMode={TooltipOverflowMode.Parent}
-                            directionalHint={DirectionalHint.bottomCenter}
-                        >
-
+                    <Link className="name-link" href={link} onClick={delegate(this, this._onRowClick, ruleGroup)}>
+                        <TooltipHost content={ruleGroup.name} delay={TooltipDelay.medium} overflowMode={TooltipOverflowMode.Parent} directionalHint={DirectionalHint.bottomCenter}>
                             {ruleGroup.name}
                         </TooltipHost>
                     </Link>
                 </div>
                 <div className={css("subscribe-button", { unsubscribed: !isSubscribed })}>
-                    <TooltipHost
-                        content={iconTooltip}
-                        delay={TooltipDelay.medium}
-                        directionalHint={DirectionalHint.bottomAutoEdge}
-                    >
-
-                        {isPersonalOrGlobalRuleGroup(ruleGroup) &&
-                            <VssIcon
-                                iconType={VssIconType.fabric}
-                                iconName="Info"
-                                className="rule-group-info-icon"
-                            />
-                        }
-                        {!isPersonalOrGlobalRuleGroup(ruleGroup) &&
+                    <TooltipHost content={iconTooltip} delay={TooltipDelay.medium} directionalHint={DirectionalHint.bottomAutoEdge}>
+                        {isPersonalOrGlobalRuleGroup(ruleGroup) && <VssIcon iconType={VssIconType.fabric} iconName="Info" className="rule-group-info-icon" />}
+                        {!isPersonalOrGlobalRuleGroup(ruleGroup) && (
                             <IconToggleButton
                                 toggledOnIconProps={{
                                     iconName: "FavoriteStarFill",
@@ -464,76 +425,83 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
                                 onToggle={delegate(this, this._toggleSubscription, ruleGroup)}
                                 className="rule-group-subscribe-command"
                             />
-                        }
+                        )}
                     </TooltipHost>
                 </div>
             </div>
         );
-    }
+    };
 
     private _getGridContextMenuItems = (ruleGroup: IRuleGroup): IContextualMenuItem[] => {
         const menuItems: IContextualMenuItem[] = [
             {
-                key: "open", name: "Open", iconProps: {iconName: "ReplyMirrored"},
+                key: "open",
+                name: "Open",
+                iconProps: { iconName: "ReplyMirrored" },
                 onClick: () => {
-                    navigate({witName: this.props.workItemTypeName, ruleGroup: ruleGroup.id});
+                    navigate({ witName: this.props.workItemTypeName, ruleGroup: ruleGroup.id });
                 }
             }
         ];
         if (!isPersonalOrGlobalRuleGroup(ruleGroup)) {
-            menuItems.push({
-                key: "edit", name: "Edit", iconProps: {iconName: "Edit"},
-                onClick: () => {
-                    this._showGroupPanel(ruleGroup);
+            menuItems.push(
+                {
+                    key: "edit",
+                    name: "Edit",
+                    iconProps: { iconName: "Edit" },
+                    onClick: () => {
+                        this._showGroupPanel(ruleGroup);
+                    }
+                },
+                {
+                    key: "delete",
+                    name: "Delete",
+                    iconProps: { iconName: "Delete", style: { color: "#da0a00" } },
+                    onClick: () => {
+                        this._deleteRuleGroup(ruleGroup);
+                    }
                 }
-            },
-                           {
-                key: "delete", name: "Delete", iconProps: {iconName: "Delete", style: { color: "#da0a00" }},
-                onClick: () => {
-                    this._deleteRuleGroup(ruleGroup);
-                }
-            });
+            );
         }
 
         return menuItems;
-    }
+    };
 
     private _refresh = () => {
         this.props.refresh();
-    }
+    };
 
     private _isRuleGroupSubscribed = (ruleGroup: IRuleGroup): boolean => {
-        return isPersonalOrGlobalRuleGroup(ruleGroup)
-            || (this.state.subscribedRuleGroupMap && this.state.subscribedRuleGroupMap[ruleGroup.id.toLowerCase()]);
-    }
+        return isPersonalOrGlobalRuleGroup(ruleGroup) || (this.state.subscribedRuleGroupMap && this.state.subscribedRuleGroupMap[ruleGroup.id.toLowerCase()]);
+    };
 
     private _showGroupPanel = (ruleGroup?: IRuleGroup) => {
-        this.setState({isGroupPanelOpen: true, selectedRuleGroupForEdit: ruleGroup});
-    }
+        this.setState({ isGroupPanelOpen: true, selectedRuleGroupForEdit: ruleGroup });
+    };
 
     private _hideGroupPanel = () => {
-        this.setState({isGroupPanelOpen: false, selectedRuleGroupForEdit: null});
-    }
+        this.setState({ isGroupPanelOpen: false, selectedRuleGroupForEdit: null });
+    };
 
     private _showSettingsPanel = () => {
-        this.setState({isSettingsPanelOpen: true});
-    }
+        this.setState({ isSettingsPanelOpen: true });
+    };
 
     private _hideSettingsPanel = () => {
-        this.setState({isSettingsPanelOpen: false});
-    }
+        this.setState({ isSettingsPanelOpen: false });
+    };
 
     private _togglePersonalRules = (enabled: boolean) => {
         SettingsActions.updateSetting<boolean>(this.props.workItemTypeName, SettingKey.PersonalRulesEnabled, enabled, false);
-    }
+    };
 
     private _toggleGlobalRules = (enabled: boolean) => {
         SettingsActions.updateSetting<boolean>(this.props.workItemTypeName, SettingKey.GlobalRulesEnabled, enabled, false);
-    }
+    };
 
     private _toggleWorkItemType = (enabled: boolean) => {
         SettingsActions.updateSetting<boolean>(this.props.workItemTypeName, SettingKey.WorkItemTypeEnabled, enabled, false);
-    }
+    };
 
     private _onFilterChange = (filterState: IFilterState) => {
         if (filterState && filterState.keyword) {
@@ -543,15 +511,15 @@ export class RuleGroupList extends BaseFluxComponent<IRuleGroupListProps, IRuleG
                 ruleGroups: this._filterGroups(filterText, this.state.personalRulesEnabled, this.state.globalRulesEnabled)
             });
         }
-    }
+    };
 
     private _focusFilterBar = (ev: KeyboardEvent) => {
         if (this._filterBar && ev.ctrlKey && ev.shiftKey && stringEquals(ev.key, "f", true)) {
             this._filterBar.focus();
         }
-    }
+    };
 
     private _resolveFilterBar = (filterBar: IFilterBar) => {
         this._filterBar = filterBar;
-    }
+    };
 }

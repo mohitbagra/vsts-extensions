@@ -32,8 +32,7 @@ export namespace BugBashItemActions {
     export function initializeItems(bugBashId: string) {
         if (StoresHub.bugBashItemStore.isLoaded()) {
             BugBashItemActionsHub.InitializeBugBashItems.invoke(null);
-        }
-        else {
+        } else {
             refreshItems(bugBashId, false);
         }
     }
@@ -76,8 +75,7 @@ export namespace BugBashItemActions {
                 if (bugBashItemModel.workItemId <= 0 || bugBashItemModel.workItemId == null) {
                     BugBashItemCommentActions.refreshComments(bugBashItemId);
                 }
-            }
-            catch (e) {
+            } catch (e) {
                 StoresHub.bugBashItemStore.setLoading(false, bugBashItemId);
                 ErrorMessageActions.showErrorMessage(e, ErrorKeys.BugBashItemError);
             }
@@ -98,8 +96,7 @@ export namespace BugBashItemActions {
                 StoresHub.bugBashItemStore.setLoading(false, bugBashItemModel.id);
                 ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashItemError);
                 BugBashClientActionsHub.SelectedBugBashItemChanged.invoke(updatedBugBashItemModel.id);
-            }
-            catch (e) {
+            } catch (e) {
                 StoresHub.bugBashItemStore.setLoading(false, bugBashItemModel.id);
                 ErrorMessageActions.showErrorMessage(e, ErrorKeys.BugBashItemError);
             }
@@ -118,8 +115,7 @@ export namespace BugBashItemActions {
 
                 BugBashClientActionsHub.SelectedBugBashItemChanged.invoke(createdBugBashItemModel.id);
                 ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashItemError);
-            }
-            catch (e) {
+            } catch (e) {
                 ErrorMessageActions.showErrorMessage(e, ErrorKeys.BugBashItemError);
             }
         }
@@ -148,8 +144,7 @@ export namespace BugBashItemActions {
 
                 BugBashClientActionsHub.SelectedBugBashItemChanged.invoke(acceptedBugBashItemModel.id);
                 ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashItemError);
-            }
-            catch (e) {
+            } catch (e) {
                 StoresHub.bugBashItemStore.setLoading(false, bugBashItemModel.id);
                 ErrorMessageActions.showErrorMessage(e, ErrorKeys.BugBashItemError);
             }

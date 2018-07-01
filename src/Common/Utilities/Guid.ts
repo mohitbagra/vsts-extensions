@@ -1,6 +1,5 @@
 export function newGuid(): string {
-    // tslint:disable-next-line:insecure-random
-    const clockSequenceHi = (128 + Math.floor(Math.random() * 64)).toString(16);
+    const clockSequenceHi = (Math.floor(Math.random() * 64) + 128).toString(16);
     return `${oct(8)}-${oct(4)}-4${oct(3)}-${clockSequenceHi}${oct(2)}-${oct(12)}`;
 }
 
@@ -11,8 +10,7 @@ export function isGuid(str: string): boolean {
 
 function oct(length?: number): string {
     if (!length) {
-        // tslint:disable-next-line:insecure-random
-        return (Math.floor(Math.random() * 0x10)).toString(16);
+        return Math.floor(Math.random() * 0x10).toString(16);
     }
 
     let result: string = "";

@@ -26,8 +26,7 @@ export namespace BugBashItemCommentDataService {
             preProcessModel(savedComment);
 
             return savedComment;
-        }
-        catch (e) {
+        } catch (e) {
             throw `Cannot create comment. Reason: ${e.message}`;
         }
     }
@@ -40,8 +39,7 @@ export namespace BugBashItemCommentDataService {
         if (typeof bugBashItemComment.createdDate === "string") {
             if (isNullOrWhiteSpace(bugBashItemComment.createdDate as string)) {
                 bugBashItemComment.createdDate = undefined;
-            }
-            else {
+            } else {
                 bugBashItemComment.createdDate = new Date(bugBashItemComment.createdDate);
             }
         }

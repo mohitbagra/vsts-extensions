@@ -19,11 +19,12 @@
             padding: 0;
         }
 
-        .auto-accept-menuitem, .acceptItemButton {
+        .auto-accept-menuitem,
+        .acceptItemButton {
             i {
                 color: #107c10;
             }
-        }        
+        }
 
         .reject-menu-item-checkbox {
             padding: 10px;
@@ -34,7 +35,7 @@
         padding: 5px 5px 0px 5px;
 
         a {
-            text-decoration: none;            
+            text-decoration: none;
             color: #0078d7;
 
             &:hover {
@@ -65,24 +66,24 @@
         .input-error {
             margin-top: 5px;
         }
-        
+
         .item-team-container {
             margin-top: 10px;
         }
-    
+
         .reject-reason-input {
             margin-top: 10px;
         }
-    
+
         .item-description-container {
             margin-top: 10px;
-    
+
             .rich-editor {
                 min-height: 250px;
                 max-height: 250px;
             }
         }
-    
+
         .item-comments-editor-container {
             margin-top: 10px;
 
@@ -91,17 +92,17 @@
                 max-height: 100px;
             }
         }
-    
+
         .item-comments-container {
             padding-top: 10px;
             overflow: auto;
             flex: 1;
-    
+
             .item-comment {
                 margin-bottom: 10px;
                 border-bottom: 1px solid #eee;
                 padding-bottom: 10px;
-    
+
                 .created-by {
                     font-weight: 700;
                     margin-right: 5px;
@@ -113,7 +114,7 @@
                     font-style: italic;
                     color: #666;
                 }
-    
+
                 .message {
                     margin-top: 5px;
                     word-wrap: break-word;

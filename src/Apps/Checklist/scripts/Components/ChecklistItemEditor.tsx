@@ -32,13 +32,13 @@ export class ChecklistItemEditor extends BaseFluxComponent<IChecklistItemEditorP
     public componentWillReceiveProps(nextProps: IChecklistItemEditorProps, context?: any) {
         super.componentWillReceiveProps(nextProps, context);
         this.setState({
-            checklistItem: nextProps.checklistItem ? {...nextProps.checklistItem} : this._getDefaultItem()
+            checklistItem: nextProps.checklistItem ? { ...nextProps.checklistItem } : this._getDefaultItem()
         });
     }
 
     public render(): JSX.Element {
-        const {disabled, inputPlaceholder, showStatePicker, autoFocus} = this.props;
-        const {checklistItem} = this.state;
+        const { disabled, inputPlaceholder, showStatePicker, autoFocus } = this.props;
+        const { checklistItem } = this.state;
         const checklistItemState = ChecklistItemStates[checklistItem.state];
 
         return (
@@ -63,7 +63,7 @@ export class ChecklistItemEditor extends BaseFluxComponent<IChecklistItemEditorP
                             checked={checklistItem.required}
                             onChange={this._onItemMandatoryChange}
                         />
-                        {showStatePicker &&
+                        {showStatePicker && (
                             <DefaultButton
                                 className="checklist-item-editor-state-picker"
                                 text={checklistItemState.name}
@@ -91,29 +91,21 @@ export class ChecklistItemEditor extends BaseFluxComponent<IChecklistItemEditorP
                                     onItemClick: this._onStateChange
                                 }}
                             />
-                        }
+                        )}
                     </div>
                     <div className="checklist-item-editor-buttons">
-                        <TooltipHost
-                            content={"Save"}
-                            delay={TooltipDelay.medium}
-                            directionalHint={DirectionalHint.topCenter}
-                        >
+                        <TooltipHost content={"Save"} delay={TooltipDelay.medium} directionalHint={DirectionalHint.topCenter}>
                             <IconButton
                                 className="checklist-item-editor-button save-button"
-                                iconProps={{iconName: "SkypeCircleCheck"}}
+                                iconProps={{ iconName: "SkypeCircleCheck" }}
                                 disabled={disabled}
                                 onClick={this._submitItem}
                             />
                         </TooltipHost>
-                        <TooltipHost
-                            content={"Cancel"}
-                            delay={TooltipDelay.medium}
-                            directionalHint={DirectionalHint.topCenter}
-                        >
+                        <TooltipHost content={"Cancel"} delay={TooltipDelay.medium} directionalHint={DirectionalHint.topCenter}>
                             <IconButton
                                 className="checklist-item-editor-button cancel-button"
-                                iconProps={{iconName: "StatusErrorFull"}}
+                                iconProps={{ iconName: "StatusErrorFull" }}
                                 disabled={disabled}
                                 onClick={this._cancelEdit}
                             />
@@ -126,7 +118,7 @@ export class ChecklistItemEditor extends BaseFluxComponent<IChecklistItemEditorP
 
     protected getInitialState(props: IChecklistItemEditorProps): IChecklistItemEditorState {
         return {
-            checklistItem: props.checklistItem ? {...props.checklistItem} : this._getDefaultItem()
+            checklistItem: props.checklistItem ? { ...props.checklistItem } : this._getDefaultItem()
         };
     }
 
@@ -148,54 +140,53 @@ export class ChecklistItemEditor extends BaseFluxComponent<IChecklistItemEditorP
     }
 
     private _onStateChange = (_ev: React.MouseEvent<HTMLElement>, item: IContextualMenuItem) => {
-        const checklistItem = {...this.state.checklistItem};
+        const checklistItem = { ...this.state.checklistItem };
         checklistItem.state = item.key as ChecklistItemState;
-        this.setState({checklistItem: checklistItem});
-    }
+        this.setState({ checklistItem: checklistItem });
+    };
 
     private _onInputKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.keyCode === KeyCodes.enter) {
             e.preventDefault();
             e.stopPropagation();
             this._submitItem();
-        }
-        else if (e.keyCode === KeyCodes.escape) {
+        } else if (e.keyCode === KeyCodes.escape) {
             e.preventDefault();
             e.stopPropagation();
             this._cancelEdit();
         }
-    }
+    };
 
     private _onItemTextChange = (value: string) => {
-        const checklistItem = {...this.state.checklistItem};
+        const checklistItem = { ...this.state.checklistItem };
         checklistItem.text = value;
-        this.setState({checklistItem: checklistItem});
-    }
+        this.setState({ checklistItem: checklistItem });
+    };
 
     private _onItemMandatoryChange = (_ev: React.FormEvent<HTMLInputElement>, checked: boolean) => {
-        const checklistItem = {...this.state.checklistItem};
+        const checklistItem = { ...this.state.checklistItem };
         checklistItem.required = checked;
-        this.setState({checklistItem: checklistItem});
-    }
+        this.setState({ checklistItem: checklistItem });
+    };
 
     private _submitItem = () => {
-        const {checklistItem} = this.state;
+        const { checklistItem } = this.state;
         if (!isNullOrWhiteSpace(checklistItem.text)) {
             this.props.onSubmit(this.state.checklistItem);
         }
-    }
+    };
 
     private _cancelEdit = () => {
         this.setState(
             {
-                checklistItem: this.props.checklistItem ? {...this.props.checklistItem} : this._getDefaultItem()
+                checklistItem: this.props.checklistItem ? { ...this.props.checklistItem } : this._getDefaultItem()
             },
             () => {
-                const {onCancel} = this.props;
+                const { onCancel } = this.props;
                 if (onCancel) {
                     onCancel();
                 }
             }
         );
-    }
+    };
 }

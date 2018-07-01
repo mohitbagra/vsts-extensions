@@ -13,7 +13,7 @@ body {
     right: 0;
     bottom: 0;
 
-    .fabric-container {        
+    .fabric-container {
         height: 100%;
 
         & > .message-panel {
@@ -39,15 +39,15 @@ body {
                     overflow: auto;
                     height: 100%;
                     position: relative;
-        
+
                     .work-item-grid {
                         overflow-x: initial;
                         overflow-y: initial;
-        
+
                         .ms-DetailsRow-check {
                             height: 100%;
                         }
-        
+
                         .identity-view {
                             height: 34px;
 
@@ -55,19 +55,19 @@ body {
                                 padding: 0 0 0 5px;
                             }
                         }
-        
+
                         .info-label {
                             align-items: center;
-        
+
                             .info-icon {
                                 padding-top: 0;
                                 vertical-align: top;
                             }
-        
+
                             &.linked-cell .info-label-text {
                                 color: green;
                             }
-        
+
                             &.unlinked-cell .info-label-text {
                                 color: red;
                             }

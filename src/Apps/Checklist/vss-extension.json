@@ -8,11 +8,7 @@
     "icons": {
         "default": "images/logo.png"
     },
-    "scopes": [ 
-    	"vso.work",
-        "vso.work_write",
-        "vso.profile"
-	 ],
+    "scopes": ["vso.work", "vso.work_write", "vso.profile"],
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services.Cloud"
@@ -22,12 +18,7 @@
             "version": "[15.1,)"
         }
     ],
-    "tags": [
-        "Work Item",
-        "Check list",
-        "Form",
-        "Group"
-    ],
+    "tags": ["Work Item", "Check list", "Form", "Group"],
     "content": {
         "details": {
             "path": "README.md"
@@ -36,22 +27,18 @@
     "repository": {
         "type": "git",
         "uri": "https://github.com/mohitbagra/vsts-extensions"
-    },  
+    },
     "branding": {
         "color": "#106ebe",
         "theme": "dark"
     },
-    "categories": [
-        "Plan and track"
-    ],
+    "categories": ["Plan and track"],
     "contributions": [
         {
             "id": "work-item-checklist-group-hub",
             "type": "ms.vss-work-web.work-item-form-group",
             "description": "Work item checklist extension",
-            "targets": [
-                "ms.vss-work-web.work-item-form"
-            ],
+            "targets": ["ms.vss-work-web.work-item-form"],
             "properties": {
                 "name": "Checklist",
                 "uri": "html/index.html"
@@ -61,9 +48,7 @@
             "id": "settings-hub",
             "type": "ms.vss-web.hub",
             "description": "Customize work item checklists",
-            "targets": [
-                "ms.vss-web.project-admin-hub-group"
-            ],
+            "targets": ["ms.vss-web.project-admin-hub-group"],
             "properties": {
                 "name": "Work item checklists",
                 "order": 100,

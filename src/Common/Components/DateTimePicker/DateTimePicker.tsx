@@ -19,62 +19,20 @@ export interface IDateTimePickerState {
 }
 
 const DEFAULT_STRINGS: IDatePickerStrings = {
-    months: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
-    ],
+    months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
 
-    shortMonths: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ],
+    shortMonths: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
 
-    days: [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday"
-    ],
+    days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
 
-    shortDays: [
-      "S",
-      "M",
-      "T",
-      "W",
-      "T",
-      "F",
-      "S"
-    ],
+    shortDays: ["S", "M", "T", "W", "T", "F", "S"],
 
     goToToday: "Go to today",
     prevMonthAriaLabel: "Go to previous month",
     nextMonthAriaLabel: "Go to next month",
     prevYearAriaLabel: "Go to previous year",
     nextYearAriaLabel: "Go to next year"
-  };
+};
 
 export class DateTimePicker extends React.Component<IDateTimePickerProps, IDateTimePickerState> {
     constructor(props: IDateTimePickerProps) {
@@ -85,8 +43,7 @@ export class DateTimePicker extends React.Component<IDateTimePickerProps, IDateT
         let initialDate: Date = null;
         if (value) {
             initialDate = new Date(value.getTime());
-        }
-        else {
+        } else {
             initialDate = new Date(today.getTime());
             initialDate.setHours(0, 0, 0, 0);
         }
@@ -103,22 +60,12 @@ export class DateTimePicker extends React.Component<IDateTimePickerProps, IDateT
         return (
             <div className={css("date-time-picker", className)}>
                 <div className="date-time-picker-calendar">
-                    <Calendar
-                        onSelectDate={this._onSelectDate}
-                        isMonthPickerVisible={true}
-                        today={today}
-                        value={selectedDate}
-                        strings={DEFAULT_STRINGS}
-                    />
+                    <Calendar onSelectDate={this._onSelectDate} isMonthPickerVisible={true} today={today} value={selectedDate} strings={DEFAULT_STRINGS} />
                 </div>
                 <div className="date-time-picker-time">
-                    <Time
-                        onSelectTime={this._onSelectTime}
-                        hour={selectedDate ? selectedDate.getHours() : 12}
-                        minute={selectedDate ? selectedDate.getMinutes() : 0}
-                    />
+                    <Time onSelectTime={this._onSelectTime} hour={selectedDate ? selectedDate.getHours() : 12} minute={selectedDate ? selectedDate.getMinutes() : 0} />
                 </div>
-            </div >
+            </div>
         );
     }
 
@@ -137,7 +84,7 @@ export class DateTimePicker extends React.Component<IDateTimePickerProps, IDateT
         if (onSelectDate) {
             onSelectDate(new Date(newDate.getTime()));
         }
-    }
+    };
 
     private _onSelectTime = (hour: number, minute: number) => {
         const { onSelectDate } = this.props;
@@ -153,5 +100,5 @@ export class DateTimePicker extends React.Component<IDateTimePickerProps, IDateT
         if (onSelectDate) {
             onSelectDate(new Date(selectedDate.getTime()));
         }
-    }
+    };
 }

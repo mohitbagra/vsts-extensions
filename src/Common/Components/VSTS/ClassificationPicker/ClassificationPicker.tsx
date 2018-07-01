@@ -85,11 +85,9 @@ export class ClassificationPicker extends BaseFluxComponent<IClassificationPicke
             this.setState({
                 treeNode: this._getTreeNode(this._classificationNodeStore.getItem(keyType), null, 1)
             });
-        }
-        else if (keyType === ClassificationNodeKey.Area) {
+        } else if (keyType === ClassificationNodeKey.Area) {
             ClassificationNodeActions.initializeAreaPaths();
-        }
-        else {
+        } else {
             ClassificationNodeActions.initializeIterationPaths();
         }
     }
@@ -110,8 +108,7 @@ export class ClassificationPicker extends BaseFluxComponent<IClassificationPicke
             uiNode.add(newUINode);
             // tslint:disable-next-line:no-parameter-reassignment
             uiNode = newUINode;
-        }
-        else {
+        } else {
             // tslint:disable-next-line:no-parameter-reassignment
             uiNode = TreeNode.create(nodeName);
         }
@@ -128,11 +125,9 @@ export class ClassificationPicker extends BaseFluxComponent<IClassificationPicke
         const nodePath = this.state.value;
         if (isNullOrEmpty(nodePath)) {
             return this.props.required ? "A value is required." : null;
-        }
-        else if (this.props.keyType === ClassificationNodeKey.Area) {
+        } else if (this.props.keyType === ClassificationNodeKey.Area) {
             return !this._classificationNodeStore.getAreaPathNode(nodePath) ? "This area path doesn't exist in the current project" : null;
-        }
-        else if (this.props.keyType === ClassificationNodeKey.Iteration) {
+        } else if (this.props.keyType === ClassificationNodeKey.Iteration) {
             return !this._classificationNodeStore.getIterationPathNode(nodePath) ? "This iteration path doesn't exist in the current project" : null;
         }
 
@@ -140,8 +135,8 @@ export class ClassificationPicker extends BaseFluxComponent<IClassificationPicke
     }
 
     private _onChange = (value: string) => {
-        this.setState({value: value}, () => {
+        this.setState({ value: value }, () => {
             this.props.onChange(value);
         });
-    }
+    };
 }

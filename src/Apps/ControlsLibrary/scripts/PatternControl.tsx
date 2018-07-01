@@ -30,12 +30,12 @@ interface IPatternControlState extends IWorkItemFieldControlState<string> {
 
 export class PatternControl extends WorkItemFieldControl<string, IPatternControlProps, IPatternControlState> {
     public render(): JSX.Element {
-        const {value, hovered, focussed, error} = this.state;
+        const { value, hovered, focussed, error } = this.state;
         const isActive = hovered || focussed || error;
         return (
             <Fabric className="fabric-container">
                 <TextField
-                    className={css("pattern-control", {invalid: !!error})}
+                    className={css("pattern-control", { invalid: !!error })}
                     value={value || ""}
                     borderless={!isActive}
                     onChanged={this._onChange}
@@ -63,8 +63,7 @@ export class PatternControl extends WorkItemFieldControl<string, IPatternControl
         const service: any = await getFormService();
         if (error) {
             service.setError(error);
-        }
-        else {
+        } else {
             service.clearError();
         }
     }
@@ -75,27 +74,27 @@ export class PatternControl extends WorkItemFieldControl<string, IPatternControl
             const formService = await getFormService();
             formService.save();
         }
-    }
+    };
 
     private _onMouseOver = () => {
-        this.setState({hovered: true});
-    }
+        this.setState({ hovered: true });
+    };
 
     private _onMouseOut = () => {
-        this.setState({hovered: false});
-    }
+        this.setState({ hovered: false });
+    };
 
     private _onFocus = () => {
-        this.setState({focussed: true});
-    }
+        this.setState({ focussed: true });
+    };
 
     private _onBlur = () => {
-        this.setState({focussed: false});
-    }
+        this.setState({ focussed: false });
+    };
 
     private _onChange = (value: string) => {
         this.onValueChanged(value);
-    }
+    };
 }
 
 export function init() {
@@ -106,7 +105,8 @@ export function init() {
         <PatternControl
             fieldName={inputs.FieldName}
             pattern={inputs.Pattern}
-            errorMessage={inputs.ErrorMessage && inputs.ErrorMessage.trim() || "The entered value does not match the control's pattern."}
+            errorMessage={(inputs.ErrorMessage && inputs.ErrorMessage.trim()) || "The entered value does not match the control's pattern."}
         />,
-        document.getElementById("ext-container"));
+        document.getElementById("ext-container")
+    );
 }

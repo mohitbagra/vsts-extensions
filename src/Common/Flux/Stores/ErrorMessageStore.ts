@@ -16,7 +16,7 @@ export class ErrorMessageStore extends BaseStore<IDictionaryStringTo<string>, st
     }
 
     protected initializeActionListeners() {
-        ErrorMessageActionsHub.PushErrorMessage.addListener((error: {errorMessage: string, errorKey: string}) => {
+        ErrorMessageActionsHub.PushErrorMessage.addListener((error: { errorMessage: string; errorKey: string }) => {
             this.items[error.errorKey] = error.errorMessage;
             this.emitChanged();
         });

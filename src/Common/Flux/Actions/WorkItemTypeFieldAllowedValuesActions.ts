@@ -14,11 +14,15 @@ export namespace WorkItemTypeFieldAllowedValuesActions {
 
         if (workItemTypeFieldStore.isLoaded(key)) {
             WorkItemTypeFieldAllowedValuesActionsHub.InitializeAllowedValues.invoke(null);
-        }
-        else if (!workItemTypeFieldStore.isLoading(key)) {
+        } else if (!workItemTypeFieldStore.isLoading(key)) {
             workItemTypeFieldStore.setLoading(true, key);
             try {
-                const workItemTypeField = await WitClient.getClient().getWorkItemTypeFieldWithReferences(VSS.getWebContext().project.id, workItemType, fieldRefName, WorkItemTypeFieldsExpandLevel.AllowedValues);
+                const workItemTypeField = await WitClient.getClient().getWorkItemTypeFieldWithReferences(
+                    VSS.getWebContext().project.id,
+                    workItemType,
+                    fieldRefName,
+                    WorkItemTypeFieldsExpandLevel.AllowedValues
+                );
 
                 WorkItemTypeFieldAllowedValuesActionsHub.InitializeAllowedValues.invoke({
                     workItemType: workItemType,
@@ -26,8 +30,7 @@ export namespace WorkItemTypeFieldAllowedValuesActions {
                     allowedValues: workItemTypeField.allowedValues || []
                 });
                 workItemTypeFieldStore.setLoading(false, key);
-            }
-            catch (e) {
+            } catch (e) {
                 WorkItemTypeFieldAllowedValuesActionsHub.InitializeAllowedValues.invoke({
                     workItemType: workItemType,
                     fieldRefName: fieldRefName,

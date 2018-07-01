@@ -26,7 +26,7 @@ import { VssIcon, VssIconType } from "VSSUI/VssIcon";
 
 const DragHandle = SortableHandle(() => <VssIcon className="drag-handle" iconName="GlobalNavButton" iconType={VssIconType.fabric} />);
 
-const SortableItem = SortableElement(({value}) => {
+const SortableItem = SortableElement(({ value }) => {
     return (
         <div className="checklist-item-container">
             <DragHandle />
@@ -35,14 +35,8 @@ const SortableItem = SortableElement(({value}) => {
     );
 });
 
-const SortableList = SortableContainer(({items}) => {
-    return (
-        <div className="checklist-items">
-            {items.map((value, index) => (
-                <SortableItem key={`item-${index}`} index={index} value={value} />
-            ))}
-        </div>
-    );
+const SortableList = SortableContainer(({ items }) => {
+    return <div className="checklist-items">{items.map((value, index) => <SortableItem key={`item-${index}`} index={index} value={value} />)}</div>;
 });
 
 export interface IChecklistViewProps extends IBaseFluxComponentProps {
@@ -73,23 +67,21 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
         if (this.props.workItemId !== nextProps.workItemId) {
             const checklist = this._getChecklists(nextProps.workItemId);
             if (checklist) {
-                this.setState({checklists: checklist, editChecklistItem: null, error: null, disabled: false});
-            }
-            else {
-                this.setState({checklists: null, editChecklistItem: null, error: null, disabled: false});
+                this.setState({ checklists: checklist, editChecklistItem: null, error: null, disabled: false });
+            } else {
+                this.setState({ checklists: null, editChecklistItem: null, error: null, disabled: false });
                 ChecklistActions.initializeChecklists(nextProps.workItemId, nextProps.workItemType, nextProps.projectId);
             }
         }
     }
 
     public render(): JSX.Element {
-        const {checklists, disabled} = this.state;
-        const {isPersonal} = this.props;
+        const { checklists, disabled } = this.state;
+        const { isPersonal } = this.props;
 
         if (checklists == null) {
             return <Loading />;
-        }
-        else {
+        } else {
             return (
                 <div className="checklist-view">
                     {this._renderEditView()}
@@ -106,7 +98,7 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
     }
 
     protected getInitialState(props: IChecklistViewProps): IChecklistViewState {
-        const {workItemId} = props;
+        const { workItemId } = props;
         const error = StoresHub.errorMessageStore.getItem("ChecklistError");
 
         return {
@@ -122,7 +114,7 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
     }
 
     protected getStoresState(): IChecklistViewState {
-        const {workItemId} = this.props;
+        const { workItemId } = this.props;
         const checklists = this._getChecklists(workItemId);
         const error = StoresHub.errorMessageStore.getItem("ChecklistError");
 
@@ -132,14 +124,14 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
         } as IChecklistViewState;
 
         if (!StoresHub.checklistStore.isLoading(`${workItemId}`)) {
-            newState = {...newState, checklists: checklists};
+            newState = { ...newState, checklists: checklists };
         }
         return newState;
     }
 
     private _renderChecklistItemsContainer(): JSX.Element {
-        const {checklists} = this.state;
-        const {isPersonal} = this.props;
+        const { checklists } = this.state;
+        const { isPersonal } = this.props;
         const showSeparator = checklists.shared.checklistItems && checklists.shared.checklistItems.length > 0;
         const personalItems = checklists.personal.checklistItems || [];
         const defaultItems = checklists.witDefault.checklistItems || [];
@@ -170,38 +162,24 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
         const items = checklistItems.map(i => this._renderChecklistItem(i, checklistType));
         if (checklistType === ChecklistType.WitDefault) {
             return (
-                <div className={css("checklist-items", {showBottomBorder: showSeparator})}>
+                <div className={css("checklist-items", { showBottomBorder: showSeparator })}>
                     {items.map(i => (
-                        <div className="checklist-item-container" style={{paddingLeft: "19px"}} >
+                        <div className="checklist-item-container" style={{ paddingLeft: "19px" }}>
                             {i}
                         </div>
                     ))}
                 </div>
             );
-        }
-        else {
-            return (
-                <SortableList
-                    items={items}
-                    axis="y"
-                    lockAxis="y"
-                    onSortEnd={delegate(this, this._reorderChecklistItem, checklistType)}
-                    useDragHandle={true}
-                />
-            );
+        } else {
+            return <SortableList items={items} axis="y" lockAxis="y" onSortEnd={delegate(this, this._reorderChecklistItem, checklistType)} useDragHandle={true} />;
         }
     }
 
     private _renderEditView(): JSX.Element {
-        const {editChecklistItem, editChecklistItemType} = this.state;
+        const { editChecklistItem, editChecklistItemType } = this.state;
         if (editChecklistItem) {
             return (
-                <Modal
-                    isOpen={true}
-                    onDismiss={this._cancelItemEdit}
-                    isBlocking={false}
-                    containerClassName="edit-checklist-item-overlay"
-                >
+                <Modal isOpen={true} onDismiss={this._cancelItemEdit} isBlocking={false} containerClassName="edit-checklist-item-overlay">
                     <ChecklistItemEditor
                         checklistItem={editChecklistItem}
                         onSubmit={delegate(this, this._updateChecklistItem, editChecklistItemType)}
@@ -228,10 +206,10 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
     }
 
     private _updateChecklist(checklistItems: IChecklistItem[], checklistType: ChecklistType) {
-        const checklist = {...this._getWorkItemChecklistFromType(checklistType)};
+        const checklist = { ...this._getWorkItemChecklistFromType(checklistType) };
         checklist.checklistItems = checklistItems;
 
-        const newChecklistsState = {...this.state.checklists};
+        const newChecklistsState = { ...this.state.checklists };
         switch (checklistType) {
             case ChecklistType.Personal:
                 newChecklistsState.personal = checklist;
@@ -243,7 +221,7 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
                 newChecklistsState.witDefault = checklist;
         }
 
-        this.setState({checklists: newChecklistsState});
+        this.setState({ checklists: newChecklistsState });
         ChecklistActions.updateChecklist(checklist, checklistType);
     }
 
@@ -281,35 +259,35 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
                 onToggleCheck={delegate(this, this._onToggleChecklistItem, checklistType)}
             />
         );
-    }
+    };
 
     private _editChecklistItem = (checklistItem: IChecklistItem, checklistType: ChecklistType) => {
-        this.setState({editChecklistItem: {...checklistItem}, editChecklistItemType: checklistType});
-    }
+        this.setState({ editChecklistItem: { ...checklistItem }, editChecklistItemType: checklistType });
+    };
 
     private _cancelItemEdit = () => {
-        this.setState({editChecklistItem: null, editChecklistItemType: null});
-    }
+        this.setState({ editChecklistItem: null, editChecklistItemType: null });
+    };
 
     private _onToggleChecklistItem = (checklistItem: IChecklistItem, checked: boolean, checklistType: ChecklistType) => {
         const checklist = this._getWorkItemChecklistFromType(checklistType);
         const newChecklistItems = [...checklist.checklistItems];
         const index = findIndex(newChecklistItems, (i: IChecklistItem) => stringEquals(i.id, checklistItem.id, true));
         if (index !== -1) {
-            newChecklistItems[index] = {...newChecklistItems[index], state: checked ? ChecklistItemState.Completed : ChecklistItemState.New};
+            newChecklistItems[index] = { ...newChecklistItems[index], state: checked ? ChecklistItemState.Completed : ChecklistItemState.New };
             this._updateChecklist(newChecklistItems, checklistType);
         }
-    }
+    };
 
-    private _reorderChecklistItem = (data: {oldIndex: number, newIndex: number}, _ev: MouseEvent, checklistType: ChecklistType) => {
-        const {oldIndex, newIndex} = data;
+    private _reorderChecklistItem = (data: { oldIndex: number; newIndex: number }, _ev: MouseEvent, checklistType: ChecklistType) => {
+        const { oldIndex, newIndex } = data;
 
         if (oldIndex !== newIndex) {
             const checklist = this._getWorkItemChecklistFromType(checklistType);
             const newChecklistItems = arrayMove([...checklist.checklistItems], oldIndex, newIndex);
             this._updateChecklist(newChecklistItems, checklistType);
         }
-    }
+    };
 
     private _deleteChecklistItem = (checklistItem: IChecklistItem, checklistType: ChecklistType) => {
         const checklist = this._getWorkItemChecklistFromType(checklistType);
@@ -317,25 +295,25 @@ export class ChecklistView extends AutoResizableComponent<IChecklistViewProps, I
         if (newChecklistItems.length !== checklist.checklistItems.length) {
             this._updateChecklist(newChecklistItems, checklistType);
         }
-    }
+    };
 
     private _addChecklistItem = (checklistItem: IChecklistItem, checklistType: ChecklistType) => {
         const checklist = this._getWorkItemChecklistFromType(checklistType);
-        const newChecklistItem = {...checklistItem, id: `${Date.now()}`};
+        const newChecklistItem = { ...checklistItem, id: `${Date.now()}` };
         const newChecklistItems = (checklist.checklistItems || []).concat(newChecklistItem);
 
         this._updateChecklist(newChecklistItems, checklistType);
-    }
+    };
 
     private _updateChecklistItem = (checklistItem: IChecklistItem, checklistType: ChecklistType) => {
         const checklist = this._getWorkItemChecklistFromType(checklistType);
         const newChecklistItems = [...checklist.checklistItems];
         const index = findIndex(newChecklistItems, (i: IChecklistItem) => stringEquals(i.id, checklistItem.id, true));
         if (index !== -1) {
-            newChecklistItems[index] = {...newChecklistItems[index], text: checklistItem.text, required: checklistItem.required, state: checklistItem.state};
+            newChecklistItems[index] = { ...newChecklistItems[index], text: checklistItem.text, required: checklistItem.required, state: checklistItem.state };
             this._updateChecklist(newChecklistItems, checklistType);
         }
 
         this._cancelItemEdit();
-    }
+    };
 }

@@ -4,8 +4,9 @@ import { IBugBashItem, ISortState } from "BugBashPro/Interfaces";
 import { BugBashItem } from "BugBashPro/ViewModels/BugBashItem";
 import { BaseStore } from "Common/Flux/Stores/BaseStore";
 import { findIndex } from "Common/Utilities/Array";
-import { getDistinctNameFromIdentityRef, IdentityRef } from "Common/Utilities/Identity";
+import { getDistinctNameFromIdentityRef } from "Common/Utilities/Identity";
 import { stringEquals } from "Common/Utilities/String";
+import { IdentityRef } from "VSS/WebApi/Contracts";
 import { IFilterState } from "VSSUI/Utilities/Filter";
 
 export class BugBashItemStore extends BaseStore<BugBashItem[], BugBashItem, string> {
@@ -17,15 +18,15 @@ export class BugBashItemStore extends BaseStore<BugBashItem[], BugBashItem, stri
     private _propertyMap: IDictionaryStringTo<IDictionaryStringTo<number>>;
     private _defaultTeamId: string;
 
-    get filterState(): IFilterState {
+    public get filterState(): IFilterState {
         return this._filterState;
     }
 
-    get sortState(): ISortState {
+    public get sortState(): ISortState {
         return this._sortState;
     }
 
-    get propertyMap(): IDictionaryStringTo<IDictionaryStringTo<number>> {
+    public get propertyMap(): IDictionaryStringTo<IDictionaryStringTo<number>> {
         return this._propertyMap;
     }
 
@@ -48,7 +49,7 @@ export class BugBashItemStore extends BaseStore<BugBashItem[], BugBashItem, stri
     }
 
     public getItem(bugBashItemId: string): BugBashItem {
-         return this._itemsIdMap[bugBashItemId.toLowerCase()];
+        return this._itemsIdMap[bugBashItemId.toLowerCase()];
     }
 
     public getFilteredItems(): BugBashItem[] {
@@ -191,8 +192,7 @@ export class BugBashItemStore extends BaseStore<BugBashItem[], BugBashItem, stri
         const existingIndex = findIndex(this.items, (existingBugBashItem: BugBashItem) => stringEquals(bugBashItemModel.id, existingBugBashItem.id, true));
         if (existingIndex !== -1) {
             this.items[existingIndex] = bugBashItem;
-        }
-        else {
+        } else {
             this.items.push(bugBashItem);
         }
 
@@ -252,8 +252,7 @@ export class BugBashItemStore extends BaseStore<BugBashItem[], BugBashItem, stri
                     const rejectedByStr = getDistinctNameFromIdentityRef(rejectedBy);
                     this._propertyMap[BugBashItemFieldNames.RejectedBy][rejectedByStr] = (this._propertyMap[BugBashItemFieldNames.RejectedBy][rejectedByStr] || 0) + 1;
                 }
-            }
-            else {
+            } else {
                 const workItem = bugBashItem.workItem;
                 const areaPath = workItem.fields[WorkItemFieldNames.AreaPath];
                 const assignedTo = workItem.fields[WorkItemFieldNames.AssignedTo] || "Unassigned";

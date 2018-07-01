@@ -40,6 +40,6 @@ export class LongTextStore extends BaseStore<IDictionaryStringTo<LongText>, Long
     }
 
     protected convertItemKeyToString(key: string): string {
-       return key;
+        return key;
     }
 }

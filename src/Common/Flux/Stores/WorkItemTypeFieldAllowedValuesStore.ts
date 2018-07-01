@@ -22,11 +22,7 @@ export class WorkItemTypeFieldAllowedValuesStore extends BaseStore<IDictionarySt
     }
 
     protected initializeActionListeners() {
-        WorkItemTypeFieldAllowedValuesActionsHub.InitializeAllowedValues.addListener((data: {
-            workItemType: string,
-            fieldRefName: string,
-            allowedValues: string[]
-        }) => {
+        WorkItemTypeFieldAllowedValuesActionsHub.InitializeAllowedValues.addListener((data: { workItemType: string; fieldRefName: string; allowedValues: string[] }) => {
             if (data) {
                 const key = `${data.workItemType}_${data.fieldRefName}`;
                 this.items[key.toLowerCase()] = data.allowedValues;

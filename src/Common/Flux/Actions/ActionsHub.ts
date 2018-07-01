@@ -20,7 +20,7 @@ export namespace WorkItemFieldActionsHub {
 }
 
 export namespace WorkItemTemplateActionsHub {
-    export const InitializeWorkItemTemplates = new Action<{teamId: string, templates: WorkItemTemplateReference[]}>();
+    export const InitializeWorkItemTemplates = new Action<{ teamId: string; templates: WorkItemTemplateReference[] }>();
 }
 
 export namespace WorkItemTemplateItemActionsHub {
@@ -28,7 +28,7 @@ export namespace WorkItemTemplateItemActionsHub {
 }
 
 export namespace WorkItemStateItemActionsHub {
-    export const InitializeWorkItemStateItems = new Action<{witName: string, states: WorkItemStateColor[]}>();
+    export const InitializeWorkItemStateItems = new Action<{ witName: string; states: WorkItemStateColor[] }>();
 }
 
 export namespace TeamActionsHub {
@@ -44,11 +44,11 @@ export namespace GitRepoActionsHub {
 }
 
 export namespace TeamFieldActionsHub {
-    export const InitializeTeamFieldItem = new Action<{teamId: string, teamFieldValues: TeamFieldValues}>();
+    export const InitializeTeamFieldItem = new Action<{ teamId: string; teamFieldValues: TeamFieldValues }>();
 }
 
 export namespace WorkItemTypeFieldAllowedValuesActionsHub {
-    export const InitializeAllowedValues = new Action<{workItemType: string, fieldRefName: string, allowedValues: string[]}>();
+    export const InitializeAllowedValues = new Action<{ workItemType: string; fieldRefName: string; allowedValues: string[] }>();
 }
 
 export namespace WorkItemActionsHub {
@@ -58,7 +58,7 @@ export namespace WorkItemActionsHub {
 }
 
 export namespace ErrorMessageActionsHub {
-    export const PushErrorMessage = new Action<{errorMessage: string, errorKey: string}>();
+    export const PushErrorMessage = new Action<{ errorMessage: string; errorKey: string }>();
     export const DismissErrorMessage = new Action<string>();
     export const DismissAllErrorMessages = new Action<void>();
 }

@@ -6,7 +6,7 @@ import { IAction } from "OneClick/Interfaces";
 import { Observable } from "VSSUI/Utilities/Observable";
 
 export abstract class BaseAction extends Observable<void> {
-    public static getNewAction<TAction extends BaseAction>(actionType: new(model: IAction) => TAction, actionName: string): BaseAction {
+    public static getNewAction<TAction extends BaseAction>(actionType: new (model: IAction) => TAction, actionName: string): BaseAction {
         return new actionType({
             name: actionName,
             attributes: null
@@ -27,8 +27,7 @@ export abstract class BaseAction extends Observable<void> {
             // existing action
             this._originalAttributes = this.preProcessAttributes(model.attributes);
             this._updates = {};
-        }
-        else {
+        } else {
             // new action
             this._originalAttributes = null;
             this._updates = this.defaultAttributes();
@@ -48,7 +47,7 @@ export abstract class BaseAction extends Observable<void> {
     }
 
     public get updatedAttributes(): IDictionaryStringTo<any> {
-        return {...(this._originalAttributes || {}), ...(this._updates || {})};
+        return { ...(this._originalAttributes || {}), ...(this._updates || {}) };
     }
 
     public get originalModel(): IAction {
@@ -84,9 +83,8 @@ export abstract class BaseAction extends Observable<void> {
 
     public getAttribute<T>(attributeName: string, original?: boolean): T {
         if (original) {
-            return this._originalAttributes && this._originalAttributes[attributeName] as T;
-        }
-        else {
+            return this._originalAttributes && (this._originalAttributes[attributeName] as T);
+        } else {
             return this.updatedAttributes[attributeName] as T;
         }
     }
@@ -114,7 +112,7 @@ export abstract class BaseAction extends Observable<void> {
     }
 
     protected preProcessAttributes(attributes: IDictionaryStringTo<any>): IDictionaryStringTo<any> {
-        return {...attributes};
+        return { ...attributes };
     }
 
     private _emitChanged() {

@@ -17,10 +17,7 @@ import { BaseTrigger } from "OneClick/RuleTriggers/BaseTrigger";
 import { FieldType } from "TFS/WorkItemTracking/Contracts";
 import { IWorkItemFieldChangedArgs } from "TFS/WorkItemTracking/ExtensionContracts";
 
-const AsyncFieldChangedPicker = getAsyncLoadedComponent(
-    ["scripts/ActionRenderers"],
-    (m: typeof ActionRenderers_Async) => m.FieldChangedPicker,
-    () => <Loading />);
+const AsyncFieldChangedPicker = getAsyncLoadedComponent(["scripts/ActionRenderers"], (m: typeof ActionRenderers_Async) => m.FieldChangedPicker, () => <Loading />);
 
 export class FieldChangedTrigger extends BaseTrigger {
     private _workItemType: string;
@@ -39,7 +36,7 @@ export class FieldChangedTrigger extends BaseTrigger {
             const oldValue = await formService.getFieldValue(fieldName, true);
             const newValue = await formService.getFieldValue(fieldName);
 
-            return (oldValue !== newValue) && (isAnyMacro(oldFieldValue) || oldFieldValue === oldValue) && (isAnyMacro(newFieldValue) || newFieldValue === newValue);
+            return oldValue !== newValue && (isAnyMacro(oldFieldValue) || oldFieldValue === oldValue) && (isAnyMacro(newFieldValue) || newFieldValue === newValue);
         }
 
         return false;
@@ -54,10 +51,12 @@ export class FieldChangedTrigger extends BaseTrigger {
     }
 
     public isDirty(): boolean {
-        return super.isDirty()
-            || !stringEquals(this.getAttribute<string>("fieldName", true), this.getAttribute<string>("fieldName"), true)
-            || !stringEquals(this.getAttribute<string>("oldFieldValue", true), this.getAttribute<string>("oldFieldValue"), true)
-            || !stringEquals(this.getAttribute<string>("newFieldValue", true), this.getAttribute<string>("newFieldValue"), true);
+        return (
+            super.isDirty() ||
+            !stringEquals(this.getAttribute<string>("fieldName", true), this.getAttribute<string>("fieldName"), true) ||
+            !stringEquals(this.getAttribute<string>("oldFieldValue", true), this.getAttribute<string>("oldFieldValue"), true) ||
+            !stringEquals(this.getAttribute<string>("newFieldValue", true), this.getAttribute<string>("newFieldValue"), true)
+        );
     }
 
     public isValid(): boolean {
@@ -78,10 +77,12 @@ export class FieldChangedTrigger extends BaseTrigger {
         const field = StoresHub.workItemFieldStore.getItem(fieldName);
 
         if (field) {
-            return !contains(ExcludedFields, field.referenceName, (s1, s2) => stringEquals(s1, s2, true))
-                && contains(witFields, field.referenceName, (s1, s2) => stringEquals(s1, s2, true))
-                && isNullOrEmpty(this._getFieldValueError(field.type, oldFieldValue))
-                && isNullOrEmpty(this._getFieldValueError(field.type, newFieldValue));
+            return (
+                !contains(ExcludedFields, field.referenceName, (s1, s2) => stringEquals(s1, s2, true)) &&
+                contains(witFields, field.referenceName, (s1, s2) => stringEquals(s1, s2, true)) &&
+                isNullOrEmpty(this._getFieldValueError(field.type, oldFieldValue)) &&
+                isNullOrEmpty(this._getFieldValueError(field.type, newFieldValue))
+            );
         }
 
         return false;
@@ -91,7 +92,7 @@ export class FieldChangedTrigger extends BaseTrigger {
         return {
             iconName: "FieldChanged",
             styles: {
-                root: {color: "#004578 !important"}
+                root: { color: "#004578 !important" }
             }
         };
     }
@@ -159,11 +160,7 @@ export class FieldChangedTrigger extends BaseTrigger {
     }
 
     private _validateBoolean(value: string): string {
-        if (value && !stringEquals(value, "True", true)
-            && !stringEquals(value, "1", true)
-            && !stringEquals(value, "False", true)
-            && !stringEquals(value, "0", true)) {
-
+        if (value && !stringEquals(value, "True", true) && !stringEquals(value, "1", true) && !stringEquals(value, "False", true) && !stringEquals(value, "0", true)) {
             return "Invalid boolean value";
         }
         return "";
@@ -195,13 +192,13 @@ export class FieldChangedTrigger extends BaseTrigger {
         this.setAttribute<string>("fieldName", fieldName || "", false);
         this.setAttribute<string>("oldFieldValue", "", false);
         this._onNewFieldValueChange("");
-    }
+    };
 
     private _onOldFieldValueChange = (fieldValue: string) => {
         this.setAttribute<string>("oldFieldValue", fieldValue || "");
-    }
+    };
 
     private _onNewFieldValueChange = (fieldValue: string) => {
         this.setAttribute<string>("newFieldValue", fieldValue || "");
-    }
+    };
 }

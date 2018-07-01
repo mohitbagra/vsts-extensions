@@ -2,8 +2,8 @@ const path = require("path");
 const webpack = require("webpack");
 const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const { existsSync } = require('fs');
-const Apps = require('./src/Apps');
+const { existsSync } = require("fs");
+const Apps = require("./src/Apps");
 
 let appEntryPoints = {};
 let appPlugins = [
@@ -28,30 +28,28 @@ let appPlugins = [
                 comments: false,
                 beautify: false
             },
-            warnings: false 
+            warnings: false
         }
     })
 ];
 
 Apps.forEach(appName => {
-    const appPath = path.resolve(__dirname, `src/Apps/${appName}`)
+    const appPath = path.resolve(__dirname, `src/Apps/${appName}`);
     if (existsSync(appPath)) {
         console.log(`App "${appName}" found.`);
         const configPath = path.resolve(__dirname, `src/Apps/${appName}/configs/webpack.config.js`);
         if (existsSync(configPath)) {
             const config = require(configPath);
             if (config.entry) {
-                appEntryPoints = {...appEntryPoints, ...config.entry};
+                appEntryPoints = { ...appEntryPoints, ...config.entry };
             }
             if (config.plugins) {
                 appPlugins = appPlugins.concat(config.plugins);
             }
-        }
-        else {
+        } else {
             console.log(`No config found for App "${appName}".`);
         }
-    }
-    else {
+    } else {
         console.log(`App "${appName}" not found.`);
     }
 });
@@ -65,26 +63,28 @@ module.exports = {
     },
     externals: [
         {
-            "q": true,
-            "react": true,
+            q: true,
+            react: true,
             "react-dom": true
         },
-        /^VSS\/.*/, /^TFS\/.*/, /^q$/
+        /^VSS\/.*/,
+        /^TFS\/.*/,
+        /^q$/
     ],
     resolve: {
         extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
         moduleExtensions: ["-loader"],
-        alias: { 
-            "OfficeFabric": path.resolve(__dirname, "node_modules/office-ui-fabric-react/lib"),
-            "VSSUI": path.resolve(__dirname, "node_modules/vss-ui"),
-            "Common": path.resolve(__dirname, "src/Common"),
-            "BugBashPro": path.resolve(__dirname, "src/Apps/BugBashPro/scripts"),
-            "Checklist": path.resolve(__dirname, "src/Apps/Checklist/scripts"),
-            "ControlsLibrary": path.resolve(__dirname, "src/Apps/ControlsLibrary/scripts"),
-            "OneClick": path.resolve(__dirname, "src/Apps/OneClick/scripts"),
-            "PRWorkItems": path.resolve(__dirname, "src/Apps/PRWorkItems/scripts"),
-            "RelatedWits": path.resolve(__dirname, "src/Apps/RelatedWits/scripts")
-        }        
+        alias: {
+            OfficeFabric: path.resolve(__dirname, "node_modules/office-ui-fabric-react/lib"),
+            VSSUI: path.resolve(__dirname, "node_modules/vss-ui"),
+            Common: path.resolve(__dirname, "src/Common"),
+            BugBashPro: path.resolve(__dirname, "src/Apps/BugBashPro/scripts"),
+            Checklist: path.resolve(__dirname, "src/Apps/Checklist/scripts"),
+            ControlsLibrary: path.resolve(__dirname, "src/Apps/ControlsLibrary/scripts"),
+            OneClick: path.resolve(__dirname, "src/Apps/OneClick/scripts"),
+            PRWorkItems: path.resolve(__dirname, "src/Apps/PRWorkItems/scripts"),
+            RelatedWits: path.resolve(__dirname, "src/Apps/RelatedWits/scripts")
+        }
     },
     module: {
         rules: [
@@ -101,9 +101,7 @@ module.exports = {
                     {
                         loader: "sass-resources-loader",
                         query: {
-                            resources: [
-                                path.resolve(__dirname, './src/Common/_CommonStyles.scss')
-                            ]
+                            resources: [path.resolve(__dirname, "./src/Common/_CommonStyles.scss")]
                         }
                     }
                 ]
@@ -111,4 +109,4 @@ module.exports = {
         ]
     },
     plugins: appPlugins
-}
+};

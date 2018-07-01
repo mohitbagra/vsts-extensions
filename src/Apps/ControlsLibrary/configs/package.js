@@ -2,7 +2,7 @@ var exec = require("child_process").exec;
 
 // Package release extension
 var command = `tfx extension create --overrides-file configs/release.json --manifest-globs vss-extension.json --no-prompt --json`;
-exec(command, { cwd: 'dist/ControlsLibrary/' }, (error, stdout) => {
+exec(command, { cwd: "dist/ControlsLibrary/" }, (error, stdout) => {
     if (error) {
         console.error(`Could not create package: '${error}'`);
         return;
@@ -15,7 +15,7 @@ exec(command, { cwd: 'dist/ControlsLibrary/' }, (error, stdout) => {
 var manifest = require("../vss-extension.json");
 var extensionId = manifest.id;
 var command = `tfx extension create --overrides-file configs/dev.json --manifest-globs vss-extension.json --extension-id ${extensionId}-dev --no-prompt --json`;
-exec(command, { cwd: 'dist/ControlsLibrary/' }, (error, stdout) => {
+exec(command, { cwd: "dist/ControlsLibrary/" }, (error, stdout) => {
     if (error) {
         console.error(`Could not create package: '${error}'`);
         return;

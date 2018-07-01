@@ -1,16 +1,14 @@
 export function delegate(instance: any, method: Function, data?: any): (...args: any[]) => any {
     // tslint:disable-next-line:no-function-expression
-    return function () {
+    return function() {
         if (data == null) {
             return method.apply(instance, arguments);
-        }
-        else {
+        } else {
             let args = <any[]>Array.prototype.slice.call(arguments, 0);
 
             if (data instanceof Array) {
                 args = args.concat(data);
-            }
-            else {
+            } else {
                 args.push(data);
             }
 
@@ -36,17 +34,14 @@ export class DelayedFunction {
 
     public start() {
         if (!this._timeoutHandle) {
-            this._timeoutHandle = window.setTimeout(
-                () => {
-                    delete this._timeoutHandle;
-                    try {
-                        this._invoke.call(this);
-                    }
-                    catch {
-                        // eat up
-                    }
-                },
-                this._interval);
+            this._timeoutHandle = window.setTimeout(() => {
+                delete this._timeoutHandle;
+                try {
+                    this._invoke.call(this);
+                } catch {
+                    // eat up
+                }
+            }, this._interval);
         }
     }
 
@@ -80,7 +75,7 @@ let hostDialogService: IHostDialogService;
 
 export async function getHostDialogService(): Promise<IHostDialogService> {
     if (!hostDialogService) {
-        hostDialogService = await VSS.getService(VSS.ServiceIds.Dialog) as IHostDialogService;
+        hostDialogService = (await VSS.getService(VSS.ServiceIds.Dialog)) as IHostDialogService;
     }
 
     return hostDialogService;
@@ -106,8 +101,7 @@ export async function confirmAction(condition: boolean, msg: string): Promise<bo
         try {
             await dialogService.openMessageDialog(msg, { useBowtieStyle: true });
             return true;
-        }
-        catch (e) {
+        } catch (e) {
             // user selected "No"" in dialog
             return false;
         }
@@ -123,8 +117,7 @@ export async function showErrorDialog(message: string, reason?: any): Promise<vo
     const dialogService = await getHostDialogService();
     try {
         await dialogService.openMessageDialog(errorMsg, { useBowtieStyle: true });
-    }
-    catch (e) {
+    } catch (e) {
         // do nothing as pressing cancel on the dialog will throw an error here
     }
     return;

@@ -58,7 +58,7 @@ export class WorkItemFieldPicker extends BaseFluxComponent<IWorkItemFieldPickerP
         }
 
         if (!arrayEquals(nextProps.allowedFieldTypes, this.props.allowedFieldTypes) || !arrayEquals(nextProps.excludeFields, this.props.excludeFields)) {
-            this.setState({allowedFields: this._getAllowedFields(nextProps.allowedFieldTypes, nextProps.excludeFields, nextProps.workItemType)});
+            this.setState({ allowedFields: this._getAllowedFields(nextProps.allowedFieldTypes, nextProps.excludeFields, nextProps.workItemType) });
         }
     }
 
@@ -100,9 +100,11 @@ export class WorkItemFieldPicker extends BaseFluxComponent<IWorkItemFieldPickerP
                 witFields = this._workItemTypeStore.getItem(workItemType).fields.map(wf => wf.referenceName);
             }
 
-            return (!allowedFieldTypes || allowedFieldTypes.indexOf(f.type) !== -1)
-                && (!excludeFields || !contains(excludeFields, f.referenceName, (a, b) => stringEquals(a, b, true)))
-                && (!witFields || contains(witFields, f.referenceName, (s1, s2) => stringEquals(s1, s2, true)));
+            return (
+                (!allowedFieldTypes || allowedFieldTypes.indexOf(f.type) !== -1) &&
+                (!excludeFields || !contains(excludeFields, f.referenceName, (a, b) => stringEquals(a, b, true))) &&
+                (!witFields || contains(witFields, f.referenceName, (s1, s2) => stringEquals(s1, s2, true)))
+            );
         });
     }
 }

@@ -25,18 +25,17 @@ export function defaultDateComparer(date1: Date, date2: Date): number {
 export function dateEquals(date1: Date, date2: Date): boolean {
     if (date1 === null || date1 === undefined) {
         return date1 === date2;
-    }
-    else {
-        return (date1 instanceof Date) && defaultDateComparer(date1, date2) === 0;
+    } else {
+        return date1 instanceof Date && defaultDateComparer(date1, date2) === 0;
     }
 }
 
 export function shiftToUTC(date: Date): Date {
-    return new Date(date.getTime() + (date.getTimezoneOffset() * 1000 * 60));
+    return new Date(date.getTime() + date.getTimezoneOffset() * 1000 * 60);
 }
 
 export function shiftToLocal(date: Date): Date {
-    return new Date(date.getTime() - (date.getTimezoneOffset() * 1000 * 60));
+    return new Date(date.getTime() - date.getTimezoneOffset() * 1000 * 60);
 }
 
 export function ago(date: Date): string {
@@ -83,19 +82,19 @@ export function friendly(date: Date): string {
     const steps = [
         {
             limit: day,
-            format: (dt) => {
+            format: dt => {
                 return ago(dt);
             }
         },
         {
             limit: (<any>now - <any>firstDayOfWeek) / 1000,
-            format: (dt) => {
+            format: dt => {
                 return format(dt, "dddd");
             }
         },
         {
             limit: Number.POSITIVE_INFINITY,
-            format: (dt) => {
+            format: dt => {
                 return format(dt, "M/D/YYYY");
             }
         }

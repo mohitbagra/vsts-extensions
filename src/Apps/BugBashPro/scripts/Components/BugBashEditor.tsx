@@ -43,7 +43,7 @@ export interface IBugBashEditorState extends IBaseFluxComponentState {
     error?: string;
 }
 
-export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBashEditorState>  {
+export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBashEditorState> {
     public componentDidMount() {
         super.componentDidMount();
 
@@ -78,14 +78,12 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
                     };
                 });
 
-                this.setState({templates: templates} as IBugBashEditorState);
-            }
-            else {
+                this.setState({ templates: templates } as IBugBashEditorState);
+            } else {
                 WorkItemTemplateActions.initializeWorkItemTemplates(nextAcceptTemplateTeam);
             }
-        }
-        else {
-            this.setState({templates: []} as IBugBashEditorState);
+        } else {
+            this.setState({ templates: [] } as IBugBashEditorState);
         }
     }
 
@@ -96,15 +94,11 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
 
         return (
             <div className="bugbash-editor">
-                { this.state.error &&
-                    <MessageBar
-                        className="message-panel"
-                        messageBarType={MessageBarType.error}
-                        onDismiss={this._dismissErrorMessage}
-                    >
+                {this.state.error && (
+                    <MessageBar className="message-panel" messageBarType={MessageBarType.error} onDismiss={this._dismissErrorMessage}>
                         {this.state.error}
                     </MessageBar>
-                }
+                )}
                 {this._renderEditor()}
             </div>
         );
@@ -121,7 +115,11 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
         return [
             StoresHub.bugBashStore,
             StoresHub.workItemFieldStore,
-            StoresHub.teamStore, StoresHub.workItemTemplateStore, StoresHub.workItemTypeStore, StoresHub.errorMessageStore];
+            StoresHub.teamStore,
+            StoresHub.workItemTemplateStore,
+            StoresHub.workItemTypeStore,
+            StoresHub.errorMessageStore
+        ];
     }
 
     protected getStoresState(): IBugBashEditorState {
@@ -139,7 +137,7 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
                 };
             });
 
-            state = {...state, templates: templates};
+            state = { ...state, templates: templates };
         }
 
         return state;
@@ -165,16 +163,13 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
 
         return (
             <div className="bugbash-editor-contents" onKeyDown={this._onEditorKeyDown} tabIndex={0}>
-                {isBugBashLoading && <Overlay className="loading-overlay"><Loading /></Overlay>}
+                {isBugBashLoading && (
+                    <Overlay className="loading-overlay">
+                        <Loading />
+                    </Overlay>
+                )}
                 <div className="title-container">
-                    <ThrottledTextField
-                        label="Title"
-                        maxLength={SizeLimits.TitleFieldMaxLength}
-                        value={bugBashTitle}
-                        delay={200}
-                        required={true}
-                        onChanged={this._onTitleChange}
-                    />
+                    <ThrottledTextField label="Title" maxLength={SizeLimits.TitleFieldMaxLength} value={bugBashTitle} delay={200} required={true} onChanged={this._onTitleChange} />
                 </div>
                 <div className="section-container">
                     <div className="first-section">
@@ -186,17 +181,10 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
                             value={startTime}
                             onSelectDate={this._onStartDateChange}
                         />
-                        <DatePicker
-                            label="Finish Date"
-                            className="editor-control"
-                            allowTextInput={true}
-                            isRequired={false}
-                            value={endTime}
-                            onSelectDate={this._onEndDateChange}
-                        />
-                        {startTime
-                            && endTime
-                            && defaultDateComparer(startTime, endTime) >= 0 &&  <InputError error="Bugbash end time cannot be a date before bugbash start time." />}
+                        <DatePicker label="Finish Date" className="editor-control" allowTextInput={true} isRequired={false} value={endTime} onSelectDate={this._onEndDateChange} />
+                        {startTime &&
+                            endTime &&
+                            defaultDateComparer(startTime, endTime) >= 0 && <InputError error="Bugbash end time cannot be a date before bugbash start time." />}
                         <WorkItemTypePicker
                             className="editor-control"
                             selectedOption={workItemType}
@@ -221,12 +209,7 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
                     </div>
                     <div className="second-section">
                         <div className="checkbox-container">
-                            <Checkbox
-                                className="auto-accept"
-                                label=""
-                                checked={bugBash.getFieldValue<boolean>(BugBashFieldNames.AutoAccept)}
-                                onChange={this._onAutoAcceptChange}
-                            />
+                            <Checkbox className="auto-accept" label="" checked={bugBash.getFieldValue<boolean>(BugBashFieldNames.AutoAccept)} onChange={this._onAutoAcceptChange} />
 
                             <InfoLabel label="Auto Accept?" info="Auto create work items on creation of a bug bash item" />
                         </div>
@@ -254,7 +237,12 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
 
                         <div className="template-info-container">
                             <InfoLabel label="Work item template" info="Select a work item template that would be applied during work item creation." />
-                            {workItemType && acceptTemplateTeam && <Link href={this._getTemplatePageUrl(acceptTemplateTeamId, workItemType.name)} target="_blank">Add a template</Link>}
+                            {workItemType &&
+                                acceptTemplateTeam && (
+                                    <Link href={this._getTemplatePageUrl(acceptTemplateTeamId, workItemType.name)} target="_blank">
+                                        Add a template
+                                    </Link>
+                                )}
                         </div>
                         <Dropdown
                             selectedKey={acceptTemplateId.toLowerCase()}
@@ -284,63 +272,56 @@ export class BugBashEditor extends BaseFluxComponent<IBugBashEditorProps, IBugBa
     }
 
     private _dismissErrorMessage = () => {
-        setTimeout(
-            () => {
-                ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashError);
-            },
-            0
-        );
-    }
+        setTimeout(() => {
+            ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashError);
+        }, 0);
+    };
 
     private _onRenderCallout = (props?: IDropdownProps, defaultRender?: (props?: IDropdownProps) => JSX.Element): JSX.Element => {
-        return (
-            <div className="callout-container">
-                {defaultRender(props)}
-            </div>
-        );
-    }
+        return <div className="callout-container">{defaultRender(props)}</div>;
+    };
 
     private _onEditorKeyDown = (e: React.KeyboardEvent<any>) => {
         if (e.ctrlKey && e.keyCode === 83) {
             e.preventDefault();
             this.props.bugBash.save();
         }
-    }
+    };
 
     private _onTitleChange = (value: string) => {
         this._onChange(BugBashFieldNames.Title, value);
-    }
+    };
 
     private _onStartDateChange = (value: Date) => {
         this._onChange(BugBashFieldNames.StartTime, value);
-    }
+    };
 
     private _onEndDateChange = (value: Date) => {
         this._onChange(BugBashFieldNames.EndTime, value);
-    }
+    };
 
     private _onAutoAcceptChange = (_ev: React.FormEvent<HTMLElement>, isChecked: boolean) => {
         this._onChange(BugBashFieldNames.AutoAccept, isChecked);
-    }
+    };
 
     private _onTemplateChange = (option: IDropdownOption) => {
         this._onChange(BugBashFieldNames.AcceptTemplateId, option.key as string);
-    }
+    };
 
     private _onFieldChange = (field: WorkItemField, value?: string) => {
         this._onChange(BugBashFieldNames.ItemDescriptionField, field ? field.referenceName : value);
-    }
+    };
 
     private _onWorkItemTypeChange = (witType: WorkItemType, value?: string) => {
         this._onChange(BugBashFieldNames.WorkItemType, witType ? witType.name : value);
-    }
+    };
 
     private _onTemplateTeamChange = (team: WebApiTeam, value?: string) => {
         this.props.bugBash.setFieldValue<string>(BugBashFieldNames.AcceptTemplateId, "", false);
         this._onChange(BugBashFieldNames.AcceptTemplateTeam, team ? team.id : value);
-    }
+    };
 
     private _onDefaultTeamChange = (team: WebApiTeam, value?: string) => {
         this._onChange(BugBashFieldNames.DefaultTeam, team ? team.id : value);
-    }
+    };
 }

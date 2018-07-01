@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    
+
     #ext-container {
         padding: 0px 10px;
 
@@ -9,21 +9,21 @@ body {
             height: 100%;
 
             .rules-content-container {
-                height: 100%;     
-                outline: none;           
+                height: 100%;
+                outline: none;
 
                 .rules-command-bar {
                     display: flex;
-                    flex-direction: row-reverse;;
+                    flex-direction: row-reverse;
                     border-bottom: 1px solid #ddd;
                     margin-bottom: 5px;
                     padding-bottom: 5px;
                     align-items: center;
-                    
+
                     .rules-command {
                         color: #0078d7;
                         height: 24px;
-    
+
                         &:hover {
                             color: #005a9e;
                         }
@@ -43,13 +43,14 @@ body {
                         text-decoration: none;
                         line-height: 22px;
                         margin-right: 10px;
-                        
-                        &:hover, &:focus {
+
+                        &:hover,
+                        &:focus {
                             text-decoration: underline;
                         }
                     }
                 }
-    
+
                 .vss-ZeroData {
                     margin-top: 0px;
                     padding-bottom: 10px;
@@ -58,19 +59,19 @@ body {
                         display: none;
                     }
                 }
-    
+
                 .rules-list-container {
                     max-height: 300px;
                     overflow: auto;
                     margin: 0;
-                    padding: 0;                    
+                    padding: 0;
                     padding-bottom: 10px;
 
                     .rule-list-item {
                         float: left;
                     }
                 }
-            } 
-        }               
+            }
+        }
     }
 }

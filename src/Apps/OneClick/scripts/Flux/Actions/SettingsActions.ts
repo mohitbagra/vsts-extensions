@@ -12,15 +12,10 @@ export namespace SettingsActions {
         if (!store.isLoading(storeKey)) {
             store.setLoading(true, storeKey);
 
-            const value = await SettingsDataService.loadSetting<T>(
-                key,
-                defaultValue,
-                workItemTypeName,
-                VSS.getWebContext().project.id,
-                isPrivate);
+            const value = await SettingsDataService.loadSetting<T>(key, defaultValue, workItemTypeName, VSS.getWebContext().project.id, isPrivate);
 
             if (store.checkCurrentWorkItemType(workItemTypeName)) {
-                SettingsActionsHub.InitializeSetting.invoke({key: key, value: value});
+                SettingsActionsHub.InitializeSetting.invoke({ key: key, value: value });
             }
 
             store.setLoading(false, storeKey);
@@ -33,15 +28,10 @@ export namespace SettingsActions {
         if (!store.isLoading(storeKey)) {
             store.setLoading(true, storeKey);
 
-            const newValue = await SettingsDataService.updateSetting<T>(
-                key,
-                value,
-                workItemTypeName,
-                VSS.getWebContext().project.id,
-                isPrivate);
+            const newValue = await SettingsDataService.updateSetting<T>(key, value, workItemTypeName, VSS.getWebContext().project.id, isPrivate);
 
             if (store.checkCurrentWorkItemType(workItemTypeName)) {
-                SettingsActionsHub.UpdateSetting.invoke({key: key, value: newValue});
+                SettingsActionsHub.UpdateSetting.invoke({ key: key, value: newValue });
             }
 
             store.setLoading(false, storeKey);

@@ -24,7 +24,7 @@
 
         div.wrap > input[type="text"] {
             padding: 0 5px;
-            width: calc(100% - 45px);    
+            width: calc(100% - 45px);
             @include TextOverflowEllipsis();
         }
 
@@ -36,14 +36,14 @@
             width: 25px;
             transform: none;
             font-size: 12px;
-            
+
             &::before {
                 content: "\E70D";
             }
 
             &.bowtie-calendar {
                 font-size: 15px;
-                
+
                 &::before {
                     content: "\E787";
                 }
@@ -67,7 +67,7 @@
                 font-size: 10px;
                 vertical-align: middle;
                 margin-right: 3px;
-                
+
                 &::before {
                     content: "\E70D";
                 }

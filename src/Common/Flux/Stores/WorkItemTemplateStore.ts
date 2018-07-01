@@ -26,7 +26,7 @@ export class WorkItemTemplateStore extends BaseStore<IDictionaryStringTo<WorkIte
     }
 
     protected initializeActionListeners() {
-        WorkItemTemplateActionsHub.InitializeWorkItemTemplates.addListener((data: {teamId: string, templates: WorkItemTemplateReference[]}) => {
+        WorkItemTemplateActionsHub.InitializeWorkItemTemplates.addListener((data: { teamId: string; templates: WorkItemTemplateReference[] }) => {
             if (data && data.teamId && data.templates) {
                 this.items[data.teamId.toLowerCase()] = data.templates;
 

@@ -16,7 +16,8 @@ import { FieldType } from "TFS/WorkItemTracking/Contracts";
 const AsyncAddExistingRelationRenderer = getAsyncLoadedComponent(
     ["scripts/ActionRenderers"],
     (m: typeof ActionRenderers_Async) => m.AddExistingRelationActionRenderer,
-    () => <Loading />);
+    () => <Loading />
+);
 
 export class AddExistingRelationAction extends BaseAction {
     public async run() {
@@ -59,24 +60,28 @@ export class AddExistingRelationAction extends BaseAction {
         const relationType = this.getAttribute<string>("relationType");
         const workItemId = this.getAttribute<string>("workItemId");
 
-        return StoresHub.workItemRelationTypeStore.isLoaded()
-            && !isNullOrEmpty(relationType)
-            && StoresHub.workItemRelationTypeStore.itemExists(relationType)
-            && !isNullOrEmpty(workItemId)
-            && isNullOrEmpty(this._getWorkItemIdError(workItemId));
+        return (
+            StoresHub.workItemRelationTypeStore.isLoaded() &&
+            !isNullOrEmpty(relationType) &&
+            StoresHub.workItemRelationTypeStore.itemExists(relationType) &&
+            !isNullOrEmpty(workItemId) &&
+            isNullOrEmpty(this._getWorkItemIdError(workItemId))
+        );
     }
 
     public isDirty(): boolean {
-        return super.isDirty()
-            || !stringEquals(this.getAttribute<string>("workItemId", true), this.getAttribute<string>("workItemId"), true)
-            || !stringEquals(this.getAttribute<string>("relationType", true), this.getAttribute<string>("relationType"), true);
+        return (
+            super.isDirty() ||
+            !stringEquals(this.getAttribute<string>("workItemId", true), this.getAttribute<string>("workItemId"), true) ||
+            !stringEquals(this.getAttribute<string>("relationType", true), this.getAttribute<string>("relationType"), true)
+        );
     }
 
     public getIcon(): IIconProps {
         return {
             iconName: "Link",
             styles: {
-                root: {color: "#004578 !important"}
+                root: { color: "#004578 !important" }
             }
         };
     }
@@ -122,9 +127,9 @@ export class AddExistingRelationAction extends BaseAction {
 
     private _onWorkItemIdChange = (value: string) => {
         this.setAttribute<string>("workItemId", value);
-    }
+    };
 
     private _onWorkItemRelationTypeChange = (value: string) => {
         this.setAttribute<string>("relationType", value);
-    }
+    };
 }

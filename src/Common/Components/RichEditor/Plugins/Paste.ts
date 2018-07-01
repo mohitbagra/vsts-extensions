@@ -32,10 +32,7 @@ export class Paste implements EditorPlugin {
     /**
      * Create an instance of Paste
      */
-    constructor(
-        private _getPastedImageUrl: (data: string) => Promise<string>,
-        private _htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback
-    ) {}
+    constructor(private _getPastedImageUrl: (data: string) => Promise<string>, private _htmlPropertyCallbacks?: SanitizeHtmlPropertyCallback) {}
 
     public initialize(editor: Editor) {
         this._editor = editor;
@@ -84,39 +81,22 @@ export class Paste implements EditorPlugin {
 
     private _onPaste = (event: Event) => {
         this._editor.addUndoSnapshot();
-        buildClipboardData(
-            <ClipboardEvent>event,
-            this._editor,
-            clipboardData => {
-                if (!clipboardData.html && clipboardData.text) {
-                    clipboardData.html = textToHtml(clipboardData.text);
-                }
-
-                const currentStyles = getInheritableStyles(this._editor);
-                clipboardData.html = sanitizeHtml(
-                    clipboardData.html,
-                    null,
-                    false,
-                    this._htmlPropertyCallbacks,
-                    true,
-                    currentStyles
-                );
-                this.pasteOriginal(clipboardData);
+        buildClipboardData(<ClipboardEvent>event, this._editor, clipboardData => {
+            if (!clipboardData.html && clipboardData.text) {
+                clipboardData.html = textToHtml(clipboardData.text);
             }
-        );
-    }
+
+            const currentStyles = getInheritableStyles(this._editor);
+            clipboardData.html = sanitizeHtml(clipboardData.html, null, false, this._htmlPropertyCallbacks, true, currentStyles);
+            this.pasteOriginal(clipboardData);
+        });
+    };
 
     private _detectPasteOption(clipboardData: ClipboardData): PasteOption {
-        return clipboardData.text || !clipboardData.image
-            ? PasteOption.PasteHtml
-            : PasteOption.PasteImage;
+        return clipboardData.text || !clipboardData.image ? PasteOption.PasteHtml : PasteOption.PasteImage;
     }
 
-    private _paste(
-        clipboardData: ClipboardData,
-        pasteOption: PasteOption,
-        mergeCurrentFormat?: boolean
-    ) {
+    private _paste(clipboardData: ClipboardData, pasteOption: PasteOption, mergeCurrentFormat?: boolean) {
         const document = this._editor.getDocument();
         const fragment = document.createDocumentFragment();
 
@@ -136,7 +116,7 @@ export class Paste implements EditorPlugin {
             eventType: PluginEventType.BeforePaste,
             clipboardData: clipboardData,
             fragment: fragment,
-            pasteOption: pasteOption,
+            pasteOption: pasteOption
         };
 
         this._editor.triggerEvent(event, true);
@@ -175,11 +155,7 @@ export class Paste implements EditorPlugin {
         let leaf = getFirstLeafNode(node);
         const parents: HTMLElement[] = [];
         while (leaf) {
-            if (
-                leaf.nodeType === NodeType.Text &&
-                leaf.parentNode &&
-                parents.indexOf(<HTMLElement>leaf.parentNode) < 0
-            ) {
+            if (leaf.nodeType === NodeType.Text && leaf.parentNode && parents.indexOf(<HTMLElement>leaf.parentNode) < 0) {
                 parents.push(<HTMLElement>leaf.parentNode);
             }
             leaf = getNextLeafSibling(node, leaf);

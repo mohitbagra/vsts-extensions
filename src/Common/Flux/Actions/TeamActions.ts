@@ -12,16 +12,14 @@ export namespace TeamActions {
     export async function initializeTeams() {
         if (teamStore.isLoaded()) {
             TeamActionsHub.InitializeTeams.invoke(null);
-        }
-        else if (!teamStore.isLoading()) {
+        } else if (!teamStore.isLoading()) {
             teamStore.setLoading(true);
             try {
                 const teams = await getTeams();
                 teams.sort((a: WebApiTeam, b: WebApiTeam) => localeIgnoreCaseComparer(a.name, b.name));
                 TeamActionsHub.InitializeTeams.invoke(teams);
                 teamStore.setLoading(false);
-            }
-            catch (e) {
+            } catch (e) {
                 teamStore.setLoading(false);
                 throw e.message;
             }

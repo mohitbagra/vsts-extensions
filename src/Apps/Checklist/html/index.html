@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <script src="../3rdParty/es6-promise.min.js"></script>
@@ -22,7 +23,7 @@
                 }
             }
         });
-        
+
         // Load main entry point for extension
         VSS.require(["scripts/App", "TFS/WorkItemTracking/ExtensionContracts", "TFS/WorkItemTracking/Services"], function (App) {
             App.init();
@@ -31,7 +32,8 @@
     </script>
 
     <div id="ext-container">
-          
+
     </div>
 </body>
+
 </html>

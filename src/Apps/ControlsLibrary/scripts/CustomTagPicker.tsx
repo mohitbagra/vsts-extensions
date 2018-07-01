@@ -14,7 +14,9 @@ export interface ICustomTagPickerProps extends IBasePickerProps<ITag> {
 
 export class CustomTagPicker extends BasePicker<ITag, ICustomTagPickerProps> {
     protected static defaultProps = {
-        onRenderItem: (props: IPickerItemProps<ITag>) => { return <TagItem {...props}>{props.item.name}</TagItem>; },
+        onRenderItem: (props: IPickerItemProps<ITag>) => {
+            return <TagItem {...props}>{props.item.name}</TagItem>;
+        },
         onRenderSuggestionsItem: (props: ITag) => <div className={css("ms-TagItem-TextOverflow")}>{props.name}</div>
     };
 
@@ -40,6 +42,6 @@ export class CustomTagPicker extends BasePicker<ITag, ICustomTagPickerProps> {
                 removeSuggestionAriaLabel={this.props.removeButtonAriaLabel}
                 {...this.props.pickerSuggestionsProps as any}
             />
-        ) : (null);
+        ) : null;
     }
 }

@@ -9,7 +9,7 @@ export class WorkItemStore extends BaseStore<IDictionaryNumberTo<WorkItem>, Work
     }
 
     public getItem(workItemId: number): WorkItem {
-         return this.items[workItemId];
+        return this.items[workItemId];
     }
 
     public getItems(workItemIds: number[]): WorkItem[] {
@@ -56,7 +56,6 @@ export class WorkItemStore extends BaseStore<IDictionaryNumberTo<WorkItem>, Work
             this.clearStore();
             this.emitChanged();
         });
-
     }
 
     protected convertItemKeyToString(key: number): string {

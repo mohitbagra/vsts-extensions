@@ -27,7 +27,7 @@ export interface IBugBashDetailsState extends IBaseFluxComponentState {
     longText: LongText;
 }
 
-export class BugBashDetails extends BaseFluxComponent<IBugBashDetailsProps, IBugBashDetailsState>  {
+export class BugBashDetails extends BaseFluxComponent<IBugBashDetailsProps, IBugBashDetailsState> {
     public componentDidMount() {
         super.componentDidMount();
         LongTextActions.initializeLongText(this.props.id);
@@ -45,23 +45,14 @@ export class BugBashDetails extends BaseFluxComponent<IBugBashDetailsProps, IBug
 
         return (
             <div className="bugbash-details">
-                { this.state.error &&
-                    <MessageBar
-                        className="message-panel"
-                        messageBarType={MessageBarType.error}
-                        onDismiss={this._dismissErrorMessage}
-                    >
+                {this.state.error && (
+                    <MessageBar className="message-panel" messageBarType={MessageBarType.error} onDismiss={this._dismissErrorMessage}>
                         {this.state.error}
                     </MessageBar>
-                }
+                )}
 
-                <div
-                    className="bugbash-details-contents"
-                    onKeyDown={this._onEditorKeyDown}
-                    tabIndex={0}
-                >
-
-                    { this.props.isEditMode &&
+                <div className="bugbash-details-contents" onKeyDown={this._onEditorKeyDown} tabIndex={0}>
+                    {this.props.isEditMode && (
                         <RichEditorComponent
                             value={this.state.longText.Text}
                             delay={200}
@@ -70,15 +61,12 @@ export class BugBashDetails extends BaseFluxComponent<IBugBashDetailsProps, IBug
                             }}
                             onChange={this._onChange}
                         />
-                    }
+                    )}
 
-                    { !this.props.isEditMode && !this.state.longText.Text &&
-                        <Label className="bugbash-details-nodata">No details have been added to this Bug bash. Click Edit to enter details.</Label>
-                    }
+                    {!this.props.isEditMode &&
+                        !this.state.longText.Text && <Label className="bugbash-details-nodata">No details have been added to this Bug bash. Click Edit to enter details.</Label>}
 
-                    { !this.props.isEditMode && this.state.longText.Text &&
-                        <div className="bugbash-details-html" dangerouslySetInnerHTML={{__html: this.state.longText.Text}} />
-                    }
+                    {!this.props.isEditMode && this.state.longText.Text && <div className="bugbash-details-html" dangerouslySetInnerHTML={{ __html: this.state.longText.Text }} />}
                 </div>
             </div>
         );
@@ -106,26 +94,25 @@ export class BugBashDetails extends BaseFluxComponent<IBugBashDetailsProps, IBug
 
     private _dismissErrorMessage = () => {
         ErrorMessageActions.dismissErrorMessage(ErrorKeys.BugBashDetailsError);
-    }
+    };
 
     private _onChange = (newValue: string) => {
         this.state.longText.setDetails(newValue);
-    }
+    };
 
     private _pasteImage = async (data: string): Promise<string> => {
         try {
             return await copyImageToGitRepo(data, "Details");
-        }
-        catch (e) {
+        } catch (e) {
             ErrorMessageActions.showErrorMessage(e, ErrorKeys.BugBashDetailsError);
             return null;
         }
-    }
+    };
 
     private _onEditorKeyDown = (e: React.KeyboardEvent<any>) => {
         if (e.ctrlKey && e.keyCode === 83 && this.props.isEditMode) {
             e.preventDefault();
             this.state.longText.save();
         }
-    }
+    };
 }

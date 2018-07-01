@@ -12,7 +12,7 @@ const KeyTypes = {
     [WorkItemFieldNames.Title]: "string",
     [WorkItemFieldNames.State]: "string",
     [WorkItemFieldNames.WorkItemType]: "string",
-    [WorkItemFieldNames.ID]: "number",
+    [WorkItemFieldNames.ID]: "number"
 };
 
 export function workItemMatchesFilter(workItem: WorkItem, filterState: IFilterState): boolean {
@@ -74,27 +74,21 @@ export function workItemComparer(workItem1: WorkItem, workItem2: WorkItem, sortS
 
     if (v1 == null && v2 == null) {
         compareValue = 0;
-    }
-    else if (v1 == null && v2 != null) {
+    } else if (v1 == null && v2 != null) {
         compareValue = -1;
-    }
-    else if (v1 != null && v2 == null) {
+    } else if (v1 != null && v2 == null) {
         compareValue = 1;
-    }
-    else if (KeyTypes[sortKey] === "string") {
+    } else if (KeyTypes[sortKey] === "string") {
         compareValue = ignoreCaseComparer(v1 as string, v2 as string);
-    }
-    else if (KeyTypes[sortKey] === "date") {
+    } else if (KeyTypes[sortKey] === "date") {
         compareValue = defaultDateComparer(v1 as Date, v2 as Date);
-    }
-    else if (KeyTypes[sortKey] === "boolean") {
+    } else if (KeyTypes[sortKey] === "boolean") {
         const b1 = !v1 ? "False" : "True";
         const b2 = !v2 ? "False" : "True";
         compareValue = ignoreCaseComparer(b1, b2);
-    }
-    else if (KeyTypes[sortKey] === "number") {
-        compareValue = (v1 > v2) ? 1 : -1;
+    } else if (KeyTypes[sortKey] === "number") {
+        compareValue = v1 > v2 ? 1 : -1;
     }
 
-    return isSortedDescending ? -1 * compareValue : compareValue;
+    return isSortedDescending ? compareValue * -1 : compareValue;
 }

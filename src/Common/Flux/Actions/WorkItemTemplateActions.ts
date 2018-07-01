@@ -11,17 +11,15 @@ export namespace WorkItemTemplateActions {
     export async function initializeWorkItemTemplates(teamId: string) {
         if (workItemTemplateStore.isLoaded(teamId)) {
             WorkItemTemplateActionsHub.InitializeWorkItemTemplates.invoke(null);
-        }
-        else if (!workItemTemplateStore.isLoading(teamId)) {
+        } else if (!workItemTemplateStore.isLoading(teamId)) {
             workItemTemplateStore.setLoading(true, teamId);
             try {
                 const workItemTemplates = await WitClient.getClient().getTemplates(VSS.getWebContext().project.id, teamId);
                 workItemTemplates.sort((a: WorkItemTemplateReference, b: WorkItemTemplateReference) => localeIgnoreCaseComparer(a.name, b.name));
 
-                WorkItemTemplateActionsHub.InitializeWorkItemTemplates.invoke({teamId: teamId, templates: workItemTemplates});
+                WorkItemTemplateActionsHub.InitializeWorkItemTemplates.invoke({ teamId: teamId, templates: workItemTemplates });
                 workItemTemplateStore.setLoading(false, teamId);
-            }
-            catch (e) {
+            } catch (e) {
                 workItemTemplateStore.setLoading(false, teamId);
                 throw e.message;
             }

@@ -28,7 +28,7 @@ export interface IFileInputDialogState extends IBaseFluxComponentState {
 
 export class FileUploadDialog extends BaseFluxComponent<IFileInputDialogProps, IFileInputDialogState> {
     public render(): JSX.Element {
-        const {title, maxFileSize, className, resultContentType, maximumNumberOfFiles, allowedFileExtensions} = this.props;
+        const { title, maxFileSize, className, resultContentType, maximumNumberOfFiles, allowedFileExtensions } = this.props;
 
         return (
             <Dialog
@@ -63,10 +63,7 @@ export class FileUploadDialog extends BaseFluxComponent<IFileInputDialogProps, I
                             OK
                         </PrimaryButton>
 
-                        <DefaultButton
-                            ariaLabel="Cancel"
-                            onClick={this._onDialogClose}
-                        >
+                        <DefaultButton ariaLabel="Cancel" onClick={this._onDialogClose}>
                             Cancel
                         </DefaultButton>
                     </DialogFooter>
@@ -83,14 +80,14 @@ export class FileUploadDialog extends BaseFluxComponent<IFileInputDialogProps, I
 
     private _onDialogClose = () => {
         this._closeDialog();
-    }
+    };
 
     private _onOkClicked = () => {
         if (!!this.props.onOkClick) {
             this.props.onOkClick(this.state.files);
         }
         this._closeDialog();
-    }
+    };
 
     private _onFileInputUpdate = (updateEvent: FileInputUpdateEventData) => {
         let files: FileInputResult[] = null;
@@ -100,5 +97,5 @@ export class FileUploadDialog extends BaseFluxComponent<IFileInputDialogProps, I
         this.setState({
             files: files
         });
-    }
+    };
 }

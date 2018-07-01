@@ -37,8 +37,7 @@ export class WorkItemTitleView extends BaseFluxComponent<IWorkItemTitleViewProps
             this.setState({
                 workItemType: this._workItemTypeStore.getItem(this.props.workItemType)
             });
-        }
-        else {
+        } else {
             WorkItemTypeActions.initializeWorkItemTypes();
         }
     }
@@ -59,28 +58,18 @@ export class WorkItemTitleView extends BaseFluxComponent<IWorkItemTitleViewProps
         const wit = this.state.workItemType;
 
         const witIcon = wit ? wit.icon : null;
-        const witIconUrl = (witIcon && witIcon.id) ? witIcon.url : null;
+        const witIconUrl = witIcon && witIcon.id ? witIcon.url : null;
 
         const webContext = VSS.getWebContext();
         const witUrl = `${webContext.collection.uri}/${webContext.project.name}/_workitems/edit/${this.props.workItemId}`;
 
         return (
-            <div
-                className={`${css("work-item-title-view", this.props.className)}`}
-            >
+            <div className={`${css("work-item-title-view", this.props.className)}`}>
                 {witIconUrl && <img src={witIconUrl} alt="icon" />}
                 {this.props.showId && <span className="work-item-id">{this.props.workItemId}</span>}
                 <div className="title-link">
-                    <TooltipHost
-                        content={this.props.title}
-                        delay={TooltipDelay.medium}
-                        overflowMode={TooltipOverflowMode.Parent}
-                        directionalHint={DirectionalHint.bottomLeftEdge}
-                    >
-                        <Link
-                            href={witUrl}
-                            onClick={this._onLinkClick}
-                        >
+                    <TooltipHost content={this.props.title} delay={TooltipDelay.medium} overflowMode={TooltipOverflowMode.Parent} directionalHint={DirectionalHint.bottomLeftEdge}>
+                        <Link href={witUrl} onClick={this._onLinkClick}>
                             {this.props.title}
                         </Link>
                     </TooltipHost>
@@ -108,5 +97,5 @@ export class WorkItemTitleView extends BaseFluxComponent<IWorkItemTitleViewProps
             e.preventDefault();
             this.props.onClick(e);
         }
-    }
+    };
 }

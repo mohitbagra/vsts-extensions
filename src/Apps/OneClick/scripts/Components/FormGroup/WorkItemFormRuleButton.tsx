@@ -25,7 +25,7 @@ export interface IWorkItemFormRuleButtonState extends IBaseFluxComponentState {
 
 export class WorkItemFormRuleButton extends BaseFluxComponent<IWorkItemFormRuleButtonProps, IWorkItemFormRuleButtonState> {
     public render(): JSX.Element {
-        const {rule} = this.props;
+        const { rule } = this.props;
 
         const name = rule.getFieldValue<string>(RuleFieldNames.Name);
         const color = rule.getFieldValue<string>(RuleFieldNames.Color);
@@ -41,7 +41,10 @@ export class WorkItemFormRuleButton extends BaseFluxComponent<IWorkItemFormRuleB
                 title={tooltip}
                 style={{
                     backgroundColor: color,
-                    color: new Color(color).toBlackOrWhite().invert().asHex(),
+                    color: new Color(color)
+                        .toBlackOrWhite()
+                        .invert()
+                        .asHex(),
                     display: hideButton ? "none" : undefined
                 }}
             >
@@ -53,7 +56,7 @@ export class WorkItemFormRuleButton extends BaseFluxComponent<IWorkItemFormRuleB
 
     private _onRuleClick = async () => {
         if (!this.state.disabled) {
-            this.setState({disabled: true});
+            this.setState({ disabled: true });
 
             const error = await this.props.rule.run();
             this.props.onExecute(error);
@@ -66,7 +69,7 @@ export class WorkItemFormRuleButton extends BaseFluxComponent<IWorkItemFormRuleB
                 user: getCurrentUserName()
             });
 
-            this.setState({disabled: false});
+            this.setState({ disabled: false });
         }
-    }
+    };
 }

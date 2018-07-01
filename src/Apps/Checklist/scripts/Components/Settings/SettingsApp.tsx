@@ -43,7 +43,7 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
         return (
             <Fabric className="fabric-container">
                 {this.state.loading && <Loading />}
-                {!this.state.loading &&
+                {!this.state.loading && (
                     <div className="container">
                         <Nav
                             className="workitemtype-selector-nav"
@@ -57,19 +57,13 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
                         />
 
                         <div className="workitemtype-container">
-                            <WorkItemTypeView
-                                workItemType={this.state.selectedWit}
-                            />
+                            <WorkItemTypeView workItemType={this.state.selectedWit} />
                         </div>
                     </div>
-                }
-                {!this.state.loading &&
+                )}
+                {!this.state.loading && (
                     <div className="info-button-contaier">
-                        <TooltipHost
-                            content={"How to use the extension"}
-                            delay={TooltipDelay.medium}
-                            directionalHint={DirectionalHint.bottomLeftEdge}
-                        >
+                        <TooltipHost content={"How to use the extension"} delay={TooltipDelay.medium} directionalHint={DirectionalHint.bottomLeftEdge}>
                             <IconButton
                                 className="info-button"
                                 iconProps={{
@@ -80,7 +74,7 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
                             />
                         </TooltipHost>
                     </div>
-                }
+                )}
             </Fabric>
         );
     }
@@ -105,18 +99,16 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
             if (!this.state.selectedWit) {
                 // if no wit is selected, route to the 1st wit
                 navigate({ witName: workItemTypes[0].name }, true, false, null, true);
-                newState = {...newState, selectedWit: workItemTypes[0].name};
-            }
-            else {
+                newState = { ...newState, selectedWit: workItemTypes[0].name };
+            } else {
                 // check the correct witName for current selected wit
                 const wit = StoresHub.workItemTypeStore.getItem(this.state.selectedWit);
                 if (!wit) {
                     // if its an invalid wit, route to the 1st workitemtype page
                     navigate({ witName: workItemTypes[0].name }, true, false, null, true);
-                    newState = {...newState, selectedWit: workItemTypes[0].name};
-                }
-                else {
-                    newState = {...newState, selectedWit: wit.name};
+                    newState = { ...newState, selectedWit: workItemTypes[0].name };
+                } else {
+                    newState = { ...newState, selectedWit: wit.name };
                 }
             }
         }
@@ -148,7 +140,7 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
             e.preventDefault();
             navigate({ witName: link.key });
         }
-    }
+    };
 
     private _onNavigate = async () => {
         if (this._navigationService) {
@@ -164,12 +156,10 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
                     // if its an invalid wit, route to the 1st workitemtype page
                     navigate({ witName: workItemTypes[0].name }, true);
                     return;
-                }
-                else {
+                } else {
                     witName = wit.name;
                 }
-            }
-            else if (!witName && workItemTypes) {
+            } else if (!witName && workItemTypes) {
                 witName = workItemTypes[0].name;
             }
 
@@ -177,7 +167,7 @@ export class SettingsApp extends BaseFluxComponent<IBaseFluxComponentProps, IApp
                 selectedWit: witName
             });
         }
-    }
+    };
 }
 
 export function init() {

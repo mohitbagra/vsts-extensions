@@ -9,9 +9,7 @@ import { WorkItemStateView } from "Common/Components/VSTS/WorkItemStateView";
 import { WorkItemTitleView } from "Common/Components/VSTS/WorkItemTitleView";
 import { WorkItemActions } from "Common/Flux/Actions/WorkItemActions";
 import { defaultDateComparer, friendly } from "Common/Utilities/Date";
-import {
-    getCurrentUser, getDistinctNameFromIdentityRef, IdentityRef
-} from "Common/Utilities/Identity";
+import { getCurrentUser, getDistinctNameFromIdentityRef } from "Common/Utilities/Identity";
 import {
     caseInsensitiveContains, ignoreCaseComparer, isNullOrWhiteSpace, stringEquals
 } from "Common/Utilities/String";
@@ -21,6 +19,7 @@ import {
     DirectionalHint, TooltipDelay, TooltipHost, TooltipOverflowMode
 } from "OfficeFabric/Tooltip";
 import { WorkItem } from "TFS/WorkItemTracking/Contracts";
+import { IdentityRef } from "VSS/WebApi/Contracts";
 import { IFilterState } from "VSSUI/Utilities/Filter";
 import { VssIcon, VssIconType } from "VSSUI/VssIcon";
 
@@ -41,7 +40,7 @@ export const BugBashItemKeyTypes = {
     [WorkItemFieldNames.Title]: "string",
     [WorkItemFieldNames.State]: "string",
     [WorkItemFieldNames.WorkItemType]: "string",
-    [WorkItemFieldNames.ID]: "number",
+    [WorkItemFieldNames.ID]: "number"
 };
 
 export class BugBashItem {
@@ -68,12 +67,10 @@ export class BugBashItem {
             if (bugBashItem2.isAccepted) {
                 v2 = sortKey === WorkItemFieldNames.ID ? bugBashItem2.workItemId : bugBashItem2.workItem.fields[sortKey];
             }
-        }
-        else if (sortKey === BugBashItemFieldNames.Title) {
+        } else if (sortKey === BugBashItemFieldNames.Title) {
             v1 = bugBashItem1.isAccepted ? bugBashItem1.workItem.fields[WorkItemFieldNames.Title] : bugBashItem1.getFieldValue(BugBashItemFieldNames.Title, true);
             v2 = bugBashItem2.isAccepted ? bugBashItem2.workItem.fields[WorkItemFieldNames.Title] : bugBashItem2.getFieldValue(BugBashItemFieldNames.Title, true);
-        }
-        else {
+        } else {
             v1 = bugBashItem1.getFieldValue(sortKey as BugBashItemFieldNames, true);
             v2 = bugBashItem2.getFieldValue(sortKey as BugBashItemFieldNames, true);
 
@@ -87,32 +84,25 @@ export class BugBashItem {
 
         if (v1 == null && v2 == null) {
             compareValue = 0;
-        }
-        else if (v1 == null && v2 != null) {
+        } else if (v1 == null && v2 != null) {
             compareValue = -1;
-        }
-        else if (v1 != null && v2 == null) {
+        } else if (v1 != null && v2 == null) {
             compareValue = 1;
-        }
-        else if (BugBashItemKeyTypes[sortKey] === "string" || BugBashItemKeyTypes[sortKey] === "identity") {
+        } else if (BugBashItemKeyTypes[sortKey] === "string" || BugBashItemKeyTypes[sortKey] === "identity") {
             compareValue = ignoreCaseComparer(v1 as string, v2 as string);
-        }
-        else if (BugBashItemKeyTypes[sortKey] === "identityRef") {
+        } else if (BugBashItemKeyTypes[sortKey] === "identityRef") {
             compareValue = ignoreCaseComparer(getDistinctNameFromIdentityRef(v1 as IdentityRef), getDistinctNameFromIdentityRef(v2 as IdentityRef));
-        }
-        else if (BugBashItemKeyTypes[sortKey] === "date") {
+        } else if (BugBashItemKeyTypes[sortKey] === "date") {
             compareValue = defaultDateComparer(v1 as Date, v2 as Date);
-        }
-        else if (BugBashItemKeyTypes[sortKey] === "boolean") {
+        } else if (BugBashItemKeyTypes[sortKey] === "boolean") {
             const b1 = !v1 ? "False" : "True";
             const b2 = !v2 ? "False" : "True";
             compareValue = ignoreCaseComparer(b1, b2);
-        }
-        else if (BugBashItemKeyTypes[sortKey] === "number") {
-            compareValue = (v1 > v2) ? 1 : -1;
+        } else if (BugBashItemKeyTypes[sortKey] === "number") {
+            compareValue = v1 > v2 ? 1 : -1;
         }
 
-        return isSortedDescending ? -1 * compareValue : compareValue;
+        return isSortedDescending ? compareValue * -1 : compareValue;
     }
 
     public static getNewBugBashItemModel(bugBashId?: string, teamId?: string): IBugBashItem {
@@ -134,45 +124,45 @@ export class BugBashItem {
     private _updates: IBugBashItem;
     private _newComment: string;
 
-    get newComment(): string {
+    public get newComment(): string {
         return this._newComment;
     }
 
-    get id(): string {
+    public get id(): string {
         return this._originalModel.id;
     }
 
-    get bugBashId(): string {
+    public get bugBashId(): string {
         return this._originalModel.bugBashId;
     }
 
-    get workItemId(): number {
+    public get workItemId(): number {
         return this._originalModel.workItemId;
     }
 
-    get workItem(): WorkItem {
+    public get workItem(): WorkItem {
         return this.isAccepted ? StoresHub.workItemStore.getItem(this.workItemId) : null;
     }
 
-    get version(): number {
+    public get version(): number {
         return this._originalModel.__etag;
     }
 
-    get isAccepted(): boolean {
+    public get isAccepted(): boolean {
         return this.workItemId != null && this.workItemId > 0;
     }
 
-    get isRejected(): boolean {
+    public get isRejected(): boolean {
         return this._originalModel.rejected;
     }
 
-    get isPending(): boolean {
+    public get isPending(): boolean {
         return !this.isAccepted && !this.isRejected;
     }
 
     constructor(model?: IBugBashItem) {
         const bugBashItemModel = model || BugBashItem.getNewBugBashItemModel();
-        this._originalModel = {...bugBashItemModel};
+        this._originalModel = { ...bugBashItemModel };
         this._updates = {} as IBugBashItem;
         this._newComment = "";
     }
@@ -188,9 +178,8 @@ export class BugBashItem {
     public getFieldValue<T extends string | boolean | Date | number | IdentityRef>(fieldName: BugBashItemFieldNames, original?: boolean): T {
         if (original) {
             return this._originalModel[fieldName] as T;
-        }
-        else {
-            const updatedModel: IBugBashItem = {...this._originalModel, ...this._updates};
+        } else {
+            const updatedModel: IBugBashItem = { ...this._originalModel, ...this._updates };
             return updatedModel[fieldName] as T;
         }
     }
@@ -265,12 +254,11 @@ export class BugBashItem {
 
     public save(bugBashId: string) {
         if (this.isDirty() && this.isValid()) {
-            const updatedModel: IBugBashItem = {...this._originalModel, ...this._updates};
+            const updatedModel: IBugBashItem = { ...this._originalModel, ...this._updates };
 
             if (this.isNew()) {
                 BugBashItemActions.createBugBashItem(bugBashId, updatedModel, this.newComment);
-            }
-            else {
+            } else {
                 BugBashItemActions.updateBugBashItem(this.bugBashId, updatedModel, this.newComment);
             }
         }
@@ -308,26 +296,28 @@ export class BugBashItem {
     }
 
     public isDirty(): boolean {
-        const updatedModel: IBugBashItem = {...this._originalModel, ...this._updates};
+        const updatedModel: IBugBashItem = { ...this._originalModel, ...this._updates };
 
-        return !stringEquals(updatedModel.title, this._originalModel.title)
-            || !stringEquals(updatedModel.teamId, this._originalModel.teamId)
-            || !stringEquals(updatedModel.description, this._originalModel.description)
-            || !stringEquals(updatedModel.rejectReason, this._originalModel.rejectReason)
-            || Boolean(updatedModel.rejected) !== Boolean(this._originalModel.rejected)
-            || !isNullOrWhiteSpace(this._newComment);
+        return (
+            !stringEquals(updatedModel.title, this._originalModel.title) ||
+            !stringEquals(updatedModel.teamId, this._originalModel.teamId) ||
+            !stringEquals(updatedModel.description, this._originalModel.description) ||
+            !stringEquals(updatedModel.rejectReason, this._originalModel.rejectReason) ||
+            Boolean(updatedModel.rejected) !== Boolean(this._originalModel.rejected) ||
+            !isNullOrWhiteSpace(this._newComment)
+        );
     }
 
     public isValid(): boolean {
-        const updatedModel: IBugBashItem = {...this._originalModel, ...this._updates};
+        const updatedModel: IBugBashItem = { ...this._originalModel, ...this._updates };
 
-        return !isNullOrWhiteSpace(updatedModel.title)
-            && updatedModel.title.trim().length <= SizeLimits.TitleFieldMaxLength
-            && !isNullOrWhiteSpace(updatedModel.teamId)
-            && StoresHub.teamStore.itemExists(updatedModel.teamId)
-            && (!updatedModel.rejected
-                || (!isNullOrWhiteSpace(updatedModel.rejectReason)
-                    && updatedModel.rejectReason.trim().length <= SizeLimits.RejectFieldMaxLength));
+        return (
+            !isNullOrWhiteSpace(updatedModel.title) &&
+            updatedModel.title.trim().length <= SizeLimits.TitleFieldMaxLength &&
+            !isNullOrWhiteSpace(updatedModel.teamId) &&
+            StoresHub.teamStore.itemExists(updatedModel.teamId) &&
+            (!updatedModel.rejected || (!isNullOrWhiteSpace(updatedModel.rejectReason) && updatedModel.rejectReason.trim().length <= SizeLimits.RejectFieldMaxLength))
+        );
     }
 
     public onRenderPropertyCell(key: BugBashItemFieldNames | WorkItemFieldNames): JSX.Element {
@@ -344,11 +334,9 @@ export class BugBashItem {
             if (this.isAccepted) {
                 value = key === WorkItemFieldNames.ID ? this.workItemId : this.workItem.fields[key];
             }
-        }
-        else if (key === BugBashItemFieldNames.Title && this.isAccepted) {
+        } else if (key === BugBashItemFieldNames.Title && this.isAccepted) {
             value = this.workItem.fields[WorkItemFieldNames.Title];
-        }
-        else if (key !== BugBashItemFieldNames.Status) {
+        } else if (key !== BugBashItemFieldNames.Status) {
             value = this.getFieldValue(key as BugBashItemFieldNames);
             if (key === BugBashItemFieldNames.TeamId) {
                 const team = StoresHub.teamStore.getItem(value);
@@ -358,8 +346,7 @@ export class BugBashItem {
 
         if (key === BugBashItemFieldNames.Status) {
             return this._renderStatusCell();
-        }
-        else if (key === BugBashItemFieldNames.Title && this.isAccepted) {
+        } else if (key === BugBashItemFieldNames.Title && this.isAccepted) {
             return (
                 <WorkItemTitleView
                     className={className}
@@ -370,60 +357,26 @@ export class BugBashItem {
                     workItemType={this.workItem.fields[WorkItemFieldNames.WorkItemType]}
                 />
             );
-        }
-        else if (key === WorkItemFieldNames.State) {
+        } else if (key === WorkItemFieldNames.State) {
+            return <WorkItemStateView className={className} state={value} workItemType={this.workItem.fields[WorkItemFieldNames.WorkItemType]} />;
+        } else if (key === BugBashItemFieldNames.Title) {
             return (
-                <WorkItemStateView
-                    className={className}
-                    state={value}
-                    workItemType={this.workItem.fields[WorkItemFieldNames.WorkItemType]}
-                />
-            );
-        }
-        else if (key === BugBashItemFieldNames.Title) {
-            return (
-                <TooltipHost
-                    content={value}
-                    delay={TooltipDelay.medium}
-                    overflowMode={TooltipOverflowMode.Parent}
-                    directionalHint={DirectionalHint.bottomLeftEdge}
-                >
-                    <span className={className}>
-                        {`${this.isDirty() ? "* " : ""}${value}`}
-                    </span>
+                <TooltipHost content={value} delay={TooltipDelay.medium} overflowMode={TooltipOverflowMode.Parent} directionalHint={DirectionalHint.bottomLeftEdge}>
+                    <span className={className}>{`${this.isDirty() ? "* " : ""}${value}`}</span>
                 </TooltipHost>
             );
-        }
-        else if (BugBashItemKeyTypes[key] === "identity") {
-            return <IdentityView className={className} identityDistinctName={value} />;
-        }
-        else if (BugBashItemKeyTypes[key] === "identityRef") {
-            return <IdentityView className={className} identityRef={value} />;
-        }
-        else if (BugBashItemKeyTypes[key] === "date") {
+        } else if (BugBashItemKeyTypes[key] === "identity" || BugBashItemKeyTypes[key] === "identityRef") {
+            return <IdentityView className={className} value={value} />;
+        } else if (BugBashItemKeyTypes[key] === "date") {
             return (
-                <TooltipHost
-                    content={format(value, "M/D/YYYY h:mm aa")}
-                    delay={TooltipDelay.medium}
-                    directionalHint={DirectionalHint.bottomLeftEdge}
-                >
-                    <span className={className}>
-                        {friendly(value)}
-                    </span>
+                <TooltipHost content={format(value, "M/D/YYYY h:mm aa")} delay={TooltipDelay.medium} directionalHint={DirectionalHint.bottomLeftEdge}>
+                    <span className={className}>{friendly(value)}</span>
                 </TooltipHost>
             );
-        }
-        else {
+        } else {
             return (
-                <TooltipHost
-                    content={value}
-                    delay={TooltipDelay.medium}
-                    overflowMode={TooltipOverflowMode.Parent}
-                    directionalHint={DirectionalHint.bottomLeftEdge}
-                >
-                    <span className={className}>
-                        {value}
-                    </span>
+                <TooltipHost content={value} delay={TooltipDelay.medium} overflowMode={TooltipOverflowMode.Parent} directionalHint={DirectionalHint.bottomLeftEdge}>
+                    <span className={className}>{value}</span>
                 </TooltipHost>
             );
         }
@@ -438,25 +391,19 @@ export class BugBashItem {
             tooltip = "Accepted";
             iconName = "Accept";
             color = "#107c10";
-        }
-        else if (this.isRejected) {
+        } else if (this.isRejected) {
             tooltip = "Rejected";
             iconName = "Cancel";
             color = "#da0a00";
-        }
-        else {
+        } else {
             tooltip = "Pending";
             iconName = "Clock";
             color = "#666666";
         }
 
         return (
-            <div style={{textAlign: "center"}}>
-                <TooltipHost
-                    content={tooltip}
-                    delay={TooltipDelay.medium}
-                    directionalHint={DirectionalHint.bottomCenter}
-                >
+            <div style={{ textAlign: "center" }}>
+                <TooltipHost content={tooltip} delay={TooltipDelay.medium} directionalHint={DirectionalHint.bottomCenter}>
                     <VssIcon
                         iconName={iconName}
                         iconType={VssIconType.fabric}
@@ -477,5 +424,5 @@ export class BugBashItem {
         if (updatedWorkItem) {
             WorkItemActions.refreshWorkItemInStore([updatedWorkItem]);
         }
-    }
+    };
 }

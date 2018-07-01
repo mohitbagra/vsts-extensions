@@ -25,10 +25,7 @@ import {
     IWorkItemChangedArgs, IWorkItemLoadedArgs, IWorkItemNotificationListener
 } from "TFS/WorkItemTracking/ExtensionContracts";
 
-const AsyncChecklistView = getAsyncLoadedComponent(
-    ["scripts/ChecklistView"],
-    (m: typeof ChecklistView_Async) => m.ChecklistView,
-    () => <Loading />);
+const AsyncChecklistView = getAsyncLoadedComponent(["scripts/ChecklistView"], (m: typeof ChecklistView_Async) => m.ChecklistView, () => <Loading />);
 
 interface IChecklistAppState extends IBaseFluxComponentState {
     workItemId: number;
@@ -47,11 +44,11 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
             },
             onUnloaded: (_args: IWorkItemChangedArgs) => {
                 ErrorMessageActions.dismissErrorMessage("ChecklistError");
-                this.setState({workItemId: null});
+                this.setState({ workItemId: null });
             },
             onSaved: (args: IWorkItemChangedArgs) => {
                 if (args.id !== this.state.workItemId) {
-                    this.setState({workItemId: args.id});
+                    this.setState({ workItemId: args.id });
                 }
             },
             onRefreshed: (_args: IWorkItemChangedArgs) => {
@@ -66,30 +63,22 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
     }
 
     public render(): JSX.Element {
-        const {workItemId} = this.state;
+        const { workItemId } = this.state;
 
         if (workItemId == null) {
             return <Loading />;
-        }
-        else if (workItemId === 0) {
+        } else if (workItemId === 0) {
             return (
                 <Fabric className="fabric-container">
-                    <MessageBar messageBarType={MessageBarType.info}>
-                        You need to save the workitem before working with checklist.
-                    </MessageBar>
+                    <MessageBar messageBarType={MessageBarType.info}>You need to save the workitem before working with checklist.</MessageBar>
                 </Fabric>
             );
-        }
-        else {
+        } else {
             return (
                 <Fabric className="fabric-container">
                     <div className="container">
                         <div className="command-bar">
-                            <TooltipHost
-                                content={"How to use the extension"}
-                                delay={TooltipDelay.medium}
-                                directionalHint={DirectionalHint.bottomLeftEdge}
-                            >
+                            <TooltipHost content={"How to use the extension"} delay={TooltipDelay.medium} directionalHint={DirectionalHint.bottomLeftEdge}>
                                 <IconButton
                                     className="info-button command-item"
                                     iconProps={{
@@ -99,25 +88,13 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
                                     target="_blank"
                                 />
                             </TooltipHost>
-                            <TooltipHost
-                                content={"Refresh"}
-                                delay={TooltipDelay.medium}
-                                directionalHint={DirectionalHint.bottomRightEdge}
-                            >
-                                <IconButton
-                                    className="command-item"
-                                    iconProps={{iconName: "Refresh"}}
-                                    onClick={this._onRefreshClick}
-                                />
+                            <TooltipHost content={"Refresh"} delay={TooltipDelay.medium} directionalHint={DirectionalHint.bottomRightEdge}>
+                                <IconButton className="command-item" iconProps={{ iconName: "Refresh" }} onClick={this._onRefreshClick} />
                             </TooltipHost>
-                            <TooltipHost
-                                content={"Settings"}
-                                delay={TooltipDelay.medium}
-                                directionalHint={DirectionalHint.bottomRightEdge}
-                            >
+                            <TooltipHost content={"Settings"} delay={TooltipDelay.medium} directionalHint={DirectionalHint.bottomRightEdge}>
                                 <IconButton
                                     className="command-item"
-                                    iconProps={{iconName: "Settings"}}
+                                    iconProps={{ iconName: "Settings" }}
                                     href={this._project ? getWorkItemTypeSettingsUrl(this._workItemTypeName, this._project.name) : undefined}
                                     target="_blank"
                                 />
@@ -125,22 +102,10 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
                         </div>
                         <Pivot initialSelectedIndex={0}>
                             <PivotItem linkText="Shared" itemKey="shared">
-                                <AsyncChecklistView
-                                    workItemId={workItemId}
-                                    workItemType={this._workItemTypeName}
-                                    projectId={this._project.id}
-                                    key="shared"
-                                    isPersonal={false}
-                                />
+                                <AsyncChecklistView workItemId={workItemId} workItemType={this._workItemTypeName} projectId={this._project.id} key="shared" isPersonal={false} />
                             </PivotItem>
                             <PivotItem linkText="Personal" itemKey="personal">
-                                <AsyncChecklistView
-                                    workItemId={workItemId}
-                                    workItemType={this._workItemTypeName}
-                                    projectId={this._project.id}
-                                    key="personal"
-                                    isPersonal={true}
-                                />
+                                <AsyncChecklistView workItemId={workItemId} workItemType={this._workItemTypeName} projectId={this._project.id} key="personal" isPersonal={true} />
                             </PivotItem>
                         </Pivot>
                     </div>
@@ -170,12 +135,12 @@ export class ChecklistApp extends BaseFluxComponent<IBaseFluxComponentProps, ICh
             this._project = await CoreClient.getClient().getProject(projectName);
         }
 
-        this.setState({workItemId: isNew ? 0 : workItemId});
-    }
+        this.setState({ workItemId: isNew ? 0 : workItemId });
+    };
 
     private _onRefreshClick = () => {
         this._refreshChecklist(this.state.workItemId);
-    }
+    };
 }
 
 export function init() {

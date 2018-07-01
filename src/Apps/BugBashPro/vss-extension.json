@@ -1,31 +1,20 @@
 {
     "manifestVersion": 1,
     "id": "bugbashpro",
-    "version": "3.4.0",
+    "version": "3.5.1",
     "name": "Bug Bash Pro",
     "description": "Easier way to manage bug bashes",
     "publisher": "mohitbagra",
     "icons": {
         "default": "images/logo.png"
     },
-    "scopes": [
-    	"vso.work",
-        "vso.work_write",
-        "vso.profile",
-        "vso.code",
-        "vso.code_write"
-    ],
+    "scopes": ["vso.work", "vso.work_write", "vso.profile", "vso.code", "vso.code_write"],
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services.Cloud"
         }
     ],
-    "tags": [
-        "Work Item",
-        "Collaborate",
-        "Bug",
-        "Bug bash"
-    ],
+    "tags": ["Work Item", "Collaborate", "Bug", "Bug bash"],
     "content": {
         "details": {
             "path": "README.md"
@@ -34,30 +23,24 @@
     "repository": {
         "type": "git",
         "uri": "https://github.com/mohitbagra/vsts-extensions"
-    },    
+    },
     "branding": {
         "color": "#106ebe",
         "theme": "dark"
-    },    
-    "categories": [
-        "Collaborate"
-    ],
-    "contributions": [        
+    },
+    "categories": ["Collaborate"],
+    "contributions": [
         {
             "id": "bugbash-hub",
             "type": "ms.vss-web.hub",
             "description": "Bug bash manager work item hub",
-            "targets": [
-                "ms.vss-work-web.work-hub-group"
-            ],
+            "targets": ["ms.vss-work-web.work-hub-group"],
             "properties": {
                 "name": "Bug Bash Pro",
                 "uri": "html/index.html",
                 "iconAsset": "mohitbagra.bugbashpro/images/logo.png",
                 "_sharedData": {
-                    "assets": [
-                        "mohitbagra.bugbashpro/images/logo.png"
-                    ]
+                    "assets": ["mohitbagra.bugbashpro/images/logo.png"]
                 }
             }
         }

@@ -24,8 +24,7 @@ export class WorkItemRelationTypePicker extends BaseFluxComponent<ISimpleComboPr
             this.setState({
                 relationTypes: this._workItemRelationTypeStore.getAll()
             });
-        }
-        else {
+        } else {
             WorkItemRelationTypeActions.initializeWorkItemRelationTypes();
         }
     }

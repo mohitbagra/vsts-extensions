@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <script src="../3rdParty/es6-promise.min.js"></script>
-    <script src="../3rdParty/VSS.SDK.min.js"></script>    
+    <script src="../3rdParty/VSS.SDK.min.js"></script>
     <script src="../scripts/bugbashpro_common_chunks.js"></script>
     <style>
         #spinner {
@@ -11,7 +12,7 @@
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;        
+            bottom: 0;
             width: 28px;
             height: 28px;
             margin: auto;
@@ -23,7 +24,7 @@
             -webkit-animation: spinAnimation 1.3s infinite cubic-bezier(0.53, 0.21, 0.29, 0.67);
             animation: spinAnimation 1.3s infinite cubic-bezier(0.53, 0.21, 0.29, 0.67);
         }
-    
+
         @keyframes spinAnimation {
             0% {
                 -webkit-transform: rotate(0deg);
@@ -51,21 +52,22 @@
                 }
             }
         });
-        
+
         // Load main entry point for extension
         VSS.require(["scripts/App",
-        "VSS/WebApi/Contracts", "VSS/SDK/Services/Navigation",
-        "VSS/Controls/Combos", "VSS/Controls",
-        "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/RestClient", "TFS/WorkItemTracking/Services",
-        "TFS/Work/Contracts", "TFS/Work/RestClient",
-        "TFS/Core/Contracts", "TFS/Core/RestClient",
-        "TFS/VersionControl/GitRestClient", "TFS/VersionControl/Contracts"], function (App) {
-            App.init();
-        });
+            "VSS/WebApi/Contracts", "VSS/SDK/Services/Navigation",
+            "VSS/Controls/Combos", "VSS/Controls",
+            "TFS/WorkItemTracking/Contracts", "TFS/WorkItemTracking/RestClient", "TFS/WorkItemTracking/Services",
+            "TFS/Work/Contracts", "TFS/Work/RestClient",
+            "TFS/Core/Contracts", "TFS/Core/RestClient",
+            "TFS/VersionControl/GitRestClient", "TFS/VersionControl/Contracts"], function (App) {
+                App.init();
+            });
     </script>
 
     <div id="ext-container">
         <div id="spinner"></div>
     </div>
 </body>
+
 </html>

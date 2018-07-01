@@ -9,7 +9,7 @@ export class BugBashItemCommentStore extends BaseStore<IDictionaryStringTo<IBugB
     }
 
     public getItem(bugBashItemId: string): IBugBashItemComment[] {
-         return this.items[(bugBashItemId || "").toLowerCase()] || null;
+        return this.items[(bugBashItemId || "").toLowerCase()] || null;
     }
 
     public getKey(): string {
@@ -21,7 +21,7 @@ export class BugBashItemCommentStore extends BaseStore<IDictionaryStringTo<IBugB
     }
 
     protected initializeActionListeners() {
-        BugBashItemCommentActionsHub.InitializeComments.addListener((commentItems: {bugBashItemId: string, comments: IBugBashItemComment[]}) => {
+        BugBashItemCommentActionsHub.InitializeComments.addListener((commentItems: { bugBashItemId: string; comments: IBugBashItemComment[] }) => {
             if (commentItems) {
                 this.items[commentItems.bugBashItemId.toLowerCase()] = commentItems.comments;
             }
@@ -29,7 +29,7 @@ export class BugBashItemCommentStore extends BaseStore<IDictionaryStringTo<IBugB
             this.emitChanged();
         });
 
-        BugBashItemCommentActionsHub.CreateComment.addListener((commentItem: {bugBashItemId: string, comment: IBugBashItemComment}) => {
+        BugBashItemCommentActionsHub.CreateComment.addListener((commentItem: { bugBashItemId: string; comment: IBugBashItemComment }) => {
             if (commentItem) {
                 if (this.items[commentItem.bugBashItemId.toLowerCase()] == null) {
                     this.items[commentItem.bugBashItemId.toLowerCase()] = [];

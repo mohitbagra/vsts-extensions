@@ -19,8 +19,7 @@ export abstract class BaseStore<TCollection, TItem, TKey> extends Observable<voi
         let dataLoaded: boolean;
         if (key) {
             dataLoaded = this.itemExists(key);
-        }
-        else {
+        } else {
             dataLoaded = this.items != null ? true : false;
         }
 
@@ -30,8 +29,7 @@ export abstract class BaseStore<TCollection, TItem, TKey> extends Observable<voi
     public isLoading(key?: TKey): boolean {
         if (key) {
             return this._isLoading || this._isItemLoadingMap[this.convertItemKeyToString(key)] === true;
-        }
-        else {
+        } else {
             return this._isLoading;
         }
     }
@@ -40,12 +38,10 @@ export abstract class BaseStore<TCollection, TItem, TKey> extends Observable<voi
         if (key) {
             if (loading) {
                 this._isItemLoadingMap[this.convertItemKeyToString(key)] = true;
-            }
-            else {
+            } else {
                 delete this._isItemLoadingMap[this.convertItemKeyToString(key)];
             }
-        }
-        else {
+        } else {
             this._isLoading = loading;
         }
 
@@ -82,7 +78,7 @@ export abstract class BaseStore<TCollection, TItem, TKey> extends Observable<voi
 export namespace StoreFactory {
     const storeInstances: IDictionaryStringTo<BaseStore<any, any, any>> = {};
 
-    export function getInstance<TStore extends BaseStore<any, any, any>>(storeType: {new(): TStore; }): TStore {
+    export function getInstance<TStore extends BaseStore<any, any, any>>(storeType: { new (): TStore }): TStore {
         const instance = new storeType();
         if (!storeInstances[instance.getKey()]) {
             storeInstances[instance.getKey()] = instance;

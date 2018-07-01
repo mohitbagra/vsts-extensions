@@ -25,17 +25,10 @@
             "PRWorkItems/*": ["src/Apps/PRWorkItems/scripts/*"],
             "RelatedWits/*": ["src/Apps/RelatedWits/scripts/*"]
         },
-        "types": [
-            "react",
-            "react-dom",
-            "vss-web-extension-sdk"
-        ]
+        "types": ["react", "react-dom", "vss-web-extension-sdk"]
     },
     "typeAcquisition": {
         "enable": true
     },
-    "filesGlob": [
-        "src/**/*.ts",
-        "src/**/*.tsx"
-    ]
+    "filesGlob": ["src/**/*.ts", "src/**/*.tsx"]
 }

@@ -33,21 +33,19 @@ export class BugBash {
             const v1 = bugBash1.getFieldValue<string>(sortKey as BugBashFieldNames, true);
             const v2 = bugBash2.getFieldValue<string>(sortKey as BugBashFieldNames, true);
             compareValue = ignoreCaseComparer(v1, v2);
-        }
-        else if (BugBashKeyTypes[sortKey] === "date") {
+        } else if (BugBashKeyTypes[sortKey] === "date") {
             const v1 = bugBash1.getFieldValue<Date>(sortKey as BugBashFieldNames, true);
             const v2 = bugBash2.getFieldValue<Date>(sortKey as BugBashFieldNames, true);
             compareValue = defaultDateComparer(v1, v2);
-        }
-        else if (BugBashKeyTypes[sortKey] === "boolean") {
+        } else if (BugBashKeyTypes[sortKey] === "boolean") {
             const v1 = bugBash1.getFieldValue<boolean>(sortKey as BugBashFieldNames, true);
             const v2 = bugBash2.getFieldValue<boolean>(sortKey as BugBashFieldNames, true);
-            const b1 = v1 == null ? "" : (!v1 ? "False" : "True");
-            const b2 = v2 == null ? "" : (!v2 ? "False" : "True");
+            const b1 = v1 == null ? "" : !v1 ? "False" : "True";
+            const b2 = v2 == null ? "" : !v2 ? "False" : "True";
             compareValue = ignoreCaseComparer(b1, b2);
         }
 
-        return isSortedDescending ? -1 * compareValue : compareValue;
+        return isSortedDescending ? compareValue * -1 : compareValue;
     }
 
     public static getNewBugBashModel(): IBugBash {
@@ -65,25 +63,25 @@ export class BugBash {
     private _originalModel: IBugBash;
     private _updates: IBugBash;
 
-    get id(): string {
+    public get id(): string {
         return this._originalModel.id;
     }
 
-    get projectId(): string {
+    public get projectId(): string {
         return this._originalModel.projectId;
     }
 
-    get version(): number {
+    public get version(): number {
         return this._originalModel.__etag;
     }
 
-    get isAutoAccept(): boolean {
+    public get isAutoAccept(): boolean {
         return this._originalModel.autoAccept;
     }
 
     constructor(model?: IBugBash) {
         const bugBashModel = model || BugBash.getNewBugBashModel();
-        this._originalModel = {...bugBashModel};
+        this._originalModel = { ...bugBashModel };
         this._updates = {} as IBugBash;
     }
 
@@ -98,9 +96,8 @@ export class BugBash {
     public getFieldValue<T extends string | boolean | Date | number>(fieldName: BugBashFieldNames, original?: boolean): T {
         if (original) {
             return this._originalModel[fieldName] as T;
-        }
-        else {
-            const updatedModel: IBugBash = {...this._originalModel, ...this._updates};
+        } else {
+            const updatedModel: IBugBash = { ...this._originalModel, ...this._updates };
             return updatedModel[fieldName] as T;
         }
     }
@@ -116,11 +113,10 @@ export class BugBash {
 
     public save() {
         if (this.isDirty() && this.isValid()) {
-            const updatedModel: IBugBash = {...this._originalModel, ...this._updates};
+            const updatedModel: IBugBash = { ...this._originalModel, ...this._updates };
             if (this.isNew()) {
                 BugBashActions.createBugBash(updatedModel);
-            }
-            else {
+            } else {
                 BugBashActions.updateBugBash(updatedModel);
             }
         }
@@ -151,38 +147,41 @@ export class BugBash {
     }
 
     public isDirty(): boolean {
-        const updatedModel: IBugBash = {...this._originalModel, ...this._updates};
+        const updatedModel: IBugBash = { ...this._originalModel, ...this._updates };
 
-        return !stringEquals(updatedModel.title, this._originalModel.title)
-            || !stringEquals(updatedModel.workItemType, this._originalModel.workItemType, true)
-            || !dateEquals(updatedModel.startTime, this._originalModel.startTime)
-            || !dateEquals(updatedModel.endTime, this._originalModel.endTime)
-            || !stringEquals(updatedModel.itemDescriptionField, this._originalModel.itemDescriptionField, true)
-            || updatedModel.autoAccept !== this._originalModel.autoAccept
-            || !stringEquals(updatedModel.defaultTeam, this._originalModel.defaultTeam, true)
-            || !stringEquals(updatedModel.acceptTemplateTeam, this._originalModel.acceptTemplateTeam, true)
-            || !stringEquals(updatedModel.acceptTemplateId, this._originalModel.acceptTemplateId, true);
-
+        return (
+            !stringEquals(updatedModel.title, this._originalModel.title) ||
+            !stringEquals(updatedModel.workItemType, this._originalModel.workItemType, true) ||
+            !dateEquals(updatedModel.startTime, this._originalModel.startTime) ||
+            !dateEquals(updatedModel.endTime, this._originalModel.endTime) ||
+            !stringEquals(updatedModel.itemDescriptionField, this._originalModel.itemDescriptionField, true) ||
+            updatedModel.autoAccept !== this._originalModel.autoAccept ||
+            !stringEquals(updatedModel.defaultTeam, this._originalModel.defaultTeam, true) ||
+            !stringEquals(updatedModel.acceptTemplateTeam, this._originalModel.acceptTemplateTeam, true) ||
+            !stringEquals(updatedModel.acceptTemplateId, this._originalModel.acceptTemplateId, true)
+        );
     }
 
     public isValid(): boolean {
-        const updatedModel: IBugBash = {...this._originalModel, ...this._updates};
+        const updatedModel: IBugBash = { ...this._originalModel, ...this._updates };
 
-        let dataValid = !isNullOrWhiteSpace(updatedModel.title)
-            && updatedModel.title.length <= SizeLimits.TitleFieldMaxLength
-            && !isNullOrWhiteSpace(updatedModel.workItemType)
-            && !isNullOrWhiteSpace(updatedModel.itemDescriptionField)
-            && !isNullOrWhiteSpace(updatedModel.acceptTemplateId)
-            && !isNullOrWhiteSpace(updatedModel.acceptTemplateTeam)
-            && (!updatedModel.startTime || !updatedModel.endTime || defaultDateComparer(updatedModel.startTime, updatedModel.endTime) < 0);
+        let dataValid =
+            !isNullOrWhiteSpace(updatedModel.title) &&
+            updatedModel.title.length <= SizeLimits.TitleFieldMaxLength &&
+            !isNullOrWhiteSpace(updatedModel.workItemType) &&
+            !isNullOrWhiteSpace(updatedModel.itemDescriptionField) &&
+            !isNullOrWhiteSpace(updatedModel.acceptTemplateId) &&
+            !isNullOrWhiteSpace(updatedModel.acceptTemplateTeam) &&
+            (!updatedModel.startTime || !updatedModel.endTime || defaultDateComparer(updatedModel.startTime, updatedModel.endTime) < 0);
 
         if (dataValid && StoresHub.teamStore.isLoaded() && StoresHub.workItemTypeStore.isLoaded() && StoresHub.workItemFieldStore.isLoaded()) {
-            dataValid = dataValid
-                && StoresHub.teamStore.itemExists(updatedModel.acceptTemplateTeam)
-                && (isNullOrWhiteSpace(updatedModel.defaultTeam) ||  StoresHub.teamStore.itemExists(updatedModel.defaultTeam))
-                && StoresHub.workItemTypeStore.itemExists(updatedModel.workItemType)
-                && StoresHub.workItemFieldStore.itemExists(updatedModel.itemDescriptionField)
-                && StoresHub.workItemFieldStore.getItem(updatedModel.itemDescriptionField).type === FieldType.Html;
+            dataValid =
+                dataValid &&
+                StoresHub.teamStore.itemExists(updatedModel.acceptTemplateTeam) &&
+                (isNullOrWhiteSpace(updatedModel.defaultTeam) || StoresHub.teamStore.itemExists(updatedModel.defaultTeam)) &&
+                StoresHub.workItemTypeStore.itemExists(updatedModel.workItemType) &&
+                StoresHub.workItemFieldStore.itemExists(updatedModel.itemDescriptionField) &&
+                StoresHub.workItemFieldStore.getItem(updatedModel.itemDescriptionField).type === FieldType.Html;
         }
 
         return dataValid;

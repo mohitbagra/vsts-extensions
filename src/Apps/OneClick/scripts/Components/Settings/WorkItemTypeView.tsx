@@ -73,15 +73,8 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
                     ruleGroupId={this.props.ruleGroupId}
                 />
             );
-        }
-        else {
-            return (
-                <RuleGroupList
-                    refresh={this._refresh}
-                    toggleSubscription={this._toggleSubscription}
-                    workItemTypeName={this.props.workItemTypeName}
-                />
-            );
+        } else {
+            return <RuleGroupList refresh={this._refresh} toggleSubscription={this._toggleSubscription} workItemTypeName={this.props.workItemTypeName} />;
         }
     }
 
@@ -114,13 +107,16 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
     }
 
     private _toggleWorkItemType = async () => {
-        const confirm = await confirmAction(true, `This setting would be globally applied for "${this.props.workItemTypeName}" work item type in the current project.
-        Are you sure you still want to enable this work item type? If you are unsure, please consult your administrator first.`);
+        const confirm = await confirmAction(
+            true,
+            `This setting would be globally applied for "${this.props.workItemTypeName}" work item type in the current project.
+        Are you sure you still want to enable this work item type? If you are unsure, please consult your administrator first.`
+        );
 
         if (confirm) {
             SettingsActions.updateSetting<boolean>(this.props.workItemTypeName, SettingKey.WorkItemTypeEnabled, true, false);
         }
-    }
+    };
 
     private _refresh = (workItemType?: string) => {
         const workItemTypeName = workItemType || this.props.workItemTypeName;
@@ -131,7 +127,7 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
         SettingsActions.initializeSetting<boolean>(workItemTypeName, SettingKey.PersonalRulesEnabled, false, true);
         SettingsActions.initializeSetting<boolean>(workItemTypeName, SettingKey.GlobalRulesEnabled, false, true);
         SettingsActions.initializeSetting<boolean>(workItemTypeName, SettingKey.WorkItemTypeEnabled, false, true);
-    }
+    };
 
     private _toggleSubscription = (subscribe: boolean, ruleGroup: IRuleGroup) => {
         if (isPersonalOrGlobalRuleGroup(ruleGroup)) {
@@ -145,8 +141,7 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
             if (subscribe) {
                 // subscribe
                 updatedSubscriptions.push(ruleGroup.id);
-            }
-            else {
+            } else {
                 // unsubscribe
                 updatedSubscriptions = updatedSubscriptions.filter(srgId => !stringEquals(srgId, ruleGroup.id, true));
             }
@@ -161,8 +156,7 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
                     workItemTypeName: ruleGroup.workItemType,
                     project: ruleGroup.projectId
                 });
-            }
-            else {
+            } else {
                 trackEvent("UnsubscribeFromRuleGroup", {
                     user: getCurrentUserName(),
                     ruleGroupId: ruleGroup.id,
@@ -171,5 +165,5 @@ export class WorkItemTypeView extends BaseFluxComponent<IWorkItemTypeViewProps, 
                 });
             }
         }
-    }
+    };
 }

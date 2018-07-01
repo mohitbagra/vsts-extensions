@@ -13,20 +13,15 @@ import { translateToFieldValue } from "OneClick/Helpers";
 import { BaseAction } from "OneClick/RuleActions/BaseAction";
 import { FieldType } from "TFS/WorkItemTracking/Contracts";
 
-const AsyncRichEditor = getAsyncLoadedComponent(
-    ["scripts/ActionRenderers"],
-    (m: typeof ActionRenderers_Async) => m.RichEditor,
-    () => <Loading />);
+const AsyncRichEditor = getAsyncLoadedComponent(["scripts/ActionRenderers"], (m: typeof ActionRenderers_Async) => m.RichEditor, () => <Loading />);
 
-const AsyncThrottledTextField = getAsyncLoadedComponent(
-    ["scripts/ActionRenderers"],
-    (m: typeof ActionRenderers_Async) => m.ThrottledTextField,
-    () => <Loading />);
+const AsyncThrottledTextField = getAsyncLoadedComponent(["scripts/ActionRenderers"], (m: typeof ActionRenderers_Async) => m.ThrottledTextField, () => <Loading />);
 
 export class MentionAction extends BaseAction {
     public async run() {
-        const warnMessage = "A recent change in VSTS mention feature makes it incompatible with one click's \"Mention someone\" action. " +
-        "Due to this, mentioning someone is temporarily suspended from the extension.";
+        const warnMessage =
+            "A recent change in VSTS mention feature makes it incompatible with one click's 'Mention someone' action. " +
+            "Due to this, mentioning someone is temporarily suspended from the extension.";
         console.warn(warnMessage);
 
         const personNames = this.getAttribute<string>("personNames", true) || "";
@@ -57,14 +52,18 @@ export class MentionAction extends BaseAction {
 
     public getDescription(): string {
         // return "Mention someone in the work item";
-        return "A recent change in VSTS mention feature makes it incompatible with one click's \"Mention someone\" action. " +
-        "Due to this, mentioning someone is temporarily suspended from the extension.";
+        return (
+            "A recent change in VSTS mention feature makes it incompatible with one click's 'Mention someone' action. " +
+            "Due to this, mentioning someone is temporarily suspended from the extension."
+        );
     }
 
     public isDirty(): boolean {
-        return super.isDirty()
-            || !stringEquals(this.getAttribute<string>("personNames", true), this.getAttribute<string>("personNames"), true)
-            || !stringEquals(this.getAttribute<string>("message", true), this.getAttribute<string>("message"), true);
+        return (
+            super.isDirty() ||
+            !stringEquals(this.getAttribute<string>("personNames", true), this.getAttribute<string>("personNames"), true) ||
+            !stringEquals(this.getAttribute<string>("message", true), this.getAttribute<string>("message"), true)
+        );
     }
 
     public isValid(): boolean {
@@ -75,7 +74,7 @@ export class MentionAction extends BaseAction {
         return {
             iconName: "Accounts",
             styles: {
-                root: {color: "#004578 !important"}
+                root: { color: "#004578 !important" }
             }
         };
     }
@@ -122,9 +121,9 @@ export class MentionAction extends BaseAction {
 
     private _onPersonsChange = (value: string) => {
         this.setAttribute<string>("personNames", value);
-    }
+    };
 
     private _onMessageChange = (value: string) => {
         this.setAttribute<string>("message", value);
-    }
+    };
 }

@@ -45,22 +45,12 @@ export interface IWorkItemRulesGroupState extends IBaseFluxComponentState {
     ruleExecutionError?: IActionError;
 }
 
-const SortableItem = SortableElement(({value}) => {
-    return (
-        <div className="rule-list-item">
-            {value}
-        </div>
-    );
+const SortableItem = SortableElement(({ value }) => {
+    return <div className="rule-list-item">{value}</div>;
 });
 
-const SortableList = SortableContainer(({items}) => {
-    return (
-        <div className="rules-list-container">
-            {items.map((value, index) => (
-                <SortableItem key={`item-${index}`} index={index} value={value} />
-            ))}
-        </div>
-    );
+const SortableList = SortableContainer(({ items }) => {
+    return <div className="rules-list-container">{items.map((value, index) => <SortableItem key={`item-${index}`} index={index} value={value} />)}</div>;
 });
 
 export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponentProps, IWorkItemRulesGroupState> {
@@ -75,7 +65,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
         VSS.register(VSS.getContribution().id, {
             onLoaded: async (args: IWorkItemLoadedArgs) => {
                 // load data only if its not already loaded and not currently being loaded
-                resetSession();  // reset telemetry session id
+                resetSession(); // reset telemetry session id
                 let rules = this.state.rules;
                 if (!this.state.loading && !this.state.rules) {
                     rules = await this._initializeRules(false);
@@ -112,11 +102,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
             <Fabric className="fabric-container">
                 <div className="rules-content-container" tabIndex={-1} onKeyDown={this._onKeyDown}>
                     <div className="rules-command-bar">
-                        <TooltipHost
-                            content={"Configure rules"}
-                            delay={TooltipDelay.medium}
-                            directionalHint={DirectionalHint.bottomLeftEdge}
-                        >
+                        <TooltipHost content={"Configure rules"} delay={TooltipDelay.medium} directionalHint={DirectionalHint.bottomLeftEdge}>
                             <IconButton
                                 className="rules-command"
                                 iconProps={{
@@ -127,11 +113,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
                                 target="_blank"
                             />
                         </TooltipHost>
-                        <TooltipHost
-                            content={"Refresh"}
-                            delay={TooltipDelay.medium}
-                            directionalHint={DirectionalHint.bottomLeftEdge}
-                        >
+                        <TooltipHost content={"Refresh"} delay={TooltipDelay.medium} directionalHint={DirectionalHint.bottomLeftEdge}>
                             <IconButton
                                 className="rules-command"
                                 iconProps={{
@@ -141,11 +123,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
                                 onClick={this._refresh}
                             />
                         </TooltipHost>
-                        <TooltipHost
-                            content={"How to use the extension"}
-                            delay={TooltipDelay.medium}
-                            directionalHint={DirectionalHint.bottomLeftEdge}
-                        >
+                        <TooltipHost content={"How to use the extension"} delay={TooltipDelay.medium} directionalHint={DirectionalHint.bottomLeftEdge}>
                             <IconButton
                                 className="info-button"
                                 iconProps={{
@@ -175,11 +153,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
     private _renderErrors(): JSX.Element {
         if (this.state.ruleExecutionError) {
             return (
-                <a
-                    href="javascript:void();"
-                    onClick={this._showErrorsDialog}
-                    className="error-link"
-                >
+                <a href="javascript:void();" onClick={this._showErrorsDialog} className="error-link">
                     error
                 </a>
             );
@@ -220,19 +194,11 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
 
         const items = this.state.rules.map(this._renderRuleButton);
 
-        return (
-            <SortableList
-                items={items}
-                axis="xy"
-                lockAxis="xy"
-                distance={10}
-                onSortEnd={this._reorderRules}
-            />
-        );
+        return <SortableList items={items} axis="xy" lockAxis="xy" distance={10} onSortEnd={this._reorderRules} />;
     }
 
     private async _initializeRules(forceFromServer: boolean): Promise<Rule[]> {
-        this.setState({loading: true});
+        this.setState({ loading: true });
 
         if (!this._project) {
             // read work item type and project from current workitem
@@ -244,7 +210,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
 
             // read current cache stamp and user's rule ordering setting
             const [ruleOrder, cacheStamp] = await Promise.all([
-                SettingsDataService.loadSetting<IDictionaryStringTo<number>>(SettingKey.UserRulesOrdering, { }, this._workItemTypeName, this._project.id, true),
+                SettingsDataService.loadSetting<IDictionaryStringTo<number>>(SettingKey.UserRulesOrdering, {}, this._workItemTypeName, this._project.id, true),
                 SettingsDataService.readCacheStamp(this._workItemTypeName, this._project.id)
             ]);
 
@@ -280,20 +246,17 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
                 const rm2Order = this._ruleOrder[rm2.id.toLowerCase()];
                 if (rm1Order == null && rm2Order == null) {
                     return 0;
-                }
-                else if (rm1Order != null && rm2Order == null) {
+                } else if (rm1Order != null && rm2Order == null) {
                     return -1;
-                }
-                else if (rm1Order == null && rm2Order != null) {
+                } else if (rm1Order == null && rm2Order != null) {
                     return 1;
-                }
-                else {
+                } else {
                     return rm1Order > rm2Order ? 1 : -1;
                 }
             });
         }
         const rules = ruleModels.map(r => new Rule(r));
-        this.setState({loading: false, rules: rules});
+        this.setState({ loading: false, rules: rules });
 
         return rules;
     }
@@ -309,12 +272,10 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
                 const localRules: ILocalStorageRulesData = JSON.parse(localRulesStr);
                 if (!localRules || localRules.cacheStamp !== currentCacheStamp) {
                     return null;
-                }
-                else {
+                } else {
                     return localRules.rules;
                 }
-            }
-            catch {
+            } catch {
                 return null;
             }
         }
@@ -322,7 +283,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
         return null;
     }
 
-    private async _filterExistingRuleGroups(ruleGroupIds: string[]): Promise<{existingRuleGroupIds: string[], deletedRuleGroupIds: string[]}> {
+    private async _filterExistingRuleGroups(ruleGroupIds: string[]): Promise<{ existingRuleGroupIds: string[]; deletedRuleGroupIds: string[] }> {
         const workItemTypeName = this._workItemTypeName;
         const projectId = this._project.id;
         const allRuleGroups = await RuleGroupsDataService.loadRuleGroups(workItemTypeName, projectId);
@@ -368,24 +329,24 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
 
     private _showErrorsDialog = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
-        const {ruleExecutionError} = this.state;
+        const { ruleExecutionError } = this.state;
         alert(`${ruleExecutionError.actionName.toUpperCase()} : ${ruleExecutionError.error}`);
-    }
+    };
 
     private _renderRuleButton = (rule: Rule): JSX.Element => {
         return <WorkItemFormRuleButton rule={rule} onExecute={this._setError} />;
-    }
+    };
 
     private _setError = (ruleExecutionError: IActionError) => {
-        this.setState({ruleExecutionError: ruleExecutionError});
-    }
+        this.setState({ ruleExecutionError: ruleExecutionError });
+    };
 
-    private _reorderRules = (data: {oldIndex: number, newIndex: number}) => {
-        const {oldIndex, newIndex} = data;
+    private _reorderRules = (data: { oldIndex: number; newIndex: number }) => {
+        const { oldIndex, newIndex } = data;
         if (oldIndex !== newIndex) {
             let newRules = [...this.state.rules];
             newRules = arrayMove(newRules, oldIndex, newIndex);
-            this.setState({rules: newRules});
+            this.setState({ rules: newRules });
 
             const newRuleOrder: IDictionaryStringTo<number> = {};
             for (let i = 0; i < newRules.length; i++) {
@@ -395,24 +356,24 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
             this._ruleOrder = newRuleOrder;
             SettingsDataService.updateSetting<IDictionaryStringTo<number>>(SettingKey.UserRulesOrdering, newRuleOrder, this._workItemTypeName, this._project.id, true);
         }
-    }
+    };
 
     private _openSettingsPage = () => {
         const url = getWorkItemTypeSettingsUrl(this._workItemTypeName, this._project.name);
         window.open(url, "_blank");
-    }
+    };
 
     private _refresh = async () => {
         this._cacheStamp = await SettingsDataService.readCacheStamp(this._workItemTypeName, this._project.id);
         this._initializeRules(true);
-    }
+    };
 
     private _onKeyDown = (e: React.KeyboardEvent<any>) => {
         if (e.ctrlKey && e.keyCode === 83) {
             e.preventDefault();
             this._saveWorkItem();
         }
-    }
+    };
 
     private _refreshFromServer = async (): Promise<IRule[]> => {
         const workItemTypeName = this._workItemTypeName;
@@ -423,11 +384,11 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
             SettingsDataService.loadSetting<string[]>(SettingKey.UserSubscriptions, [], workItemTypeName, projectId, true),
             SettingsDataService.loadSetting<boolean>(SettingKey.PersonalRulesEnabled, true, workItemTypeName, projectId, false),
             SettingsDataService.loadSetting<boolean>(SettingKey.GlobalRulesEnabled, true, workItemTypeName, projectId, false),
-            SettingsDataService.loadSetting<boolean>(SettingKey.WorkItemTypeEnabled, true, workItemTypeName, projectId, false),
+            SettingsDataService.loadSetting<boolean>(SettingKey.WorkItemTypeEnabled, true, workItemTypeName, projectId, false)
         ]);
 
         if (!workItemTypeEnabled) {
-            this.setState({workItemTypeEnabled: false});
+            this.setState({ workItemTypeEnabled: false });
             return [];
         }
 
@@ -443,7 +404,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
 
         if (userSubscriptions && userSubscriptions.length > 0) {
             // verify existence of rule groups and only load those which exists currently
-            const {existingRuleGroupIds, deletedRuleGroupIds} = await this._filterExistingRuleGroups(userSubscriptions);
+            const { existingRuleGroupIds, deletedRuleGroupIds } = await this._filterExistingRuleGroups(userSubscriptions);
             if (existingRuleGroupIds && existingRuleGroupIds.length > 0) {
                 ruleGroupIdsToLoad.push(...existingRuleGroupIds);
             }
@@ -455,7 +416,8 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
                     subtract(userSubscriptions, deletedRuleGroupIds, (s1, s2) => stringEquals(s1, s2, true)),
                     workItemTypeName,
                     projectId,
-                    true);
+                    true
+                );
             }
         }
 
@@ -466,7 +428,7 @@ export class WorkItemRulesGroup extends AutoResizableComponent<IBaseFluxComponen
         }
 
         return rules;
-    }
+    };
 }
 
 export function init() {

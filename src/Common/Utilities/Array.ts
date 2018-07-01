@@ -8,7 +8,7 @@ export function first<T>(array: T[], predicate?: (value: T) => boolean): T {
     }
 
     const items = array.filter(predicate);
-    return (items && items.length > 0) ? items[0] : null;
+    return items && items.length > 0 ? items[0] : null;
 }
 
 export function findIndex<T>(array: T[], predicate: (param: T) => boolean): number {
@@ -139,8 +139,7 @@ export function arrayEquals<T>(source: T[], target: T[], comparer?: (s: T, t: T)
                 return false;
             }
         }
-    }
-    else {
+    } else {
         for (let i = 0; i < source.length; i++) {
             if (!innerComparer(source[i], target[i])) {
                 return false;
@@ -154,11 +153,9 @@ export function arrayEquals<T>(source: T[], target: T[], comparer?: (s: T, t: T)
 function defaultComparer<T>(a: T, b: T): number {
     if (a === b) {
         return 0;
-    }
-    else if (a > b) {
+    } else if (a > b) {
         return 1;
-    }
-    else {
+    } else {
         return -1;
     }
 }

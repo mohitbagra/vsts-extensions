@@ -58,15 +58,14 @@ export class WorkItemFieldValuePicker extends BaseFluxComponent<IWorkItemFieldVa
     public componentDidMount() {
         super.componentDidMount();
 
-        const {field, workItemType} = this.props;
+        const { field, workItemType } = this.props;
 
         if (this._fieldSupportsAllowedValues(field)) {
             const allowedValues = this._fieldAllowedValuesStore.getAllowedValues(workItemType, field.referenceName);
             if (allowedValues == null) {
                 WorkItemTypeFieldAllowedValuesActions.initializeAllowedValues(workItemType, field.referenceName);
-            }
-            else {
-                this.setState({allowedValues: allowedValues});
+            } else {
+                this.setState({ allowedValues: allowedValues });
             }
         }
     }
@@ -74,44 +73,34 @@ export class WorkItemFieldValuePicker extends BaseFluxComponent<IWorkItemFieldVa
     public componentWillReceiveProps(nextProps: IWorkItemFieldValuePickerProps, context?: any) {
         super.componentWillReceiveProps(nextProps, context);
 
-        const {field, workItemType} = nextProps;
+        const { field, workItemType } = nextProps;
         const oldField = this.props.field;
         const oldWorkItemType = this.props.workItemType;
 
         if (!stringEquals(field && field.referenceName, oldField && oldField.referenceName, true) || !stringEquals(oldWorkItemType, workItemType, true)) {
             if (this._fieldSupportsAllowedValues(field)) {
                 const allowedValues = this._fieldAllowedValuesStore.getAllowedValues(workItemType, field.referenceName);
-                this.setState({allowedValues: allowedValues, internalValue: nextProps.value});
+                this.setState({ allowedValues: allowedValues, internalValue: nextProps.value });
 
                 if (allowedValues == null) {
                     WorkItemTypeFieldAllowedValuesActions.initializeAllowedValues(workItemType, field.referenceName);
                 }
+            } else {
+                this.setState({ allowedValues: null, internalValue: nextProps.value });
             }
-            else {
-                this.setState({allowedValues: null, internalValue: nextProps.value});
-            }
-        }
-        else if (this.state.internalValue !== nextProps.value) {
-            this.setState({internalValue: nextProps.value});
+        } else if (this.state.internalValue !== nextProps.value) {
+            this.setState({ internalValue: nextProps.value });
         }
     }
 
     public render(): JSX.Element {
-        const {field, delay, label, disabled, info, required, error} = this.props;
-        const {internalValue = ""} = this.state;
+        const { field, delay, label, disabled, info, required, error } = this.props;
+        const { internalValue = "" } = this.state;
 
         const className = css("field-value-picker", this.props.className);
 
         if (!field || (this._fieldSupportsAllowedValues(field) && this.state.allowedValues == null)) {
-            return (
-                <ThrottledTextField
-                    className={className}
-                    value={""}
-                    label={label}
-                    info={info}
-                    disabled={true}
-                />
-            );
+            return <ThrottledTextField className={className} value={""} label={label} info={info} disabled={true} />;
         }
 
         if (field.referenceName === "System.Tags") {
@@ -130,15 +119,9 @@ export class WorkItemFieldValuePicker extends BaseFluxComponent<IWorkItemFieldVa
 
         switch (field.type) {
             case FieldType.Boolean:
-                const checked = (internalValue === 1 || internalValue === "1" || stringEquals(internalValue as string, "true", true) || internalValue as boolean === true) ? true : false;
-                return (
-                    <Checkbox
-                        className={className}
-                        checked={checked}
-                        onChange={this._onCheckboxChange}
-                        disabled={disabled}
-                    />
-                );
+                const checked =
+                    internalValue === 1 || internalValue === "1" || stringEquals(internalValue as string, "true", true) || (internalValue as boolean) === true ? true : false;
+                return <Checkbox className={className} checked={checked} onChange={this._onCheckboxChange} disabled={disabled} />;
             case FieldType.PlainText:
                 return (
                     <ThrottledTextField
@@ -218,8 +201,7 @@ export class WorkItemFieldValuePicker extends BaseFluxComponent<IWorkItemFieldVa
                             onChange={this._onComboValueChange}
                         />
                     );
-                }
-                else {
+                } else {
                     return (
                         <ThrottledTextField
                             className={className}
@@ -260,15 +242,15 @@ export class WorkItemFieldValuePicker extends BaseFluxComponent<IWorkItemFieldVa
 
     private _onCheckboxChange = (_ev: React.FormEvent<HTMLElement | HTMLInputElement>, checked?: boolean) => {
         return this._onFieldValueChange(checked ? "1" : "0");
-    }
+    };
 
     private _onComboValueChange = (option: string, value: string) => {
         this._onFieldValueChange(option || value);
-    }
+    };
 
     private _onTagsChange = (tags: string[]) => {
         this._onFieldValueChange(tags.join(";"));
-    }
+    };
 
     private _onFieldValueChange = (value: any) => {
         this.setState(
@@ -279,5 +261,5 @@ export class WorkItemFieldValuePicker extends BaseFluxComponent<IWorkItemFieldVa
                 this.props.onChange(value);
             }
         );
-    }
+    };
 }

@@ -35,8 +35,7 @@ export class WorkItemStateView extends BaseFluxComponent<IWorkItemStateViewProps
             this.setState({
                 workItemTypeState: first(workItemTypeStates, s => stringEquals(s.name, this.props.state, true))
             });
-        }
-        else {
+        } else {
             WorkItemStateItemActions.initializeWorkItemStates(this.props.workItemType);
         }
     }
@@ -50,8 +49,7 @@ export class WorkItemStateView extends BaseFluxComponent<IWorkItemStateViewProps
                 this.setState({
                     workItemTypeState: first(workItemTypeStates, s => stringEquals(s.name, nextProps.state, true))
                 });
-            }
-            else {
+            } else {
                 WorkItemStateItemActions.initializeWorkItemStates(nextProps.workItemType);
             }
         }
@@ -62,8 +60,7 @@ export class WorkItemStateView extends BaseFluxComponent<IWorkItemStateViewProps
 
         if (this.state.workItemTypeState && this.state.workItemTypeState.color) {
             stateColor = `#${this.state.workItemTypeState.color.substring(this.state.workItemTypeState.color.length - 6)}`;
-        }
-        else {
+        } else {
             stateColor = "#000000";
         }
 

@@ -24,12 +24,9 @@ export class ConfigureDialog {
 
         initializeIcons();
         ReactDOM.render(
-            <ConfigureDialogComponent
-                onToggleWorkItemType={this._onToggleWorkItemType}
-                configuredWorkItemTypes={configuredWorkItemTypes}
-                allWorkItemTypes={allWorkItemTypes}
-            />,
-            document.getElementById("dialog-container"));
+            <ConfigureDialogComponent onToggleWorkItemType={this._onToggleWorkItemType} configuredWorkItemTypes={configuredWorkItemTypes} allWorkItemTypes={allWorkItemTypes} />,
+            document.getElementById("dialog-container")
+        );
     }
 
     private _onToggleWorkItemType = (workItemTypeName: string, toggleOn: boolean) => {
@@ -38,12 +35,11 @@ export class ConfigureDialog {
 
         if (toggleOn && !witSubscribed) {
             this._configuredWorkItemTypes.push(workItemTypeName);
-        }
-        else if (!toggleOn && witSubscribed) {
+        } else if (!toggleOn && witSubscribed) {
             this._configuredWorkItemTypes = this._configuredWorkItemTypes.filter(w1 => !stringEquals(w1, workItemTypeName, true));
         }
         ExtensionDataManager.writeSetting(`wits_${projectId}`, this._configuredWorkItemTypes, false);
-    }
+    };
 }
 
 interface IConfigureDialogComponentProps {
@@ -59,31 +55,29 @@ class ConfigureDialogComponent extends React.Component<IConfigureDialogComponent
     }
 
     public render(): JSX.Element {
-        const {allWorkItemTypes, configuredWorkItemTypes} = this.props;
+        const { allWorkItemTypes, configuredWorkItemTypes } = this.props;
         const configuredWorkItemTypesMap: IDictionaryStringTo<boolean> = {};
         for (const w of configuredWorkItemTypes) {
             configuredWorkItemTypesMap[w.toLowerCase()] = true;
         }
         return (
             <Fabric>
-                <div style={{marginBottom: "10px", fontWeight: 600, fontSize: "15px"}}>
-                    Select work item types which can be linked to Pull requests.
-                </div>
+                <div style={{ marginBottom: "10px", fontWeight: 600, fontSize: "15px" }}>Select work item types which can be linked to Pull requests.</div>
                 {allWorkItemTypes.map(w => (
-                        <Checkbox
-                            styles={{
-                                root: {marginBottom: "10px"}
-                            }}
-                            defaultChecked={!!configuredWorkItemTypesMap[w.name.toLowerCase()]}
-                            label={w.name}
-                            onChange={delegate(this, this._onToggle, w)}
-                        />
-                    ))}
+                    <Checkbox
+                        styles={{
+                            root: { marginBottom: "10px" }
+                        }}
+                        defaultChecked={!!configuredWorkItemTypesMap[w.name.toLowerCase()]}
+                        label={w.name}
+                        onChange={delegate(this, this._onToggle, w)}
+                    />
+                ))}
             </Fabric>
         );
     }
 
     private _onToggle = (_ev: React.FormEvent<HTMLElement | HTMLInputElement>, checked: boolean, workItemType: WorkItemType) => {
         this.props.onToggleWorkItemType(workItemType.name, checked);
-    }
+    };
 }

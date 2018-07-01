@@ -1,5 +1,5 @@
 import { BugBashFieldNames, BugBashItemFieldNames, WorkItemFieldNames } from "BugBashPro/Constants";
-import { IdentityRef } from "Common/Utilities/Identity";
+import { IdentityRef } from "VSS/WebApi/Contracts";
 
 export interface IBugBash {
     id?: string;

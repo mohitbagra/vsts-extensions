@@ -96,7 +96,7 @@ export class ThrottledTextField extends BaseFluxComponent<IThrottledTextFieldPro
 
     private _refCallback = (component: ITextField) => {
         this._component = component;
-    }
+    };
 
     private _onChange = (value: string) => {
         this._disposeDelayedFunction();
@@ -116,11 +116,10 @@ export class ThrottledTextField extends BaseFluxComponent<IThrottledTextFieldPro
 
         if (this.props.delay == null) {
             fireChange();
-        }
-        else {
+        } else {
             this._delayedFunction = delay(this, this.props.delay, () => {
                 fireChange();
             });
         }
-    }
+    };
 }

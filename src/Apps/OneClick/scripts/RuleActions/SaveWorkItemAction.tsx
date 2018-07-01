@@ -32,16 +32,12 @@ export class SaveWorkItemAction extends BaseAction {
         return {
             iconName: "Save",
             styles: {
-                root: {color: "#0078D7 !important"}
+                root: { color: "#0078D7 !important" }
             }
         };
     }
 
     public render(): React.ReactNode {
-        return (
-            <MessageBar messageBarType={MessageBarType.info}>
-                Save the current work item.
-            </MessageBar>
-        );
+        return <MessageBar messageBarType={MessageBarType.info}>Save the current work item.</MessageBar>;
     }
 }

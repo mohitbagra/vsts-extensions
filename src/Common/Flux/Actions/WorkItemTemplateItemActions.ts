@@ -9,15 +9,13 @@ export namespace WorkItemTemplateItemActions {
     export async function initializeWorkItemTemplateItem(teamId: string, id: string, projectId?: string) {
         if (workItemTemplateItemStore.isLoaded(id)) {
             WorkItemTemplateItemActionsHub.InitializeWorkItemTemplateItem.invoke(null);
-        }
-        else if (!workItemTemplateItemStore.isLoading(id)) {
+        } else if (!workItemTemplateItemStore.isLoading(id)) {
             workItemTemplateItemStore.setLoading(true, id);
             try {
                 const workItemTemplate = await WitClient.getClient().getTemplate(projectId || VSS.getWebContext().project.id, teamId, id);
                 WorkItemTemplateItemActionsHub.InitializeWorkItemTemplateItem.invoke(workItemTemplate);
                 workItemTemplateItemStore.setLoading(false, id);
-            }
-            catch (e) {
+            } catch (e) {
                 workItemTemplateItemStore.setLoading(false, id);
                 throw e.message;
             }

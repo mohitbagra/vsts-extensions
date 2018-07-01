@@ -67,11 +67,7 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
 
         return (
             <div className="time-ampm">
-                <StringSpinner
-                    value={value}
-                    valueRange={this._AMPMRange}
-                    onValueChange={this._onAMPMChange}
-                />
+                <StringSpinner value={value} valueRange={this._AMPMRange} onValueChange={this._onAMPMChange} />
             </div>
         );
     }
@@ -79,11 +75,7 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
     private _renderHour(): JSX.Element {
         return (
             <div className="time-hour">
-                <NumberSpinner
-                    value={this.state.hour}
-                    valueRange={this._hourRange}
-                    onValueChange={this._onHourChange}
-                />
+                <NumberSpinner value={this.state.hour} valueRange={this._hourRange} onValueChange={this._onHourChange} />
             </div>
         );
     }
@@ -91,11 +83,7 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
     private _renderMinute(): JSX.Element {
         return (
             <div className="time-minute">
-                <NumberSpinner
-                    value={this.state.minute}
-                    valueRange={this._minuteRange}
-                    onValueChange={this._onMinuteChange}
-                />
+                <NumberSpinner value={this.state.minute} valueRange={this._minuteRange} onValueChange={this._onMinuteChange} />
             </div>
         );
     }
@@ -111,7 +99,7 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
         this._minHour = 1;
         this._maxHour = 12;
         this._hourRange = new NumericValueRange(this._minHour, this._maxHour);
-        this._minuteRange = new NumericValueRange(0, 59, (n: number) => (n < 10) ? `0${n}` : n.toString());
+        this._minuteRange = new NumericValueRange(0, 59, (n: number) => (n < 10 ? `0${n}` : n.toString()));
         this._AMPMRange = new CategoryRange(["AM", "PM"]);
     }
 
@@ -123,8 +111,7 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
 
         if (hour === 0) {
             displayedHour = 12;
-        }
-        else if (hour >= 12) {
+        } else if (hour >= 12) {
             isAM = false;
             if (hour > 12) {
                 displayedHour = hour - 12;
@@ -149,8 +136,7 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
         if (this.props.onSelectTime) {
             if (!isAM && hour !== 12) {
                 h = hour + 12;
-            }
-            else if (isAM && hour === 12) {
+            } else if (isAM && hour === 12) {
                 h = 0;
             }
             this.props.onSelectTime(h, minute);
@@ -159,14 +145,14 @@ export class Time extends React.Component<ITimeProps, ITimeState> {
 
     private _onHourChange = (value: number) => {
         this._changeTime(value, this.state.minute, this.state.isAM);
-    }
+    };
 
     private _onMinuteChange = (value: number) => {
         this._changeTime(this.state.hour, value, this.state.isAM);
-    }
+    };
 
     private _onAMPMChange = (value: string) => {
         const isAM = value && value.toLowerCase() === "am";
         this._changeTime(this.state.hour, this.state.minute, isAM);
-    }
+    };
 }

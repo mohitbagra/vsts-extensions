@@ -66,8 +66,16 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
                 onDismiss={this.props.onDismiss}
             >
                 <div className="rule-editor-container" onKeyDown={this._onKeyDown}>
-                    {this.state.error && <MessageBar className="rule-editor-error" messageBarType={MessageBarType.error}>{this.state.error}</MessageBar>}
-                    {this.state.saving && <Overlay className="loading-overlay"><Loading /></Overlay>}
+                    {this.state.error && (
+                        <MessageBar className="rule-editor-error" messageBarType={MessageBarType.error}>
+                            {this.state.error}
+                        </MessageBar>
+                    )}
+                    {this.state.saving && (
+                        <Overlay className="loading-overlay">
+                            <Loading />
+                        </Overlay>
+                    )}
                     <div className="rule-editor">
                         <div className="left-section">
                             <ThrottledTextField
@@ -84,7 +92,7 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
                                 maxLength={SizeLimits.DescriptionMaxLength}
                                 className="form-control"
                                 label="Description"
-                                style={{height: "200px"}}
+                                style={{ height: "200px" }}
                                 delay={200}
                                 resizable={false}
                                 multiline={true}
@@ -104,14 +112,13 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
                                 onChange={this._onToggleDisable}
                             />
                             <div className="form-control checkbox-label-control">
-                                <Checkbox
-                                    checked={this.state.rule.getFieldValue<boolean>(RuleFieldNames.HideOnForm)}
-                                    onChange={this._onToggleFormVisibility}
-                                />
+                                <Checkbox checked={this.state.rule.getFieldValue<boolean>(RuleFieldNames.HideOnForm)} onChange={this._onToggleFormVisibility} />
                                 <InfoLabel
                                     label="Hide on form"
-                                    info={"If you have triggers configured in this rule, then you can choose to hide the rule button in your form, " +
-                                        "as the rule will automatically fire when the trigger is fired"}
+                                    info={
+                                        "If you have triggers configured in this rule, then you can choose to hide the rule button in your form, " +
+                                        "as the rule will automatically fire when the trigger is fired"
+                                    }
                                 />
                             </div>
                         </div>
@@ -134,26 +141,14 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
 
     private _renderTriggers(): React.ReactNode {
         if (!this.state.rule.hasTriggers) {
-            return (
-                <ZeroData
-                    imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`}
-                    imageAltText=""
-                    primaryText="No triggers added yet"
-                />
-            );
+            return <ZeroData imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`} imageAltText="" primaryText="No triggers added yet" />;
         }
         return this.state.rule.renderTriggers();
     }
 
     private _renderActions(): React.ReactNode {
         if (this.state.rule.actions.length === 0) {
-            return (
-                <ZeroData
-                    imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`}
-                    imageAltText=""
-                    primaryText="No actions added yet"
-                />
-            );
+            return <ZeroData imagePath={`${VSS.getExtensionContext().baseUri}/images/nodata.png`} imageAltText="" primaryText="No actions added yet" />;
         }
         return this.state.rule.renderActions();
     }
@@ -161,23 +156,12 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
     private _onRenderHeader = (): JSX.Element => {
         return (
             <div className="rule-editor-panel-header">
-                <Label className="rule-editor-header-text">
-                    {this.state.rule.isNew ? "Add Rule" : "Edit Rule"}
-                </Label>
+                <Label className="rule-editor-header-text">{this.state.rule.isNew ? "Add Rule" : "Edit Rule"}</Label>
                 <div className="rule-header-tabs">
-                    <CommandBarButton
-                        className={css("rule-editor-header-tab", { selected: !this.state.showTriggers })}
-                        text="Actions"
-                        onClick={this._showActions}
-                    />
-                    <CommandBarButton
-                        className={css("rule-editor-header-tab", { selected: this.state.showTriggers })}
-                        text="Triggers"
-                        onClick={this._showTriggers}
-                    />
+                    <CommandBarButton className={css("rule-editor-header-tab", { selected: !this.state.showTriggers })} text="Actions" onClick={this._showActions} />
+                    <CommandBarButton className={css("rule-editor-header-tab", { selected: this.state.showTriggers })} text="Triggers" onClick={this._showTriggers} />
                 </div>
-                {
-                    !this.state.showTriggers &&
+                {!this.state.showTriggers && (
                     <CommandBarButton
                         iconProps={{ iconName: "Add" }}
                         className="rule-editor-header-add-button"
@@ -197,9 +181,8 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
                             })
                         }}
                     />
-                }
-                {
-                    this.state.showTriggers &&
+                )}
+                {this.state.showTriggers && (
                     <CommandBarButton
                         iconProps={{ iconName: "Add" }}
                         className="rule-editor-header-add-button"
@@ -218,22 +201,22 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
                             })
                         }}
                     />
-                }
+                )}
             </div>
         );
-    }
+    };
 
     private _showTriggers = () => {
         if (!this.state.showTriggers) {
-            this.setState({showTriggers: true});
+            this.setState({ showTriggers: true });
         }
-    }
+    };
 
     private _showActions = () => {
         if (this.state.showTriggers) {
-            this.setState({showTriggers: false});
+            this.setState({ showTriggers: false });
         }
-    }
+    };
 
     private _onRenderFooter = (): JSX.Element => {
         return (
@@ -246,41 +229,37 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
                 >
                     Save
                 </PrimaryButton>
-                <DefaultButton
-                    onClick={this.props.onDismiss}
-                >
-                    Cancel
-                </DefaultButton>
+                <DefaultButton onClick={this.props.onDismiss}>Cancel</DefaultButton>
             </div>
         );
-    }
+    };
 
     private _onNameChange = (value: string) => {
         this.state.rule.setFieldValue<string>(RuleFieldNames.Name, value);
-    }
+    };
 
     private _onDescriptionChange = (value: string) => {
         this.state.rule.setFieldValue<string>(RuleFieldNames.Description, value);
-    }
+    };
 
     private _onToggleDisable = (_ev: React.FormEvent<HTMLElement>, isChecked: boolean) => {
         this.state.rule.setFieldValue<boolean>(RuleFieldNames.Disabled, isChecked);
-    }
+    };
 
     private _onToggleFormVisibility = (_ev: React.FormEvent<HTMLElement>, isChecked: boolean) => {
         this.state.rule.setFieldValue<boolean>(RuleFieldNames.HideOnForm, isChecked);
-    }
+    };
 
     private _onColorChange = (value: string) => {
         this.state.rule.setFieldValue<string>(RuleFieldNames.Color, value);
-    }
+    };
 
     private _onKeyDown = (e: React.KeyboardEvent<any>) => {
         if (e.ctrlKey && e.keyCode === 83) {
             e.preventDefault();
             this._saveRule();
         }
-    }
+    };
 
     private _saveRule = async () => {
         if (!this.state.rule.isDirty() || !this.state.rule.isValid() || this.state.saving) {
@@ -288,23 +267,21 @@ export class RuleEditor extends BaseFluxComponent<IRuleEditorProps, IRuleEditorS
         }
 
         try {
-            this.setState({saving: true});
+            this.setState({ saving: true });
             if (this.state.rule.isNew) {
                 await RuleActions.createRule(this.props.ruleGroupId, this.state.rule.updatedModel);
-            }
-            else {
+            } else {
                 await RuleActions.updateRule(this.props.ruleGroupId, this.state.rule.updatedModel);
             }
 
-            this.setState({saving: false});
+            this.setState({ saving: false });
             this.props.onDismiss();
+        } catch (e) {
+            this.setState({ saving: false, error: e });
         }
-        catch (e) {
-            this.setState({saving: false, error: e});
-        }
-    }
+    };
 
     private _onModelChanged = () => {
-        this.setState({rule: this.state.rule});
-    }
+        this.setState({ rule: this.state.rule });
+    };
 }

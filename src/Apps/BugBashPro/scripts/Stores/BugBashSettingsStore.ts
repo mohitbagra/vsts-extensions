@@ -4,7 +4,7 @@ import { BaseStore } from "Common/Flux/Stores/BaseStore";
 
 export class BugBashSettingsStore extends BaseStore<IBugBashSettings, IBugBashSettings, void> {
     public getItem(_id: void): IBugBashSettings {
-         return this.items;
+        return this.items;
     }
 
     public getKey(): string {

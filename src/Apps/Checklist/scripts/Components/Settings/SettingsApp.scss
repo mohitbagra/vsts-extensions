@@ -4,11 +4,11 @@
     left: 0;
     right: 0;
     bottom: 0;
-    overflow: auto;    
+    overflow: auto;
 
     .fabric-container {
         height: 100%;
-        
+
         .info-button-contaier {
             position: fixed;
             bottom: 20px;
@@ -45,7 +45,7 @@
                 .checklist-view {
                     width: 600px;
                     margin-top: 20px;
-                    
+
                     .checklist-items-container {
                         max-height: inherit;
                     }
@@ -57,7 +57,7 @@
                 }
             }
         }
-    }    
+    }
 }
 
 .edit-checklist-item-overlay {

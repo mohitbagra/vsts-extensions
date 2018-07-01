@@ -9,7 +9,7 @@ export class TeamFieldStore extends BaseStore<IDictionaryStringTo<TeamFieldValue
     }
 
     public getItem(teamId: string): TeamFieldValues {
-         return this.items[teamId.toLowerCase()] || null;
+        return this.items[teamId.toLowerCase()] || null;
     }
 
     public getKey(): string {
@@ -17,7 +17,7 @@ export class TeamFieldStore extends BaseStore<IDictionaryStringTo<TeamFieldValue
     }
 
     protected initializeActionListeners() {
-        TeamFieldActionsHub.InitializeTeamFieldItem.addListener((values: {teamId: string, teamFieldValues: TeamFieldValues}) => {
+        TeamFieldActionsHub.InitializeTeamFieldItem.addListener((values: { teamId: string; teamFieldValues: TeamFieldValues }) => {
             if (values) {
                 this.items[values.teamId.toLowerCase()] = values.teamFieldValues;
             }

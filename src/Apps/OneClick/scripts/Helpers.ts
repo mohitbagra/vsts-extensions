@@ -19,7 +19,7 @@ export function isPersonalOrGlobalRuleGroup(ruleGroup: IRuleGroup): boolean {
 }
 
 export function getRuleGroupUrl(witName: string, ruleGroupId: string): string {
-    const {collection, project} = VSS.getWebContext();
+    const { collection, project } = VSS.getWebContext();
     const extensionId = `${VSS.getExtensionContext().publisherId}.${VSS.getExtensionContext().extensionId}`;
     return `${collection.uri}/${project.name}/_apps/hub/${extensionId}.settings-hub?witName=${witName}&ruleGroup=${ruleGroupId}`;
 }
@@ -28,8 +28,7 @@ export async function translateToFieldValue(value: string, fieldType?: WitContra
     if (Macros.BaseMacro.isMacro(value) && Macros.BaseMacro.getMacroType(value)) {
         const macroType = Macros.BaseMacro.getMacroType(value);
         return new macroType().translate(value, true);
-    }
-    else {
+    } else {
         switch (fieldType) {
             case WitContracts.FieldType.Boolean:
                 return stringEquals(value, "True", true) || stringEquals(value, "1", true);

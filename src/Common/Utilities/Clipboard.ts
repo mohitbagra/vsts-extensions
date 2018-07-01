@@ -10,19 +10,16 @@ export function copyToClipboard(data: string, options?: IClipboardOptions): bool
             if (supportsNativeHtmlCopy()) {
                 try {
                     dataCopied = nativeCopy(data, true);
-                }
-                catch {
+                } catch {
                     // eat up
                 }
             }
-        }
-        else {
+        } else {
             // Plain text copy
             if (supportsNativeCopy()) {
                 try {
                     dataCopied = nativeCopy(data, false);
-                }
-                catch {
+                } catch {
                     // eat up
                 }
             }
@@ -37,8 +34,7 @@ export function supportsNativeCopy(): boolean {
 }
 
 export function supportsNativeHtmlCopy(): boolean {
-    return (<any>document.body).createTextRange !== undefined
-        || (document.queryCommandSupported("copy") && document.createRange !== undefined);
+    return (<any>document.body).createTextRange !== undefined || (document.queryCommandSupported("copy") && document.createRange !== undefined);
 }
 
 function nativeCopy(data: string, copyAsHtml: boolean): boolean {
@@ -47,21 +43,18 @@ function nativeCopy(data: string, copyAsHtml: boolean): boolean {
     if (!copyAsHtml && (<any>window).clipboardData !== undefined) {
         (<any>window).clipboardData.setData("text", data);
         success = true;
-    }
-    else {
+    } else {
         let range;
         let sel;
         // Create an element in the dom with the content to be copied.
         const $copyContent = $("<div/>");
         try {
-
             // body can have its own background color.
             $copyContent.css("background-color", "white");
 
             if (copyAsHtml) {
                 $copyContent.append(data);
-            }
-            else {
+            } else {
                 $copyContent.css("white-space", "pre");
                 $copyContent.text(data);
             }
@@ -73,8 +66,7 @@ function nativeCopy(data: string, copyAsHtml: boolean): boolean {
                 range.moveToElementText($copyContent[0]);
                 range.select();
                 success = range.execCommand("copy");
-            }
-            else if (document.createRange && window.getSelection) {
+            } else if (document.createRange && window.getSelection) {
                 $copyContent.appendTo($("body"));
 
                 range = document.createRange();
@@ -85,8 +77,7 @@ function nativeCopy(data: string, copyAsHtml: boolean): boolean {
                 sel.addRange(range);
                 success = (<any>document).execCommand("copy");
             }
-        }
-        finally {
+        } finally {
             // Remove the content from the dom.
             $copyContent.remove();
         }

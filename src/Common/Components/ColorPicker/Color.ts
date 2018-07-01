@@ -42,8 +42,7 @@ export class Color {
         }
         if (typeof color === "string") {
             this.convertStringColorToRgb(<string>color);
-        }
-        else if (color instanceof Rgb) {
+        } else if (color instanceof Rgb) {
             this._value = <Rgb>color;
         } else {
             throw new Error("color not in a known type");
@@ -64,7 +63,7 @@ export class Color {
 
     public convertStringColorToRgb(colorInString: string): void {
         const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-        const c = colorInString.replace(shorthandRegex, (_m, r, g, b) => (r + r + g + g + b + b));
+        const c = colorInString.replace(shorthandRegex, (_m, r, g, b) => r + r + g + g + b + b);
 
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(c);
         if (result != null) {
@@ -72,7 +71,6 @@ export class Color {
         } else {
             throw new Error("Color in string only support Hex format");
         }
-
     }
 
     public equals(color: Color): boolean {
@@ -115,46 +113,146 @@ export class Color {
 
 export class AccessibilityColor extends Color {
     public static FullPaletteColors: AccessibilityColor[] = [
-        new AccessibilityColor("#222222"), new AccessibilityColor("#292E6B"), new AccessibilityColor("#009CCC"), new AccessibilityColor("#00643A"),
-        new AccessibilityColor("#339947"), new AccessibilityColor("#FBBC3D"), new AccessibilityColor("#DB552C"), new AccessibilityColor("#7F1725"),
-        new AccessibilityColor("#EC008C"), new AccessibilityColor("#5C197B"), new AccessibilityColor("#51399F"), new AccessibilityColor("#444444"),
-        new AccessibilityColor("#1B478B"), new AccessibilityColor("#43B4D5"), new AccessibilityColor("#207752"), new AccessibilityColor("#60AF49"),
-        new AccessibilityColor("#FBD144"), new AccessibilityColor("#E87025"), new AccessibilityColor("#B20B1E"), new AccessibilityColor("#EF33A3"),
-        new AccessibilityColor("#71338D"), new AccessibilityColor("#6951AA"), new AccessibilityColor("#666666"), new AccessibilityColor("#0D60AB"),
-        new AccessibilityColor("#86CDDE"), new AccessibilityColor("#56987D"), new AccessibilityColor("#8DC54B"), new AccessibilityColor("#FBE74B"),
-        new AccessibilityColor("#F58B1F"), new AccessibilityColor("#E60017"), new AccessibilityColor("#F266BA"), new AccessibilityColor("#9260A1"),
-        new AccessibilityColor("#8874C2"), new AccessibilityColor("#888888"), new AccessibilityColor("#007ACC"), new AccessibilityColor("#C9E7E7"),
-        new AccessibilityColor("#7CAF9A"), new AccessibilityColor("#A8CE4B"), new AccessibilityColor("#FBFD52"), new AccessibilityColor("#F7A24B"),
-        new AccessibilityColor("#EB3345"), new AccessibilityColor("#F599D1"), new AccessibilityColor("#AE88B9"), new AccessibilityColor("#AA9CDF"),
-        new AccessibilityColor("#AAAAAA"), new AccessibilityColor("#3F9BD8"), new AccessibilityColor("#D6EDED"), new AccessibilityColor("#9CC3B2"),
-        new AccessibilityColor("#C3D84C"), new AccessibilityColor("#FCFD7D"), new AccessibilityColor("#F9B978"), new AccessibilityColor("#F06673"),
-        new AccessibilityColor("#F9CCE8"), new AccessibilityColor("#C7ABD0"), new AccessibilityColor("#C0B6E9"), new AccessibilityColor("#CCCCCC"),
-        new AccessibilityColor("#7FBCE5"), new AccessibilityColor("#E4F3F3"), new AccessibilityColor("#BFD8CD"), new AccessibilityColor("#D7E587"),
-        new AccessibilityColor("#FCFEA8"), new AccessibilityColor("#FBD0A5"), new AccessibilityColor("#F599A2"), new AccessibilityColor("#FBDDEF"),
-        new AccessibilityColor("#E0CAE7"), new AccessibilityColor("#DAD4F7")
+        new AccessibilityColor("#222222"),
+        new AccessibilityColor("#292E6B"),
+        new AccessibilityColor("#009CCC"),
+        new AccessibilityColor("#00643A"),
+        new AccessibilityColor("#339947"),
+        new AccessibilityColor("#FBBC3D"),
+        new AccessibilityColor("#DB552C"),
+        new AccessibilityColor("#7F1725"),
+        new AccessibilityColor("#EC008C"),
+        new AccessibilityColor("#5C197B"),
+        new AccessibilityColor("#51399F"),
+        new AccessibilityColor("#444444"),
+        new AccessibilityColor("#1B478B"),
+        new AccessibilityColor("#43B4D5"),
+        new AccessibilityColor("#207752"),
+        new AccessibilityColor("#60AF49"),
+        new AccessibilityColor("#FBD144"),
+        new AccessibilityColor("#E87025"),
+        new AccessibilityColor("#B20B1E"),
+        new AccessibilityColor("#EF33A3"),
+        new AccessibilityColor("#71338D"),
+        new AccessibilityColor("#6951AA"),
+        new AccessibilityColor("#666666"),
+        new AccessibilityColor("#0D60AB"),
+        new AccessibilityColor("#86CDDE"),
+        new AccessibilityColor("#56987D"),
+        new AccessibilityColor("#8DC54B"),
+        new AccessibilityColor("#FBE74B"),
+        new AccessibilityColor("#F58B1F"),
+        new AccessibilityColor("#E60017"),
+        new AccessibilityColor("#F266BA"),
+        new AccessibilityColor("#9260A1"),
+        new AccessibilityColor("#8874C2"),
+        new AccessibilityColor("#888888"),
+        new AccessibilityColor("#007ACC"),
+        new AccessibilityColor("#C9E7E7"),
+        new AccessibilityColor("#7CAF9A"),
+        new AccessibilityColor("#A8CE4B"),
+        new AccessibilityColor("#FBFD52"),
+        new AccessibilityColor("#F7A24B"),
+        new AccessibilityColor("#EB3345"),
+        new AccessibilityColor("#F599D1"),
+        new AccessibilityColor("#AE88B9"),
+        new AccessibilityColor("#AA9CDF"),
+        new AccessibilityColor("#AAAAAA"),
+        new AccessibilityColor("#3F9BD8"),
+        new AccessibilityColor("#D6EDED"),
+        new AccessibilityColor("#9CC3B2"),
+        new AccessibilityColor("#C3D84C"),
+        new AccessibilityColor("#FCFD7D"),
+        new AccessibilityColor("#F9B978"),
+        new AccessibilityColor("#F06673"),
+        new AccessibilityColor("#F9CCE8"),
+        new AccessibilityColor("#C7ABD0"),
+        new AccessibilityColor("#C0B6E9"),
+        new AccessibilityColor("#CCCCCC"),
+        new AccessibilityColor("#7FBCE5"),
+        new AccessibilityColor("#E4F3F3"),
+        new AccessibilityColor("#BFD8CD"),
+        new AccessibilityColor("#D7E587"),
+        new AccessibilityColor("#FCFEA8"),
+        new AccessibilityColor("#FBD0A5"),
+        new AccessibilityColor("#F599A2"),
+        new AccessibilityColor("#FBDDEF"),
+        new AccessibilityColor("#E0CAE7"),
+        new AccessibilityColor("#DAD4F7")
     ];
 
     public static VibrantPaletteColors: AccessibilityColor[] = [
-        new AccessibilityColor("#222222"), new AccessibilityColor("#666666"), new AccessibilityColor("#292E6B"), new AccessibilityColor("#009CCC"),
-        new AccessibilityColor("#00643A"), new AccessibilityColor("#339947"), new AccessibilityColor("#FBBC3D"), new AccessibilityColor("#DB552C"),
-        new AccessibilityColor("#7F1725"), new AccessibilityColor("#EC008C"), new AccessibilityColor("#5C197B"), new AccessibilityColor("#51399F"),
-        new AccessibilityColor("#FFFFFF"), new AccessibilityColor("#CCCCCC"), new AccessibilityColor("#007ACC"), new AccessibilityColor("#C9E7E7"),
-        new AccessibilityColor("#7CAF9A"), new AccessibilityColor("#A8CE4B"), new AccessibilityColor("#FBFD52"), new AccessibilityColor("#F7A24B"),
-        new AccessibilityColor("#E60017"), new AccessibilityColor("#F599D1"), new AccessibilityColor("#AE88B9"), new AccessibilityColor("#AA9CDF")
+        new AccessibilityColor("#222222"),
+        new AccessibilityColor("#666666"),
+        new AccessibilityColor("#292E6B"),
+        new AccessibilityColor("#009CCC"),
+        new AccessibilityColor("#00643A"),
+        new AccessibilityColor("#339947"),
+        new AccessibilityColor("#FBBC3D"),
+        new AccessibilityColor("#DB552C"),
+        new AccessibilityColor("#7F1725"),
+        new AccessibilityColor("#EC008C"),
+        new AccessibilityColor("#5C197B"),
+        new AccessibilityColor("#51399F"),
+        new AccessibilityColor("#FFFFFF"),
+        new AccessibilityColor("#CCCCCC"),
+        new AccessibilityColor("#007ACC"),
+        new AccessibilityColor("#C9E7E7"),
+        new AccessibilityColor("#7CAF9A"),
+        new AccessibilityColor("#A8CE4B"),
+        new AccessibilityColor("#FBFD52"),
+        new AccessibilityColor("#F7A24B"),
+        new AccessibilityColor("#E60017"),
+        new AccessibilityColor("#F599D1"),
+        new AccessibilityColor("#AE88B9"),
+        new AccessibilityColor("#AA9CDF")
     ];
 
     public static MutePaletteColors: AccessibilityColor[] = [
-        new AccessibilityColor("#888888"), new AccessibilityColor("#007ACC"), new AccessibilityColor("#C9E7E7"), new AccessibilityColor("#7CAF9A"),
-        new AccessibilityColor("#A8CE4B"), new AccessibilityColor("#FBFD52"), new AccessibilityColor("#F7A24B"), new AccessibilityColor("#EB3345"),
-        new AccessibilityColor("#F599D1"), new AccessibilityColor("#AE88B9"), new AccessibilityColor("#AA9CDF"), new AccessibilityColor("#AAAAAA"),
-        new AccessibilityColor("#3F9BD8"), new AccessibilityColor("#D6EDED"), new AccessibilityColor("#9CC3B2"), new AccessibilityColor("#C3D84C"),
-        new AccessibilityColor("#FCFD7D"), new AccessibilityColor("#F9B978"), new AccessibilityColor("#F06673"), new AccessibilityColor("#F9CCE8"),
-        new AccessibilityColor("#C7ABD0"), new AccessibilityColor("#C0B6E9"), new AccessibilityColor("#CCCCCC"), new AccessibilityColor("#7FBCE5"),
-        new AccessibilityColor("#E4F3F3"), new AccessibilityColor("#BFD8CD"), new AccessibilityColor("#D7E587"), new AccessibilityColor("#FCFEA8"),
-        new AccessibilityColor("#FBD0A5"), new AccessibilityColor("#F599A2"), new AccessibilityColor("#FBDDEF"), new AccessibilityColor("#E0CAE7"),
-        new AccessibilityColor("#DAD4F7"), new AccessibilityColor("#FFFFFF"), new AccessibilityColor("#BFDDF2"), new AccessibilityColor("#F1F9F9"),
-        new AccessibilityColor("#E3F5EE"), new AccessibilityColor("#EBF2C3"), new AccessibilityColor("#FEFED3"), new AccessibilityColor("#FDE7D2"),
-        new AccessibilityColor("#FACCD0"), new AccessibilityColor("#FDEEF7"), new AccessibilityColor("#F5E5FB"), new AccessibilityColor("#EDEAFF")
+        new AccessibilityColor("#888888"),
+        new AccessibilityColor("#007ACC"),
+        new AccessibilityColor("#C9E7E7"),
+        new AccessibilityColor("#7CAF9A"),
+        new AccessibilityColor("#A8CE4B"),
+        new AccessibilityColor("#FBFD52"),
+        new AccessibilityColor("#F7A24B"),
+        new AccessibilityColor("#EB3345"),
+        new AccessibilityColor("#F599D1"),
+        new AccessibilityColor("#AE88B9"),
+        new AccessibilityColor("#AA9CDF"),
+        new AccessibilityColor("#AAAAAA"),
+        new AccessibilityColor("#3F9BD8"),
+        new AccessibilityColor("#D6EDED"),
+        new AccessibilityColor("#9CC3B2"),
+        new AccessibilityColor("#C3D84C"),
+        new AccessibilityColor("#FCFD7D"),
+        new AccessibilityColor("#F9B978"),
+        new AccessibilityColor("#F06673"),
+        new AccessibilityColor("#F9CCE8"),
+        new AccessibilityColor("#C7ABD0"),
+        new AccessibilityColor("#C0B6E9"),
+        new AccessibilityColor("#CCCCCC"),
+        new AccessibilityColor("#7FBCE5"),
+        new AccessibilityColor("#E4F3F3"),
+        new AccessibilityColor("#BFD8CD"),
+        new AccessibilityColor("#D7E587"),
+        new AccessibilityColor("#FCFEA8"),
+        new AccessibilityColor("#FBD0A5"),
+        new AccessibilityColor("#F599A2"),
+        new AccessibilityColor("#FBDDEF"),
+        new AccessibilityColor("#E0CAE7"),
+        new AccessibilityColor("#DAD4F7"),
+        new AccessibilityColor("#FFFFFF"),
+        new AccessibilityColor("#BFDDF2"),
+        new AccessibilityColor("#F1F9F9"),
+        new AccessibilityColor("#E3F5EE"),
+        new AccessibilityColor("#EBF2C3"),
+        new AccessibilityColor("#FEFED3"),
+        new AccessibilityColor("#FDE7D2"),
+        new AccessibilityColor("#FACCD0"),
+        new AccessibilityColor("#FDEEF7"),
+        new AccessibilityColor("#F5E5FB"),
+        new AccessibilityColor("#EDEAFF")
     ];
 
     private displayName: string;
@@ -163,7 +261,7 @@ export class AccessibilityColor extends Color {
         if (color instanceof Color) {
             colorCode = color.asHex();
         } else {
-            colorCode = < string | Rgb>color;
+            colorCode = <string | Rgb>color;
         }
         super(colorCode);
         this.displayName = displayName;

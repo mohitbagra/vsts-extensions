@@ -11,7 +11,7 @@
         top: 0;
         padding: 10px !important;
         box-sizing: border-box;
-        margin: 0 !important;    
+        margin: 0 !important;
         z-index: 99999;
 
         .rich-editor {
@@ -35,7 +35,7 @@
         overflow: hidden;
         background-color: #fff;
 
-        &:before{
+        &:before {
             display: block;
             position: absolute;
             content: "";
@@ -45,17 +45,30 @@
             background-color: #ffd3ad;
             animation: loading 2s linear infinite;
         }
-    }      
-      
-    @keyframes loading {
-        from {left: -200px; width: 30%;}
-        50% {width: 30%;}
-        70% {width: 70%;}
-        80% { left: 50%;}
-        95% {left: 120%;}
-        to {left: 100%;}
     }
-    
+
+    @keyframes loading {
+        from {
+            left: -200px;
+            width: 30%;
+        }
+        50% {
+            width: 30%;
+        }
+        70% {
+            width: 70%;
+        }
+        80% {
+            left: 50%;
+        }
+        95% {
+            left: 120%;
+        }
+        to {
+            left: 100%;
+        }
+    }
+
     .rich-editor {
         flex: 1;
         box-sizing: border-box;
@@ -65,7 +78,7 @@
         padding: 5px;
         overflow: auto;
         word-wrap: break-word;
-        
+
         &:hover {
             border-color: #212121;
         }

@@ -61,7 +61,7 @@ export class SimpleCombo<T> extends BaseFluxComponent<ISimpleComboProps<T>, ISim
     public componentDidMount(): void {
         super.componentDidMount();
 
-        const {options = [], getItemText, selectedOption, selectedValue, disabled} = this.props;
+        const { options = [], getItemText, selectedOption, selectedValue, disabled } = this.props;
 
         this._buildOptionsMap(options, getItemText);
         const comboOptions = {
@@ -144,15 +144,9 @@ export class SimpleCombo<T> extends BaseFluxComponent<ISimpleComboProps<T>, ISim
     }
 
     private _getDefaultError(): string {
-        const {
-            required,
-            limitedToAllowedOptions
-        } = this.props;
+        const { required, limitedToAllowedOptions } = this.props;
 
-        const {
-            selectedOption,
-            selectedValue
-        } = this.state;
+        const { selectedOption, selectedValue } = this.state;
 
         if (!selectedOption && isNullOrEmpty(selectedValue)) {
             return required ? "A value is required." : null;
@@ -165,7 +159,7 @@ export class SimpleCombo<T> extends BaseFluxComponent<ISimpleComboProps<T>, ISim
     }
 
     private _isSelectedValueValid(value: string): boolean {
-        return (this._nameToOptionMap && this._nameToOptionMap[(value || "").toLowerCase()]) ? true : false;
+        return this._nameToOptionMap && this._nameToOptionMap[(value || "").toLowerCase()] ? true : false;
     }
 
     private _disposeDelayedFunction() {
@@ -175,7 +169,9 @@ export class SimpleCombo<T> extends BaseFluxComponent<ISimpleComboProps<T>, ISim
         }
     }
 
-    private _containerRefCallback = (container: HTMLDivElement) => { this._container = container; };
+    private _containerRefCallback = (container: HTMLDivElement) => {
+        this._container = container;
+    };
 
     private _onChange = () => {
         this._disposeDelayedFunction();
@@ -201,11 +197,10 @@ export class SimpleCombo<T> extends BaseFluxComponent<ISimpleComboProps<T>, ISim
 
         if (this.props.delay == null) {
             fireChange();
-        }
-        else {
+        } else {
             this._delayedFunction = delay(this, this.props.delay, () => {
                 fireChange();
             });
         }
-    }
+    };
 }

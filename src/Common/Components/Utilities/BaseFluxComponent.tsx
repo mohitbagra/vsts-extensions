@@ -54,5 +54,5 @@ export class BaseFluxComponent<TProps extends IBaseFluxComponentProps, TState ex
     private _onStoreChanged = () => {
         const newStoreState = this.getStoresState();
         this.setState(newStoreState);
-    }
+    };
 }

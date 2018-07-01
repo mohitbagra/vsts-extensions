@@ -10,14 +10,14 @@ export namespace LongTextDataService {
                 id: id,
                 text: ""
             },
-            false);
+            false
+        );
     }
 
     export async function addOrUpdateLongText(longText: ILongText): Promise<ILongText> {
         try {
             return await ExtensionDataManager.addOrUpdateDocument<ILongText>(getCollectionKey(), longText, false);
-        }
-        catch (e) {
+        } catch (e) {
             throw "This text has been modified by some one else. Please refresh the instance to get the latest version and try updating it again.";
         }
     }

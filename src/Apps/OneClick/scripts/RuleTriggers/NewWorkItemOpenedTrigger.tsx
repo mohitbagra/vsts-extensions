@@ -27,17 +27,13 @@ export class NewWorkItemOpenedTrigger extends BaseTrigger {
         return {
             iconName: "WorkItem",
             styles: {
-                root: {color: "#004578 !important"}
+                root: { color: "#004578 !important" }
             }
         };
     }
 
     public render(): React.ReactNode {
-        return (
-            <MessageBar messageBarType={MessageBarType.info}>
-                This rule would be automatically triggered when a new work item form is opened.
-            </MessageBar>
-        );
+        return <MessageBar messageBarType={MessageBarType.info}>This rule would be automatically triggered when a new work item form is opened.</MessageBar>;
     }
 
     public getAssociatedFormEvent(): FormEvents {

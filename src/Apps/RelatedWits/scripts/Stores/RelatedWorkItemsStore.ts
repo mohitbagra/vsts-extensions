@@ -12,15 +12,15 @@ export class RelatedWorkItemsStore extends BaseStore<WorkItem[], WorkItem, numbe
     private _sortState: ISortState;
     private _propertyMap: IDictionaryStringTo<IDictionaryStringTo<number>>;
 
-    get filterState(): IFilterState {
+    public get filterState(): IFilterState {
         return this._filterState;
     }
 
-    get sortState(): ISortState {
+    public get sortState(): ISortState {
         return this._sortState;
     }
 
-    get propertyMap(): IDictionaryStringTo<IDictionaryStringTo<number>> {
+    public get propertyMap(): IDictionaryStringTo<IDictionaryStringTo<number>> {
         return this._propertyMap;
     }
 

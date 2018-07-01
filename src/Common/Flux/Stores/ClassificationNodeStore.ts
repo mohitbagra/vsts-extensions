@@ -76,8 +76,7 @@ export class ClassificationNodeStore extends BaseStore<IClassificationNodeItem, 
         if (nodeType === ClassificationNodeKey.Area) {
             this._areaPathMap[nodeName.toLowerCase()] = node;
             this._areaPathIdMap[node.id.toString()] = node;
-        }
-        else {
+        } else {
             this._iterationPathMap[nodeName.toLowerCase()] = node;
             this._iterationPathIdMap[node.id.toString()] = node;
         }

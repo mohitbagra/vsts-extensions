@@ -11,16 +11,14 @@ export namespace WorkItemTagActions {
     export async function initializeTags() {
         if (tagsStore.isLoaded()) {
             WorkItemTagActionsHub.InitializeTags.invoke(null);
-        }
-        else if (!tagsStore.isLoading()) {
+        } else if (!tagsStore.isLoading()) {
             tagsStore.setLoading(true);
             try {
                 const tags = await getTags();
                 tags.sort((a: WebApiTagDefinition, b: WebApiTagDefinition) => localeIgnoreCaseComparer(a.name, b.name));
                 WorkItemTagActionsHub.InitializeTags.invoke(tags);
                 tagsStore.setLoading(false);
-            }
-            catch (e) {
+            } catch (e) {
                 WorkItemTagActionsHub.InitializeTags.invoke([]);
                 tagsStore.setLoading(false);
             }
@@ -37,7 +35,7 @@ export namespace WorkItemTagActions {
             url: url,
             method: "GET",
             data: null,
-            beforeSend: (req) => {
+            beforeSend: req => {
                 req.setRequestHeader("Authorization", authHeader);
                 req.setRequestHeader("Accept", "application/json");
             }

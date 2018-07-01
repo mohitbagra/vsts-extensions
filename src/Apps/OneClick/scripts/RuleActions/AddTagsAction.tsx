@@ -12,22 +12,18 @@ import * as ActionRenderers_Async from "OneClick/Components/ActionRenderers";
 import { CoreFieldRefNames } from "OneClick/Constants";
 import { BaseAction } from "OneClick/RuleActions/BaseAction";
 
-const AsyncWorkItemTagPicker = getAsyncLoadedComponent(
-    ["scripts/ActionRenderers"],
-    (m: typeof ActionRenderers_Async) => m.WorkItemTagPicker,
-    () => <Loading />);
+const AsyncWorkItemTagPicker = getAsyncLoadedComponent(["scripts/ActionRenderers"], (m: typeof ActionRenderers_Async) => m.WorkItemTagPicker, () => <Loading />);
 
 export class AddTagsAction extends BaseAction {
     public async run() {
         const formService = await getFormService();
-        const tags = await formService.getFieldValue(CoreFieldRefNames.Tags) as string;
+        const tags = (await formService.getFieldValue(CoreFieldRefNames.Tags)) as string;
         let newTags: string[];
         const addedTags = (this.getAttribute<string>("tags", true) as string).split(";").map(t => t.trim());
         if (tags) {
             const existingTags = tags.split(";").map(t => t.trim());
             newTags = union(existingTags, addedTags, localeIgnoreCaseComparer);
-        }
-        else {
+        } else {
             newTags = addedTags;
         }
 
@@ -54,7 +50,7 @@ export class AddTagsAction extends BaseAction {
         return {
             iconName: "Tag",
             styles: {
-                root: {color: "#004578 !important"}
+                root: { color: "#004578 !important" }
             }
         };
     }
@@ -85,5 +81,5 @@ export class AddTagsAction extends BaseAction {
 
     private _onTagsChange = (tags: string[]) => {
         this.setAttribute<string>("tags", tags.join(";"));
-    }
+    };
 }
