@@ -45,11 +45,11 @@ export interface IWorkItemRulesGroupState extends IBaseFluxComponentState {
     ruleExecutionError?: IActionError;
 }
 
-const SortableItem = SortableElement(({ value }) => {
+const SortableItem: any = SortableElement(({ value }) => {
     return <div className="rule-list-item">{value}</div>;
 });
 
-const SortableList = SortableContainer(({ items }) => {
+const SortableList: any = SortableContainer(({ items }) => {
     return <div className="rules-list-container">{items.map((value, index) => <SortableItem key={`item-${index}`} index={index} value={value} />)}</div>;
 });
 

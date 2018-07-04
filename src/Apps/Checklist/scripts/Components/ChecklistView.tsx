@@ -24,9 +24,9 @@ import { Modal } from "OfficeFabric/Modal";
 import { css } from "OfficeFabric/Utilities";
 import { VssIcon, VssIconType } from "VSSUI/VssIcon";
 
-const DragHandle = SortableHandle(() => <VssIcon className="drag-handle" iconName="GlobalNavButton" iconType={VssIconType.fabric} />);
+const DragHandle: any = SortableHandle(() => <VssIcon className="drag-handle" iconName="GlobalNavButton" iconType={VssIconType.fabric} />);
 
-const SortableItem = SortableElement(({ value }) => {
+const SortableItem: any = SortableElement(({ value }) => {
     return (
         <div className="checklist-item-container">
             <DragHandle />
@@ -35,7 +35,7 @@ const SortableItem = SortableElement(({ value }) => {
     );
 });
 
-const SortableList = SortableContainer(({ items }) => {
+const SortableList: any = SortableContainer(({ items }) => {
     return <div className="checklist-items">{items.map((value, index) => <SortableItem key={`item-${index}`} index={index} value={value} />)}</div>;
 });
 
