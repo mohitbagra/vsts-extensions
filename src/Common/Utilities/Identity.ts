@@ -13,7 +13,7 @@ export function getCurrentUserName(): string {
 
 export function getCurrentUser(): IdentityRef {
     const currentUser = VSS.getWebContext().user;
-    const imageUrl = getIdentityImageUrl(currentUser.id);
+    const imageUrl = buildAvatarUrl(currentUser.id);
     return {
         id: currentUser.id,
         displayName: currentUser.name,
@@ -83,18 +83,27 @@ export function parseUniquefiedIdentityName(distinctName: string): IdentityRef {
         id: id,
         displayName: displayName,
         uniqueName: uniqueName,
-        imageUrl: getIdentityImageUrl(id, uniqueName)
+        imageUrl: buildAvatarUrl(id, uniqueName)
     } as IdentityRef;
 }
 
-export function getIdentityImageUrl(id: string, uniqueName?: string): string {
-    if (!isNullOrWhiteSpace(id)) {
-        return `${VSS.getWebContext().host.uri}/_api/_common/IdentityImage?id=${id}`;
+export function buildAvatarUrl(id?: string, uniqueName?: string, descriptor?: string): string {
+    const hostUri = VSS.getWebContext().host.uri;
+
+    if (!isNullOrWhiteSpace(descriptor)) {
+        return `${hostUri}/_apis/GraphProfile/MemberAvatars/${descriptor}`;
+    } else if (!isNullOrWhiteSpace(id)) {
+        return `${hostUri}/_api/_common/IdentityImage?id=${id}`;
     } else if (!isNullOrWhiteSpace(uniqueName)) {
-        return `${VSS.getWebContext().host.uri}/_api/_common/IdentityImage?identifier=${uniqueName}&identifierType=0`;
+        return `${hostUri}/_api/_common/IdentityImage?identifier=${uniqueName}&identifierType=0`;
     }
 
     return null;
+}
+
+export function getAvatarUrl(identityRef: IdentityRef): string {
+    const avatarUrl = identityRef._links && identityRef._links.avatar && identityRef._links.avatar.href;
+    return avatarUrl || identityRef.imageUrl || buildAvatarUrl(identityRef.id, identityRef.uniqueName, identityRef.descriptor);
 }
 
 function getVsIdFromGroupUniqueName(str: string): string {

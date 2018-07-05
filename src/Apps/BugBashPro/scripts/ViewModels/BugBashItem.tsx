@@ -36,7 +36,7 @@ export const BugBashItemKeyTypes = {
     [BugBashItemFieldNames.TeamId]: "string",
     [BugBashItemFieldNames.WorkItemId]: "number",
     [WorkItemFieldNames.AreaPath]: "string",
-    [WorkItemFieldNames.AssignedTo]: "identity",
+    [WorkItemFieldNames.AssignedTo]: "identityRef",
     [WorkItemFieldNames.Title]: "string",
     [WorkItemFieldNames.State]: "string",
     [WorkItemFieldNames.WorkItemType]: "string",
@@ -88,7 +88,7 @@ export class BugBashItem {
             compareValue = -1;
         } else if (v1 != null && v2 == null) {
             compareValue = 1;
-        } else if (BugBashItemKeyTypes[sortKey] === "string" || BugBashItemKeyTypes[sortKey] === "identity") {
+        } else if (BugBashItemKeyTypes[sortKey] === "string") {
             compareValue = ignoreCaseComparer(v1 as string, v2 as string);
         } else if (BugBashItemKeyTypes[sortKey] === "identityRef") {
             compareValue = ignoreCaseComparer(getDistinctNameFromIdentityRef(v1 as IdentityRef), getDistinctNameFromIdentityRef(v2 as IdentityRef));
@@ -365,7 +365,7 @@ export class BugBashItem {
                     <span className={className}>{`${this.isDirty() ? "* " : ""}${value}`}</span>
                 </TooltipHost>
             );
-        } else if (BugBashItemKeyTypes[key] === "identity" || BugBashItemKeyTypes[key] === "identityRef") {
+        } else if (BugBashItemKeyTypes[key] === "identityRef") {
             return <IdentityView className={className} value={value} />;
         } else if (BugBashItemKeyTypes[key] === "date") {
             return (
