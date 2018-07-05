@@ -255,7 +255,7 @@ export class BugBashItemStore extends BaseStore<BugBashItem[], BugBashItem, stri
             } else {
                 const workItem = bugBashItem.workItem;
                 const areaPath = workItem.fields[WorkItemFieldNames.AreaPath];
-                const assignedTo = workItem.fields[WorkItemFieldNames.AssignedTo] || "Unassigned";
+                const assignedTo = getDistinctNameFromIdentityRef(workItem.fields[WorkItemFieldNames.AssignedTo]) || "Unassigned";
                 const state = workItem.fields[WorkItemFieldNames.State];
                 const itemCreatedBy = bugBashItem.getFieldValue<IdentityRef>(BugBashItemFieldNames.CreatedBy, true);
                 const itemCreatedByStr = getDistinctNameFromIdentityRef(itemCreatedBy);

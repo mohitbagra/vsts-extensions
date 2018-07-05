@@ -231,7 +231,7 @@ export class BugBashItem {
         // filter by work item assigned to
         const assignedTos = filter[WorkItemFieldNames.AssignedTo] && filter[WorkItemFieldNames.AssignedTo].value;
         if (assignedTos && assignedTos.length > 0 && this.isAccepted) {
-            if (assignedTos.filter(v => stringEquals(v, this.workItem.fields[WorkItemFieldNames.AssignedTo] || "Unassigned", true)).length === 0) {
+            if (assignedTos.filter(v => stringEquals(v, getDistinctNameFromIdentityRef(this.workItem.fields[WorkItemFieldNames.AssignedTo]) || "Unassigned", true)).length === 0) {
                 return false;
             }
         }

@@ -533,7 +533,7 @@ export class BugBashView extends BaseFluxComponent<IBugBashViewProps, IBugBashVi
     private _getListItem = (value: string, key: BugBashItemFieldNames | WorkItemFieldNames): IPickListItem => {
         const keyType = BugBashItemKeyTypes[key];
 
-        if (keyType === "identity" || keyType === "identityRef") {
+        if (keyType === "identityRef") {
             const identity = parseUniquefiedIdentityName(value);
             return {
                 name: identity.displayName,
