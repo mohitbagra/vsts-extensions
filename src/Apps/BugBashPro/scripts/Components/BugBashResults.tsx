@@ -216,13 +216,13 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
                     constrainMode={ConstrainMode.horizontalConstrained}
                     onColumnHeaderClick={this._onSortChange}
                     checkboxVisibility={CheckboxVisibility.hidden}
-                    selectionMode={this.props.view === BugBashViewActions.AcceptedItemsOnly ? SelectionMode.multiple : SelectionMode.single}
+                    selectionMode={SelectionMode.multiple}
                     className="bugbash-item-grid"
                     selection={this._selection}
                     getKey={this._getBugBashItemId}
                     setKey={`bugbash-item-grid-${this.state.gridKeyCounter}`}
                     onItemInvoked={this._onItemInvoked}
-                    actionsColumnKey={this.props.view === BugBashViewActions.AcceptedItemsOnly ? BugBashItemFieldNames.Title : undefined}
+                    actionsColumnKey={BugBashItemFieldNames.Title}
                     getMenuItems={this._getGridContextMenuItems}
                     onRenderItemColumn={this._onRenderColumn}
                     listProps={{ onKeyDown: this._onListKeyPressed }}
@@ -325,30 +325,37 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
     };
 
     private _getGridContextMenuItems = (item: BugBashItem): IContextualMenuItem[] => {
-        if (this.props.view === BugBashViewActions.AcceptedItemsOnly) {
-            let selectedItems = this._selection.getSelection() as BugBashItem[];
-            if (!selectedItems || selectedItems.length === 0) {
-                selectedItems = [item];
-            }
-
-            return [
-                {
-                    key: "openinquery",
-                    name: "Open selected items in Queries",
-                    iconProps: { iconName: "ReplyMirrored" },
-                    href: getQueryUrl(selectedItems.map(i => i.workItem), [
-                        WorkItemFieldNames.ID,
-                        WorkItemFieldNames.Title,
-                        WorkItemFieldNames.State,
-                        WorkItemFieldNames.AssignedTo,
-                        WorkItemFieldNames.AreaPath
-                    ]),
-                    target: "_blank"
-                }
-            ];
-        } else {
-            return null;
+        let selectedItems = this._selection.getSelection() as BugBashItem[];
+        if (!selectedItems || selectedItems.length === 0) {
+            selectedItems = [item];
         }
+        const menuItems: IContextualMenuItem[] = [
+            {
+                key: "copytoclipboard",
+                name: "Copy selected items to clipboard",
+                iconProps: { iconName: "Copy" },
+                onClick: () => {
+                    this._copyToClipboard(selectedItems);
+                }
+            }
+        ];
+        if (this.props.view === BugBashViewActions.AcceptedItemsOnly) {
+            menuItems.push({
+                key: "openinquery",
+                name: "Open selected items in Queries",
+                iconProps: { iconName: "ReplyMirrored" },
+                href: getQueryUrl(selectedItems.map(i => i.workItem), [
+                    WorkItemFieldNames.ID,
+                    WorkItemFieldNames.Title,
+                    WorkItemFieldNames.State,
+                    WorkItemFieldNames.AssignedTo,
+                    WorkItemFieldNames.AreaPath
+                ]),
+                target: "_blank"
+            });
+        }
+
+        return menuItems;
     };
 
     private _onItemInvoked = async (bugBashItem: BugBashItem) => {
@@ -405,7 +412,11 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
     private _onListKeyPressed = (e: React.KeyboardEvent<HTMLDivElement>) => {
         const selectedItems = this._selection.getSelection() as BugBashItem[];
         if (selectedItems.length > 0 && e.keyCode === KeyCodes.c && (e.ctrlKey || e.metaKey)) {
-            copyToClipboard(selectedItems.map(s => s.getFieldValue(BugBashItemFieldNames.Title)).join(";"), true);
+            this._copyToClipboard(selectedItems);
         }
     };
+
+    private _copyToClipboard(selectedItems: BugBashItem[]) {
+        copyToClipboard(selectedItems.map(s => s.getFieldValue(BugBashItemFieldNames.Title)).join(";"), { copyAsHtml: true });
+    }
 }
