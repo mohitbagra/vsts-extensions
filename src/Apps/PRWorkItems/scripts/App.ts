@@ -2,18 +2,19 @@ import { contains } from "Common/Utilities/Array";
 import * as ExtensionDataManager from "Common/Utilities/ExtensionDataManager";
 import { reloadPage } from "Common/Utilities/Navigation";
 import { stringEquals } from "Common/Utilities/String";
+import { getClient } from "Common/Utilities/WITRestClient";
 import { getFormNavigationService } from "Common/Utilities/WorkItemFormHelpers";
 import * as Q from "q";
 import { WorkItemType } from "TFS/WorkItemTracking/Contracts";
-import * as WitClient from "TFS/WorkItemTracking/RestClient";
 import { JsonPatchDocument, JsonPatchOperation, Operation } from "VSS/WebApi/Contracts";
 
 const extensionContext = VSS.getExtensionContext();
 let configuredWorkItemTypes: WorkItemType[];
 
 async function getChildItems(artifactId: string): Promise<IContributedMenuItem[]> {
-    const [workItemNavSvc, witClient] = await Promise.all([getFormNavigationService(), WitClient.getClient()]);
+    const workItemNavSvc = await getFormNavigationService();
     const projectId = VSS.getWebContext().project.id;
+    const witClient = getClient();
 
     if (!configuredWorkItemTypes) {
         const [configuredWorkItemTypesSetting, allWorkItemTypes] = await Promise.all([

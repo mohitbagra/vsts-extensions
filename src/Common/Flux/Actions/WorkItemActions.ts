@@ -1,9 +1,8 @@
 import { WorkItemActionsHub } from "Common/Flux/Actions/ActionsHub";
 import { StoreFactory } from "Common/Flux/Stores/BaseStore";
 import { WorkItemStore } from "Common/Flux/Stores/WorkItemStore";
+import { getClient } from "Common/Utilities/WITRestClient";
 import { WorkItem, WorkItemErrorPolicy } from "TFS/WorkItemTracking/Contracts";
-import * as WitClient from "TFS/WorkItemTracking/RestClient";
-import * as VSS_Service from "VSS/Service";
 import { JsonPatchDocument, JsonPatchOperation, Operation } from "VSS/WebApi/Contracts";
 
 export namespace WorkItemActions {
@@ -159,10 +158,6 @@ export namespace WorkItemActions {
 
     export function clearWorkItemsCache() {
         WorkItemActionsHub.ClearWorkItems.invoke(null);
-    }
-
-    function getClient(): WitClient.WorkItemTrackingHttpClient5 {
-        return VSS_Service.getClient<WitClient.WorkItemTrackingHttpClient5>(WitClient.WorkItemTrackingHttpClient5);
     }
 
     async function getWorkItems(ids: number[]): Promise<WorkItem[]> {

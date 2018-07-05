@@ -6,19 +6,19 @@ import { contains } from "Common/Utilities/Array";
 import { delegate } from "Common/Utilities/Core";
 import * as ExtensionDataManager from "Common/Utilities/ExtensionDataManager";
 import { stringEquals } from "Common/Utilities/String";
+import { getClient } from "Common/Utilities/WITRestClient";
 import { Checkbox } from "OfficeFabric/Checkbox";
 import { Fabric } from "OfficeFabric/Fabric";
 import { WorkItemType } from "TFS/WorkItemTracking/Contracts";
-import * as WitClient from "TFS/WorkItemTracking/RestClient";
 
 export class ConfigureDialog {
     private _configuredWorkItemTypes: string[];
+
     public async initialize() {
-        const witClient = await WitClient.getClient();
         const projectId = VSS.getWebContext().project.id;
         const [configuredWorkItemTypes, allWorkItemTypes] = await Promise.all([
             ExtensionDataManager.readSetting(`wits_${projectId}`, ["Bug", "User Story"], false),
-            witClient.getWorkItemTypes(projectId)
+            getClient().getWorkItemTypes(projectId)
         ]);
         this._configuredWorkItemTypes = configuredWorkItemTypes;
 

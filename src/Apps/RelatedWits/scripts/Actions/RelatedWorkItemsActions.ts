@@ -1,8 +1,8 @@
+import { getClient } from "Common/Utilities/WITRestClient";
 import { ActionsHub } from "RelatedWits/Actions/ActionsHub";
 import { Constants, ISortState } from "RelatedWits/Models";
 import { StoresHub } from "RelatedWits/Stores/StoresHub";
 import { WorkItem, WorkItemErrorPolicy } from "TFS/WorkItemTracking/Contracts";
-import * as WitClient from "TFS/WorkItemTracking/RestClient";
 import { IFilterState } from "VSSUI/Utilities/Filter";
 
 export namespace RelatedWorkItemsActions {
@@ -31,15 +31,10 @@ export namespace RelatedWorkItemsActions {
             StoresHub.relatedWorkItemsStore.setLoading(true);
 
             let workItems: WorkItem[];
-            const queryResult = await WitClient.getClient().queryByWiql({ query: query.wiql }, query.project, null, false, top);
+            const witClient = getClient();
+            const queryResult = await witClient.queryByWiql({ query: query.wiql }, query.project, null, false, top);
             if (queryResult.workItems && queryResult.workItems.length > 0) {
-                workItems = await WitClient.getClient().getWorkItems(
-                    queryResult.workItems.map(w => w.id),
-                    Constants.DEFAULT_FIELDS_TO_RETRIEVE,
-                    null,
-                    null,
-                    WorkItemErrorPolicy.Omit
-                );
+                workItems = await witClient.getWorkItems(queryResult.workItems.map(w => w.id), Constants.DEFAULT_FIELDS_TO_RETRIEVE, null, null, WorkItemErrorPolicy.Omit);
             } else {
                 workItems = [];
             }

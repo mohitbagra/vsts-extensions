@@ -1,7 +1,7 @@
 import { WorkItemTemplateItemActionsHub } from "Common/Flux/Actions/ActionsHub";
 import { StoreFactory } from "Common/Flux/Stores/BaseStore";
 import { WorkItemTemplateItemStore } from "Common/Flux/Stores/WorkItemTemplateItemStore";
-import * as WitClient from "TFS/WorkItemTracking/RestClient";
+import { getClient } from "Common/Utilities/WITRestClient";
 
 export namespace WorkItemTemplateItemActions {
     const workItemTemplateItemStore: WorkItemTemplateItemStore = StoreFactory.getInstance<WorkItemTemplateItemStore>(WorkItemTemplateItemStore);
@@ -12,7 +12,7 @@ export namespace WorkItemTemplateItemActions {
         } else if (!workItemTemplateItemStore.isLoading(id)) {
             workItemTemplateItemStore.setLoading(true, id);
             try {
-                const workItemTemplate = await WitClient.getClient().getTemplate(projectId || VSS.getWebContext().project.id, teamId, id);
+                const workItemTemplate = await getClient().getTemplate(projectId || VSS.getWebContext().project.id, teamId, id);
                 WorkItemTemplateItemActionsHub.InitializeWorkItemTemplateItem.invoke(workItemTemplate);
                 workItemTemplateItemStore.setLoading(false, id);
             } catch (e) {
