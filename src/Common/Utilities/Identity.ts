@@ -69,7 +69,7 @@ export function parseUniquefiedIdentityName(distinctName: string): IdentityRef {
 
             // If the alias component is just a guid then this is not a uniqueName but
             // vsId which is used only for TFS groups
-            if (vsIdFromAlias !== "") {
+            if (!isNullOrWhiteSpace(vsIdFromAlias)) {
                 id = vsIdFromAlias;
                 uniqueName = null;
             }
@@ -109,7 +109,7 @@ export function getAvatarUrl(identityRef: IdentityRef): string {
 function getVsIdFromGroupUniqueName(str: string): string {
     let leftPart: string;
     if (isNullOrWhiteSpace(str)) {
-        return "";
+        return null;
     }
 
     let vsid = null;

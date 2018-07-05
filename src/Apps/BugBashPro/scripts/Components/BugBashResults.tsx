@@ -19,6 +19,7 @@ import {
 import { TeamActions } from "Common/Flux/Actions/TeamActions";
 import { WorkItemActions } from "Common/Flux/Actions/WorkItemActions";
 import { BaseStore } from "Common/Flux/Stores/BaseStore";
+import { copyToClipboard } from "Common/Utilities/Clipboard";
 import { delay, DelayedFunction } from "Common/Utilities/Core";
 import {
     readLocalSetting, WebSettingsScope, writeLocalSetting
@@ -31,6 +32,7 @@ import {
     CheckboxVisibility, ConstrainMode, DetailsListLayoutMode, IColumn
 } from "OfficeFabric/DetailsList";
 import { MessageBar, MessageBarType } from "OfficeFabric/MessageBar";
+import { KeyCodes } from "OfficeFabric/Utilities";
 import { ISelection, Selection, SelectionMode } from "OfficeFabric/utilities/selection";
 import { VssDetailsList } from "VSSUI/VssDetailsList";
 import { ZeroData } from "VSSUI/ZeroData";
@@ -223,6 +225,7 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
                     actionsColumnKey={this.props.view === BugBashViewActions.AcceptedItemsOnly ? BugBashItemFieldNames.Title : undefined}
                     getMenuItems={this._getGridContextMenuItems}
                     onRenderItemColumn={this._onRenderColumn}
+                    listProps={{ onKeyDown: this._onListKeyPressed }}
                 />
             </div>
         );
@@ -396,6 +399,13 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
                 selectedBugBashItem: StoresHub.bugBashItemStore.getNewBugBashItem(),
                 gridKeyCounter: this.state.gridKeyCounter + 1
             } as IBugBashResultsState);
+        }
+    };
+
+    private _onListKeyPressed = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        const selectedItems = this._selection.getSelection() as BugBashItem[];
+        if (selectedItems.length > 0 && e.keyCode === KeyCodes.c && (e.ctrlKey || e.metaKey)) {
+            copyToClipboard(selectedItems.map(s => s.getFieldValue(BugBashItemFieldNames.Title)).join(";"), true);
         }
     };
 }
