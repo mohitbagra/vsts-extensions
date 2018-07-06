@@ -9,7 +9,9 @@ import { WorkItemStateView } from "Common/Components/VSTS/WorkItemStateView";
 import { WorkItemTitleView } from "Common/Components/VSTS/WorkItemTitleView";
 import { WorkItemActions } from "Common/Flux/Actions/WorkItemActions";
 import { defaultDateComparer, friendly } from "Common/Utilities/Date";
-import { getCurrentUser, getDistinctNameFromIdentityRef } from "Common/Utilities/Identity";
+import {
+    getCurrentUser, getDistinctNameFromIdentityRef, isIdentityRef
+} from "Common/Utilities/Identity";
 import {
     caseInsensitiveContains, ignoreCaseComparer, isNullOrWhiteSpace, stringEquals
 } from "Common/Utilities/String";
@@ -318,6 +320,37 @@ export class BugBashItem {
             StoresHub.teamStore.itemExists(updatedModel.teamId) &&
             (!updatedModel.rejected || (!isNullOrWhiteSpace(updatedModel.rejectReason) && updatedModel.rejectReason.trim().length <= SizeLimits.RejectFieldMaxLength))
         );
+    }
+
+    public getStringValue(key: BugBashItemFieldNames | WorkItemFieldNames): string {
+        let value: any;
+        let returnValue: string;
+
+        if (BugBashItem.isWorkItemFieldName(key)) {
+            if (this.isAccepted) {
+                value = key === WorkItemFieldNames.ID ? this.workItemId : this.workItem.fields[key];
+            }
+        } else if (key === BugBashItemFieldNames.Title && this.isAccepted) {
+            value = this.workItem.fields[WorkItemFieldNames.Title];
+        } else if (key === BugBashItemFieldNames.Status) {
+            return this.isAccepted ? "Accepted" : this.isRejected ? "Rejected" : "Pending";
+        } else {
+            value = this.getFieldValue(key as BugBashItemFieldNames);
+            if (key === BugBashItemFieldNames.TeamId) {
+                const team = StoresHub.teamStore.getItem(value);
+                value = team ? team.name : value;
+            }
+        }
+
+        if (value instanceof Date) {
+            returnValue = format(value, "M/D/YYYY h:mm aa");
+        } else if (isIdentityRef(value)) {
+            returnValue = getDistinctNameFromIdentityRef(value);
+        } else {
+            returnValue = (value || "").toString();
+        }
+
+        return returnValue;
     }
 
     public onRenderPropertyCell(key: BugBashItemFieldNames | WorkItemFieldNames): JSX.Element {

@@ -8,7 +8,9 @@ import { BugBashItemEditor } from "BugBashPro/Components/BugBashItemEditor";
 import {
     BugBashFieldNames, BugBashItemFieldNames, BugBashViewActions, UrlActions, WorkItemFieldNames
 } from "BugBashPro/Constants";
+import { getBugBashUrl } from "BugBashPro/Helpers";
 import { StoresHub } from "BugBashPro/Stores/StoresHub";
+import { BugBashItemHtmlFormatter } from "BugBashPro/Utilities/BugBashItemHtmlFormatter";
 import { BugBash } from "BugBashPro/ViewModels/BugBash";
 import { BugBashItem } from "BugBashPro/ViewModels/BugBashItem";
 import { Loading } from "Common/Components/Loading";
@@ -417,6 +419,9 @@ export class BugBashResults extends BaseFluxComponent<IBugBashResultsProps, IBug
     };
 
     private _copyToClipboard(selectedItems: BugBashItem[]) {
-        copyToClipboard(selectedItems.map(s => s.getFieldValue(BugBashItemFieldNames.Title)).join(";"), { copyAsHtml: true });
+        const bugBashTitle = this.props.bugBash.getFieldValue<string>(BugBashFieldNames.Title, true);
+        const extendedHtml = `<br>Bug bash: <a href=${getBugBashUrl(this.props.bugBash.id, UrlActions.ACTION_RESULTS)}>${bugBashTitle}</a>`;
+        const table = new BugBashItemHtmlFormatter(selectedItems, this._getBugBashItemGridColumns(), { extendedHtml: extendedHtml }).getHtml();
+        copyToClipboard(table, { copyAsHtml: true });
     }
 }
