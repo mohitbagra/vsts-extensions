@@ -13,8 +13,9 @@ import {
     getCurrentUser, getDistinctNameFromIdentityRef, isIdentityRef
 } from "Common/Utilities/Identity";
 import {
-    caseInsensitiveContains, ignoreCaseComparer, isNullOrWhiteSpace, stringEquals
+    caseInsensitiveContains, htmlEncode, ignoreCaseComparer, isNullOrWhiteSpace, stringEquals
 } from "Common/Utilities/String";
+import { getWorkItemUrl } from "Common/Utilities/UrlHelper";
 import { openWorkItemDialog } from "Common/Utilities/WorkItemFormHelpers";
 import * as format from "date-fns/format";
 import {
@@ -322,16 +323,19 @@ export class BugBashItem {
         );
     }
 
-    public getStringValue(key: BugBashItemFieldNames | WorkItemFieldNames): string {
+    public getFormattedFieldValue(key: BugBashItemFieldNames | WorkItemFieldNames): string {
         let value: any;
         let returnValue: string;
+        let isHtmlString: boolean = false;
 
         if (BugBashItem.isWorkItemFieldName(key)) {
             if (this.isAccepted) {
                 value = key === WorkItemFieldNames.ID ? this.workItemId : this.workItem.fields[key];
             }
         } else if (key === BugBashItemFieldNames.Title && this.isAccepted) {
-            value = this.workItem.fields[WorkItemFieldNames.Title];
+            const title = this.workItem.fields[WorkItemFieldNames.Title];
+            value = `<a href="${getWorkItemUrl(this.workItemId)}">${this.workItemId}</a>&nbsp;&nbsp;${title}`;
+            isHtmlString = true;
         } else if (key === BugBashItemFieldNames.Status) {
             return this.isAccepted ? "Accepted" : this.isRejected ? "Rejected" : "Pending";
         } else {
@@ -345,9 +349,12 @@ export class BugBashItem {
         if (value instanceof Date) {
             returnValue = format(value, "M/D/YYYY h:mm aa");
         } else if (isIdentityRef(value)) {
-            returnValue = getDistinctNameFromIdentityRef(value);
+            returnValue = htmlEncode(getDistinctNameFromIdentityRef(value));
         } else {
             returnValue = (value || "").toString();
+            if (!isHtmlString) {
+                returnValue = htmlEncode(returnValue);
+            }
         }
 
         return returnValue;

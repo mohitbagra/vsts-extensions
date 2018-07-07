@@ -54,6 +54,14 @@
     }
 }
 
+.vss-DetailsList.ms-DetailsList .ms-List-cell .ms-DetailsRow .vss-ContextualMenu--container {
+    padding-top: 0 !important;
+}
+
+.vss-HubTileRegion .vss-HubTile {
+    width: auto !important;
+}
+
 .vss-PickList .vss-PickList--element .vss-ItemIndicator--textIndicator {
     padding-right: 5px;
 }

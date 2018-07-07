@@ -29,7 +29,7 @@ export abstract class HtmlTableFormatter<TItem, TColumn> {
         const headerRows = this.columns.map(c => `<th style="${HtmlTableFormatter.COLUMN_STYLE}">${htmlEncode(this.getColumnName(c))}</th>`);
         const tableHeader = `<thead style="${HtmlTableFormatter.HEADER_STYLE}"><tr>${headerRows.join("")}</tr></thead>`;
         const tableRows = this.rows.map((row, rowIndex) => {
-            const rows = this.columns.map(c => `<td style="${HtmlTableFormatter.COLUMN_STYLE}">${htmlEncode(this.getCellValue(row, c))}</td>`);
+            const rows = this.columns.map(c => `<td style="${HtmlTableFormatter.COLUMN_STYLE}">${this.getCellValue(row, c)}</td>`);
             const rowStyle = rowIndex % 2 ? HtmlTableFormatter.ROW_ALT_BACKGROUND_COLOR : HtmlTableFormatter.ROW_BACKGROUND_COLOR;
 
             return `<tr style="${rowStyle}">${rows.join("")}</tr>`;
